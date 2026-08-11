@@ -1,0 +1,12 @@
+{
+  "name": "Nihon GO Benkyo",
+  "short_name": "Nihon GO",
+  "description": "Belajar bahasa Jepang secara terstruktur.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f3eee6",
+  "theme_color": "#142945",
+  "icons": [
+    {"src": "kitsune-mascot.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}
