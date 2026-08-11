@@ -716,16 +716,16 @@
     };
     document.querySelectorAll('.kanji-stroke-svg').forEach(svg=>enableBrushMotion(svg));
   </script><script>
-    /* Modul animasi frame bersih: satu goresan tinta utuh pada setiap langkah. */
+    /* Modul animasi frame bersih: goresan digambar mengikuti bentuk asli kanji (data KanjiVG). */
     const cleanFramePaths={
-      '\u65e5':['M68 36 L68 181','M68 36 L164 36 L164 181','M70 108 L162 108','M68 181 L164 181'],
-      '\u5c71':['M109 38 L109 126','M52 80 L52 174 L109 174','M166 80 L166 174 L109 174'],
-      '\u5ddd':['M54 44 L54 174','M109 34 L109 184','M165 44 L165 174'],
-      '\u4eba':['M108 39 L58 159','M108 39 L172 177'],
-      '\u6708':['M62 37 L62 182','M62 39 L161 39 L161 182','M64 96 L157 96','M64 145 L157 145'],
-      '\u6728':['M40 89 L177 89','M109 36 L109 185','M109 89 L49 171','M109 89 L173 171'],
-      '\u672c':['M40 82 L177 82','M109 30 L109 185','M109 82 L50 166','M109 82 L173 166','M84 153 L133 153'],
-      '\u5b66':['M70 38 L92 38','M138 38 L160 38','M66 68 L165 68','M79 68 L67 107 L173 107','M120 79 L120 177','M120 117 L71 165','M120 117 L171 165','M83 177 L158 177']
+      '\u65e5':['M31.5,24.5c1.12,1.12,1.74,2.75,1.74,4.75c0,1.6-0.16,38.11-0.09,53.5c0.02,3.82,0.05,6.35,0.09,6.75','M33.48,26c0.8-0.05,37.67-3.01,40.77-3.25c3.19-0.25,5,1.75,5,4.25c0,4-0.22,40.84-0.23,56c0,3.48,0,5.72,0,6','M34.22,55.25c7.78-0.5,35.9-2.5,44.06-2.75','M34.23,86.5c10.52-0.75,34.15-2.12,43.81-2.25'],
+      '\u5c71':['M52.49,15.5c1.38,1.38,2.26,3.5,2.26,5.75c0,0.75-0.22,58.3-0.25,59.25','M21.49,54.5c0.88,0.88,1.39,2.25,1.26,3.75c-0.58,6.99-1,16-2.5,23c-0.7,3.26,0.11,4,2,3.75c17-2.25,47.12-5.12,65.5-6','M89.24,49c0.94,0.94,1.64,2.38,1.51,4.25c-0.25,3.68-1.83,20.3-2.55,28.77c-0.22,2.64-0.39,4.51-0.45,4.98'],
+      '\u5ddd':['M27.22,25.68c0.91,1.57,1.18,3.45,1.19,5.37C28.5,43.5,28.5,69,17.39,84.15','M53.75,23.63c0.94,0.94,1.41,2.37,1.41,3.9c0,0.58-0.01,28.48-0.08,41.71c-0.02,3.31-0.04,5.74-0.06,6.63','M85.56,15.63c1.09,1.09,1.76,2.62,1.76,4.25c0,0.74,0.23,46.86,0.09,66.12c-0.03,4.31-0.06,7.61-0.09,8.63'],
+      '\u4eba':['M54.5,20c0.37,2.12,0.23,4.03-0.22,6.27C51.68,39.48,38.25,72.25,16.5,87.25','M46,54.25c6.12,6,25.51,22.24,35.52,29.72c3.66,2.73,6.94,4.64,11.48,5.53'],
+      '\u6708':['M34.25,16.25c1,1,1.48,2.38,1.5,4c0.38,33.62,2.38,59.38-11,73.25','M36.25,19c4.12-0.62,31.49-4.78,33.25-5c4-0.5,5.5,1.12,5.5,4.75c0,2.76-0.5,49.25-0.5,69.5c0,13-6.25,4-8.75,1.75','M37.25,38c10.25-1.5,27.25-3.75,36.25-4.5','M37,58.25c8.75-1.12,27-3.5,36.25-4'],
+      '\u6728':['M19.5,39.86c2.45,0.57,5.23,0.8,8.04,0.57C40.75,39.38,63,36.5,79.78,36.15c2.8-0.06,4.54,0.1,7.34,0.5','M51.75,10.5c1.19,1.19,2,3,2,5c0,8.65,0,55.15-0.14,74.75c-0.03,4.19-0.07,7.15-0.11,8.25','M50.75,39.5c0,1.12-0.61,2.44-1.42,3.95C41.75,57.5,26.7,73.93,15.75,80.25','M54.5,39c4.62,6,23,25.75,31.76,34.61c2.27,2.29,4.61,4.39,7.49,5.64'],
+      '\u672c':['M20.5,33.5c1.93,0.62,4.91,1.07,8.1,0.75C42.43,32.88,66,30.75,79.64,30c3.2-0.18,7.22,0.25,9.23,0.5','M52.1,11.12c1.25,1.25,2.05,3.23,2.05,4.99c0,0.84,0,57.16-0.02,76.76c-0.01,3.96-0.01,6.42-0.02,6.62','M51.75,33.5c0,1-0.41,2.22-1.29,3.88C43.62,50.25,30.12,65.5,13.25,75.5','M54.75,35.5c4.92,5.74,23.48,23.33,32.85,31.27c2.58,2.18,5.16,4.41,8.52,5.23','M33.88,73.92c1.5,0.46,2.74,0.75,5.3,0.59c9.95-0.63,21.2-2.13,27.96-2.95c1.93-0.23,3.62-0.31,6-0.02'],
+      '\u5b66':['M29.5,17.25c3.5,3,6.5,7.25,7.75,9.75','M49,12c1.25,2,4.75,8.25,5.25,11.5','M75,11c0.25,1.75-0.12,2.75-0.75,4.25c-1.29,3.1-4.25,7.38-6.5,9.75','M21.25,33.75c-0.12,4.75-2,12.5-3.75,16.25','M23.5,36.5c17-1.62,42.38-5.5,60-5.75c9.5-0.13,4.12,5.12,0,9','M37.25,46.5c1,0.25,3.75,0.25,5.5-0.25s18.25-4,20-4s2.75,0.75,1,2.25S54.5,53.5,53,54.75','M50.75,55.75c4,8.75,7.18,24.67,1.75,38c-2.75,6.75-7.75,1.25-9.75-2','M15.75,67.75c1.75,1,4.64,1.36,7.5,1c15.88-2,44.43-6.25,61.37-5.5c2.5,0.11,4.72,0.25,6.39,1']
     };
     let cleanFrameTimer=null;
     function startCleanKanjiFrames(character){
@@ -733,20 +733,30 @@
       if(!grid)return;
       if(cleanFrameTimer)clearTimeout(cleanFrameTimer);
       const strokes=cleanFramePaths[character]||cleanFramePaths['\u65e5'];
-      grid.innerHTML='<span class="stroke-badge">Goresan 1-'+strokes.length+'</span><svg class="clean-kanji-frame" viewBox="0 0 220 220" role="img" aria-label="Urutan penulisan kanji '+character+'">'+strokes.map((path,index)=>'<path data-stroke="'+index+'" d="'+path+'"></path>').join('')+'</svg>';
+      grid.innerHTML='<span class="stroke-badge">Goresan 1-'+strokes.length+'</span><svg class="clean-kanji-frame" viewBox="0 0 109 109" role="img" aria-label="Animasi urutan penulisan kanji '+character+'">'+strokes.map((path,index)=>'<path data-stroke="'+index+'" pathLength="1" d="'+path+'"></path>').join('')+'</svg>';
       const svg=grid.querySelector('.clean-kanji-frame');
       const paths=Array.from(svg.querySelectorAll('path'));
       let visible=0;
-      const paint=()=>{
-        paths.forEach((path,index)=>path.classList.toggle('shown',index<visible));
-        visible++;
-        cleanFrameTimer=setTimeout(()=>{if(visible<=paths.length)paint();else{cleanFrameTimer=setTimeout(()=>{visible=0;paint();},1550);}},820);
+      const drawNext=()=>{
+        if(visible<paths.length){
+          paths[visible].classList.add('shown');
+          visible++;
+          cleanFrameTimer=setTimeout(drawNext,700);
+        }else{
+          cleanFrameTimer=setTimeout(()=>{
+            paths.forEach(path=>{path.classList.add('reset');path.classList.remove('shown');});
+            void svg.offsetWidth;
+            paths.forEach(path=>path.classList.remove('reset'));
+            visible=0;
+            cleanFrameTimer=setTimeout(drawNext,320);
+          },1600);
+        }
       };
-      paint();
+      drawNext();
     }
     const cleanFrameStyle=document.createElement('style');
     cleanFrameStyle.textContent=`
-      .clean-kanji-frame{position:absolute;inset:0;width:100%;height:100%;z-index:2}.clean-kanji-frame path{fill:none;stroke:#a9140c;stroke-width:13;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .15s ease-out;filter:drop-shadow(.35px .55px .18px #6a090650)}.clean-kanji-frame path.shown{opacity:1}.writing-grid .writing-char,.writing-grid .kanji-stroke-svg{display:none!important}.writing-grid{background:#fff!important}
+      .clean-kanji-frame{position:absolute;inset:0;width:100%;height:100%;z-index:2}.clean-kanji-frame path{fill:none;stroke:#a9140c;stroke-width:7.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset .68s cubic-bezier(.22,.75,.25,1),opacity .12s linear;filter:drop-shadow(.35px .55px .18px #6a090650)}.clean-kanji-frame path.shown{opacity:1;stroke-dashoffset:0}.clean-kanji-frame path.reset{transition:none}.writing-grid .writing-char,.writing-grid .kanji-stroke-svg{display:none!important}.writing-grid{background:#fff!important}
     `;
     document.head.appendChild(cleanFrameStyle);
     renderKanjiLesson=()=>{
@@ -766,7 +776,7 @@
   </script><script>
     const elegantInkStyle=document.createElement('style');
     elegantInkStyle.textContent=`
-      .writing-grid{background:linear-gradient(145deg,#fffefb,#f7f1e7)!important;border:1px solid #decdb4!important;box-shadow:0 12px 28px #40210d14,inset 0 0 0 8px #ffffff80!important}.clean-kanji-frame path{stroke:#9f1c14!important;stroke-width:9.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;filter:drop-shadow(.25px .45px .15px #65100b55)!important;transition:opacity .42s cubic-bezier(.22,.75,.25,1)!important}.clean-kanji-frame path.shown{animation:ink-settle .42s cubic-bezier(.22,.75,.25,1) both}@keyframes ink-settle{0%{opacity:0;stroke-width:7.2}65%{opacity:1;stroke-width:10.4}100%{opacity:1;stroke-width:9.8}}.stroke-badge{background:linear-gradient(135deg,#b72b1f,#86120d)!important;box-shadow:0 4px 10px #7b1a1466!important}.animation-note{font-style:italic;letter-spacing:.1px}
+      .writing-grid{background:linear-gradient(145deg,#fffefb,#f7f1e7)!important;border:1px solid #decdb4!important;box-shadow:0 12px 28px #40210d14,inset 0 0 0 8px #ffffff80!important}.clean-kanji-frame path{stroke:#9f1c14!important;stroke-width:7.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;filter:drop-shadow(.25px .45px .15px #65100b55)!important;transition:stroke-dashoffset .72s cubic-bezier(.22,.75,.25,1),opacity .18s ease-out!important}.clean-kanji-frame path.reset{transition:none!important}.clean-kanji-frame path.shown{animation:ink-settle .72s cubic-bezier(.22,.75,.25,1) both}@keyframes ink-settle{0%{stroke-width:6.4}55%{stroke-width:9.2}100%{stroke-width:7.8}}.stroke-badge{background:linear-gradient(135deg,#b72b1f,#86120d)!important;box-shadow:0 4px 10px #7b1a1466!important}.animation-note{font-style:italic;letter-spacing:.1px}
     `;
     document.head.appendChild(elegantInkStyle);
   </script><script>
