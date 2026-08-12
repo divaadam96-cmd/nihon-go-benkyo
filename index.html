@@ -799,7 +799,7 @@
     const memoryHome=document.getElementById('memorization');
     if(memoryHome){
       const memoryHead=memoryHome.querySelector('.head');
-      if(memoryHead)memoryHead.insertAdjacentHTML('afterend','<div class="memory-routes"><button class="memory-route" data-memory="hiragana"><span class="route-icon">あ</span><b>Hiragana dan Katakana</b><small>Latihan membaca, menulis, kata pendek, dan cerita sederhana.</small></button><button class="memory-route" data-memory="noun"><span class="route-icon">語</span><b>Masteri Kosakata</b><small>Hafalkan arti bahasa Indonesia untuk kata benda, sifat, dan kerja.</small></button><button class="memory-route" data-memory="kanji"><span class="route-icon">漢</span><b>Spesialis Kanji</b><small>Hafalkan cara baca dan lanjutkan ke Onyomi, Kunyomi, serta contoh kata.</small></button></div>');
+      if(memoryHead)memoryHead.insertAdjacentHTML('afterend','<div class="memory-routes"><button class="memory-route" data-memory="hiragana"><span class="route-icon">あ</span><b>Hiragana dan Katakana</b><small>Latihan membaca, menulis, kata pendek, dan cerita sederhana.</small></button><button class="memory-route" data-memory="noun"><span class="route-icon">語</span><b>Masteri Kosakata</b><small>Hafalkan arti bahasa Indonesia untuk semua kata, per Bab.</small></button><button class="memory-route" data-memory="kanji"><span class="route-icon">漢</span><b>Spesialis Kanji</b><small>Hafalkan cara baca kanji dari daftar kosakata, per Bab.</small></button></div><p class="hafalan-panel-hint" id="hafalanPanelHint">Pilih salah satu di atas untuk mulai belajar.</p>');
       const filterBox=memoryHome.querySelector('.filters');
       if(filterBox){
         filterBox.innerHTML='<span class="study-section-label">Hiragana dan Katakana</span><button class="filter" data-category="hiragana">Hiragana</button><button class="filter" data-category="katakana">Katakana</button><span class="study-section-label">Masteri Kosakata</span><button class="filter active" data-category="noun">Kata benda</button><button class="filter" data-category="adjective">Kata sifat</button><button class="filter" data-category="verb">Kata kerja</button><span class="study-section-label">Hafalan Kanji</span><button class="filter" data-category="kanji">Cara baca kanji</button>';
@@ -1221,6 +1221,9 @@ const babKanjiData={
       .bab-select{border:1px solid #ded9d0;background:#fffdf9;color:#3a4252;border-radius:20px;padding:8px 13px;font:600 12px "DM Sans";cursor:pointer}
       .bab-note{color:var(--muted);font-size:11px;margin:8px 0 10px}
       .bab-total-info{color:#7a6a3f;background:#f8f2e3;border:1px solid #e7d9b8;border-radius:7px;padding:8px 11px;font-size:11px;line-height:1.5;margin:2px 0 16px}
+      .hafalan-hidden{display:none!important}
+      .memory-route.active{border-color:#142945;background:#f0ebe1;box-shadow:0 9px 20px #4d351522}
+      .hafalan-panel-hint{color:var(--muted);font-size:12px;margin:0 0 18px;text-align:center;padding:14px;border:1px dashed #d8cfba;border-radius:10px}
     `;
     document.head.appendChild(babFlashStyle);
     const memorizationView=document.getElementById('memorization');
@@ -1250,6 +1253,7 @@ const babKanjiData={
           babMode=button.dataset.mode;
           filterBox2.querySelectorAll('[data-mode]').forEach(other=>other.classList.toggle('active',other===button));
           applyBabCategory();
+          showHafalanPanel('flash');
         });
         renderCard=()=>{
           const list=deck[category]||[];
@@ -1278,14 +1282,43 @@ const babKanjiData={
           document.getElementById('masterPct').textContent=p+'%';
           document.getElementById('masterBar').style.width=p+'%';
         };
+        const flashLayoutEl=memorizationView.querySelector('.flash-layout');
+        const kanaCurriculumEl=memorizationView.querySelector('.kana-curriculum');
+        const panelHintEl=memorizationView.querySelector('#hafalanPanelHint');
+        const routeButtons=Array.from(memorizationView.querySelectorAll('.memory-route'));
+        function showHafalanPanel(which){
+          if(flashLayoutEl)flashLayoutEl.classList.toggle('hafalan-hidden',which!=='flash');
+          if(kanaCurriculumEl)kanaCurriculumEl.classList.toggle('hafalan-hidden',which!=='kana');
+          if(panelHintEl)panelHintEl.classList.toggle('hafalan-hidden',!!which);
+          routeButtons.forEach(button=>button.classList.toggle('active',
+            (which==='kana'&&button.dataset.memory==='hiragana')||
+            (which==='flash'&&babMode==='kosakata'&&button.dataset.memory==='noun')||
+            (which==='flash'&&babMode==='kanji'&&button.dataset.memory==='kanji')
+          ));
+        }
+        showHafalanPanel(null);
+        const hiraganaRoute=memorizationView.querySelector('[data-memory="hiragana"]');
+        if(hiraganaRoute)hiraganaRoute.onclick=()=>{
+          showHafalanPanel('kana');
+          if(kanaCurriculumEl)kanaCurriculumEl.scrollIntoView({behavior:'smooth',block:'start'});
+        };
         const nounRoute=memorizationView.querySelector('[data-memory="noun"]');
         if(nounRoute)nounRoute.onclick=()=>{
           babMode='kosakata';
           filterBox2.querySelectorAll('[data-mode]').forEach(other=>other.classList.toggle('active',other.dataset.mode==='kosakata'));
           babSelectEl.value='1';
           applyBabCategory();
-          const layout=memorizationView.querySelector('.flash-layout');
-          if(layout)layout.scrollIntoView({behavior:'smooth',block:'start'});
+          showHafalanPanel('flash');
+          if(flashLayoutEl)flashLayoutEl.scrollIntoView({behavior:'smooth',block:'start'});
+        };
+        const kanjiRoute=memorizationView.querySelector('[data-memory="kanji"]');
+        if(kanjiRoute)kanjiRoute.onclick=()=>{
+          babMode='kanji';
+          filterBox2.querySelectorAll('[data-mode]').forEach(other=>other.classList.toggle('active',other.dataset.mode==='kanji'));
+          babSelectEl.value='1';
+          applyBabCategory();
+          showHafalanPanel('flash');
+          if(flashLayoutEl)flashLayoutEl.scrollIntoView({behavior:'smooth',block:'start'});
         };
         applyBabCategory();
       }
