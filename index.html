@@ -1140,6 +1140,7 @@ const babKanjiData={
       .bab-filter-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:2px}
       .bab-select{border:1px solid #ded9d0;background:#fffdf9;color:#3a4252;border-radius:20px;padding:8px 13px;font:600 12px "DM Sans";cursor:pointer}
       .bab-note{color:var(--muted);font-size:11px;margin:8px 0 16px}
+      .bab-total-info{color:#7a6a3f;background:#f8f2e3;border:1px solid #e7d9b8;border-radius:7px;padding:8px 11px;font-size:11px;line-height:1.5;margin:2px 0 14px}
     `;
     document.head.appendChild(babFlashStyle);
     const memorizationView=document.getElementById('memorization');
@@ -1149,13 +1150,20 @@ const babKanjiData={
         let babOptions='';
         for(let n=1;n<=MAX_BAB_LOADED;n++)babOptions+='<option value="'+n+'">Bab '+n+'</option>';
         filterBox2.insertAdjacentHTML('afterend','<p class="bab-note">Kosakata dan kanji diambil dari daftar kata Minna no Nihongo. Bab 1-'+MAX_BAB_LOADED+' tersedia, bab berikutnya menyusul.</p>');
-        filterBox2.innerHTML='<span class="study-section-label">Hafalan per Bab (Minna no Nihongo)</span><div class="bab-filter-row"><select id="babSelect" class="bab-select" aria-label="Pilih Bab">'+babOptions+'</select><button class="filter active" data-mode="kosakata">Kosakata</button><button class="filter" data-mode="kanji">Kanji</button></div>';
+        filterBox2.innerHTML='<span class="study-section-label">Hafalan per Bab (Minna no Nihongo)</span><div class="bab-filter-row"><select id="babSelect" class="bab-select" aria-label="Pilih Bab">'+babOptions+'</select><button class="filter active" data-mode="kosakata">Kosakata</button><button class="filter" data-mode="kanji">Kanji</button></div><p class="bab-total-info" id="babTotalInfo"></p>';
         const babSelectEl=filterBox2.querySelector('#babSelect');
+        const babTotalInfoEl=filterBox2.querySelector('#babTotalInfo');
         let babMode='kosakata';
         function applyBabCategory(){
           category='bab'+babSelectEl.value+'-'+babMode;
           index=0;state.mastered=0;
           renderCard();updateMaster();
+          if(babTotalInfoEl){
+            const n=babSelectEl.value;
+            const kCount=(babKosakataData[n]||[]).length;
+            const jCount=(babKanjiData[n]||[]).length;
+            babTotalInfoEl.textContent='Bab '+n+' berisi '+(kCount+jCount)+' kata total dari PDF: '+kCount+' kosakata (tanpa kanji) + '+jCount+' kanji. Semua sudah tersedia, terbagi di dua tombol di atas.';
+          }
         }
         babSelectEl.onchange=applyBabCategory;
         filterBox2.querySelectorAll('[data-mode]').forEach(button=>button.onclick=()=>{
