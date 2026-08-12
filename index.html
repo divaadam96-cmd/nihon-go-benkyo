@@ -799,7 +799,7 @@
     const memoryHome=document.getElementById('memorization');
     if(memoryHome){
       const memoryHead=memoryHome.querySelector('.head');
-      if(memoryHead)memoryHead.insertAdjacentHTML('afterend','<div class="memory-routes"><button class="memory-route" data-memory="hiragana"><span class="route-icon">あ</span><b>Hiragana dan Katakana</b><small>Latihan membaca, menulis, kata pendek, dan cerita sederhana.</small></button><button class="memory-route" data-memory="noun"><span class="route-icon">語</span><b>Masteri Kosakata</b><small>Hafalkan arti bahasa Indonesia untuk semua kata, per Bab.</small></button><button class="memory-route" data-memory="kanji"><span class="route-icon">漢</span><b>Spesialis Kanji</b><small>Hafalkan cara baca kanji dari daftar kosakata, per Bab.</small></button></div><p class="hafalan-panel-hint" id="hafalanPanelHint">Pilih salah satu di atas untuk mulai belajar.</p>');
+      if(memoryHead)memoryHead.insertAdjacentHTML('afterend','<div class="memory-routes"><button class="memory-route" data-memory="hiragana"><span class="route-icon">あ</span><b>Hiragana dan Katakana</b><small>Latihan membaca, menulis, kata pendek, dan cerita sederhana.</small></button><button class="memory-route" data-memory="noun"><span class="route-icon">語</span><b>Masteri Kosakata</b><small>Hafalkan arti bahasa Indonesia untuk semua kata, per Bab.</small></button><button class="memory-route" data-memory="kanji"><span class="route-icon">漢</span><b>Spesialis Kanji</b><small>Hafalkan cara baca dan lanjutkan ke Onyomi, Kunyomi, serta contoh kata.</small></button></div><p class="hafalan-panel-hint" id="hafalanPanelHint">Pilih salah satu di atas untuk mulai belajar.</p>');
       const filterBox=memoryHome.querySelector('.filters');
       if(filterBox){
         filterBox.innerHTML='<span class="study-section-label">Hiragana dan Katakana</span><button class="filter" data-category="hiragana">Hiragana</button><button class="filter" data-category="katakana">Katakana</button><span class="study-section-label">Masteri Kosakata</span><button class="filter active" data-category="noun">Kata benda</button><button class="filter" data-category="adjective">Kata sifat</button><button class="filter" data-category="verb">Kata kerja</button><span class="study-section-label">Hafalan Kanji</span><button class="filter" data-category="kanji">Cara baca kanji</button>';
@@ -1292,8 +1292,7 @@ const babKanjiData={
           if(panelHintEl)panelHintEl.classList.toggle('hafalan-hidden',!!which);
           routeButtons.forEach(button=>button.classList.toggle('active',
             (which==='kana'&&button.dataset.memory==='hiragana')||
-            (which==='flash'&&babMode==='kosakata'&&button.dataset.memory==='noun')||
-            (which==='flash'&&babMode==='kanji'&&button.dataset.memory==='kanji')
+            (which==='flash'&&button.dataset.memory==='noun')
           ));
         }
         showHafalanPanel(null);
@@ -1313,12 +1312,7 @@ const babKanjiData={
         };
         const kanjiRoute=memorizationView.querySelector('[data-memory="kanji"]');
         if(kanjiRoute)kanjiRoute.onclick=()=>{
-          babMode='kanji';
-          filterBox2.querySelectorAll('[data-mode]').forEach(other=>other.classList.toggle('active',other.dataset.mode==='kanji'));
-          babSelectEl.value='1';
-          applyBabCategory();
-          showHafalanPanel('flash');
-          if(flashLayoutEl)flashLayoutEl.scrollIntoView({behavior:'smooth',block:'start'});
+          open('kanji-study');
         };
         applyBabCategory();
       }
