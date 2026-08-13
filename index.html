@@ -4,7 +4,7 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Nihon GO Benkyo — Belajar Bahasa Jepang</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@500;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
   <meta name="theme-color" content="#142945">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="manifest" href="nihon-go-benkyo.webmanifest">
@@ -389,8 +389,11 @@
 
     const kanjiView=document.createElement('section');
     kanjiView.className='view';kanjiView.id='kanji-study';
-    kanjiView.innerHTML='<div class="head"><div><div class="eyebrow">Belajar karakter Jepang</div><h1>Kanji: tulis, baca, dan gunakan.</h1><p>Pelajari bentuk kanji, urutan penulisan, onyomi, kunyomi, serta contoh kata sehari-hari.</p></div></div><div class="kanji-study-grid"><article class="kanji-display"><div class="eyebrow">Cara menulis</div><div class="writing-grid"><span class="writing-char" id="kanjiCharacter"></span></div><div class="stroke-order" id="strokeOrder"></div></article><article class="card kanji-info"><div class="eyebrow" id="kanjiLevel">KANJI DASAR</div><h2 id="kanjiTitle"></h2><p id="kanjiMeaning" style="color:var(--muted);line-height:1.6;margin:0"></p><div class="reading-pills"><span class="reading-pill"><b>ONYOMI</b><span id="onyomi"></span></span><span class="reading-pill"><b>KUNYOMI</b><span id="kunyomi"></span></span></div><h3>Contoh bacaan</h3><div class="word-list" id="kanjiWords"></div><div class="kanji-controls"><button class="secondary" id="previousKanji">Kanji sebelumnya</button><button class="primary" id="nextKanji">Kanji berikutnya</button></div></article></div><div class="notice">Urutan penulisan dibaca dari atas ke bawah dan dari kiri ke kanan. Ikuti langkahnya perlahan, lalu tulis ulang kanji pada buku kotak-kotak.</div>';
+    kanjiView.innerHTML='<div class="head"><div><div class="eyebrow">Belajar karakter Jepang</div><h1 class="kanji-page-title">Mari Belajar Kanji</h1><p>Pelajari bentuk kanji, urutan penulisan, onyomi, kunyomi, serta contoh kata sehari-hari.</p></div></div><div class="kanji-study-grid"><article class="kanji-display"><div class="eyebrow">Cara menulis</div><div class="writing-grid"><span class="writing-char" id="kanjiCharacter"></span></div><div class="stroke-order" id="strokeOrder"></div></article><article class="card kanji-info"><div class="eyebrow" id="kanjiLevel">KANJI DASAR</div><h2 id="kanjiTitle"></h2><p id="kanjiMeaning" style="color:var(--muted);line-height:1.6;margin:0"></p><div class="reading-pills"><span class="reading-pill"><b>ONYOMI</b><span id="onyomi"></span></span><span class="reading-pill"><b>KUNYOMI</b><span id="kunyomi"></span></span></div><h3>Contoh bacaan</h3><div class="word-list" id="kanjiWords"></div><div class="kanji-controls"><button class="secondary" id="previousKanji">Kanji sebelumnya</button><button class="primary" id="nextKanji">Kanji berikutnya</button></div></article></div><div class="notice">Urutan penulisan dibaca dari atas ke bawah dan dari kiri ke kanan. Ikuti langkahnya perlahan, lalu tulis ulang kanji pada buku kotak-kotak.</div>';
     document.querySelector('.main').appendChild(kanjiView);
+    const kanjiTitleStyle=document.createElement('style');
+    kanjiTitleStyle.textContent=`.kanji-page-title{font-family:"Yuji Syuku","Zen Kaku Gothic New","Yu Mincho","Hiragino Mincho ProN","Noto Serif CJK JP",serif;font-weight:400;letter-spacing:.5px;color:var(--navy)}`;
+    document.head.appendChild(kanjiTitleStyle);
 
     const kanjiLessons=[
       {char:'\u5c71',meaning:'Gunung',on:'san, zan',kun:'yama',steps:'1. Tulis garis pendek di atas.  2. Tambahkan garis kiri.  3. Selesaikan garis kanan yang lebih panjang.',words:[['\u5bcc\u58eb\u5c71','fujisan - Gunung Fuji'],['\u706b\u5c71','kazan - gunung berapi'],['\u5c71\u5ddd','yamakawa - gunung dan sungai']]},
@@ -782,7 +785,7 @@
   </script><script>
     const curriculumStyle=document.createElement('style');
     curriculumStyle.textContent=`
-      .course-nav,.memory-routes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 18px}.course-switch,.memory-route{border:1px solid #dfd7cb;background:#fffdf9e8;border-radius:10px;padding:18px;text-align:left;color:var(--ink);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.course-switch:hover,.memory-route:hover{transform:translateY(-2px);border-color:#b99152;box-shadow:0 9px 20px #4d351510}.course-switch b,.memory-route b{display:block;color:var(--navy);font-size:16px;margin:4px 0 6px}.course-switch small,.memory-route small{color:var(--muted);line-height:1.55}.memory-routes{grid-template-columns:repeat(3,minmax(0,1fr))}.route-icon{font:600 23px "Zen Kaku Gothic New";color:#a27637}.exam-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.exam-card p{min-height:auto}@media(max-width:780px){.course-nav,.memory-routes,.exam-grid{grid-template-columns:1fr}}
+      .course-nav,.memory-routes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 18px}.course-switch,.memory-route{border:1px solid #dfd7cb;background:#fffdf9e8;border-radius:10px;padding:18px;text-align:left;color:var(--ink);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.course-switch:hover,.memory-route:hover{transform:translateY(-2px);border-color:#b99152;box-shadow:0 9px 20px #4d351510}.course-switch b,.memory-route b{display:block;color:var(--navy);font-size:16px;margin:4px 0 6px}.course-switch small,.memory-route small{color:var(--muted);line-height:1.55}.memory-routes{grid-template-columns:repeat(2,minmax(0,1fr))}.route-icon{font:600 23px "Zen Kaku Gothic New";color:#a27637}.exam-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.exam-card p{min-height:auto}@media(max-width:780px){.course-nav,.memory-routes,.exam-grid{grid-template-columns:1fr}}
     `;
     document.head.appendChild(curriculumStyle);
 
@@ -799,7 +802,7 @@
     const memoryHome=document.getElementById('memorization');
     if(memoryHome){
       const memoryHead=memoryHome.querySelector('.head');
-      if(memoryHead)memoryHead.insertAdjacentHTML('afterend','<div class="memory-routes"><button class="memory-route" data-memory="hiragana"><span class="route-icon">あ</span><b>Hiragana dan Katakana</b><small>Latihan membaca, menulis, kata pendek, dan cerita sederhana.</small></button><button class="memory-route" data-memory="noun"><span class="route-icon">語</span><b>Masteri Kosakata</b><small>Hafalkan arti bahasa Indonesia untuk semua kata, per Bab.</small></button><button class="memory-route" data-memory="kanji"><span class="route-icon">漢</span><b>Spesialis Kanji</b><small>Hafalkan cara baca dan lanjutkan ke Onyomi, Kunyomi, serta contoh kata.</small></button></div><p class="hafalan-panel-hint" id="hafalanPanelHint">Pilih salah satu di atas untuk mulai belajar.</p>');
+      if(memoryHead)memoryHead.insertAdjacentHTML('afterend','<div class="memory-routes"><button class="memory-route" data-memory="hiragana"><span class="route-icon">あ</span><b>Hiragana dan Katakana</b><small>Latihan membaca, menulis, kata pendek, dan cerita sederhana.</small></button><button class="memory-route" data-memory="noun"><span class="route-icon">語</span><b>Masteri Kosakata</b><small>Hafalkan arti bahasa Indonesia untuk semua kata, per Bab.</small></button></div><p class="hafalan-panel-hint" id="hafalanPanelHint">Pilih salah satu di atas untuk mulai belajar.</p>');
       const filterBox=memoryHome.querySelector('.filters');
       if(filterBox){
         filterBox.innerHTML='<span class="study-section-label">Hiragana dan Katakana</span><button class="filter" data-category="hiragana">Hiragana</button><button class="filter" data-category="katakana">Katakana</button><span class="study-section-label">Masteri Kosakata</span><button class="filter active" data-category="noun">Kata benda</button><button class="filter" data-category="adjective">Kata sifat</button><button class="filter" data-category="verb">Kata kerja</button><span class="study-section-label">Hafalan Kanji</span><button class="filter" data-category="kanji">Cara baca kanji</button>';
@@ -1309,10 +1312,6 @@ const babKanjiData={
           applyBabCategory();
           showHafalanPanel('flash');
           if(flashLayoutEl)flashLayoutEl.scrollIntoView({behavior:'smooth',block:'start'});
-        };
-        const kanjiRoute=memorizationView.querySelector('[data-memory="kanji"]');
-        if(kanjiRoute)kanjiRoute.onclick=()=>{
-          open('kanji-study');
         };
         applyBabCategory();
       }
