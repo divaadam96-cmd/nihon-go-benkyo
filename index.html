@@ -36,7 +36,7 @@
     <section class="view" id="flashcards"><div class="head"><div><div class="eyebrow">Hafalan interaktif</div><h1>Flashcard kosakata & kanji.</h1><p>Pilih kategori, klik kartu untuk melihat arti dan cara baca, lalu nilai pemahamanmu.</p></div></div><div class="flash-layout"><div><div class="filters"><button class="filter active" data-category="noun">Kata benda</button><button class="filter" data-category="verb">Kata kerja</button><button class="filter" data-category="adjective">Kata sifat</button><button class="filter" data-category="kanji">Baca kanji</button></div><div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Balik kartu flashcard"><div class="flash-inner"><div class="face"><div class="kana" id="front">学校</div><small>Klik kartu untuk melihat arti</small></div><div class="face back"><div><b id="back">sekolah</b><p id="reading">がっこう · gakkou</p></div></div></div></div><div class="flash-controls"><button class="secondary" id="again">Belum ingat</button><button class="primary" id="known">Sudah paham</button></div><div class="card-count" id="cardCount">Kartu 1 dari 5 · kata benda</div></div><aside class="card learning-tips"><h3>Catatan belajar</h3><p>Ucapkan kata di depan kartu terlebih dahulu. Setelah dibalik, baca furigana atau romaji lalu buat satu contoh kalimat sederhana.</p><hr><small>Penguasaan sesi ini</small><div style="display:flex;justify-content:space-between;margin:9px 0"><b id="mastered">0 kata</b><span id="masterPct">0%</span></div><div class="track"><div class="fill" id="masterBar" style="width:0%"></div></div></aside></div></section>
     <section class="view" id="test"><div class="head"><div><div class="eyebrow">Evaluasi kemampuan</div><h1>Simulasi tes bahasa Jepang.</h1><p>Pilih mode latihan sesuai targetmu. Hasil latihan akan menambah data perkembangan siswa.</p></div></div><div id="testStart" class="test-intro"><div class="mode-grid"><article class="card mode"><div class="eyebrow">Dasar · N5/N4</div><h2>Latihan gaya JLPT</h2><p>Soal kosakata, kanji, tata bahasa, dan pemahaman bacaan singkat.</p><ul><li>5 soal latihan</li><li>Skor dan pembahasan</li><li>Fokus kemampuan bahasa</li></ul><button class="primary" data-mode="jlpt">Mulai latihan</button></article><article class="card mode"><div class="eyebrow">Situasional · pemula</div><h2>Latihan gaya JFT</h2><p>Soal komunikasi praktis untuk pekerjaan dan kehidupan sehari-hari di Jepang.</p><ul><li>5 soal latihan</li><li>Fokus konteks sehari-hari</li><li>Hasil tersimpan lokal</li></ul><button class="primary" data-mode="jft">Mulai latihan</button></article></div><p class="disclaimer">Simulasi ini adalah latihan buatan sendiri, bukan ujian resmi atau materi resmi JLPT maupun JFT.</p></div><div id="quizArea" class="card question-box hidden"><small id="step"></small><div class="question" id="question"></div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button id="next" class="primary hidden">Soal berikutnya</button></div></section>
   </main></div>
-</div><div class="kitsune-wrap"><div id="kitsuneMessage" class="kitsune-message"><b>Kitsune Sensei</b>Klik aku untuk semangat belajar hari ini.</div><button id="kitsuneButton" class="kitsune-button" aria-label="Buka pesan dari Kitsune Sensei"><span id="kitsuneSprite" class="kitsune-sprite kitsune-anim-idle" role="img" aria-label="Kitsune Sensei, maskot rubah untuk belajar bahasa Jepang"></span><img id="kitsuneSleepImg" class="kitsune-sleep-img" src="kitsune-sleep.png" alt="Kitsune Sensei sedang tidur"></button></div><script>
+</div><div class="kitsune-wrap"><div id="kitsuneMessage" class="kitsune-message"><b>Kitsune Sensei</b>Klik aku untuk semangat belajar hari ini.</div><button id="kitsuneButton" class="kitsune-button" aria-label="Buka pesan dari Kitsune Sensei"><img id="kitsuneImg" src="kitsune-single.png" alt="Kitsune Sensei, maskot rubah untuk belajar bahasa Jepang"></button></div><script>
   const deck={noun:[['学校','sekolah','がっこう · gakkou'],['本','buku','ほん · hon'],['電車','kereta listrik','でんしゃ · densha'],['友達','teman','ともだち · tomodachi'],['会社','perusahaan','かいしゃ · kaisha']],verb:[['食べる','makan','たべる · taberu'],['飲む','minum','のむ · nomu'],['行く','pergi','いく · iku'],['見る','melihat','みる · miru'],['書く','menulis','かく · kaku']],adjective:[['大きい','besar','おおきい · ookii'],['小さい','kecil','ちいさい · chiisai'],['新しい','baru','あたらしい · atarashii'],['静か','tenang','しずか · shizuka'],['便利','praktis','べんり · benri']],kanji:[['山','gunung','やま · yama'],['川','sungai','かわ · kawa'],['人','orang','ひと · hito'],['時間','waktu','じかん · jikan'],['日本','Jepang','にほん · nihon']]};
   const quizzes={jlpt:[{q:'Apa arti kata 先生 (せんせい)?',a:['Siswa','Guru','Dokter','Teman'],c:1},{q:'Pilih partikel yang tepat: わたし___学生です。',a:['を','に','は','で'],c:2},{q:'Bagaimana membaca kanji 山?',a:['かわ','やま','ひと','ほん'],c:1},{q:'Apa bentuk sopan dari 食べる?',a:['食べます','食べた','食べない','食べて'],c:0},{q:'Kalimat 「きのう えいがを みました」 berarti…',a:['Besok menonton film','Kemarin menonton film','Sedang menonton film','Ingin menonton film'],c:1}],jft:[{q:'Di stasiun, arti 「次の電車は何時ですか」 adalah…',a:['Kereta berikutnya jam berapa?','Kereta ini ke mana?','Tiketnya berapa?','Di mana stasiunnya?'],c:0},{q:'Saat meminta tolong dengan sopan, pilihan yang tepat adalah…',a:['手伝ってください','手伝います','手伝った','手伝わない'],c:0},{q:'「ここに 名前を 書いてください」 berarti…',a:['Tolong baca nama di sini','Tolong tulis nama di sini','Tolong cari nama di sini','Tolong sebut nama di sini'],c:1},{q:'Jawaban yang tepat untuk 「ありがとうございます」 adalah…',a:['どういたしまして','いただきます','しつれいします','おやすみ'],c:0},{q:'「少し待ってください」 berarti…',a:['Tolong makan sedikit','Tolong tunggu sebentar','Tolong bicara pelan','Tolong pergi sekarang'],c:1}]};
   let state=JSON.parse(localStorage.getItem('nihonBenkyoProgress')||'{"xp":12540,"tasks":{},"mastered":0,"tests":[]}');let category='noun',index=0,quiz=[],qi=0,score=0;
@@ -2132,18 +2132,9 @@ const babKanjiData={
     /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, kitsune idle + bounce, grid muncul bertahap. */
     const animationEnhancementsStyle=document.createElement('style');
     animationEnhancementsStyle.textContent=`
-      .kitsune-message{display:none;position:absolute;right:100%;bottom:0;margin-right:10px;white-space:normal}
-      .kitsune-message.kitsune-msg-show{display:block}
-      @media(max-width:760px){.kitsune-message{right:auto;left:0;bottom:100%;margin-right:0;margin-bottom:10px}}
-      .kitsune-button{width:104px;height:118px;border:0;background:none;padding:0;cursor:pointer;position:relative;box-shadow:none;border-radius:0;overflow:visible}
-      .kitsune-sprite{display:block;width:100%;height:100%;background-repeat:no-repeat;image-rendering:-webkit-optimize-contrast}
-      .kitsune-sprite.kitsune-anim-idle{background-image:url(kitsune-strip-idle.png)}
-      .kitsune-sprite.kitsune-anim-walk{background-image:url(kitsune-strip-walk.png)}
-      .kitsune-sprite.kitsune-anim-wave{background-image:url(kitsune-strip-wave.png)}
-      .kitsune-button img.kitsune-sleep-img{display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-      .kitsune-button.kitsune-asleep .kitsune-sprite{display:none}
-      .kitsune-button.kitsune-asleep img.kitsune-sleep-img{display:block}
-      @media(max-width:610px){.kitsune-button{width:78px;height:89px}}
+      .kitsune-button{width:92px;height:92px;border:2px solid #d1aa63;background:none;padding:0;cursor:pointer;position:relative;box-shadow:0 8px 22px #10203736;border-radius:50%;overflow:hidden;transform-origin:50% 100%}
+      .kitsune-button img{width:100%;height:100%;display:block;object-fit:cover}
+      @media(max-width:610px){.kitsune-button{width:68px;height:68px}}
       @media (prefers-reduced-motion: no-preference){
         .sakura-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:4}
         .sakura-layer .petal{position:absolute;top:-40px;line-height:1;opacity:0;animation:sakura-fall linear infinite;will-change:transform,opacity}
@@ -2151,16 +2142,8 @@ const babKanjiData={
         .topnav{position:relative}
         .topnav button.active{border-bottom:2px solid transparent}
         .nav-indicator{position:absolute;bottom:0;height:2px;background:var(--gold);border-radius:2px;left:0;width:0;transition:left .32s cubic-bezier(.22,.75,.25,1),width .32s cubic-bezier(.22,.75,.25,1)}
-        .kitsune-wrap{left:0;top:0;right:auto;bottom:auto;transition:left 2.3s cubic-bezier(.45,.05,.3,1),top 2.3s cubic-bezier(.45,.05,.3,1)}
-        .kitsune-button{transform-origin:50% 100%}
-        .kitsune-sprite.kitsune-anim-idle{background-size:800% 100%;animation:kitsune-sprite-8 1.8s steps(8) infinite}
-        .kitsune-sprite.kitsune-anim-wave{background-size:800% 100%;animation:kitsune-sprite-8 .9s steps(8) 1}
-        .kitsune-sprite.kitsune-anim-walk{background-size:800% 100%;animation:kitsune-sprite-8 .7s steps(8) infinite}
-        @keyframes kitsune-sprite-8{from{background-position-x:0%}to{background-position-x:100%}}
-        .kitsune-button.kitsune-walk-anim{animation:kitsune-walk-hop .7s ease-in-out infinite}
-        @keyframes kitsune-walk-hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-        .kitsune-button.kitsune-asleep .kitsune-sleep-img{animation:kitsune-breathe 3s ease-in-out infinite}
-        @keyframes kitsune-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+        .kitsune-button{animation:kitsune-sway 2.4s ease-in-out infinite}
+        @keyframes kitsune-sway{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-5px) rotate(-4deg)}50%{transform:translateY(0) rotate(0deg)}75%{transform:translateY(-3px) rotate(4deg)}}
         .kitsune-button.kitsune-bounce{animation:kitsune-bounce .5s cubic-bezier(.34,1.56,.64,1)}
         @keyframes kitsune-bounce{0%{transform:scale(1)}35%{transform:scale(1.15)}60%{transform:scale(.95)}100%{transform:scale(1)}}
         .kanji-tile-grid .kanji-tile,.kana-table .kana-cell{opacity:0;transform:translateY(8px);animation:stagger-in .38s ease forwards}
@@ -2213,100 +2196,13 @@ const babKanjiData={
       if(document.fonts&&document.fonts.ready)document.fonts.ready.then(moveIndicator).catch(()=>{});
     })();
 
-    (function initKitsuneRoam(){
-      const wrap=document.querySelector('.kitsune-wrap');
+    (function initKitsuneBounce(){
       const btn=document.getElementById('kitsuneButton');
-      const sprite=document.getElementById('kitsuneSprite');
-      if(!wrap||!btn||!sprite)return;
-      let asleep=false;
-      let walking=false;
-      let sleepTimer=null,roamTimer=null,arriveTimer=null,msgHideTimer=null,waveTimer=null;
-      const msg=document.getElementById('kitsuneMessage');
-
-      function setSprite(anim){
-        sprite.classList.remove('kitsune-anim-idle','kitsune-anim-walk','kitsune-anim-wave');
-        sprite.classList.add('kitsune-anim-'+anim);
-      }
-      function setMoveAnim(cls){
-        btn.classList.remove('kitsune-walk-anim');
-        if(cls)btn.classList.add(cls);
-      }
-      function place(x,y){wrap.style.left=x+'px';wrap.style.top=y+'px';}
-      function currentPos(){
-        const rect=wrap.getBoundingClientRect();
-        return {x:rect.left,y:rect.top};
-      }
-      function randomTarget(){
-        const margin=16;
-        const w=wrap.offsetWidth||110,h=wrap.offsetHeight||110;
-        const maxX=Math.max(margin,window.innerWidth-w-margin);
-        const maxY=Math.max(150,window.innerHeight-h-100);
-        return {x:margin+Math.random()*(maxX-margin),y:140+Math.random()*(maxY-140)};
-      }
-      function bounce(){
+      if(!btn)return;
+      btn.addEventListener('click',()=>{
         btn.classList.remove('kitsune-bounce');
         void btn.offsetWidth;
         btn.classList.add('kitsune-bounce');
-      }
-      function goToRandom(){
-        if(asleep)return;
-        const from=currentPos();
-        const to=randomTarget();
-        walking=true;
-        clearTimeout(arriveTimer);
-        setSprite('walk');
-        setMoveAnim('kitsune-walk-anim');
-        sprite.style.transform=to.x<from.x?'scaleX(-1)':'scaleX(1)';
-        place(to.x,to.y);
-        arriveTimer=setTimeout(()=>{
-          walking=false;
-          setMoveAnim(null);
-          sprite.style.transform='';
-          if(!asleep)setSprite('idle');
-        },2400);
-      }
-      function scheduleRoam(){
-        clearTimeout(roamTimer);
-        roamTimer=setTimeout(()=>{goToRandom();scheduleRoam();},4500+Math.random()*4500);
-      }
-      function scheduleSleep(){
-        clearTimeout(sleepTimer);
-        sleepTimer=setTimeout(()=>{
-          asleep=true;
-          walking=false;
-          setMoveAnim(null);
-          sprite.style.transform='';
-          btn.classList.add('kitsune-asleep');
-        },60000);
-      }
-      btn.addEventListener('click',()=>{
-        asleep=false;
-        walking=false;
-        clearTimeout(arriveTimer);
-        clearTimeout(waveTimer);
-        btn.classList.remove('kitsune-asleep');
-        sprite.style.transform='';
-        setMoveAnim(null);
-        setSprite('wave');
-        bounce();
-        scheduleSleep();
-        if(msg){
-          msg.classList.add('kitsune-msg-show');
-          clearTimeout(msgHideTimer);
-          msgHideTimer=setTimeout(()=>msg.classList.remove('kitsune-msg-show'),4500);
-        }
-        waveTimer=setTimeout(()=>{if(!asleep&&!walking)setSprite('idle');},900);
       });
-      window.addEventListener('resize',()=>{
-        const pos=currentPos();
-        place(
-          Math.max(10,Math.min(pos.x,window.innerWidth-wrap.offsetWidth-10)),
-          Math.max(90,Math.min(pos.y,window.innerHeight-wrap.offsetHeight-10))
-        );
-      });
-      place(window.innerWidth-wrap.offsetWidth-24,window.innerHeight-wrap.offsetHeight-22);
-      setSprite('idle');
-      scheduleSleep();
-      scheduleRoam();
     })();
   </script></body></html>
