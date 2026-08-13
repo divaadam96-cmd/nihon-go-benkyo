@@ -2128,4 +2128,78 @@ const babKanjiData={
     document.body.appendChild(mobileNav);
     mobileNav.querySelectorAll('button').forEach(button=>button.onclick=()=>{open(button.dataset.mobileView);mobileNav.querySelectorAll('button').forEach(other=>other.classList.toggle('active',other===button));});
     if('serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+  </script><script>
+    /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, kitsune idle + bounce, grid muncul bertahap. */
+    const animationEnhancementsStyle=document.createElement('style');
+    animationEnhancementsStyle.textContent=`
+      @media (prefers-reduced-motion: no-preference){
+        .sakura-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:4}
+        .sakura-layer .petal{position:absolute;top:-40px;line-height:1;opacity:0;animation:sakura-fall linear infinite;will-change:transform,opacity}
+        @keyframes sakura-fall{0%{transform:translate(0,0) rotate(0deg);opacity:0}8%{opacity:.55}92%{opacity:.5}100%{transform:translate(var(--drift,40px),112vh) rotate(340deg);opacity:0}}
+        .topnav{position:relative}
+        .topnav button.active{border-bottom:2px solid transparent}
+        .nav-indicator{position:absolute;bottom:0;height:2px;background:var(--gold);border-radius:2px;left:0;width:0;transition:left .32s cubic-bezier(.22,.75,.25,1),width .32s cubic-bezier(.22,.75,.25,1)}
+        .kitsune-button{animation:kitsune-float 3.6s ease-in-out infinite}
+        @keyframes kitsune-float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-5px) rotate(-2deg)}}
+        .kitsune-button.kitsune-bounce{animation:kitsune-bounce .55s cubic-bezier(.34,1.56,.64,1)}
+        @keyframes kitsune-bounce{0%{transform:scale(1) rotate(0)}35%{transform:scale(1.22) rotate(8deg)}60%{transform:scale(.93) rotate(-4deg)}100%{transform:scale(1) rotate(0)}}
+        .kanji-tile-grid .kanji-tile,.kana-table .kana-cell{opacity:0;transform:translateY(8px);animation:stagger-in .38s ease forwards}
+        ${Array.from({length:24},(_,i)=>`.kanji-tile-grid .kanji-tile:nth-child(${i+1}){animation-delay:${i*28}ms}`).join('')}
+        .kanji-tile-grid .kanji-tile:nth-child(n+25){animation-delay:672ms}
+        ${Array.from({length:5},(_,i)=>`.kana-table .kana-cell:nth-child(${i+1}){animation-delay:${i*45}ms}`).join('')}
+        @keyframes stagger-in{to{opacity:1;transform:none}}
+      }
+    `;
+    document.head.appendChild(animationEnhancementsStyle);
+
+    (function initSakuraPetals(){
+      const layer=document.createElement('div');
+      layer.className='sakura-layer';
+      layer.setAttribute('aria-hidden','true');
+      for(let i=0;i<10;i++){
+        const petal=document.createElement('span');
+        petal.className='petal';
+        petal.textContent='🌸';
+        const duration=14+Math.random()*10;
+        petal.style.left=(Math.random()*100)+'vw';
+        petal.style.fontSize=(12+Math.random()*10)+'px';
+        petal.style.animationDuration=duration+'s';
+        petal.style.animationDelay=(Math.random()*-duration)+'s';
+        petal.style.setProperty('--drift',(Math.random()*80-40)+'px');
+        layer.appendChild(petal);
+      }
+      document.body.appendChild(layer);
+    })();
+
+    (function initNavIndicator(){
+      const nav=document.querySelector('.topnav');
+      if(!nav)return;
+      const indicator=document.createElement('span');
+      indicator.className='nav-indicator';
+      nav.appendChild(indicator);
+      function moveIndicator(){
+        const active=nav.querySelector('button.active');
+        if(!active)return;
+        indicator.style.left=active.offsetLeft+'px';
+        indicator.style.width=active.offsetWidth+'px';
+      }
+      const originalOpen=open;
+      open=function(view){
+        originalOpen(view);
+        requestAnimationFrame(moveIndicator);
+      };
+      window.addEventListener('resize',moveIndicator);
+      requestAnimationFrame(moveIndicator);
+      if(document.fonts&&document.fonts.ready)document.fonts.ready.then(moveIndicator).catch(()=>{});
+    })();
+
+    (function initKitsuneBounce(){
+      const btn=document.getElementById('kitsuneButton');
+      if(!btn)return;
+      btn.addEventListener('click',()=>{
+        btn.classList.remove('kitsune-bounce');
+        void btn.offsetWidth;
+        btn.classList.add('kitsune-bounce');
+      });
+    })();
   </script></body></html>
