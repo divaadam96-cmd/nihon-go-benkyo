@@ -1,5 +1,5 @@
 const CACHE_NAME = 'nihon-go-benkyo-v2';
-const ASSETS = ['index.html', 'nihon-go-benkyo.webmanifest', 'japan-paper-background.png', 'kitsune-mascot.png', 'logo.png'];
+const ASSETS = ['index.html', 'nihon-go-benkyo.webmanifest', 'japan-paper-background.png', 'logo.png', 'kitsune-wave.png', 'kitsune-cheer.png', 'kitsune-wink.png', 'kitsune-study.png', 'kitsune-sleep.png', 'kitsune-focus.png'];
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
