@@ -2132,6 +2132,9 @@ const babKanjiData={
     /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, kitsune idle + bounce, grid muncul bertahap. */
     const animationEnhancementsStyle=document.createElement('style');
     animationEnhancementsStyle.textContent=`
+      .kitsune-message{display:none;position:absolute;right:100%;bottom:0;margin-right:10px;white-space:normal}
+      .kitsune-message.kitsune-msg-show{display:block}
+      @media(max-width:760px){.kitsune-message{right:auto;left:0;bottom:100%;margin-right:0;margin-bottom:10px}}
       @media (prefers-reduced-motion: no-preference){
         .sakura-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:4}
         .sakura-layer .petal{position:absolute;top:-40px;line-height:1;opacity:0;animation:sakura-fall linear infinite;will-change:transform,opacity}
@@ -2139,16 +2142,16 @@ const babKanjiData={
         .topnav{position:relative}
         .topnav button.active{border-bottom:2px solid transparent}
         .nav-indicator{position:absolute;bottom:0;height:2px;background:var(--gold);border-radius:2px;left:0;width:0;transition:left .32s cubic-bezier(.22,.75,.25,1),width .32s cubic-bezier(.22,.75,.25,1)}
-        .kitsune-button{transform-origin:50% 100%;animation:kitsune-wave-move 2.1s ease-in-out infinite}
+        .kitsune-wrap{left:0;top:0;right:auto;bottom:auto;transition:left 2.3s cubic-bezier(.45,.05,.3,1),top 2.3s cubic-bezier(.45,.05,.3,1)}
+        .kitsune-button{transform-origin:50% 100%}
+        .kitsune-button.kitsune-idle-anim{animation:kitsune-wave-move 2.1s ease-in-out infinite}
         @keyframes kitsune-wave-move{0%,100%{transform:translateY(0) rotate(0deg)}20%{transform:translateY(-3px) rotate(-6deg)}40%{transform:translateY(-7px) rotate(5deg)}60%{transform:translateY(-3px) rotate(-4deg)}80%{transform:translateY(-6px) rotate(3deg)}}
+        .kitsune-button.kitsune-walk-anim{animation:kitsune-walk-bob .32s ease-in-out infinite}
+        @keyframes kitsune-walk-bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9px) rotate(4deg)}}
         .kitsune-button.kitsune-asleep{animation:kitsune-breathe 3s ease-in-out infinite}
         @keyframes kitsune-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
         .kitsune-button.kitsune-bounce{animation:kitsune-bounce .55s cubic-bezier(.34,1.56,.64,1)}
         @keyframes kitsune-bounce{0%{transform:scale(1) rotate(0)}35%{transform:scale(1.22) rotate(8deg)}60%{transform:scale(.93) rotate(-4deg)}100%{transform:scale(1) rotate(0)}}
-        .kitsune-runner{position:fixed;bottom:14px;left:-160px;width:110px;pointer-events:none;z-index:21;opacity:0}
-        .kitsune-runner.running{opacity:1;animation:kitsune-run-move 5s linear forwards,kitsune-run-bob .28s ease-in-out infinite}
-        @keyframes kitsune-run-move{from{left:-160px}to{left:100vw}}
-        @keyframes kitsune-run-bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-15px) rotate(3deg)}}
         .kanji-tile-grid .kanji-tile,.kana-table .kana-cell{opacity:0;transform:translateY(8px);animation:stagger-in .38s ease forwards}
         ${Array.from({length:24},(_,i)=>`.kanji-tile-grid .kanji-tile:nth-child(${i+1}){animation-delay:${i*28}ms}`).join('')}
         .kanji-tile-grid .kanji-tile:nth-child(n+25){animation-delay:672ms}
@@ -2199,60 +2202,100 @@ const babKanjiData={
       if(document.fonts&&document.fonts.ready)document.fonts.ready.then(moveIndicator).catch(()=>{});
     })();
 
-    (function initKitsunePoses(){
+    (function initKitsuneRoam(){
+      const wrap=document.querySelector('.kitsune-wrap');
       const btn=document.getElementById('kitsuneButton');
       const img=document.getElementById('kitsuneImg');
-      if(!btn||!img)return;
+      if(!wrap||!btn||!img)return;
       const idlePoses=['kitsune-wave.png','kitsune-wink.png','kitsune-focus.png'];
       let idleIndex=0;
-      let sleepTimer=null;
       let asleep=false;
+      let walking=false;
+      let sleepTimer=null,roamTimer=null,arriveTimer=null,msgHideTimer=null;
+      const msg=document.getElementById('kitsuneMessage');
+
+      function setAnim(cls){
+        btn.classList.remove('kitsune-idle-anim','kitsune-walk-anim','kitsune-asleep');
+        if(cls)btn.classList.add(cls);
+      }
+      function place(x,y){wrap.style.left=x+'px';wrap.style.top=y+'px';}
+      function currentPos(){
+        const rect=wrap.getBoundingClientRect();
+        return {x:rect.left,y:rect.top};
+      }
+      function randomTarget(){
+        const margin=16;
+        const w=wrap.offsetWidth||110,h=wrap.offsetHeight||110;
+        const maxX=Math.max(margin,window.innerWidth-w-margin);
+        const maxY=Math.max(150,window.innerHeight-h-100);
+        return {x:margin+Math.random()*(maxX-margin),y:140+Math.random()*(maxY-140)};
+      }
       function bounce(){
         btn.classList.remove('kitsune-bounce');
         void btn.offsetWidth;
         btn.classList.add('kitsune-bounce');
       }
+      function goToRandom(){
+        if(asleep)return;
+        const from=currentPos();
+        const to=randomTarget();
+        walking=true;
+        clearTimeout(arriveTimer);
+        setAnim('kitsune-walk-anim');
+        img.style.transform=to.x<from.x?'scaleX(-1)':'scaleX(1)';
+        img.src='kitsune-run.png';
+        place(to.x,to.y);
+        arriveTimer=setTimeout(()=>{
+          walking=false;
+          img.style.transform='';
+          if(!asleep){img.src=idlePoses[idleIndex];setAnim('kitsune-idle-anim');}
+        },2350);
+      }
+      function scheduleRoam(){
+        clearTimeout(roamTimer);
+        roamTimer=setTimeout(()=>{goToRandom();scheduleRoam();},4500+Math.random()*4500);
+      }
       function scheduleSleep(){
         clearTimeout(sleepTimer);
         sleepTimer=setTimeout(()=>{
           asleep=true;
+          walking=false;
+          img.style.transform='';
           img.src='kitsune-sleep.png';
-          btn.classList.add('kitsune-asleep');
+          setAnim('kitsune-asleep');
         },60000);
       }
       setInterval(()=>{
-        if(asleep)return;
+        if(asleep||walking)return;
         idleIndex=(idleIndex+1)%idlePoses.length;
         img.src=idlePoses[idleIndex];
       },5000);
       btn.addEventListener('click',()=>{
         asleep=false;
-        btn.classList.remove('kitsune-asleep');
+        walking=false;
+        clearTimeout(arriveTimer);
+        img.style.transform='';
         img.src='kitsune-cheer.png';
         bounce();
+        setAnim('kitsune-idle-anim');
         scheduleSleep();
-        setTimeout(()=>{if(!asleep)img.src=idlePoses[idleIndex];},1300);
+        if(msg){
+          msg.classList.add('kitsune-msg-show');
+          clearTimeout(msgHideTimer);
+          msgHideTimer=setTimeout(()=>msg.classList.remove('kitsune-msg-show'),4500);
+        }
+        setTimeout(()=>{if(!asleep&&!walking)img.src=idlePoses[idleIndex];},1300);
       });
+      window.addEventListener('resize',()=>{
+        const pos=currentPos();
+        place(
+          Math.max(10,Math.min(pos.x,window.innerWidth-wrap.offsetWidth-10)),
+          Math.max(90,Math.min(pos.y,window.innerHeight-wrap.offsetHeight-10))
+        );
+      });
+      place(window.innerWidth-wrap.offsetWidth-24,window.innerHeight-wrap.offsetHeight-22);
+      setAnim('kitsune-idle-anim');
       scheduleSleep();
-    })();
-
-    (function initKitsuneRunner(){
-      const runner=document.createElement('img');
-      runner.className='kitsune-runner';
-      runner.src='kitsune-run.png';
-      runner.alt='';
-      runner.setAttribute('aria-hidden','true');
-      document.body.appendChild(runner);
-      function runAcross(){
-        runner.classList.remove('running');
-        void runner.offsetWidth;
-        runner.classList.add('running');
-      }
-      function scheduleRun(){
-        const delay=45000+Math.random()*45000;
-        setTimeout(()=>{runAcross();scheduleRun();},delay);
-      }
-      setTimeout(runAcross,8000);
-      scheduleRun();
+      scheduleRoam();
     })();
   </script></body></html>
