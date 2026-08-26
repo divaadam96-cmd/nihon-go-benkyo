@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Prototype Belajar Kanji · Nihon GO Benkyo</title>
+  <script>document.documentElement.classList.toggle("embed-mode", new URLSearchParams(location.search).get("embed") === "1");</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
@@ -31,7 +32,7 @@
   <main>
     <section class="hero">
       <div><span class="eyebrow">KANJI LEARNING PATH</span><h1>Belajar bentuk, bacaan, dan penggunaan.</h1><p>Pahami satu karakter melalui urutan goresan, kosakata, latihan menulis, dan pengulangan terjadwal.</p></div>
-      <div class="hero-stats"><article><span>Dikuasai</span><b>84</b></article><article><span>Dipantau</span><b>27</b></article><article><span>Streak</span><b>7 hari</b></article></div>
+      <div class="hero-stats"><article><span>Dikuasai</span><b id="masteredCount">0</b></article><article><span>Dipantau</span><b id="reviewCount">0</b></article><article><span>Streak</span><b>7 hari</b></article></div>
     </section>
 
     <section class="browser-card">
@@ -88,6 +89,6 @@
   <div class="mobile-nav"><button>⌂<span>Beranda</span></button><button>文<span>Materi</span></button><button class="active">漢<span>Kanji</span></button><button>試<span>Tes</span></button></div>
   <script src="data/kanji-data.js"></script>
   <script src="data/kanji-stroke-data.js"></script>
-  <script src="prototype-kanji-v2.js?v=12"></script>
+  <script src="prototype-kanji-v2.js?v=13"></script>
 </body>
 </html>

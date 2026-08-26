@@ -57,6 +57,19 @@ function setStatus(item, status) {
   values[item.char] = status;
   localStorage.setItem("kanjiPrototypeStatusV1", JSON.stringify(values));
   applyFilters();
+  updateHeroStats();
+}
+
+function updateHeroStats() {
+  let mastered = 0;
+  let review = 0;
+  kanjiLessons.forEach((item, index) => {
+    const status = statusFor(item, index);
+    if (status === "mastered") mastered++;
+    else if (status === "review") review++;
+  });
+  document.getElementById("masteredCount").textContent = mastered;
+  document.getElementById("reviewCount").textContent = review;
 }
 
 function updateCounts() {
@@ -586,16 +599,28 @@ function shuffledChoices(correct, pool, offset) {
   return values.slice(shift).concat(values.slice(0, shift));
 }
 
+function compoundWordFor(item) {
+  // Beberapa kanji punya entri "words" yang persis sama dengan karakternya
+  // sendiri (mis. 川 punya entri "川"). Kalau entri itu terpilih, soal
+  // kosakata jadi janggal (menampilkan kanji itu sendiri sebagai "kosakata")
+  // atau kosong total setelah bagian yang ditanya dihapus. Cari entri yang
+  // benar-benar berupa kata majemuk (bukan cuma karakter itu sendiri).
+  return (
+    item.words.find((entry) => entry[0] !== item.char) ||
+    item.words[0] || [item.char]
+  );
+}
+
 function quizData() {
   const item = kanjiLessons[activeIndex];
   const others = kanjiLessons.filter((candidate) => candidate !== item);
   if (quizIndex === 0) return { type: "PILIH ARTI YANG BENAR", display: item.char, question: "Apa arti kanji tersebut?", correct: item.meaning, choices: shuffledChoices(item.meaning, others.map((x) => x.meaning), activeIndex + 1) };
   if (quizIndex === 1) return { type: "PILIH CARA BACA", display: item.char, question: "Pilih kunyomi yang benar.", correct: item.kun, choices: shuffledChoices(item.kun, others.map((x) => x.kun), activeIndex + 2) };
   if (quizIndex === 2) {
-    const word = item.words[0]?.[0] || item.char;
+    const word = compoundWordFor(item)[0];
     return { type: "PILIH KANJI DALAM KOSAKATA", display: word, question: `Kanji utama manakah yang terdapat pada kosakata tersebut?`, correct: item.char, choices: shuffledChoices(item.char, others.map((x) => x.char), activeIndex + 3) };
   }
-  const word = item.words[1]?.[0] || item.words[0]?.[0] || item.char;
+  const word = compoundWordFor(item)[0];
   return { type: "LENGKAPI KOSAKATA", display: word.replace(item.char, "（　）"), question: `Pilih kanji yang melengkapi kosakata dengan arti “${item.meaning}”.`, correct: item.char, choices: shuffledChoices(item.char, others.map((x) => x.char), activeIndex) };
 }
 
@@ -726,4 +751,5 @@ document.querySelectorAll(".topbar nav button").forEach((button, index) => {
 
 updateCounts();
 applyFilters();
+updateHeroStats();
 selectKanji(0);
