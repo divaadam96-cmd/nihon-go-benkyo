@@ -135,10 +135,6 @@ function openLesson(index,scroll=false){
   document.getElementById("readerGoal").textContent=goal;
   const fallbackPattern=`<section class="pattern-card"><span class="pattern-index">MEMUAT MATERI LENGKAP</span><h3>${title}</h3><p>${goal} Seluruh pola dari materi asli akan muncul setelah sumber selesai dimuat.</p><div class="formula">${formula}</div><div class="example"><span class="example-label">CONTOH</span><div><b>${japanese}</b><span>${meaning}</span></div></div></section>`;
   renderCompletePatterns(currentLesson,fallbackPattern);
-  checkQuestions=buildCheckQuestions(currentLesson);
-  checkQuestionIndex=0;
-  checkScore=0;
-  renderCheckQuiz();
   document.getElementById("previousLesson").disabled=currentLesson===0;
   document.getElementById("nextLesson").disabled=currentLesson===24;
   renderGrid();
@@ -176,11 +172,6 @@ document.getElementById("previousLesson").onclick=()=>openLesson(currentLesson-1
 document.getElementById("nextLesson").onclick=()=>openLesson(currentLesson+1,true);
 document.getElementById("markRepeat").onclick=()=>{status[currentLesson]="repeat";renderGrid()};
 document.getElementById("markUnderstood").onclick=()=>{status[currentLesson]="done";renderGrid();if(currentLesson<24)openLesson(currentLesson+1,true)};
-document.getElementById("nextCheck").onclick=()=>{
-  if(checkQuestionIndex===checkQuestions.length-1){checkQuestionIndex=0;checkScore=0}
-  else checkQuestionIndex+=1;
-  renderCheckQuiz();
-};
 document.querySelectorAll("[data-learning-step]").forEach((button)=>{
   button.onclick=()=>setLearningStep(button.dataset.learningStep);
 });
