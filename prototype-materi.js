@@ -108,21 +108,75 @@ function getFullLessonContent(index){
   return root.querySelectorAll(".html-course > .html-lesson")[index]?.querySelector(".html-content") || null;
 }
 
+let currentPatternNodes=[];
+let currentPatternIndex=0;
+
 function renderCompletePatterns(index,fallback){
-  const patternList=document.getElementById("patternList");
   const sourceContent=getFullLessonContent(index);
-  if(!sourceContent){
-    patternList.innerHTML=fallback;
-    return;
+  const grammarPoints=sourceContent?[...sourceContent.querySelectorAll(":scope > .grammar-point")]:[];
+  const listPoints=grammarPoints.length?[]:(sourceContent?[...sourceContent.querySelectorAll(":scope > .lesson-points > li")]:[]);
+  const nodes=grammarPoints.length?grammarPoints:listPoints;
+  if(!nodes.length){
+    currentPatternNodes=[fallback];
+  }else{
+    currentPatternNodes=nodes.map(node=>{
+      const clone=node.cloneNode(true);
+      clone.classList.add("prototype-full-content");
+      clone.querySelectorAll(".lesson-quiz,.html-note,.lesson-dialog-example").forEach(element=>element.remove());
+      return clone;
+    });
   }
-  const clonedContent=sourceContent.cloneNode(true);
-  clonedContent.classList.add("prototype-full-content");
-  clonedContent.querySelectorAll(".lesson-quiz,.html-note,.lesson-dialog-example").forEach(element=>element.remove());
-  const note=document.createElement("p");
-  note.className="full-pattern-note";
-  const totalPatterns=clonedContent.querySelectorAll(":scope > .grammar-point, :scope > .lesson-points > li").length;
-  note.textContent=`✓ Seluruh ${totalPatterns || ""} pola dan poin materi asli ditampilkan tanpa dikurangi.`;
-  patternList.replaceChildren(note,clonedContent);
+  currentPatternIndex=0;
+  showPattern();
+}
+
+function showPattern(){
+  const patternList=document.getElementById("patternList");
+  const total=currentPatternNodes.length;
+  const item=currentPatternNodes[currentPatternIndex];
+  if(typeof item==="string"){
+    patternList.innerHTML=item;
+  }else{
+    patternList.replaceChildren(item.cloneNode(true));
+  }
+  document.getElementById("patternCounter").textContent=`POLA ${currentPatternIndex+1} DARI ${total}`;
+  document.getElementById("patternPrev").disabled=currentPatternIndex===0;
+  document.getElementById("patternNext").disabled=currentPatternIndex===total-1;
+}
+
+let currentExampleNodes=[];
+let currentExampleIndex=0;
+
+function renderExamples(index){
+  const lesson=lessons[index]||lessons[0];
+  const sourceContent=getFullLessonContent(index);
+  const examples=sourceContent?[...sourceContent.querySelectorAll(".grammar-example")]:[];
+  currentExampleNodes=examples.length?examples.map(example=>{
+    const clone=example.cloneNode(true);
+    const meaningEl=clone.querySelector(".grammar-meaning");
+    const meaning=meaningEl?meaningEl.textContent.trim():"";
+    if(meaningEl) meaningEl.remove();
+    return{japanese:clone.textContent.trim(),meaning};
+  }):[{japanese:lesson[2],meaning:lesson[3]}];
+  currentExampleIndex=0;
+  showExample();
+}
+
+function showExample(){
+  const container=document.getElementById("exampleCards");
+  const total=currentExampleNodes.length;
+  const item=currentExampleNodes[currentExampleIndex];
+  container.innerHTML=`<div class="example"><span class="example-label">CONTOH</span><div><b>${item.japanese}</b><span>Arti: ${item.meaning}</span></div></div>`;
+  document.getElementById("exampleCounter").textContent=`CONTOH ${currentExampleIndex+1} DARI ${total}`;
+  document.getElementById("examplePrev").disabled=currentExampleIndex===0;
+  document.getElementById("exampleNext").disabled=currentExampleIndex===total-1;
+}
+
+function renderCheckStep(index){
+  checkQuestions=buildCheckQuestions(index);
+  checkQuestionIndex=0;
+  checkScore=0;
+  renderCheckQuiz();
 }
 
 function renderGrid(){
@@ -152,6 +206,7 @@ function openLesson(index,scroll=false){
   document.getElementById("readerGoal").textContent=goal;
   const fallbackPattern=`<section class="pattern-card"><span class="pattern-index">MEMUAT MATERI LENGKAP</span><h3>${title}</h3><p>${goal} Seluruh pola dari materi asli akan muncul setelah sumber selesai dimuat.</p><div class="formula">${formula}</div><div class="example"><span class="example-label">CONTOH</span><div><b>${japanese}</b><span>${meaning}</span></div></div></section>`;
   renderCompletePatterns(currentLesson,fallbackPattern);
+  activateStepUI("patterns");
   document.getElementById("previousLesson").disabled=currentLesson===0;
   document.getElementById("nextLesson").disabled=currentLesson===24;
   renderGrid();
@@ -171,17 +226,48 @@ function updateProgress(){
   document.getElementById("progressRing").style.setProperty("--progress",`${percent}%`);
 }
 
-function setLearningStep(step, shouldScroll = true) {
-  const targets = {
-    patterns: document.getElementById("patternList"),
-    examples: document.querySelector("#patternList .grammar-example") || document.getElementById("patternList"),
-    check: document.querySelector(".micro-check"),
-  };
+function activateStepUI(step){
   document.querySelectorAll("[data-learning-step]").forEach((button) =>
     button.classList.toggle("active", button.dataset.learningStep === step),
   );
-  if (shouldScroll) targets[step]?.scrollIntoView({ behavior: "smooth", block: "start" });
+  document.querySelectorAll("[data-step-panel]").forEach((panel) =>
+    panel.classList.toggle("active", panel.dataset.stepPanel === step),
+  );
 }
+
+function setLearningStep(step) {
+  activateStepUI(step);
+  if (step === "examples") renderExamples(currentLesson);
+  if (step === "check") renderCheckStep(currentLesson);
+}
+
+function setFocusMode(on){
+  document.body.classList.toggle("focus-mode",on);
+  focusButton.classList.toggle("active",on);
+  focusButton.setAttribute("aria-pressed",String(on));
+  focusButton.querySelector(".focus-icon").textContent=on?"✕":"⛶";
+  focusButton.querySelector(".focus-label").textContent=on?"Keluar fokus":"Mode fokus";
+}
+
+const focusButton=document.getElementById("focusButton");
+focusButton.onclick=()=>setFocusMode(!document.body.classList.contains("focus-mode"));
+document.addEventListener("keydown",(event)=>{
+  if(event.key==="Escape"&&document.body.classList.contains("focus-mode")) setFocusMode(false);
+});
+
+document.getElementById("patternPrev").onclick=()=>{if(currentPatternIndex>0){currentPatternIndex--;showPattern();}};
+document.getElementById("patternNext").onclick=()=>{if(currentPatternIndex<currentPatternNodes.length-1){currentPatternIndex++;showPattern();}};
+document.getElementById("examplePrev").onclick=()=>{if(currentExampleIndex>0){currentExampleIndex--;showExample();}};
+document.getElementById("exampleNext").onclick=()=>{if(currentExampleIndex<currentExampleNodes.length-1){currentExampleIndex++;showExample();}};
+document.getElementById("nextCheck").onclick=()=>{
+  if(checkQuestionIndex===checkQuestions.length-1){
+    checkQuestionIndex=0;
+    checkScore=0;
+  }else{
+    checkQuestionIndex++;
+  }
+  renderCheckQuiz();
+};
 
 document.querySelectorAll("[data-open-lesson]").forEach(button=>button.onclick=()=>openLesson(Number(button.dataset.openLesson),true));
 document.getElementById("backToDirectory").onclick=()=>document.getElementById("lessonDirectory").scrollIntoView({behavior:"smooth"});
