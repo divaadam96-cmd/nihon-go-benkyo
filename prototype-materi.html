@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#132640">
   <title>Prototype Materi — Nihon GO Benkyo</title>
-  <link rel="stylesheet" href="prototype-materi.css?v=3">
+  <link rel="stylesheet" href="prototype-materi.css?v=4">
 </head>
 <body>
   <div class="prototype-app">
@@ -92,10 +92,12 @@
               <div class="pattern-list" id="patternList"></div>
 
               <section class="micro-check" aria-labelledby="checkTitle">
-                <div class="check-label">CEK PEMAHAMAN · 1 SOAL</div>
-                <h3 id="checkTitle">Pilih pola utama yang sesuai dengan pelajaran ini.</h3>
+                <div class="check-label">CEK PEMAHAMAN · 4 SOAL</div>
+                <p class="check-progress" id="checkProgress">Soal 1 dari 4</p>
+                <h3 id="checkTitle">Pilih jawaban yang paling tepat.</h3>
                 <div class="answer-grid" id="answerGrid"></div>
                 <p class="check-feedback" id="checkFeedback" aria-live="polite"></p>
+                <div class="check-footer"><span id="checkScore">Skor: 0 / 4</span><button class="check-next" id="nextCheck" type="button" hidden>Soal berikutnya →</button></div>
               </section>
 
               <footer class="reader-actions">
@@ -113,6 +115,6 @@
     </main>
   </div>
   <iframe class="source-frame" id="sourceApp" src="index.html?build=21&source=1" title="Sumber materi lengkap" aria-hidden="true" tabindex="-1"></iframe>
-  <script src="prototype-materi.js?v=3"></script>
+  <script src="prototype-materi.js?v=4"></script>
 </body>
 </html>

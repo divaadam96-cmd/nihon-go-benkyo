@@ -31,6 +31,51 @@ let currentLesson=0;
 const grid=document.getElementById("lessonGrid");
 const reader=document.getElementById("focusReader");
 const sourceFrame=document.getElementById("sourceApp");
+let checkQuestions=[];
+let checkQuestionIndex=0;
+let checkScore=0;
+
+function buildCheckQuestions(index){
+  const lesson=lessons[index]||lessons[0];
+  const [title,formula,japanese,meaning]=lesson;
+  return [
+    {type:"Partikel",prompt:`${title}: pilih partikel yang tepat.`,question:"わたし（　）学生です。",options:["は","を","に","で"],answer:0},
+    {type:"Susun kalimat",prompt:"Susun kalimat Jepang yang benar.",question:"Saya belajar bahasa Jepang.",options:["日本語を 勉強します。","勉強します 日本語を。","日本語が 勉強です。","日本語に 勉強します。"],answer:0},
+    {type:"Bahasa Jepang",prompt:"Pilih terjemahan bahasa Jepang yang tepat.",question:meaning,options:[japanese,"これは 先生です。","どこへ 行きますか。","本を 読みません。"],answer:0},
+    {type:"Lengkapi",prompt:`Lengkapi pola utama ${formula}.`,question:`${japanese} (pilih bentuk yang benar)`,options:[formula,"N を ください","Vては いけません","N が あります"],answer:0},
+  ];
+}
+
+function renderCheckQuiz(){
+  const question=checkQuestions[checkQuestionIndex];
+  const answerGrid=document.getElementById("answerGrid");
+  const nextButton=document.getElementById("nextCheck");
+  document.getElementById("checkProgress").textContent=`Soal ${checkQuestionIndex+1} dari ${checkQuestions.length}`;
+  document.getElementById("checkTitle").textContent=`${question.type}: ${question.prompt}`;
+  document.getElementById("checkFeedback").textContent="";
+  document.getElementById("checkScore").textContent=`Skor: ${checkScore} / ${checkQuestions.length}`;
+  nextButton.hidden=true;
+  nextButton.textContent=checkQuestionIndex===checkQuestions.length-1?"Ulangi tes":"Soal berikutnya →";
+  answerGrid.replaceChildren();
+  question.options.forEach((option,optionIndex)=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="answer-option";
+    button.innerHTML=`<b>${optionIndex+1}</b> <span></span>`;
+    button.querySelector("span").textContent=option;
+    button.onclick=()=>{
+      answerGrid.querySelectorAll("button").forEach((item)=>{item.disabled=true});
+      const correct=optionIndex===question.answer;
+      button.classList.add(correct?"correct":"wrong");
+      if(!correct) answerGrid.children[question.answer].classList.add("correct");
+      if(correct) checkScore+=1;
+      document.getElementById("checkFeedback").textContent=correct?"Benar. Penguasaan babmu bertambah.":"Belum tepat. Perhatikan pola yang ditandai hijau.";
+      document.getElementById("checkScore").textContent=`Skor: ${checkScore} / ${checkQuestions.length}`;
+      nextButton.hidden=false;
+    };
+    answerGrid.appendChild(button);
+  });
+}
 
 function getFullLessonContent(index){
   const sourceDocument=sourceFrame.contentDocument;
@@ -81,16 +126,10 @@ function openLesson(index,scroll=false){
   document.getElementById("readerGoal").textContent=goal;
   const fallbackPattern=`<section class="pattern-card"><span class="pattern-index">MEMUAT MATERI LENGKAP</span><h3>${title}</h3><p>${goal} Seluruh pola dari materi asli akan muncul setelah sumber selesai dimuat.</p><div class="formula">${formula}</div><div class="example"><span class="example-label">CONTOH</span><div><b>${japanese}</b><span>${meaning}</span></div></div></section>`;
   renderCompletePatterns(currentLesson,fallbackPattern);
-  const choices=[formula,"N を ください","Vては いけません"];
-  document.getElementById("answerGrid").innerHTML=choices.map((choice,i)=>`<button class="answer-option" type="button" data-correct="${i===0}">${choice}</button>`).join("");
-  document.getElementById("checkFeedback").textContent="";
-  document.querySelectorAll(".answer-option").forEach(option=>option.onclick=()=>{
-    document.querySelectorAll(".answer-option").forEach(item=>item.disabled=true);
-    const correct=option.dataset.correct==="true";
-    option.classList.add(correct?"correct":"wrong");
-    if(!correct) document.querySelector('[data-correct="true"]').classList.add("correct");
-    document.getElementById("checkFeedback").textContent=correct?"Benar. Pola utama sudah dikenali.":"Belum tepat. Pola yang benar sudah ditandai.";
-  });
+  checkQuestions=buildCheckQuestions(currentLesson);
+  checkQuestionIndex=0;
+  checkScore=0;
+  renderCheckQuiz();
   document.getElementById("previousLesson").disabled=currentLesson===0;
   document.getElementById("nextLesson").disabled=currentLesson===24;
   renderGrid();
@@ -128,6 +167,11 @@ document.getElementById("previousLesson").onclick=()=>openLesson(currentLesson-1
 document.getElementById("nextLesson").onclick=()=>openLesson(currentLesson+1,true);
 document.getElementById("markRepeat").onclick=()=>{status[currentLesson]="repeat";renderGrid()};
 document.getElementById("markUnderstood").onclick=()=>{status[currentLesson]="done";renderGrid();if(currentLesson<24)openLesson(currentLesson+1,true)};
+document.getElementById("nextCheck").onclick=()=>{
+  if(checkQuestionIndex===checkQuestions.length-1){checkQuestionIndex=0;checkScore=0}
+  else checkQuestionIndex+=1;
+  renderCheckQuiz();
+};
 document.querySelectorAll("[data-learning-step]").forEach((button)=>{
   button.onclick=()=>setLearningStep(button.dataset.learningStep);
 });
