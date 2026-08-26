@@ -2942,6 +2942,12 @@ if (new URLSearchParams(location.search).get("source") !== "1") {
     });
   }
 }
+if (new URLSearchParams(location.search).get("source") === "1") {
+  const sourceModeStyle = document.createElement("style");
+  sourceModeStyle.textContent = ".top,.side,.mobile-nav{display:none!important}.layout{display:block;min-height:0}.main{padding:0;background:transparent}.view{display:none!important}.view#materials{display:block!important}.view#materials .head,.view#materials>.material-grid,.view#materials>.notice{display:none!important}.view#materials{padding:0}.app{max-width:none;box-shadow:none;background:transparent}";
+  document.head.appendChild(sourceModeStyle);
+  open("materials");
+}
 const mobilePwaStyle = document.createElement("style");
 mobilePwaStyle.textContent = `.mobile-nav{display:none}@media(max-width:700px){.top{height:58px;padding:0 18px;position:sticky;top:0;z-index:30}.brand{font-size:16px}.brand small,.topnav,.identity,.side{display:none}.layout{display:block}.main{padding:20px 15px 92px;background-attachment:scroll}.head h1{font-size:25px}.overview{grid-template-columns:1fr 1fr;gap:10px}.overview .metric:first-child{grid-column:span 2}.metric b{font-size:23px}.card{padding:16px}.dashboard-grid,.flash-layout,.kana-grid,.memory-routes,.course-nav,.exam-grid{grid-template-columns:1fr}.mobile-nav{position:fixed;z-index:50;left:10px;right:10px;bottom:10px;height:64px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:#142945f5;border:1px solid #caa45d55;border-radius:17px;box-shadow:0 12px 28px #0b162b55;padding:4px}.mobile-nav button{border:0;background:transparent;color:#cbd4df;font:600 10px "DM Sans";display:grid;gap:3px;place-items:center;padding:6px 1px}.mobile-nav button span{font:700 18px "Zen Kaku Gothic New"}.mobile-nav button.active{color:#f7dfad}.flashcard{height:270px}.face .kana{font-size:58px}}`;
 document.head.appendChild(mobilePwaStyle);
@@ -2960,7 +2966,7 @@ mobileNav.querySelectorAll("button").forEach(
     }),
 );
 if ("serviceWorker" in navigator && location.protocol !== "file:")
-  navigator.serviceWorker.register("sw.js?build=29").catch(() => {});
+  navigator.serviceWorker.register("sw.js?build=30").catch(() => {});
 /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, grid muncul bertahap. */
 const animationEnhancementsStyle = document.createElement("style");
 animationEnhancementsStyle.textContent = `
