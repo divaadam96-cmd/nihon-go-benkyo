@@ -28,6 +28,7 @@ body{
 button,a{font:inherit}
 button{color:inherit}
 .source-frame{display:none!important}
+body.embed-mode .topbar,body.embed-mode .intro{display:none}body.embed-mode main{padding-top:18px}body.embed-mode .learning-layout{margin-top:0}
 .prototype-app{min-height:100vh}
 .topbar{
   position:sticky;

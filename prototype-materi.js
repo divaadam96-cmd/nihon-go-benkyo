@@ -1,3 +1,6 @@
+const materiEmbedMode = new URLSearchParams(location.search).get("embed") === "1";
+document.body.classList.toggle("embed-mode", materiEmbedMode);
+
 const lessons = [
   ["Kalimat nominal dasar","N1 は N2 です","わたしは 学生です。","Saya adalah pelajar.","Memperkenalkan diri dan menjelaskan identitas dengan kalimat sopan."],
   ["Kata tunjuk dan persamaan","これは N です","これは 辞書です。","Ini adalah kamus.","Menunjuk benda dan menjelaskan kepemilikan atau jenisnya."],
