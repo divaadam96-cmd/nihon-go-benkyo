@@ -2928,7 +2928,7 @@ if (kanjiStudyGridEl) {
 if (new URLSearchParams(location.search).get("source") !== "1") {
   const materialsView = document.getElementById("materials");
   if (materialsView) {
-    materialsView.innerHTML = '<iframe class="production-material-frame" data-src="prototype-materi.html?v=8&embed=1" title="Materi pembelajaran fokus" loading="lazy"></iframe>';
+    materialsView.innerHTML = '<iframe class="production-material-frame" data-src="prototype-materi.html?v=9&embed=1" title="Materi pembelajaran fokus" loading="lazy"></iframe>';
     const materialsFrame = materialsView.querySelector(".production-material-frame");
     materialsFrame.addEventListener("load", () => {
       const frameDocument = materialsFrame.contentDocument;

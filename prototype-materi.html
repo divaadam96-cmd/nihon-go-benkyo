@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#132640">
   <title>Prototype Materi — Nihon GO Benkyo</title>
-  <link rel="stylesheet" href="prototype-materi.css?v=8">
+  <link rel="stylesheet" href="prototype-materi.css?v=9">
 </head>
 <body class="materi-page">
   <div class="prototype-app">
@@ -48,6 +48,10 @@
             <b>Pelajaran 5</b>
             <p>Perjalanan dan perpindahan</p>
             <button type="button" data-open-lesson="4">Mulai belajar</button>
+          </div>
+          <div class="book-switcher" role="group" aria-label="Pilih buku">
+            <button class="active" type="button" data-book="1">Dasar — Buku 1</button>
+            <button type="button" data-book="2">Menengah — Buku 2</button>
           </div>
         </aside>
 
@@ -104,6 +108,6 @@
     </main>
   </div>
   <iframe class="source-frame" id="sourceApp" src="index.html?build=30&source=1" title="Sumber materi lengkap" aria-hidden="true" tabindex="-1"></iframe>
-  <script src="prototype-materi.js?v=8"></script>
+  <script src="prototype-materi.js?v=9"></script>
 </body>
 </html>

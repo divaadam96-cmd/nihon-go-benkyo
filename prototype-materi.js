@@ -34,6 +34,8 @@ let currentLesson=0;
 const grid=document.getElementById("lessonGrid");
 const reader=document.getElementById("focusReader");
 const sourceFrame=document.getElementById("sourceApp");
+let currentBook=1;
+const bookTwoLessons=Array.from({length:25},(_,index)=>`Materi menengah Pelajaran ${index+26}`);
 let checkQuestions=[];
 let checkQuestionIndex=0;
 let checkScore=0;
@@ -92,11 +94,12 @@ function renderCheckQuiz(){
 function getFullLessonContent(index){
   const sourceDocument=sourceFrame.contentDocument;
   if(!sourceDocument) return null;
+  const root=sourceDocument.querySelector(currentBook===1?"#materials":"#book2");
+  if(!root) return null;
   if(index===0){
-    return sourceDocument.querySelector("#materials .material-reader-body .html-content") ||
-      sourceDocument.querySelector("#materials .html-course > .html-lesson .html-content");
+    return root.querySelector(".material-reader-body .html-content") || root.querySelector(".html-course > .html-lesson .html-content");
   }
-  return sourceDocument.querySelectorAll("#materials .html-course > .html-lesson")[index]?.querySelector(".html-content") || null;
+  return root.querySelectorAll(".html-course > .html-lesson")[index]?.querySelector(".html-content") || null;
 }
 
 function renderCompletePatterns(index,fallback){
@@ -118,11 +121,14 @@ function renderCompletePatterns(index,fallback){
 
 function renderGrid(){
   grid.innerHTML="";
-  lessons.forEach((lesson,index)=>{
+  const sourceLessons=currentBook===1?lessons:bookTwoLessons;
+  const start=currentBook===1?1:26;
+  sourceLessons.forEach((lesson,index)=>{
     const button=document.createElement("button");
     button.type="button";
     button.className=`lesson-card ${status[index]}${currentLesson===index?" current":""}`;
-    button.innerHTML=`<span class="lesson-card-top"><span class="lesson-number">PELAJARAN ${String(index+1).padStart(2,"0")}</span><i class="lesson-status"></i></span><b>${lesson[0]}</b><small>${status[index]==="done"?"Sudah dipahami":status[index]==="repeat"?"Perlu diulang":"Belum dimulai"}</small>`;
+    const title=currentBook===1?lesson[0]:lesson;
+    button.innerHTML=`<span class="lesson-card-top"><span class="lesson-number">PELAJARAN ${String(start+index).padStart(2,"0")}</span><i class="lesson-status"></i></span><b>${title}</b><small>${status[index]==="done"?"Sudah dipahami":status[index]==="repeat"?"Perlu diulang":"Belum dimulai"}</small>`;
     button.onclick=()=>openLesson(index,true);
     grid.appendChild(button);
   });
@@ -131,9 +137,11 @@ function renderGrid(){
 
 function openLesson(index,scroll=false){
   currentLesson=Math.max(0,Math.min(lessons.length-1,index));
-  const [title,formula,japanese,meaning,goal]=lessons[currentLesson];
-  document.getElementById("readerPosition").textContent=`Pelajaran ${currentLesson+1} dari 25`;
-  document.getElementById("readerEyebrow").textContent=`PELAJARAN ${String(currentLesson+1).padStart(2,"0")} · MODE FOKUS`;
+  const lesson=currentBook===1?lessons[currentLesson]:[bookTwoLessons[currentLesson],"Pola tata bahasa buku 2","Materi lengkap Buku 2.","Pelajari materi menengah.","Memahami pola bahasa Jepang tingkat menengah."];
+  const [title,formula,japanese,meaning,goal]=lesson;
+  const number=(currentBook===1?1:26)+currentLesson;
+  document.getElementById("readerPosition").textContent=`Pelajaran ${number} dari ${currentBook===1?25:50}`;
+  document.getElementById("readerEyebrow").textContent=`PELAJARAN ${String(number).padStart(2,"0")} · ${currentBook===1?"DASAR":"MENENGAH"}`;
   document.getElementById("readerTitle").textContent=title;
   document.getElementById("readerGoal").textContent=goal;
   const fallbackPattern=`<section class="pattern-card"><span class="pattern-index">MEMUAT MATERI LENGKAP</span><h3>${title}</h3><p>${goal} Seluruh pola dari materi asli akan muncul setelah sumber selesai dimuat.</p><div class="formula">${formula}</div><div class="example"><span class="example-label">CONTOH</span><div><b>${japanese}</b><span>${meaning}</span></div></div></section>`;
@@ -175,6 +183,20 @@ document.getElementById("previousLesson").onclick=()=>openLesson(currentLesson-1
 document.getElementById("nextLesson").onclick=()=>openLesson(currentLesson+1,true);
 document.getElementById("markRepeat").onclick=()=>{status[currentLesson]="repeat";renderGrid()};
 document.getElementById("markUnderstood").onclick=()=>{status[currentLesson]="done";renderGrid();if(currentLesson<24)openLesson(currentLesson+1,true)};
+document.querySelectorAll("[data-book]").forEach((button)=>{
+  button.onclick=()=>{
+    currentBook=Number(button.dataset.book);
+    currentLesson=0;
+    document.querySelectorAll("[data-book]").forEach((item)=>item.classList.toggle("active",item===button));
+    document.getElementById("directoryTitle").textContent=currentBook===1?"Pelajaran 1–25":"Pelajaran 26–50";
+    document.getElementById("readerPosition").textContent=currentBook===1?"Pelajaran 1 dari 25":"Pelajaran 26 dari 50";
+    document.querySelector(".progress-panel h2").textContent=`Perjalanan ${currentBook===1?"Buku 1":"Buku 2"}`;
+    document.querySelector(".today-card b").textContent=currentBook===1?"Pelajaran 5":"Pelajaran 30";
+    document.querySelector(".today-card p").textContent=currentBook===1?"Perjalanan dan perpindahan":"Materi menengah";
+    renderGrid();
+    openLesson(0,false);
+  };
+});
 document.querySelectorAll("[data-learning-step]").forEach((button)=>{
   button.onclick=()=>setLearningStep(button.dataset.learningStep);
 });

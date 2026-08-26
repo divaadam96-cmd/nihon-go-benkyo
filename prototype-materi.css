@@ -29,6 +29,7 @@ button,a{font:inherit}
 button{color:inherit}
 .source-frame{display:none!important}
 body.embed-mode .topbar,body.embed-mode .intro{display:none}body.embed-mode main{padding-top:18px}body.embed-mode .learning-layout{margin-top:0}
+.book-switcher{display:grid;gap:6px;margin-top:18px}.book-switcher button{padding:10px 12px;border:1px solid #cdbd9e;border-radius:7px;background:#f5efe3;color:var(--muted);font:700 11px inherit;text-align:left;cursor:pointer}.book-switcher button.active{border-color:var(--green);background:#e2eee8;color:var(--navy-900)}
 .prototype-app{min-height:100vh}
 .topbar{
   position:sticky;
