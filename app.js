@@ -3294,7 +3294,7 @@ function initMaterialLessonPicker({
   reader.setAttribute("role", "tabpanel");
   reader.setAttribute("tabindex", "-1");
   reader.innerHTML =
-    `<div class="material-reader-toolbar"><button type="button" class="material-back-list">↑ Daftar pelajaran</button><span class="material-reader-position">Pelajaran ${startNumber} dari ${endNumber}</span></div><header class="material-reader-head"><div><div class="eyebrow material-reader-number"></div><h2 class="material-reader-title"></h2><p>Seluruh pola, penjelasan, dan contoh asli tetap ditampilkan.</p></div><span class="material-study-time">◷ 8–15 menit</span></header><div class="material-learning-steps" role="tablist" aria-label="Tahapan belajar"><button type="button" class="material-step active" data-material-step="patterns" role="tab" aria-selected="true"><b>1</b>Pahami semua pola</button><button type="button" class="material-step" data-material-step="examples" role="tab" aria-selected="false"><b>2</b>Pelajari contoh</button><button type="button" class="material-step" data-material-step="practice" role="tab" aria-selected="false"><b>3</b>Kerjakan latihan</button></div><div class="material-completeness">✓ Materi lengkap—tidak ada pola yang dikurangi.</div><div class="material-reader-body material-step-panel" data-material-panel="patterns"></div><section class="material-example-study material-step-panel" data-material-panel="examples" hidden></section><section class="material-practice-study material-step-panel" data-material-panel="practice" hidden></section><footer class="material-reader-actions"><button type="button" class="material-secondary-action material-previous">← Sebelumnya</button><div><button type="button" class="material-repeat-action material-mark-repeat">Perlu diulang</button><button type="button" class="material-primary-action material-mark-understood">Sudah paham ✓</button></div><button type="button" class="material-secondary-action material-next">Berikutnya →</button></footer>`;
+    `<div class="material-reader-toolbar"><button type="button" class="material-back-list">↑ Daftar pelajaran</button><span class="material-reader-position">Pelajaran ${startNumber} dari ${endNumber}</span><button type="button" class="material-focus-toggle" aria-pressed="false">⛶ Mode fokus</button></div><header class="material-reader-head"><div><div class="eyebrow material-reader-number"></div><h2 class="material-reader-title"></h2><p>Seluruh pola, penjelasan, dan contoh asli tetap ditampilkan.</p></div><span class="material-study-time">◷ 8–15 menit</span></header><div class="material-learning-steps" role="tablist" aria-label="Tahapan belajar"><button type="button" class="material-step active" data-material-step="patterns" role="tab" aria-selected="true"><b>1</b>Pahami semua pola</button><button type="button" class="material-step" data-material-step="examples" role="tab" aria-selected="false"><b>2</b>Pelajari contoh</button><button type="button" class="material-step" data-material-step="practice" role="tab" aria-selected="false"><b>3</b>Kerjakan latihan</button></div><div class="material-completeness">✓ Materi lengkap—tidak ada pola yang dikurangi.</div><div class="material-reader-body material-step-panel" data-material-panel="patterns"></div><section class="material-example-study material-step-panel" data-material-panel="examples" hidden></section><section class="material-practice-study material-step-panel" data-material-panel="practice" hidden></section><footer class="material-reader-actions"><button type="button" class="material-secondary-action material-previous">← Sebelumnya</button><div><button type="button" class="material-repeat-action material-mark-repeat">Perlu diulang</button><button type="button" class="material-primary-action material-mark-understood">Sudah paham ✓</button></div><button type="button" class="material-secondary-action material-next">Berikutnya →</button></footer>`;
 
   const progressPanel = document.createElement("aside");
   progressPanel.className = "material-progress-panel";
@@ -3976,6 +3976,8 @@ function initMaterialLessonPicker({
   reader.querySelectorAll(".material-step").forEach((button) => {
     button.onclick = () => setMaterialStep(button.dataset.materialStep);
   });
+  reader.querySelector(".material-focus-toggle").onclick = () =>
+    setMaterialFocusMode(!document.body.classList.contains("focus-mode"));
   updateMaterialProgress();
   selectLesson(0);
 }
@@ -3993,6 +3995,27 @@ initMaterialLessonPicker({
   progressKey: "nihonBenkyoLessonStatusV2",
 });
 syncCurriculumDashboard();
+
+/* Mode fokus untuk pembaca materi (Buku 1 dan Buku 2 berbagi fungsi yang sama). */
+function setMaterialFocusMode(on) {
+  document.body.classList.toggle("focus-mode", on);
+  document.querySelectorAll(".material-focus-toggle").forEach((button) => {
+    button.classList.toggle("active", on);
+    button.setAttribute("aria-pressed", String(on));
+    button.textContent = on ? "✕ Keluar fokus" : "⛶ Mode fokus";
+  });
+}
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && document.body.classList.contains("focus-mode"))
+    setMaterialFocusMode(false);
+});
+(function exitFocusModeOnNavigate() {
+  const originalOpen = open;
+  open = function (view) {
+    if (view !== "materials" && view !== "book2") setMaterialFocusMode(false);
+    originalOpen(view);
+  };
+})();
 
 /* Terapkan pengalaman Belajar Kanji V2 yang telah disetujui ke aplikasi utama. */
 (function mountKanjiLearningV2() {
@@ -4026,38 +4049,3 @@ syncCurriculumDashboard();
   }).observe(view, { attributes: true, attributeFilter: ["class"] });
 })();
 
-/* Terapkan pengalaman Materi V2 (fokus, satu pola per layar) ke aplikasi utama.
-   Dilewati dalam mode source=1 karena prototype-materi.html memakai halaman itu
-   sebagai sumber data mentah (#materials .html-lesson) — mengganti isinya di sana
-   akan membuat iframe bersarang tak berujung. */
-(function mountMateriV2() {
-  if (new URLSearchParams(location.search).get("source") === "1") return;
-  const view = document.getElementById("materials");
-  if (!view) return;
-  view.innerHTML =
-    '<iframe class="production-material-frame" data-src="prototype-materi.html?v=11&embed=1" title="Materi pembelajaran interaktif" loading="lazy"></iframe>';
-  const frame = view.querySelector(".production-material-frame");
-  frame.addEventListener("load", () => {
-    const frameDocument = frame.contentDocument;
-    if (!frameDocument) return;
-    // Hanya pakai body.scrollHeight: documentElement.scrollHeight ikut
-    // terkunci ke tinggi iframe saat ini (jadi viewport-nya sendiri),
-    // sehingga tidak pernah mengecil lagi ketika konten menyusut
-    // (mis. saat Mode fokus menyembunyikan sebagian panel).
-    const resizeFrame = () => {
-      frame.style.height = `${frameDocument.body.scrollHeight + 4}px`;
-    };
-    resizeFrame();
-    if ("ResizeObserver" in window) {
-      const observer = new ResizeObserver(resizeFrame);
-      observer.observe(frameDocument.body);
-    }
-    frameDocument.fonts?.ready.then(resizeFrame);
-  });
-  new MutationObserver(() => {
-    if (view.classList.contains("active")) {
-      window.scrollTo({ top: 0, behavior: "auto" });
-      frame.contentWindow?.scrollTo(0, 0);
-    }
-  }).observe(view, { attributes: true, attributeFilter: ["class"] });
-})();
