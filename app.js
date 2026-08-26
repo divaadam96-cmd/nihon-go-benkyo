@@ -3004,7 +3004,7 @@ document.head.appendChild(animationEnhancementsStyle);
   const view = document.getElementById("test");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=4&embed=1" title="Simulasi JFT dan JLPT" loading="lazy"></iframe>';
+    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=5&embed=1" title="Simulasi JFT dan JLPT" loading="lazy"></iframe>';
   const frame = view.querySelector(".production-test-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
@@ -4014,7 +4014,7 @@ syncCurriculumDashboard();
   const view = document.getElementById("kanji-study");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-kanji-frame" data-src="prototype-kanji-v2.html?v=11&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="lazy"></iframe>';
+    '<iframe class="production-kanji-frame" data-src="prototype-kanji-v2.html?v=12&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="lazy"></iframe>';
   const frame = view.querySelector(".production-kanji-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
