@@ -307,10 +307,43 @@ function kanjiVGFile(character) {
   return character.codePointAt(0).toString(16).padStart(5, "0");
 }
 
-async function loadNaturalStrokePaths(item, version) {
-  const source = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${kanjiVGFile(item.char)}.svg`;
+// Goresan asli KanjiVG diambil dari raw.githubusercontent.com, yang bisa
+// makan waktu 1.5-2.5 detik per kanji dan diminta ulang setiap kanji dibuka.
+// Simpan hasilnya di localStorage supaya kanji yang sama hanya lambat sekali
+// per perangkat, lalu instan sesudahnya.
+function strokeCacheKey(character) {
+  return `kanjiStrokeCacheV1:${character}`;
+}
+
+function getCachedStrokePaths(character) {
   try {
-    const response = await fetch(source);
+    const raw = localStorage.getItem(strokeCacheKey(character));
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function setCachedStrokePaths(character, paths) {
+  try {
+    localStorage.setItem(strokeCacheKey(character), JSON.stringify(paths));
+  } catch {
+    // Penyimpanan penuh atau diblokir; lanjut tanpa cache, tidak fatal.
+  }
+}
+
+async function loadNaturalStrokePaths(item, version) {
+  const cached = getCachedStrokePaths(item.char);
+  if (cached && cached.length) {
+    if (version !== strokeRenderVersion) return;
+    populateStrokeBoard(item, cached, "0 0 109 109");
+    return;
+  }
+  const source = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${kanjiVGFile(item.char)}.svg`;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 4000);
+  try {
+    const response = await fetch(source, { signal: controller.signal });
     if (!response.ok) throw new Error("KanjiVG tidak tersedia");
     const sourceText = await response.text();
     const sourceSvg = new DOMParser().parseFromString(sourceText, "image/svg+xml");
@@ -318,12 +351,15 @@ async function loadNaturalStrokePaths(item, version) {
       .map((path) => path.getAttribute("d"))
       .filter(Boolean);
     if (!paths.length) throw new Error("Goresan tidak ditemukan");
+    setCachedStrokePaths(item.char, paths);
     if (version !== strokeRenderVersion) return;
     populateStrokeBoard(item, paths, "0 0 109 109");
   } catch {
     if (version !== strokeRenderVersion) return;
     const fallback = kanjiStrokePaths[item.char] || [];
     populateStrokeBoard(item, fallback);
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
