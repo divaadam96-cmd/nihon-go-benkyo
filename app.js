@@ -2925,23 +2925,6 @@ if (kanjiStudyGridEl) {
   kanjiDetailBack.onclick = showKanjiGrid;
   showKanjiGrid();
 }
-if (new URLSearchParams(location.search).get("source") !== "1") {
-  const materialsView = document.getElementById("materials");
-  if (materialsView) {
-    materialsView.innerHTML = '<iframe class="production-material-frame" data-src="prototype-materi.html?v=10&embed=1" title="Materi pembelajaran fokus" loading="lazy"></iframe>';
-    const materialsFrame = materialsView.querySelector(".production-material-frame");
-    materialsFrame.addEventListener("load", () => {
-      const frameDocument = materialsFrame.contentDocument;
-      if (!frameDocument) return;
-      const resizeFrame = () => {
-        materialsFrame.style.height = `${Math.max(frameDocument.documentElement.scrollHeight, frameDocument.body.scrollHeight) + 6}px`;
-      };
-      resizeFrame();
-      if ("ResizeObserver" in window) new ResizeObserver(resizeFrame).observe(frameDocument.body);
-      frameDocument.fonts?.ready.then(resizeFrame);
-    });
-  }
-}
 if (new URLSearchParams(location.search).get("source") === "1") {
   const sourceModeStyle = document.createElement("style");
   sourceModeStyle.textContent = ".top,.side,.mobile-nav{display:none!important}.layout{display:block;min-height:0}.main{padding:0;background:transparent}.view{display:none!important}.view#materials{display:block!important}.view#materials .head,.view#materials>.material-grid,.view#materials>.notice{display:none!important}.view#materials{padding:0}.app{max-width:none;box-shadow:none;background:transparent}";
@@ -2966,7 +2949,7 @@ mobileNav.querySelectorAll("button").forEach(
     }),
 );
 if ("serviceWorker" in navigator && location.protocol !== "file:")
-  navigator.serviceWorker.register("sw.js?build=32").catch(() => {});
+  navigator.serviceWorker.register("sw.js?build=33").catch(() => {});
 /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, grid muncul bertahap. */
 const animationEnhancementsStyle = document.createElement("style");
 animationEnhancementsStyle.textContent = `
