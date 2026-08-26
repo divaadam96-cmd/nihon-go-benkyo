@@ -110,12 +110,27 @@ function updateProgress(){
   document.getElementById("progressRing").style.setProperty("--progress",`${percent}%`);
 }
 
+function setLearningStep(step, shouldScroll = true) {
+  const targets = {
+    patterns: document.getElementById("patternList"),
+    examples: document.querySelector("#patternList .grammar-example") || document.getElementById("patternList"),
+    check: document.querySelector(".micro-check"),
+  };
+  document.querySelectorAll("[data-learning-step]").forEach((button) =>
+    button.classList.toggle("active", button.dataset.learningStep === step),
+  );
+  if (shouldScroll) targets[step]?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 document.querySelectorAll("[data-open-lesson]").forEach(button=>button.onclick=()=>openLesson(Number(button.dataset.openLesson),true));
 document.getElementById("backToDirectory").onclick=()=>document.getElementById("lessonDirectory").scrollIntoView({behavior:"smooth"});
 document.getElementById("previousLesson").onclick=()=>openLesson(currentLesson-1,true);
 document.getElementById("nextLesson").onclick=()=>openLesson(currentLesson+1,true);
 document.getElementById("markRepeat").onclick=()=>{status[currentLesson]="repeat";renderGrid()};
 document.getElementById("markUnderstood").onclick=()=>{status[currentLesson]="done";renderGrid();if(currentLesson<24)openLesson(currentLesson+1,true)};
+document.querySelectorAll("[data-learning-step]").forEach((button)=>{
+  button.onclick=()=>setLearningStep(button.dataset.learningStep);
+});
 
 sourceFrame.addEventListener("load",()=>openLesson(currentLesson));
 
