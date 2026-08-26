@@ -2922,7 +2922,7 @@ if (kanjiStudyGridEl) {
 if (new URLSearchParams(location.search).get("source") !== "1") {
   const materialsView = document.getElementById("materials");
   if (materialsView) {
-    materialsView.innerHTML = '<iframe class="production-material-frame" data-src="prototype-materi.html?v=4" title="Materi pembelajaran fokus" loading="lazy"></iframe>';
+    materialsView.innerHTML = '<iframe class="production-material-frame" data-src="prototype-materi.html?v=5" title="Materi pembelajaran fokus" loading="lazy"></iframe>';
     const materialsFrame = materialsView.querySelector(".production-material-frame");
     materialsFrame.addEventListener("load", () => {
       const frameDocument = materialsFrame.contentDocument;
@@ -2954,7 +2954,7 @@ mobileNav.querySelectorAll("button").forEach(
     }),
 );
 if ("serviceWorker" in navigator && location.protocol !== "file:")
-  navigator.serviceWorker.register("sw.js?build=26").catch(() => {});
+  navigator.serviceWorker.register("sw.js?build=27").catch(() => {});
 /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, grid muncul bertahap. */
 const animationEnhancementsStyle = document.createElement("style");
 animationEnhancementsStyle.textContent = `

@@ -38,11 +38,20 @@ let checkScore=0;
 function buildCheckQuestions(index){
   const lesson=lessons[index]||lessons[0];
   const [title,formula,japanese,meaning]=lesson;
+  const particleQuestions=[
+    ["わたし（　）学生です。","は"],["これは わたし（　）本です。","の"],["学校（　）どこですか。","は"],["七時（　）起きます。","に"],["京都（　）行きます。","へ"],
+    ["図書館（　）本を読みます。","で"],["はし（　）ご飯を食べます。","で"],["奈良（　）静かな町です。","は"],["日本料理（　）好きです。","が"],["机の上（　）本があります。","に"],
+    ["一週間（　）三回勉強します。","に"],["きのう（　）寒かったです。","は"],["日本へ行きたい（　）です。","です"],["名前を書い（　）ください。","て"],["写真を撮ってもいい（　）すか。","で"],
+    ["ご飯を食べ（　）、勉強します。","て"],["勉強しなけれ（　）なりません。","ば"],["話すこと（　）できます。","が"],["登ったこと（　）あります。","が"],["明日（　）映画を見る。","は"],
+    ["便利だ（　）思います。","と"],["先生（　）書いた本です。","が"],["日本へ行く（　）、かばんを買いました。","とき"],["友達に持って（　）いました。","もら"],["雨が降っ（　）、家にいます。","たら"],
+  ];
+  const [particleSentence,particleAnswer]=particleQuestions[index]||particleQuestions[0];
+  const particleOptions=[particleAnswer,"を","に","で"].filter((value,optionIndex,array)=>value||optionIndex===0).filter((value,optionIndex,array)=>array.indexOf(value)===optionIndex).slice(0,4);
   return [
-    {type:"Partikel",prompt:`${title}: pilih partikel yang tepat.`,question:"わたし（　）学生です。",options:["は","を","に","で"],answer:0},
-    {type:"Susun kalimat",prompt:"Susun kalimat Jepang yang benar.",question:"Saya belajar bahasa Jepang.",options:["日本語を 勉強します。","勉強します 日本語を。","日本語が 勉強です。","日本語に 勉強します。"],answer:0},
-    {type:"Bahasa Jepang",prompt:"Pilih terjemahan bahasa Jepang yang tepat.",question:meaning,options:[japanese,"これは 先生です。","どこへ 行きますか。","本を 読みません。"],answer:0},
-    {type:"Lengkapi",prompt:`Lengkapi pola utama ${formula}.`,question:`${japanese} (pilih bentuk yang benar)`,options:[formula,"N を ください","Vては いけません","N が あります"],answer:0},
+    {type:"Partikel",prompt:`${title}: pilih partikel yang tepat.`,question:particleSentence,options:particleOptions,answer:0},
+    {type:"Susun kalimat",prompt:`Susun contoh yang sesuai dengan materi ${title}.`,question:`Arti: ${meaning}`,options:[japanese,japanese.split(" ").reverse().join(" "),`${japanese} です。`,"これは 学生です。"],answer:0},
+    {type:"Bahasa Jepang",prompt:`Ubah arti berikut sesuai materi ${title}.`,question:meaning,options:[japanese,"これは 先生です。","どこへ 行きますか。","本を 読みません。"],answer:0},
+    {type:"Lengkapi",prompt:`Lengkapi pola utama Bab ${index+1}.`,question:`Contoh: ${japanese}\nPilih pola yang melengkapi contoh tersebut.`,options:[formula,"N を ください","Vては いけません","N が あります"],answer:0},
   ];
 }
 
