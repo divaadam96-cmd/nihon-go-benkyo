@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prototype UI V2 · Nihon GO Benkyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="prototype-ui-v2.css?v=2">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html?build=21">
+      <img src="logo.png" alt="">
+      <span><b>Nihon GO Benkyo</b><small>日本語勉強</small></span>
+    </a>
+    <nav aria-label="Navigasi utama">
+      <button>Beranda</button><button class="active">Materi</button><button>Kanji</button><button>Hafalan</button><button>Tes</button>
+    </nav>
+    <div class="top-actions"><span class="streak">火 7 hari</span><span class="xp">12.540 XP</span><button class="avatar">D</button></div>
+  </header>
+
+  <aside class="sidebar">
+    <button class="sidebar-collapse" aria-label="Perkecil sidebar">‹</button>
+    <div class="side-label">BELAJAR</div>
+    <button><i>⌂</i><span>Ringkasan</span></button>
+    <button class="active"><i>文</i><span>Materi pelajaran</span></button>
+    <button><i>漢</i><span>Belajar kanji</span></button>
+    <button><i>語</i><span>Hafalan</span></button>
+    <button><i>試</i><span>Tes kemampuan</span></button>
+    <div class="side-label">KELAS</div>
+    <button class="book active" data-book="1"><i>1</i><span>Dasar · Buku 1</span></button>
+    <button class="book" data-book="2"><i>2</i><span>Menengah · Buku 2</span></button>
+    <div class="daily-card"><b>Target hari ini</b><strong>2 dari 4</strong><span>aktivitas selesai</span><div><i></i></div></div>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div><span class="eyebrow">MINNA NO NIHONGO I</span><h1>Ruang belajar Anda</h1><p>Lanjutkan secara teratur, pahami pola, lalu uji kemampuan tanpa kehilangan progres.</p></div>
+      <a href="index.html?build=21">← Aplikasi utama</a>
+    </section>
+
+    <section class="stats" aria-label="Ringkasan perkembangan">
+      <article><span>Bab dikuasai</span><b>12<small>/25</small></b><i class="green"></i></article>
+      <article><span>Rata-rata skor</span><b>82<small>%</small></b><i class="gold"></i></article>
+      <article><span>Perlu diulang</span><b>7<small>soal</small></b><i class="orange"></i></article>
+      <article class="recommend"><span>Rekomendasi berikutnya</span><b>Pelajaran 13</b><small>Keinginan dan tujuan</small><button id="continueButton">Lanjut belajar →</button></article>
+    </section>
+
+    <section class="workspace">
+      <header class="section-head">
+        <div><span class="eyebrow">PILIH MATERI</span><h2>Dasar · Pelajaran 1–25</h2><p>Pilih bab atau lanjutkan rekomendasi berdasarkan hasil latihan terakhir.</p></div>
+        <div class="legend"><span><i class="new"></i>Belum</span><span><i class="repeat"></i>Ulangi</span><span><i class="done"></i>Dikuasai</span></div>
+      </header>
+      <div class="lesson-grid" id="lessonGrid"></div>
+    </section>
+
+    <section class="reader" id="reader">
+      <header class="reader-top">
+        <button id="backToGrid">← Daftar bab</button><span>Pelajaran <b id="lessonPosition">13</b> dari 25</span>
+        <label class="furigana-control">Furigana
+          <select id="furiganaMode"><option value="always">Selalu tampil</option><option value="hover">Saat disentuh</option><option value="hidden">Disembunyikan</option></select>
+        </label>
+        <button class="focus-button" id="focusButton">⛶ Mode fokus</button>
+      </header>
+      <div class="reader-title"><span class="lesson-badge" id="lessonBadge">13</span><div><span class="eyebrow">BUKU 1 · DASAR</span><h2 id="readerTitle">Keinginan dan tujuan</h2><p>Pelajari pola secara bertahap, lalu periksa pemahaman melalui latihan singkat.</p></div><div class="mastery"><span>Penguasaan</span><b>68%</b><i><em></em></i></div></div>
+
+      <nav class="study-steps" aria-label="Tahapan belajar">
+        <button class="active" data-step="pattern"><b>1</b><span>Pahami pola<small>Materi lengkap</small></span></button>
+        <button data-step="example"><b>2</b><span>Pelajari contoh<small>Amati penggunaan</small></span></button>
+        <button data-step="practice"><b>3</b><span>Kerjakan latihan<small>8 soal JLPT/JFT</small></span></button>
+      </nav>
+
+      <div class="study-panel active" data-panel="pattern">
+        <div class="panel-intro"><span id="patternCounter">POLA 01 DARI 04</span><div><button id="patternPrevious">←</button><button id="patternNext">→</button></div></div>
+        <article class="grammar-card">
+          <div class="grammar-index" id="grammarIndex">01</div>
+          <div class="grammar-content">
+            <span class="mini-label">POLA TATA BAHASA</span>
+            <h3 id="grammarTitle">N が ほしいです</h3>
+            <div class="explanation"><b>Penjelasan singkat</b><p id="grammarExplanation">Memuat penjelasan pola dari bab yang dipilih.</p></div>
+            <div class="jp-example"><span>CONTOH BAHASA JEPANG</span><p id="grammarJapanese">Materi sedang dimuat…</p></div>
+            <div class="meaning"><span>ARTI INDONESIA</span><p id="grammarMeaning">—</p></div>
+            <aside id="grammarNote"><b>Catatan penting</b><p id="grammarNoteText"></p></aside>
+          </div>
+        </article>
+        <div class="pattern-actions"><button>Perlu diulang</button><button class="primary" id="nextPatternAction">Pola berikutnya →</button></div>
+      </div>
+
+      <div class="study-panel" data-panel="example">
+        <div class="example-head"><div><span class="eyebrow">PELAJARI CONTOH</span><h3>Amati pola dalam kalimat.</h3></div><button>▶ Putar audio</button></div>
+        <div class="example-cards" id="dynamicExampleCards"></div>
+      </div>
+
+      <div class="study-panel" data-panel="practice">
+        <div class="exam-head"><div><span>文法・文の組み立て</span><h3>Latihan tata bahasa</h3></div><div><span>SOAL 3 / 8</span><b>04:32</b></div></div>
+        <div class="exam-progress"><i></i></div>
+        <article class="question-card">
+          <span class="question-type">MELENGKAPI KALIMAT</span>
+          <h4>Pilih pola yang tepat untuk melengkapi kalimat.</h4>
+          <p class="question-context">Arti: Saya ingin pergi ke Jepang tahun depan.</p>
+          <p class="question-jp"><ruby>来年<rt>らいねん</rt></ruby>、<ruby>日本<rt>にほん</rt></ruby>へ（　　　　）です。</p>
+          <div class="answers">
+            <button><b>1</b><span>行きます</span></button>
+            <button><b>2</b><span>行きたい</span></button>
+            <button class="wrong"><b>3</b><span>行きました</span></button>
+            <button><b>4</b><span>行きません</span></button>
+          </div>
+          <div class="answer-review"><b>Jawaban belum tepat</b><p>Jawaban benar: 2 · 行きたい</p><small>Vたいです digunakan untuk menyatakan keinginan melakukan suatu tindakan. Kalimat lengkapnya adalah 来年、日本へ行きたいです。</small></div>
+          <footer><button>Masukkan ke daftar kesalahan</button><button class="primary">Soal berikutnya →</button></footer>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="mobile-nav"><button>⌂<span>Beranda</span></button><button class="active">文<span>Materi</span></button><button>漢<span>Kanji</span></button><button>試<span>Tes</span></button></div>
+  <iframe class="source-frame" id="sourceApp" src="index.html?build=21" title="Sumber materi lengkap" aria-hidden="true" tabindex="-1"></iframe>
+  <script src="prototype-ui-v2.js?v=2"></script>
+</body>
+</html>

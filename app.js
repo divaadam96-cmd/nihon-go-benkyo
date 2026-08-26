@@ -2773,6 +2773,7 @@ const kanjiNoticeEl = document.querySelector("#kanji-study .notice");
 if (kanjiStudyGridEl) {
   const kanjiGridSection = document.createElement("div");
   kanjiGridSection.className = "kanji-grid-section";
+  kanjiGridSection.id = "kanjiDirectory";
   const levels = {};
   const levelOrder = [];
   kanjiLessons.forEach((item, idx) => {
@@ -2814,12 +2815,83 @@ if (kanjiStudyGridEl) {
       );
     })
     .join("");
+  const kanjiSearchPanel = document.createElement("div");
+  kanjiSearchPanel.className = "kanji-search-panel";
+  kanjiSearchPanel.innerHTML =
+    '<label for="kanjiSearch">Cari kanji</label><div class="kanji-search-field"><span aria-hidden="true">⌕</span><input id="kanjiSearch" type="search" inputmode="search" autocomplete="off" placeholder="Contoh: 日, gunung, yama, nihon…" aria-controls="kanjiDirectory"><button type="button" class="kanji-search-clear" aria-label="Hapus pencarian" hidden>×</button></div><p class="kanji-search-status" aria-live="polite"></p>';
+  const kanjiSearchEmpty = document.createElement("p");
+  kanjiSearchEmpty.className = "kanji-search-empty";
+  kanjiSearchEmpty.hidden = true;
+  kanjiSearchEmpty.textContent =
+    "Kanji tidak ditemukan. Coba karakter, arti Indonesia, atau cara baca lain.";
   const kanjiDetailBack = document.createElement("button");
   kanjiDetailBack.className = "kanji-detail-back hafalan-hidden";
-  kanjiDetailBack.innerHTML = "← Kembali ke daftar kanji";
+  kanjiDetailBack.textContent = "← Kembali ke daftar kanji";
   kanjiStudyGridEl.insertAdjacentElement("beforebegin", kanjiGridSection);
+  kanjiGridSection.insertAdjacentElement("beforebegin", kanjiSearchEmpty);
+  kanjiSearchEmpty.insertAdjacentElement("beforebegin", kanjiSearchPanel);
   kanjiStudyGridEl.insertAdjacentElement("beforebegin", kanjiDetailBack);
+  const kanjiSearchInput = kanjiSearchPanel.querySelector("input");
+  const kanjiSearchClear = kanjiSearchPanel.querySelector(
+    ".kanji-search-clear",
+  );
+  const kanjiSearchStatus = kanjiSearchPanel.querySelector(
+    ".kanji-search-status",
+  );
+  const normalizeKanjiSearch = (value) =>
+    String(value || "")
+      .normalize("NFKC")
+      .toLocaleLowerCase("id-ID")
+      .trim();
+  function filterKanjiGrid() {
+    const query = normalizeKanjiSearch(kanjiSearchInput.value);
+    const terms = query.split(/\s+/).filter(Boolean);
+    let visibleTotal = 0;
+    kanjiGridSection
+      .querySelectorAll(".kanji-level-group")
+      .forEach((group) => {
+        let visibleInLevel = 0;
+        group.querySelectorAll(".kanji-tile").forEach((tile) => {
+          const item = kanjiLessons[Number(tile.dataset.index)];
+          const searchable = normalizeKanjiSearch(
+            [
+              item.char,
+              item.meaning,
+              item.on,
+              item.kun,
+              ...(item.words || []).flat(),
+            ].join(" "),
+          );
+          const matches = terms.every((term) => searchable.includes(term));
+          tile.hidden = !matches;
+          if (matches) visibleInLevel++;
+        });
+        group.hidden = visibleInLevel === 0;
+        group.querySelector(".count").textContent = `${visibleInLevel} kanji`;
+        visibleTotal += visibleInLevel;
+      });
+    kanjiSearchClear.hidden = query.length === 0;
+    kanjiSearchEmpty.hidden = visibleTotal !== 0;
+    kanjiSearchStatus.textContent = query
+      ? `${visibleTotal} dari ${kanjiLessons.length} kanji ditemukan`
+      : `${kanjiLessons.length} kanji tersedia`;
+  }
+  kanjiSearchInput.addEventListener("input", filterKanjiGrid);
+  kanjiSearchInput.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && kanjiSearchInput.value) {
+      kanjiSearchInput.value = "";
+      filterKanjiGrid();
+    }
+  });
+  kanjiSearchClear.onclick = () => {
+    kanjiSearchInput.value = "";
+    filterKanjiGrid();
+    kanjiSearchInput.focus();
+  };
+  filterKanjiGrid();
   function showKanjiGrid() {
+    kanjiSearchPanel.classList.remove("hafalan-hidden");
+    kanjiSearchEmpty.classList.remove("hafalan-hidden");
     kanjiGridSection.classList.remove("hafalan-hidden");
     kanjiDetailBack.classList.add("hafalan-hidden");
     kanjiStudyGridEl.classList.add("hafalan-hidden");
@@ -2828,6 +2900,8 @@ if (kanjiStudyGridEl) {
   function showKanjiDetail(index) {
     currentKanji = index;
     renderKanjiLesson();
+    kanjiSearchPanel.classList.add("hafalan-hidden");
+    kanjiSearchEmpty.classList.add("hafalan-hidden");
     kanjiGridSection.classList.add("hafalan-hidden");
     kanjiDetailBack.classList.remove("hafalan-hidden");
     kanjiStudyGridEl.classList.remove("hafalan-hidden");
@@ -2839,6 +2913,23 @@ if (kanjiStudyGridEl) {
   });
   kanjiDetailBack.onclick = showKanjiGrid;
   showKanjiGrid();
+}
+if (new URLSearchParams(location.search).get("source") !== "1") {
+  const materialsView = document.getElementById("materials");
+  if (materialsView) {
+    materialsView.innerHTML = '<iframe class="production-material-frame" src="prototype-materi.html?v=2" title="Materi pembelajaran fokus" loading="eager"></iframe>';
+    const materialsFrame = materialsView.querySelector(".production-material-frame");
+    materialsFrame.addEventListener("load", () => {
+      const frameDocument = materialsFrame.contentDocument;
+      if (!frameDocument) return;
+      const resizeFrame = () => {
+        materialsFrame.style.height = `${Math.max(frameDocument.documentElement.scrollHeight, frameDocument.body.scrollHeight) + 6}px`;
+      };
+      resizeFrame();
+      if ("ResizeObserver" in window) new ResizeObserver(resizeFrame).observe(frameDocument.body);
+      frameDocument.fonts?.ready.then(resizeFrame);
+    });
+  }
 }
 const mobilePwaStyle = document.createElement("style");
 mobilePwaStyle.textContent = `.mobile-nav{display:none}@media(max-width:700px){.top{height:58px;padding:0 18px;position:sticky;top:0;z-index:30}.brand{font-size:16px}.brand small,.topnav,.identity,.side{display:none}.layout{display:block}.main{padding:20px 15px 92px;background-attachment:scroll}.head h1{font-size:25px}.overview{grid-template-columns:1fr 1fr;gap:10px}.overview .metric:first-child{grid-column:span 2}.metric b{font-size:23px}.card{padding:16px}.dashboard-grid,.flash-layout,.kana-grid,.memory-routes,.course-nav,.exam-grid{grid-template-columns:1fr}.mobile-nav{position:fixed;z-index:50;left:10px;right:10px;bottom:10px;height:64px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:#142945f5;border:1px solid #caa45d55;border-radius:17px;box-shadow:0 12px 28px #0b162b55;padding:4px}.mobile-nav button{border:0;background:transparent;color:#cbd4df;font:600 10px "DM Sans";display:grid;gap:3px;place-items:center;padding:6px 1px}.mobile-nav button span{font:700 18px "Zen Kaku Gothic New"}.mobile-nav button.active{color:#f7dfad}.flashcard{height:270px}.face .kana{font-size:58px}}`;
@@ -2858,7 +2949,7 @@ mobileNav.querySelectorAll("button").forEach(
     }),
 );
 if ("serviceWorker" in navigator && location.protocol !== "file:")
-  navigator.serviceWorker.register("sw.js").catch(() => {});
+  navigator.serviceWorker.register("sw.js?build=21").catch(() => {});
 /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, grid muncul bertahap. */
 const animationEnhancementsStyle = document.createElement("style");
 animationEnhancementsStyle.textContent = `
@@ -2897,6 +2988,38 @@ document.head.appendChild(animationEnhancementsStyle);
   document.body.appendChild(layer);
 })();
 
+/* Terapkan pusat simulasi JFT/JLPT ke aplikasi utama. Bank soal diaktifkan setelah file pengguna tersedia. */
+(function mountExamSimulationV2() {
+  const view = document.getElementById("test");
+  if (!view) return;
+  view.innerHTML =
+    '<iframe class="production-test-frame" src="prototype-tes-v2.html?v=4&embed=1" title="Simulasi JFT dan JLPT" loading="eager"></iframe>';
+  const frame = view.querySelector(".production-test-frame");
+  frame.addEventListener("load", () => {
+    const frameDocument = frame.contentDocument;
+    if (!frameDocument) return;
+    const resizeFrame = () => {
+      const height = Math.max(
+        frameDocument.documentElement.scrollHeight,
+        frameDocument.body.scrollHeight,
+      );
+      frame.style.height = `${height + 4}px`;
+    };
+    resizeFrame();
+    if ("ResizeObserver" in window) {
+      const observer = new ResizeObserver(resizeFrame);
+      observer.observe(frameDocument.body);
+    }
+    frameDocument.fonts?.ready.then(resizeFrame);
+  });
+  new MutationObserver(() => {
+    if (view.classList.contains("active")) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      frame.contentWindow?.scrollTo(0, 0);
+    }
+  }).observe(view, { attributes: true, attributeFilter: ["class"] });
+})();
+
 (function initNavIndicator() {
   const nav = document.querySelector(".topnav");
   if (!nav) return;
@@ -2918,4 +3041,991 @@ document.head.appendChild(animationEnhancementsStyle);
   requestAnimationFrame(moveIndicator);
   if (document.fonts && document.fonts.ready)
     document.fonts.ready.then(moveIndicator).catch(() => {});
+})();
+
+/* Hilangkan blok tambahan yang tidak diperlukan dari seluruh materi. */
+(function simplifyLessonMaterials() {
+  const removableLabels = [
+    "fokus pelajaran",
+    "fokus pembelajaran",
+    "latihan mandiri",
+  ];
+  document
+    .querySelectorAll("#materials .html-content, #book2 .html-content")
+    .forEach((content) => {
+      content.querySelectorAll(".html-note > div").forEach((note) => {
+        const label = note.querySelector("b")?.textContent.trim().toLowerCase();
+        if (label && removableLabels.some((target) => label.startsWith(target)))
+          note.remove();
+      });
+      content.querySelectorAll(".grammar-point").forEach((section) => {
+        const heading = section.querySelector("h3")?.textContent.trim().toLowerCase();
+        if (
+          heading === "ringkasan praktik" ||
+          heading === "ringkasan perubahan bentuk kalimat" ||
+          heading === "dialog latihan" ||
+          heading === "dialog contoh"
+        )
+          section.remove();
+      });
+      content
+        .querySelectorAll(".html-note:empty")
+        .forEach((emptyNote) => emptyNote.remove());
+
+    });
+})();
+
+/* Susun setiap pola: penjelasan, contoh Jepang, arti, lalu catatan bila perlu. */
+(function structureGrammarPoints() {
+  const importantPattern =
+    /\b(jangan|tidak boleh|tidak dipakai|tidak digunakan|berbeda|perhatikan|khusus|wajib|umumnya|hindari|harus)\b/i;
+  document
+    .querySelectorAll(
+      "#materials .html-content .grammar-point, #book2 .html-content .grammar-point",
+    )
+    .forEach((point) => {
+      if (point.classList.contains("lesson-quiz")) return;
+      const explanation = point.querySelector(":scope > p");
+      const example = point.querySelector(":scope > .grammar-example");
+      const meaning = example?.querySelector(".grammar-meaning");
+      if (explanation) explanation.classList.add("grammar-short-explanation");
+      if (example) example.classList.add("grammar-japanese-example");
+      if (meaning) meaning.classList.add("grammar-indonesian-meaning");
+
+      if (!explanation || point.querySelector(".grammar-important-note")) return;
+      const sentences = explanation.textContent
+        .trim()
+        .split(/(?<=[.!?。])\s+/)
+        .filter(Boolean);
+      if (sentences.length < 2) return;
+      const importantIndex = sentences.findIndex((sentence) =>
+        importantPattern.test(sentence),
+      );
+      if (importantIndex < 0) return;
+
+      const importantSentence = sentences.splice(importantIndex, 1)[0];
+      explanation.textContent = sentences.join(" ");
+      const note = document.createElement("aside");
+      note.className = "grammar-important-note";
+      note.textContent = importantSentence;
+      if (example) example.insertAdjacentElement("afterend", note);
+      else explanation.insertAdjacentElement("afterend", note);
+    });
+})();
+
+/* Furigana kontekstual untuk contoh dan latihan materi Buku 1-2. */
+const materialFuriganaReadings = {
+  "立入禁止": "たちいりきんし", "天気予報": "てんきよほう", "電話番号": "でんわばんごう",
+  "一週間": "いっしゅうかん", "会議室": "かいぎしつ", "会社員": "かいしゃいん",
+  "図書館": "としょかん", "説明書": "せつめいしょ", "日本語": "にほんご",
+  "郵便局": "ゆうびんきょく", "富士山": "ふじさん", "月曜日": "げつようび",
+  "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
+  "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい",
+  "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
+  "音楽": "おんがく", "家族": "かぞく", "荷物": "にもつ", "会議": "かいぎ",
+  "会社": "かいしゃ", "学校": "がっこう", "学生": "がくせい", "漢字": "かんじ",
+  "京都": "きょうと", "銀行": "ぎんこう", "健康": "けんこう", "元気": "げんき",
+  "佐藤": "さとう", "山田": "やまだ", "仕事": "しごと", "資料": "しりょう",
+  "写真": "しゃしん", "社長": "しゃちょう", "宿題": "しゅくだい", "新聞": "しんぶん",
+  "新しい": "あたらしい", "場合": "ばあい", "生活": "せいかつ", "切符": "きっぷ",
+  "先生": "せんせい", "台風": "たいふう", "田中": "たなか", "電気": "でんき",
+  "電車": "でんしゃ", "電話": "でんわ", "東京": "とうきょう", "奈良": "なら",
+  "二回": "にかい", "日本": "にほん", "病院": "びょういん", "普通": "ふつう",
+  "部屋": "へや", "部長": "ぶちょう", "復習": "ふくしゅう", "便利": "べんり",
+  "勉強": "べんきょう", "毎朝": "まいあさ", "毎日": "まいにち", "名前": "なまえ",
+  "明日": "あした", "木村": "きむら", "問題": "もんだい", "野菜": "やさい",
+  "友達": "ともだち", "有名": "ゆうめい", "予定": "よてい", "来年": "らいねん",
+  "旅行": "りょこう", "練習": "れんしゅう", "連絡": "れんらく", "時間": "じかん",
+  "週間": "しゅうかん", "親切": "しんせつ", "手伝": "てつだ", "何時": "なんじ",
+  "神戸": "こうべ", "何ですか": "なんですか", "何人": "なんにん", "何を": "なにを",
+  "何の": "なんの", "何か": "なにか", "何が": "なにが", "何に": "なにに",
+  "下さい": "ください", "拝見": "はいけん",
+  "駅": "えき", "家": "いえ", "花": "はな", "海": "うみ", "靴": "くつ",
+  "机": "つくえ", "酒": "さけ", "春": "はる", "人": "ひと", "先": "さき",
+  "前": "まえ", "窓": "まど", "中": "なか", "朝": "あさ", "町": "まち",
+  "猫": "ねこ", "箱": "はこ", "飯": "はん", "物": "もの", "文": "ぶん",
+  "母": "はは", "本": "ほん", "友": "とも", "手": "て", "雨": "あめ",
+  "安": "やす", "歌": "うた", "回": "かい", "間": "あいだ", "形": "かたち",
+  "寒": "さむ", "漢": "かん", "語": "ご", "好": "す", "今": "いま", "子": "こ",
+  "次": "つぎ", "時": "とき", "上": "うえ", "早": "はや", "切": "き",
+  "分": "ふん", "新": "あたら", "覧": "らん", "月": "つき", "日": "ひ",
+  "薬": "くすり", "何": "なに", "一": "いち",
+  "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
+  "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
+  "行": "い", "降": "ふ", "高": "たか", "座": "すわ", "使": "つか", "始": "はじ",
+  "思": "おも", "止": "と", "試": "ため", "持": "も", "治": "なお", "捨": "す",
+  "出": "で", "暑": "あつ", "書": "か", "消": "け", "食": "た", "寝": "ね",
+  "静": "しず", "洗": "あら", "送": "おく", "続": "つづ", "貸": "か", "脱": "ぬ",
+  "知": "し", "置": "お", "遅": "おく", "伝": "つた", "登": "のぼ", "働": "はたら",
+  "読": "よ", "入": "はい", "買": "か", "聞": "き", "閉": "し", "歩": "ある",
+  "忘": "わす", "忙": "いそが", "話": "はな", "来": "き", "楽": "たの",
+};
+
+const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
+  ([left], [right]) => right.length - left.length,
+);
+
+function createMaterialFuriganaFragment(text) {
+  const fragment = document.createDocumentFragment();
+  let cursor = 0;
+  while (cursor < text.length) {
+    const match = materialFuriganaEntries.find(([word]) =>
+      text.startsWith(word, cursor),
+    );
+    if (!match) {
+      fragment.append(document.createTextNode(text[cursor]));
+      cursor++;
+      continue;
+    }
+    const [word, reading] = match;
+    const ruby = document.createElement("ruby");
+    ruby.className = "material-furigana";
+    ruby.append(document.createTextNode(word));
+    const rt = document.createElement("rt");
+    rt.textContent = reading;
+    ruby.appendChild(rt);
+    fragment.appendChild(ruby);
+    cursor += word.length;
+  }
+  return fragment;
+}
+
+function addMaterialFurigana(element, directTextOnly = false) {
+  if (!element) return;
+  let nodes;
+  if (directTextOnly) {
+    nodes = Array.from(element.childNodes).filter(
+      (node) => node.nodeType === Node.TEXT_NODE,
+    );
+  } else {
+    nodes = [];
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        return node.parentElement?.closest("ruby, rt")
+          ? NodeFilter.FILTER_REJECT
+          : NodeFilter.FILTER_ACCEPT;
+      },
+    });
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+  }
+  nodes.forEach((node) => {
+    if (!/[\u3400-\u9fff]/.test(node.nodeValue || "")) return;
+    node.replaceWith(createMaterialFuriganaFragment(node.nodeValue));
+  });
+}
+
+/* Pilihan materi Buku 1 dan Buku 2: masing-masing 25 pelajaran dalam kisi 5 x 5. */
+function getStoredLessonStatuses(key) {
+  try {
+    const stored = JSON.parse(localStorage.getItem(key) || "null");
+    return Array.isArray(stored) && stored.length === 25
+      ? stored
+      : Array(25).fill("new");
+  } catch {
+    return Array(25).fill("new");
+  }
+}
+
+function syncCurriculumDashboard() {
+  const bookOne = getStoredLessonStatuses("nihonBenkyoLessonStatusV1");
+  const bookTwo = getStoredLessonStatuses("nihonBenkyoLessonStatusV2");
+  const bookOneDone = bookOne.filter((status) => status === "done").length;
+  const bookTwoDone = bookTwo.filter((status) => status === "done").length;
+  const totalDone = bookOneDone + bookTwoDone;
+  const bookOnePercent = Math.round((bookOneDone / 25) * 100);
+  const bookTwoPercent = Math.round((bookTwoDone / 25) * 100);
+  const totalPercent = Math.round((totalDone / 50) * 100);
+
+  const targetMetric = document.querySelector(
+    "#dashboard .overview .metric:nth-child(3)",
+  );
+  if (targetMetric) {
+    const targetLabel = targetMetric.querySelector("small");
+    const targetValue = targetMetric.querySelector("b");
+    const targetCopy = targetMetric.querySelector("p");
+    if (targetLabel) targetLabel.textContent = "Progres keseluruhan";
+    if (targetValue) targetValue.textContent = `${totalPercent}%`;
+    if (targetCopy)
+      targetCopy.textContent = `${totalDone} dari 50 pelajaran dipahami`;
+  }
+
+  const levels = document.querySelectorAll("#dashboard .levels .level");
+  const progressData = [
+    ["Buku 1", bookOnePercent],
+    ["Buku 2", bookTwoPercent],
+  ];
+  levels.forEach((level, index) => {
+    if (!progressData[index]) return;
+    const [label, percent] = progressData[index];
+    const name = level.querySelector("b");
+    const fill = level.querySelector(".fill");
+    const value = level.querySelector("span");
+    if (name) name.textContent = label;
+    if (fill) fill.style.width = `${percent}%`;
+    if (value) value.textContent = `${percent}%`;
+  });
+  const levelsHeading = document.querySelector(
+    "#dashboard .levels",
+  )?.parentElement?.querySelector("h2");
+  if (levelsHeading) levelsHeading.textContent = "Progres materi";
+}
+
+function initMaterialLessonPicker({
+  viewId,
+  startNumber,
+  bookNumber,
+  progressKey,
+}) {
+  const materialsView = document.getElementById(viewId);
+  const sourceCourse = materialsView?.querySelector(".html-course");
+  if (!materialsView || !sourceCourse) return;
+  const endNumber = startNumber + 24;
+
+  const lessons = Array.from(
+    sourceCourse.querySelectorAll(":scope > .html-lesson"),
+  ).filter((lesson) => lesson.querySelector("summary") && lesson.querySelector(".html-content"));
+  if (lessons.length !== 25) return;
+
+  const picker = document.createElement("section");
+  picker.className = "material-picker";
+  picker.setAttribute("aria-labelledby", `materialPickerTitle-${viewId}`);
+  picker.innerHTML =
+    `<div class="material-picker-heading"><div><div class="eyebrow">Daftar pelajaran</div><h2 id="materialPickerTitle-${viewId}">Pilih Materi Pembelajaran</h2></div><p>Pelajaran ${startNumber}–${endNumber} tersusun dalam 5 kolom dan 5 baris.</p></div><div class="material-choice-grid" role="tablist" aria-label="Pilihan Pelajaran ${startNumber} sampai ${endNumber}"></div>`;
+
+  const reader = document.createElement("section");
+  reader.className = "material-reader";
+  reader.id = `materialLessonReader-${viewId}`;
+  reader.setAttribute("role", "tabpanel");
+  reader.setAttribute("tabindex", "-1");
+  reader.innerHTML =
+    `<div class="material-reader-toolbar"><button type="button" class="material-back-list">↑ Daftar pelajaran</button><span class="material-reader-position">Pelajaran ${startNumber} dari ${endNumber}</span></div><header class="material-reader-head"><div><div class="eyebrow material-reader-number"></div><h2 class="material-reader-title"></h2><p>Seluruh pola, penjelasan, dan contoh asli tetap ditampilkan.</p></div><span class="material-study-time">◷ 8–15 menit</span></header><div class="material-learning-steps" role="tablist" aria-label="Tahapan belajar"><button type="button" class="material-step active" data-material-step="patterns" role="tab" aria-selected="true"><b>1</b>Pahami semua pola</button><button type="button" class="material-step" data-material-step="examples" role="tab" aria-selected="false"><b>2</b>Pelajari contoh</button><button type="button" class="material-step" data-material-step="practice" role="tab" aria-selected="false"><b>3</b>Kerjakan latihan</button></div><div class="material-completeness">✓ Materi lengkap—tidak ada pola yang dikurangi.</div><div class="material-reader-body material-step-panel" data-material-panel="patterns"></div><section class="material-example-study material-step-panel" data-material-panel="examples" hidden></section><section class="material-practice-study material-step-panel" data-material-panel="practice" hidden></section><footer class="material-reader-actions"><button type="button" class="material-secondary-action material-previous">← Sebelumnya</button><div><button type="button" class="material-repeat-action material-mark-repeat">Perlu diulang</button><button type="button" class="material-primary-action material-mark-understood">Sudah paham ✓</button></div><button type="button" class="material-secondary-action material-next">Berikutnya →</button></footer>`;
+
+  const progressPanel = document.createElement("aside");
+  progressPanel.className = "material-progress-panel";
+  progressPanel.innerHTML =
+    `<div class="material-progress-ring" style="--material-progress:0%"><div><b class="material-progress-percent">0%</b><span>selesai</span></div></div><h2>Perjalanan Buku ${bookNumber}</h2><p>Progres dihitung dari materi yang sudah Anda tandai sebagai dipahami.</p><div class="material-progress-stats"><span><i class="status-dot done"></i><b class="material-done-count">0</b> Dikuasai</span><span><i class="status-dot repeat"></i><b class="material-repeat-count">0</b> Ulangi</span><span><i class="status-dot new"></i><b class="material-new-count">25</b> Belum mulai</span></div><div class="material-recommendation"><span>REKOMENDASI BERIKUTNYA</span><b class="material-recommendation-title">Pelajaran ${startNumber}</b><p class="material-recommendation-text"></p><button type="button" class="material-recommendation-button">Mulai belajar</button></div>`;
+
+  const learningLayout = document.createElement("div");
+  learningLayout.className = "material-learning-layout";
+  const learningMain = document.createElement("div");
+  learningMain.className = "material-learning-main";
+
+  const grid = picker.querySelector(".material-choice-grid");
+  const readerNumber = reader.querySelector(".material-reader-number");
+  const readerTitle = reader.querySelector(".material-reader-title");
+  const readerBody = reader.querySelector(".material-reader-body");
+  const exampleStudy = reader.querySelector(".material-example-study");
+  const practiceStudy = reader.querySelector(".material-practice-study");
+  let lessonStatuses;
+  try {
+    lessonStatuses = JSON.parse(localStorage.getItem(progressKey) || "null");
+  } catch {
+    lessonStatuses = null;
+  }
+  if (!Array.isArray(lessonStatuses) || lessonStatuses.length !== 25)
+    lessonStatuses = Array(25).fill("new");
+  const buttons = [];
+  let activeIndex = -1;
+  let activeContent = null;
+
+  lessons.forEach((lesson, lessonIndex) => {
+    const lessonNumber = startNumber + lessonIndex;
+    const summaryText = lesson
+      .querySelector("summary")
+      .textContent.replace(/^\s*\d+\s*/, "")
+      .replace(/^Pelajaran\s+\d+\s*:\s*/i, "")
+      .trim();
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "material-choice";
+    button.id = `materialChoice-${viewId}-${lessonNumber}`;
+    button.dataset.lesson = String(lessonIndex);
+    button.setAttribute("role", "tab");
+    button.setAttribute("aria-controls", reader.id);
+    button.setAttribute("aria-selected", "false");
+
+    const number = document.createElement("span");
+    number.className = "material-choice-number";
+    number.textContent = String(lessonNumber).padStart(2, "0");
+    const label = document.createElement("span");
+    label.className = "material-choice-label";
+    label.textContent = summaryText;
+    const statusDot = document.createElement("i");
+    statusDot.className = "material-choice-status";
+    statusDot.setAttribute("aria-hidden", "true");
+    const statusLabel = document.createElement("small");
+    statusLabel.className = "material-choice-state";
+    button.append(number, statusDot, label, statusLabel);
+    grid.appendChild(button);
+    buttons.push(button);
+  });
+
+  function persistLessonStatuses() {
+    localStorage.setItem(progressKey, JSON.stringify(lessonStatuses));
+  }
+
+  function updateMaterialProgress() {
+    const done = lessonStatuses.filter((status) => status === "done").length;
+    const repeat = lessonStatuses.filter(
+      (status) => status === "repeat",
+    ).length;
+    const fresh = 25 - done - repeat;
+    const percent = Math.round((done / 25) * 100);
+    progressPanel.querySelector(".material-done-count").textContent = done;
+    progressPanel.querySelector(".material-repeat-count").textContent = repeat;
+    progressPanel.querySelector(".material-new-count").textContent = fresh;
+    progressPanel.querySelector(".material-progress-percent").textContent =
+      `${percent}%`;
+    progressPanel
+      .querySelector(".material-progress-ring")
+      .style.setProperty("--material-progress", `${percent}%`);
+
+    const recommendationIndex = lessonStatuses.findIndex(
+      (status) => status === "repeat",
+    );
+    const nextIndex =
+      recommendationIndex >= 0
+        ? recommendationIndex
+        : lessonStatuses.findIndex((status) => status === "new");
+    const recommended = nextIndex >= 0 ? nextIndex : 24;
+    const recommendedTitle = buttons[recommended]
+      .querySelector(".material-choice-label")
+      .textContent;
+    progressPanel.querySelector(".material-recommendation-title").textContent =
+      `Pelajaran ${startNumber + recommended}`;
+    progressPanel.querySelector(".material-recommendation-text").textContent =
+      recommendedTitle;
+    progressPanel.querySelector(".material-recommendation-button").onclick =
+      () => selectLesson(recommended, true);
+
+    buttons.forEach((button, index) => {
+      const status = lessonStatuses[index];
+      button.classList.toggle("done", status === "done");
+      button.classList.toggle("repeat", status === "repeat");
+      button.querySelector(".material-choice-state").textContent =
+        status === "done"
+          ? "Sudah dipahami"
+          : status === "repeat"
+            ? "Perlu diulang"
+            : "Belum dimulai";
+    });
+  }
+
+  function setLessonStatus(index, status) {
+    lessonStatuses[index] = status;
+    persistLessonStatuses();
+    updateMaterialProgress();
+    syncCurriculumDashboard();
+  }
+
+  function getPointData(content) {
+    return Array.from(content.querySelectorAll(":scope > .grammar-point"))
+      .map((point) => {
+        const example = point.querySelector(".grammar-example");
+        const meaning = example?.querySelector(".grammar-meaning");
+        if (!example || !meaning) return null;
+        const japaneseClone = example.cloneNode(true);
+        japaneseClone.querySelector(".grammar-meaning")?.remove();
+        japaneseClone.querySelectorAll("rt").forEach((reading) => reading.remove());
+        const titleClone = point.querySelector("h3")?.cloneNode(true);
+        titleClone?.querySelectorAll("rt").forEach((reading) => reading.remove());
+        const noteClone = point
+          .querySelector(".grammar-important-note")
+          ?.cloneNode(true);
+        noteClone?.querySelectorAll("rt").forEach((reading) => reading.remove());
+        return {
+          title: titleClone?.textContent.trim() || "Pola",
+          japanese: japaneseClone.textContent.trim(),
+          meaning: meaning.textContent.trim(),
+          note: noteClone?.textContent.trim() || "",
+        };
+      })
+      .filter(Boolean);
+  }
+
+  function buildExampleStudy(content) {
+    const points = getPointData(content);
+    exampleStudy.innerHTML =
+      '<header class="material-study-section-head"><div class="eyebrow">TAHAP 2 · PELAJARI CONTOH</div><h3>Amati penggunaan setiap pola.</h3><p>Baca kalimat Jepang dengan suara keras, lalu periksa artinya.</p></header>';
+    const list = document.createElement("div");
+    list.className = "material-example-list";
+    points.forEach((point, index) => {
+      const card = document.createElement("article");
+      card.className = "material-example-card";
+      const number = document.createElement("span");
+      number.className = "material-example-number";
+      number.textContent = `CONTOH ${String(index + 1).padStart(2, "0")}`;
+      const title = document.createElement("h4");
+      title.textContent = point.title;
+      addMaterialFurigana(title);
+      const japanese = document.createElement("p");
+      japanese.className = "material-example-japanese";
+      japanese.textContent = point.japanese;
+      addMaterialFurigana(japanese);
+      const meaning = document.createElement("p");
+      meaning.className = "material-example-meaning";
+      meaning.textContent = point.meaning;
+      card.append(number, title, japanese, meaning);
+      if (point.note) {
+        const note = document.createElement("small");
+        note.className = "material-example-note";
+        note.textContent = `Catatan: ${point.note}`;
+        addMaterialFurigana(note);
+        card.appendChild(note);
+      }
+      list.appendChild(card);
+    });
+    exampleStudy.appendChild(list);
+  }
+
+  function buildPracticeStudy(content) {
+    const points = getPointData(content);
+    let questionIndex = 0;
+    let correctAnswers = 0;
+    practiceStudy.innerHTML =
+      '<header class="material-study-section-head"><div class="eyebrow">TAHAP 3 · KERJAKAN LATIHAN</div><h3>Periksa pemahaman setiap pola.</h3><p>Pilih arti Indonesia yang sesuai dengan contoh bahasa Jepang.</p></header><div class="material-practice-card"></div>';
+    const practiceCard = practiceStudy.querySelector(".material-practice-card");
+
+    function renderPracticeQuestion() {
+      if (questionIndex >= points.length) {
+        const percentage = points.length
+          ? Math.round((correctAnswers / points.length) * 100)
+          : 0;
+        practiceCard.innerHTML = `<div class="material-practice-result"><span>LATIHAN SELESAI</span><b>${correctAnswers} / ${points.length}</b><h4>${percentage >= 80 ? "Pemahaman sangat baik" : percentage >= 60 ? "Teruskan latihan" : "Pelajari kembali contohnya"}</h4><p>Skor bab ini ${percentage}%. Anda dapat mengulang latihan atau menandai bab untuk dipelajari kembali.</p><button type="button" class="material-retry-practice">Ulangi latihan</button></div>`;
+        practiceCard.querySelector(".material-retry-practice").onclick = () => {
+          questionIndex = 0;
+          correctAnswers = 0;
+          renderPracticeQuestion();
+        };
+        return;
+      }
+
+      const point = points[questionIndex];
+      const otherMeanings = points
+        .filter((_, index) => index !== questionIndex)
+        .map((item) => item.meaning);
+      const fallbacks = [
+        "Arti tersebut tidak sesuai dengan pola ini.",
+        "Kalimat ini menyatakan hal yang berbeda.",
+      ];
+      const choices = [
+        point.meaning,
+        otherMeanings[questionIndex % Math.max(1, otherMeanings.length)] ||
+          fallbacks[0],
+        otherMeanings[(questionIndex + 1) % Math.max(1, otherMeanings.length)] ||
+          fallbacks[1],
+      ].filter((choice, index, array) => array.indexOf(choice) === index);
+      while (choices.length < 3) choices.push(fallbacks[choices.length - 1]);
+      choices.sort((a, b) =>
+        `${a}-${questionIndex}`.localeCompare(`${b}-${questionIndex}`),
+      );
+
+      practiceCard.innerHTML = `<div class="material-practice-progress"><span>Soal ${questionIndex + 1} dari ${points.length}</span><i><b style="width:${((questionIndex + 1) / points.length) * 100}%"></b></i></div><div class="material-practice-pattern">${point.title}</div><div class="material-practice-japanese">${point.japanese}</div><div class="material-practice-options"></div><p class="material-practice-feedback" aria-live="polite"></p><button type="button" class="material-practice-next" hidden>${questionIndex + 1 === points.length ? "Lihat hasil" : "Soal berikutnya →"}</button>`;
+      const options = practiceCard.querySelector(".material-practice-options");
+      choices.forEach((choice) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = choice;
+        button.onclick = () => {
+          const isCorrect = choice === point.meaning;
+          if (isCorrect) correctAnswers++;
+          options.querySelectorAll("button").forEach((option) => {
+            option.disabled = true;
+            if (option.textContent === point.meaning)
+              option.classList.add("correct");
+          });
+          if (!isCorrect) button.classList.add("wrong");
+          practiceCard.querySelector(".material-practice-feedback").textContent =
+            isCorrect
+              ? "Benar. Arti kalimat sudah dipahami."
+              : `Belum tepat. Arti yang benar: ${point.meaning}`;
+          practiceCard.querySelector(".material-practice-next").hidden = false;
+        };
+        options.appendChild(button);
+      });
+      practiceCard.querySelector(".material-practice-next").onclick = () => {
+        questionIndex++;
+        renderPracticeQuestion();
+      };
+    }
+
+    renderPracticeQuestion();
+  }
+
+  function buildPracticeTest(content) {
+    const points = getPointData(content);
+    const types = ["grammar", "sentence", "completion", "arrangement"];
+    const labels = {
+      grammar: "Pemilihan grammar",
+      sentence: "Susunan kalimat",
+      completion: "Melengkapi kalimat",
+      arrangement: "Menyusun kalimat",
+    };
+    let questionIndex = 0;
+    let correctAnswers = 0;
+    let scoreByType = createEmptyScore();
+
+    function createEmptyScore() {
+      return Object.fromEntries(types.map((type) => [type, { correct: 0, total: 0 }]));
+    }
+
+    function unique(items) {
+      return items.filter((item, index, array) => item && array.indexOf(item) === index);
+    }
+
+    function rotate(items, amount) {
+      if (items.length < 2) return items.slice();
+      const offset = ((amount % items.length) + items.length) % items.length;
+      return items.slice(offset).concat(items.slice(0, offset));
+    }
+
+    function tokensOf(sentence) {
+      const spaced = sentence
+        .replace(/([。！？])/g, " $1")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+      if (spaced.length >= 3) return spaced;
+      return sentence
+        .replace(/([はがをにでともへか、。！？])/g, " $1 ")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function chunksOf(sentence) {
+      const tokens = tokensOf(sentence);
+      if (tokens.length <= 4) return tokens;
+      return Array.from({ length: 4 }, (_, index) => {
+        const start = Math.round((index * tokens.length) / 4);
+        const end = Math.round(((index + 1) * tokens.length) / 4);
+        return tokens.slice(start, end).join(" ");
+      }).filter(Boolean);
+    }
+
+    function wrongSentences(sentence) {
+      const chunks = chunksOf(sentence);
+      if (chunks.length < 2) return [`${sentence} か`, `${sentence} ね`, `${sentence} よ`];
+      return unique([
+        rotate(chunks, 1).join(" "),
+        chunks.slice().reverse().join(" "),
+        (chunks.length > 2
+          ? [chunks[0], chunks[2], chunks[1], ...chunks.slice(3)]
+          : rotate(chunks, -1)
+        ).join(" "),
+        rotate(chunks, 2).join(" "),
+      ]).filter((item) => item !== sentence);
+    }
+
+    function fourChoices(correct, distractors, offset) {
+      const choices = unique([correct, ...distractors]);
+      const fallback = ["です", "ます", "ません", "でした", "から", "ので"];
+      let fallbackIndex = 0;
+      while (choices.length < 4) {
+        const item = fallback[fallbackIndex % fallback.length];
+        if (!choices.includes(item)) choices.push(item);
+        fallbackIndex++;
+      }
+      return rotate(choices.slice(0, 4), offset % 4);
+    }
+
+    function makeQuestion(point, type, index) {
+      const others = points.filter((candidate) => candidate !== point);
+      if (type === "grammar") {
+        return {
+          type,
+          pointTitle: point.title,
+          sourceSentence: point.japanese,
+          instruction: "Pilih kalimat yang menggunakan grammar sesuai pola berikut.",
+          context: point.title,
+          prompt: `Arti: ${point.meaning}`,
+          correct: point.japanese,
+          choices: fourChoices(
+            point.japanese,
+            [...others.map((item) => item.japanese), ...wrongSentences(point.japanese)],
+            index + 1,
+          ),
+        };
+      }
+
+      if (type === "sentence") {
+        return {
+          type,
+          pointTitle: point.title,
+          sourceSentence: point.japanese,
+          instruction: "Pilih susunan kalimat bahasa Jepang yang benar.",
+          context: `Arti: ${point.meaning}`,
+          prompt: "Kalimat manakah yang susunannya paling tepat?",
+          correct: point.japanese,
+          choices: fourChoices(point.japanese, wrongSentences(point.japanese), index + 2),
+        };
+      }
+
+      if (type === "completion") {
+        const tokens = tokensOf(point.japanese);
+        const candidates = tokens
+          .map((token, tokenIndex) => ({ token, tokenIndex }))
+          .filter(({ token }) => !/^[、。！？]$/.test(token));
+        const target = candidates[Math.floor(candidates.length / 2)] || {
+          token: tokens[0] || point.japanese,
+          tokenIndex: 0,
+        };
+        const prompt = tokens
+          .map((token, tokenIndex) => (tokenIndex === target.tokenIndex ? "（　　）" : token))
+          .join(" ");
+        const pool = unique([
+          ...others.flatMap((item) => tokensOf(item.japanese)),
+          "です",
+          "ます",
+          "ません",
+          "から",
+        ]).filter((token) => token !== target.token && !/^[、。！？]$/.test(token));
+        return {
+          type,
+          pointTitle: point.title,
+          sourceSentence: point.japanese,
+          instruction: "Pilih kata atau pola yang tepat untuk melengkapi kalimat.",
+          context: `Arti: ${point.meaning}`,
+          prompt,
+          correct: target.token,
+          choices: fourChoices(target.token, pool, index + 3),
+        };
+      }
+
+      const chunks = chunksOf(point.japanese);
+      const shuffled = chunks.length > 1 ? rotate(chunks, 1) : chunks;
+      const correctOrder = chunks.map((chunk) => shuffled.indexOf(chunk) + 1);
+      const correct = correctOrder.join(" - ");
+      const variants = [
+        rotate(correctOrder, 1),
+        correctOrder.slice().reverse(),
+        correctOrder.length > 2
+          ? [correctOrder[0], correctOrder[2], correctOrder[1], ...correctOrder.slice(3)]
+          : rotate(correctOrder, -1),
+        rotate(correctOrder, 2),
+      ].map((order) => order.join(" - "));
+      return {
+        type,
+        pointTitle: point.title,
+        sourceSentence: point.japanese,
+        instruction: "Pilih urutan nomor yang membentuk kalimat dengan benar.",
+        context: `Arti: ${point.meaning}`,
+        prompt: shuffled.map((chunk, i) => `${i + 1}. ${chunk}`).join("　｜　"),
+        correct,
+        choices: fourChoices(correct, variants, index),
+      };
+    }
+
+    const questionCount = points.length ? Math.max(8, points.length) : 0;
+    const questions = Array.from({ length: questionCount }, (_, index) =>
+      makeQuestion(points[index % points.length], types[index % types.length], index),
+    );
+    const mistakeStorageKey = `${progressKey}MistakesV1`;
+    const lessonMistakeKey = String(startNumber + activeIndex);
+    let activeQuestions = questions;
+    let reviewMode = false;
+
+    function questionId(question) {
+      return `${question.type}::${question.sourceSentence}::${question.prompt}`;
+    }
+
+    function readMistakeStore() {
+      try {
+        const value = JSON.parse(localStorage.getItem(mistakeStorageKey) || "{}");
+        return value && typeof value === "object" ? value : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function savedMistakeIds() {
+      const value = readMistakeStore()[lessonMistakeKey];
+      return Array.isArray(value) ? value : [];
+    }
+
+    function updateMistake(question, isCorrect) {
+      const store = readMistakeStore();
+      const ids = new Set(
+        Array.isArray(store[lessonMistakeKey]) ? store[lessonMistakeKey] : [],
+      );
+      if (isCorrect) ids.delete(questionId(question));
+      else ids.add(questionId(question));
+      if (ids.size) store[lessonMistakeKey] = Array.from(ids);
+      else delete store[lessonMistakeKey];
+      try {
+        localStorage.setItem(mistakeStorageKey, JSON.stringify(store));
+      } catch {
+        // Latihan tetap berjalan saat penyimpanan browser tidak tersedia.
+      }
+    }
+
+    function reviewQuestions() {
+      const ids = new Set(savedMistakeIds());
+      return questions.filter((question) => ids.has(questionId(question)));
+    }
+
+    function explanationFor(question) {
+      if (question.type === "grammar")
+        return `Kalimat tersebut memakai pola ${question.pointTitle} dan sesuai dengan arti yang diberikan.`;
+      if (question.type === "sentence")
+        return `Susunan yang benar adalah ${question.sourceSentence}. Perhatikan posisi unsur kalimat dan pola ${question.pointTitle}.`;
+      if (question.type === "completion")
+        return `Bagian yang tepat melengkapi pola ${question.pointTitle}. Kalimat lengkapnya: ${question.sourceSentence}`;
+      return `Urutan tersebut membentuk kalimat ${question.sourceSentence} sesuai pola ${question.pointTitle}.`;
+    }
+
+    function resetSession(nextQuestions, isReview) {
+      activeQuestions = nextQuestions;
+      reviewMode = isReview;
+      questionIndex = 0;
+      correctAnswers = 0;
+      scoreByType = createEmptyScore();
+      renderQuestion();
+    }
+
+    practiceStudy.innerHTML =
+      '<header class="material-study-section-head"><div class="eyebrow">TAHAP 3 · KERJAKAN LATIHAN</div><h3>Simulasi mini JLPT / JFT.</h3><p>Kerjakan empat jenis soal. Setiap jawaban disertai pembahasan singkat.</p></header><div class="material-test-types"><span>Pemilihan grammar</span><span>Susunan kalimat</span><span>Melengkapi kalimat</span><span>Menyusun kalimat</span></div><div class="material-mistake-bar" hidden><div><b>Daftar kesalahan bab ini</b><span></span></div><button type="button">Ulangi soal yang salah</button></div><div class="material-practice-card"></div>';
+    const practiceCard = practiceStudy.querySelector(".material-practice-card");
+    const mistakeBar = practiceStudy.querySelector(".material-mistake-bar");
+
+    function refreshMistakeBar() {
+      const mistakes = reviewQuestions();
+      mistakeBar.hidden = mistakes.length === 0;
+      mistakeBar.querySelector("span").textContent = `${mistakes.length} soal perlu dipelajari kembali.`;
+      mistakeBar.querySelector("button").onclick = () =>
+        resetSession(mistakes, true);
+    }
+
+    function renderQuestion() {
+      refreshMistakeBar();
+      if (!activeQuestions.length) {
+        practiceCard.innerHTML = '<p class="material-practice-empty">Latihan untuk bab ini sedang disiapkan.</p>';
+        return;
+      }
+      if (questionIndex >= activeQuestions.length) {
+        const percentage = Math.round((correctAnswers / activeQuestions.length) * 100);
+        const breakdown = types
+          .map(
+            (type) =>
+              `<li><span>${labels[type]}</span><b>${scoreByType[type].correct}/${scoreByType[type].total}</b></li>`,
+          )
+          .join("");
+        practiceCard.innerHTML = `<div class="material-practice-result"><span>${reviewMode ? "ULANG KESALAHAN SELESAI" : "TES SELESAI"}</span><b>${percentage}</b><small>SKOR</small><h4>${percentage >= 80 ? "Pemahaman sangat baik" : percentage >= 60 ? "Teruskan latihan" : "Pelajari kembali contohnya"}</h4><p>Jawaban benar ${correctAnswers} dari ${activeQuestions.length} soal.</p><ul class="material-practice-breakdown">${breakdown}</ul><div class="material-result-actions"><button type="button" class="material-retry-practice">${reviewMode ? "Ulangi soal ini" : "Ulangi tes"}</button><button type="button" class="material-all-practice" ${reviewMode ? "" : "hidden"}>Kembali ke tes lengkap</button></div></div>`;
+        practiceCard.querySelector(".material-retry-practice").onclick = () => {
+          const nextQuestions = reviewMode ? reviewQuestions() : questions;
+          resetSession(nextQuestions.length ? nextQuestions : questions, reviewMode && nextQuestions.length > 0);
+        };
+        const allPracticeButton = practiceCard.querySelector(".material-all-practice");
+        if (allPracticeButton)
+          allPracticeButton.onclick = () => resetSession(questions, false);
+        return;
+      }
+
+      const question = activeQuestions[questionIndex];
+      practiceCard.innerHTML = `<div class="material-practice-progress"><span>${reviewMode ? "Ulang kesalahan · " : ""}Soal ${questionIndex + 1} dari ${activeQuestions.length}</span><i><b style="width:${((questionIndex + 1) / activeQuestions.length) * 100}%"></b></i></div><div class="material-practice-test-head"><span>${labels[question.type]}</span><b>問題 ${questionIndex + 1}</b></div><p class="material-practice-instruction"></p><div class="material-practice-context"></div><div class="material-practice-japanese"></div><div class="material-practice-options"></div><div class="material-practice-feedback" aria-live="polite"></div><button type="button" class="material-practice-next" hidden>${questionIndex + 1 === activeQuestions.length ? "Lihat hasil" : "Soal berikutnya →"}</button>`;
+      practiceCard.querySelector(".material-practice-instruction").textContent = question.instruction;
+      practiceCard.querySelector(".material-practice-context").textContent = question.context;
+      practiceCard.querySelector(".material-practice-japanese").textContent = question.prompt;
+      addMaterialFurigana(practiceCard.querySelector(".material-practice-test-head b"));
+      addMaterialFurigana(practiceCard.querySelector(".material-practice-context"));
+      addMaterialFurigana(practiceCard.querySelector(".material-practice-japanese"));
+      const options = practiceCard.querySelector(".material-practice-options");
+      question.choices.forEach((choice, choiceIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.dataset.answer = choice;
+        const number = document.createElement("b");
+        number.textContent = String(choiceIndex + 1);
+        const label = document.createElement("span");
+        label.textContent = choice;
+        addMaterialFurigana(label);
+        button.append(number, label);
+        button.onclick = () => {
+          const isCorrect = choice === question.correct;
+          if (isCorrect) correctAnswers++;
+          updateMistake(question, isCorrect);
+          scoreByType[question.type].total++;
+          if (isCorrect) scoreByType[question.type].correct++;
+          options.querySelectorAll("button").forEach((option) => {
+            option.disabled = true;
+            if (option.dataset.answer === question.correct) {
+              option.classList.add("correct");
+            }
+          });
+          if (!isCorrect) button.classList.add("wrong");
+          const feedback = practiceCard.querySelector(".material-practice-feedback");
+          const feedbackTitle = document.createElement("b");
+          feedbackTitle.className = isCorrect ? "is-correct" : "is-wrong";
+          feedbackTitle.textContent = isCorrect
+            ? "✓ Jawaban benar"
+            : `✕ Belum tepat · jawaban ${question.choices.indexOf(question.correct) + 1}`;
+          const correctAnswer = document.createElement("p");
+          correctAnswer.textContent = `Jawaban benar: ${question.correct}`;
+          const explanation = document.createElement("small");
+          explanation.textContent = explanationFor(question);
+          addMaterialFurigana(correctAnswer);
+          addMaterialFurigana(explanation);
+          feedback.replaceChildren(feedbackTitle, correctAnswer, explanation);
+          refreshMistakeBar();
+          practiceCard.querySelector(".material-practice-next").hidden = false;
+        };
+        options.appendChild(button);
+      });
+      practiceCard.querySelector(".material-practice-next").onclick = () => {
+        questionIndex++;
+        renderQuestion();
+      };
+    }
+
+    renderQuestion();
+  }
+
+  function setMaterialStep(step) {
+    reader.querySelectorAll(".material-step").forEach((button) => {
+      const isActive = button.dataset.materialStep === step;
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-selected", String(isActive));
+    });
+    reader.querySelectorAll(".material-step-panel").forEach((panel) => {
+      panel.hidden = panel.dataset.materialPanel !== step;
+    });
+  }
+
+  function selectLesson(nextIndex, shouldScroll = false) {
+    const lesson = lessons[nextIndex];
+    const nextContent = lesson?.querySelector(".html-content");
+    if (!lesson || !nextContent || nextIndex === activeIndex) return;
+
+    if (activeContent && activeIndex >= 0)
+      lessons[activeIndex].appendChild(activeContent);
+
+    activeIndex = nextIndex;
+    activeContent = nextContent;
+    const summaryText = lesson
+      .querySelector("summary")
+      .textContent.replace(/^\s*\d+\s*/, "")
+      .trim();
+    const currentNumber = startNumber + nextIndex;
+    readerNumber.textContent = `Materi ${String(currentNumber).padStart(2, "0")} · Buku ${bookNumber}`;
+    reader.querySelector(".material-reader-position").textContent =
+      `Pelajaran ${currentNumber} dari ${endNumber}`;
+    readerTitle.textContent = summaryText;
+    readerBody.replaceChildren(activeContent);
+    buildExampleStudy(activeContent);
+    buildPracticeTest(activeContent);
+    activeContent
+      .querySelectorAll(".grammar-japanese-example")
+      .forEach((example) => addMaterialFurigana(example, true));
+    activeContent
+      .querySelectorAll(
+        ".grammar-point > h3, .grammar-short-explanation, .grammar-important-note",
+      )
+      .forEach((section) => addMaterialFurigana(section));
+    setMaterialStep("patterns");
+
+    buttons.forEach((button, buttonIndex) => {
+      const isActive = buttonIndex === nextIndex;
+      button.classList.toggle("active", isActive);
+      button.classList.toggle("current", isActive);
+      button.setAttribute("aria-selected", String(isActive));
+      button.tabIndex = isActive ? 0 : -1;
+    });
+    reader.querySelector(".material-previous").disabled = nextIndex === 0;
+    reader.querySelector(".material-next").disabled = nextIndex === 24;
+
+    if (shouldScroll) {
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      reader.scrollIntoView({
+        behavior: reducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    }
+  }
+
+  buttons.forEach((button, buttonIndex) => {
+    button.onclick = () => selectLesson(buttonIndex, true);
+    button.onkeydown = (event) => {
+      let nextIndex = buttonIndex;
+      if (event.key === "ArrowRight") nextIndex = Math.min(24, buttonIndex + 1);
+      else if (event.key === "ArrowLeft") nextIndex = Math.max(0, buttonIndex - 1);
+      else if (event.key === "ArrowDown") nextIndex = Math.min(24, buttonIndex + 5);
+      else if (event.key === "ArrowUp") nextIndex = Math.max(0, buttonIndex - 5);
+      else if (event.key === "Home") nextIndex = 0;
+      else if (event.key === "End") nextIndex = 24;
+      else return;
+      event.preventDefault();
+      buttons[nextIndex].focus();
+      selectLesson(nextIndex);
+    };
+  });
+
+  sourceCourse.classList.add("material-source-hidden");
+  sourceCourse.insertAdjacentElement("beforebegin", learningLayout);
+  learningLayout.append(progressPanel, learningMain);
+  learningMain.append(picker, sourceCourse, reader);
+  reader.querySelector(".material-back-list").onclick = () =>
+    picker.scrollIntoView({ behavior: "smooth", block: "start" });
+  reader.querySelector(".material-previous").onclick = () =>
+    selectLesson(Math.max(0, activeIndex - 1), true);
+  reader.querySelector(".material-next").onclick = () =>
+    selectLesson(Math.min(24, activeIndex + 1), true);
+  reader.querySelector(".material-mark-repeat").onclick = () =>
+    setLessonStatus(activeIndex, "repeat");
+  reader.querySelector(".material-mark-understood").onclick = () => {
+    setLessonStatus(activeIndex, "done");
+    if (activeIndex < 24) selectLesson(activeIndex + 1, true);
+  };
+  reader.querySelectorAll(".material-step").forEach((button) => {
+    button.onclick = () => setMaterialStep(button.dataset.materialStep);
+  });
+  updateMaterialProgress();
+  selectLesson(0);
+}
+
+initMaterialLessonPicker({
+  viewId: "materials",
+  startNumber: 1,
+  bookNumber: 1,
+  progressKey: "nihonBenkyoLessonStatusV1",
+});
+initMaterialLessonPicker({
+  viewId: "book2",
+  startNumber: 26,
+  bookNumber: 2,
+  progressKey: "nihonBenkyoLessonStatusV2",
+});
+syncCurriculumDashboard();
+
+/* Terapkan pengalaman Belajar Kanji V2 yang telah disetujui ke aplikasi utama. */
+(function mountKanjiLearningV2() {
+  const view = document.getElementById("kanji-study");
+  if (!view) return;
+  view.innerHTML =
+    '<iframe class="production-kanji-frame" src="prototype-kanji-v2.html?v=10&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="eager"></iframe>';
+  const frame = view.querySelector(".production-kanji-frame");
+  frame.addEventListener("load", () => {
+    const frameDocument = frame.contentDocument;
+    if (!frameDocument) return;
+    const resizeFrame = () => {
+      const height = Math.max(
+        frameDocument.documentElement.scrollHeight,
+        frameDocument.body.scrollHeight,
+      );
+      frame.style.height = `${height + 4}px`;
+    };
+    resizeFrame();
+    if ("ResizeObserver" in window) {
+      const observer = new ResizeObserver(resizeFrame);
+      observer.observe(frameDocument.body);
+    }
+    frameDocument.fonts?.ready.then(resizeFrame);
+  });
+  new MutationObserver(() => {
+    if (view.classList.contains("active")) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      frame.contentWindow?.scrollTo(0, 0);
+    }
+  }).observe(view, { attributes: true, attributeFilter: ["class"] });
 })();

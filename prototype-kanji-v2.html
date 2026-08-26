@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prototype Belajar Kanji · Nihon GO Benkyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="prototype-kanji-v2.css?v=10">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html?build=21"><img src="logo.png" alt=""><span><b>Nihon GO Benkyo</b><small>日本語勉強</small></span></a>
+    <nav><button>Beranda</button><button>Materi</button><button class="active">Kanji</button><button>Hafalan</button><button>Tes</button></nav>
+    <a class="back-app" href="index.html?build=21">Aplikasi utama →</a>
+  </header>
+
+  <aside class="sidebar">
+    <span class="side-label">JALUR BELAJAR</span>
+    <button class="active" data-level="all"><i>全</i><span>Semua kanji</span><b id="allCount">0</b></button>
+    <button data-level="N5"><i>五</i><span>JLPT N5</span><b id="n5Count">0</b></button>
+    <button data-level="N4"><i>四</i><span>JLPT N4</span><b id="n4Count">0</b></button>
+    <button data-level="N3"><i>三</i><span>JLPT N3</span><b id="n3Count">0</b></button>
+    <span class="side-label">LATIHAN</span>
+    <button data-route="review"><i>復</i><span>Ulangi hari ini</span><b>7</b></button>
+    <button data-route="similar"><i>比</i><span>Kanji mirip</span><b>12</b></button>
+    <div class="daily"><span>TARGET HARI INI</span><b>8 / 10 kanji</b><i><em></em></i><small>2 kanji lagi untuk mencapai target</small></div>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div><span class="eyebrow">KANJI LEARNING PATH</span><h1>Belajar bentuk, bacaan, dan penggunaan.</h1><p>Pahami satu karakter melalui urutan goresan, kosakata, latihan menulis, dan pengulangan terjadwal.</p></div>
+      <div class="hero-stats"><article><span>Dikuasai</span><b>84</b></article><article><span>Dipantau</span><b>27</b></article><article><span>Streak</span><b>7 hari</b></article></div>
+    </section>
+
+    <section class="browser-card">
+      <header><div><span class="eyebrow">PILIH KANJI</span><h2 id="listTitle">Semua kanji</h2></div><label class="search"><span>⌕</span><input id="kanjiSearch" type="search" placeholder="Cari kanji, arti, onyomi, kunyomi…"></label></header>
+      <div class="level-row" aria-label="Pilih tingkat JLPT">
+        <button class="active" data-level="all"><span>Semua tingkat</span><b id="browserAllCount">0</b></button>
+        <button data-level="N5"><span>JLPT N5</span><small>Dasar</small><b id="browserN5Count">0</b></button>
+        <button data-level="N4"><span>JLPT N4</span><small>Dasar lanjut</small><b id="browserN4Count">0</b></button>
+        <button data-level="N3"><span>JLPT N3</span><small>Menengah</small><b id="browserN3Count">0</b></button>
+      </div>
+      <div class="filter-row"><button class="active" data-status="all">Semua</button><button data-status="new">Belum dipelajari</button><button data-status="review">Perlu diulang</button><button data-status="mastered">Dikuasai</button><span id="resultCount"></span></div>
+      <div class="kanji-grid" id="kanjiGrid"></div>
+    </section>
+
+    <section class="study-layout" id="studyArea">
+      <article class="kanji-stage">
+        <header><span class="level-badge" id="levelBadge">JLPT N5</span><span id="strokeCount">3 goresan</span><button class="fullscreen-calligraphy" id="fullscreenCalligraphy">⛶ Layar penuh</button></header>
+        <div class="stroke-board">
+          <span class="guide-char" id="guideCharacter">山</span>
+          <span class="stroke-badge" id="strokeBadge">Goresan 1–3</span>
+          <svg id="strokeSvg" viewBox="0 0 220 220" aria-label="Animasi urutan goresan"></svg>
+          <canvas class="brush-canvas" id="brushCanvas" width="660" height="660" aria-label="Animasi kaligrafi kuas Jepang"></canvas>
+        </div>
+        <div class="stroke-controls"><button id="playStroke">▶ Putar ulang</button><button id="stepStroke">1 goresan</button><button id="resetStroke">↻ Mulai kembali</button><button class="brush-mode active" id="brushMode">筆 Kuas halus</button><label>Kecepatan<select id="strokeSpeed"><option value="1250">Pelan</option><option value="900" selected>Normal</option><option value="580">Cepat</option></select></label></div>
+        <p class="stroke-step" id="strokeStep">Animasi goresan diputar otomatis dan berulang.</p>
+      </article>
+
+      <article class="kanji-detail">
+        <header><div><span class="eyebrow">KANJI DETAIL</span><h2><span id="detailCharacter">山</span><small id="detailMeaning">Gunung</small></h2></div><button class="sound">▶ Dengarkan</button></header>
+        <div class="readings"><div><span>ONYOMI</span><b id="onReading">サン・ザン</b><button data-reading-audio="on">▶ Dengarkan</button></div><div><span>KUNYOMI</span><b id="kunReading">やま</b><button data-reading-audio="kun">▶ Dengarkan</button></div></div>
+        <div class="memory-story"><span>CERITA PENGINGAT</span><p id="memoryStory">Tiga puncak yang berdiri berdampingan membentuk sebuah gunung.</p></div>
+        <div class="word-section"><div class="section-title"><span>KOSAKATA TERKAIT</span><button id="playAllWords">▶ Putar semua audio</button></div><div id="wordList" class="word-list"></div></div>
+        <div class="context-audio"><div><span>CONTOH AUDIO KONTEKSTUAL</span><p id="contextSentenceJapanese">「富士山」という言葉を練習します。</p><small id="contextSentenceMeaning">Mari berlatih menggunakan kosakata tersebut.</small></div><button id="playContextSentence">▶ Dengarkan kalimat</button></div>
+        <div class="similar"><span>KANJI YANG SERING TERTUKAR</span><div id="similarList"></div></div>
+        <footer class="srs-actions"><span>Seberapa kuat Anda mengingat kanji ini?</span><div><button data-srs="review">Sulit</button><button data-srs="learning">Masih belajar</button><button class="master" data-srs="mastered">Sudah kuat ✓</button></div></footer>
+      </article>
+    </section>
+
+    <section class="lower-grid">
+      <article class="writing-card">
+        <header><div><span class="eyebrow">LATIHAN MENULIS</span><h3>Tirukan bentuk kanji</h3></div><div><button id="traceToggle">Contoh transparan</button><button id="clearCanvas">Hapus</button></div></header>
+        <div class="writing-board"><span id="writingGuide">山</span><canvas id="writingCanvas" width="520" height="330"></canvas></div>
+        <p>Gunakan mouse atau layar sentuh. Ikuti urutan goresan dari atas ke bawah dan kiri ke kanan.</p>
+      </article>
+
+      <article class="quiz-card">
+        <header><div><span class="eyebrow">LATIHAN ADAPTIF</span><h3>Periksa pemahaman</h3></div><span id="quizProgress">1 / 4</span></header>
+        <div class="quiz-types"><span class="active">Arti</span><span>Bacaan</span><span>Kosakata</span><span>Kalimat</span></div>
+        <div class="quiz-body"><span id="quizType">PILIH ARTI YANG BENAR</span><div class="quiz-character" id="quizCharacter">山</div><p id="quizQuestion">Apa arti kanji tersebut?</p><div class="quiz-options" id="quizOptions"></div><div class="quiz-feedback" id="quizFeedback" aria-live="polite"></div><button class="next-quiz" id="nextQuiz" hidden>Soal berikutnya →</button></div>
+      </article>
+    </section>
+  </main>
+
+  <div class="mobile-nav"><button>⌂<span>Beranda</span></button><button>文<span>Materi</span></button><button class="active">漢<span>Kanji</span></button><button>試<span>Tes</span></button></div>
+  <script src="data/kanji-data.js"></script>
+  <script src="data/kanji-stroke-data.js"></script>
+  <script src="prototype-kanji-v2.js?v=10"></script>
+</body>
+</html>

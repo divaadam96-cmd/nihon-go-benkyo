@@ -1,0 +1,254 @@
+.top,
+.side,
+.mobile-nav {
+  display: none !important;
+}
+
+html,
+body {
+  min-height: 0 !important;
+  background: transparent !important;
+}
+
+.app {
+  max-width: none !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.layout {
+  display: block !important;
+}
+
+.main {
+  min-height: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+#memorization {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 26px 28px 44px;
+}
+
+#memorization > .head {
+  margin-bottom: 15px;
+  padding: 22px 24px;
+  border: 1px solid #d9cdb7;
+  border-radius: 12px;
+  background: #fffaf2e8;
+  box-shadow: 0 13px 32px #172b4210;
+}
+
+#memorization > .head h1 {
+  margin: 6px 0;
+  color: #112944;
+  font-size: 27px;
+}
+
+#memorization > .head p {
+  max-width: 760px;
+  margin-bottom: 0;
+  color: #718095;
+  line-height: 1.65;
+}
+
+#memorization .memory-routes {
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+#memorization .memory-route {
+  position: relative;
+  min-height: 112px;
+  padding: 18px 20px 18px 70px;
+  overflow: hidden;
+  border-color: #d9cdb7;
+  background: #fffdf8e8;
+  box-shadow: 0 10px 25px #172b420b;
+}
+
+#memorization .memory-route .route-icon {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 9px;
+  color: #b27f34;
+  background: #eee3cd;
+}
+
+#memorization .memory-route b {
+  margin-top: 1px;
+  color: #112944;
+  font-size: 15px;
+}
+
+#memorization .memory-route small {
+  color: #74818e;
+  font-size: 10px;
+}
+
+#memorization .memory-route.active {
+  border-color: #112944;
+  background: #112944;
+}
+
+#memorization .memory-route.active b {
+  color: #fff7e7;
+}
+
+#memorization .memory-route.active small {
+  color: #bdcad6;
+}
+
+#memorization .memory-route.active .route-icon {
+  color: #f0ca7d;
+  background: #ffffff12;
+}
+
+#memorization .hafalan-panel-hint {
+  margin-bottom: 0;
+  padding: 18px;
+  border-color: #d7c6a7;
+  color: #778491;
+  background: #f4ecddc9;
+}
+
+#memorization .flash-layout {
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, .55fr);
+  gap: 14px;
+  align-items: start;
+}
+
+#memorization .flash-layout > div:first-child,
+#memorization .learning-tips,
+#memorization .kana-panel {
+  border: 1px solid #d9cdb7;
+  border-radius: 12px;
+  background: #fffaf2e8;
+  box-shadow: 0 13px 32px #172b420f;
+}
+
+#memorization .flash-layout > div:first-child {
+  padding: 18px;
+}
+
+#memorization .filters {
+  gap: 7px;
+  margin-bottom: 13px;
+  padding: 13px;
+  border: 1px solid #e1d6c4;
+  border-radius: 9px;
+  background: #f3ebdd;
+}
+
+#memorization .study-section-label {
+  margin: 7px 0 1px;
+  color: #936b30;
+  font-size: 8px;
+}
+
+#memorization .study-section-label:first-child {
+  margin-top: 0;
+}
+
+#memorization .bab-filter-row {
+  width: 100%;
+  gap: 7px;
+}
+
+#memorization .bab-select,
+#memorization .filter {
+  min-height: 34px;
+  border-color: #d8cbb6;
+  background: #fffdf8;
+  font-size: 9px;
+}
+
+#memorization .filter.active {
+  border-color: #112944;
+  color: #fff;
+  background: #112944;
+}
+
+#memorization .bab-total-info {
+  margin-bottom: 13px;
+  border-color: #ddcba8;
+  background: #f6eddc;
+  font-size: 9px;
+}
+
+#memorization .flashcard {
+  height: 350px;
+}
+
+#memorization .face {
+  border-color: #d8c9af;
+  border-radius: 11px;
+  background: linear-gradient(140deg, #fffdf8, #f1e6d3);
+  box-shadow: inset 0 0 0 7px #ffffff55;
+}
+
+#memorization .face .kana {
+  color: #112944;
+  font-size: 72px;
+}
+
+#memorization .back b {
+  font-size: 30px;
+}
+
+#memorization .flash-controls {
+  gap: 8px;
+  margin-top: 13px;
+}
+
+#memorization .flash-controls button {
+  min-width: 125px;
+  border-radius: 7px;
+}
+
+#memorization .learning-tips {
+  position: sticky;
+  top: 12px;
+  padding: 20px;
+}
+
+#memorization .learning-tips h3 {
+  margin-top: 0;
+  color: #112944;
+}
+
+#memorization .kana-curriculum {
+  margin-top: 0;
+}
+
+#memorization .kana-grid {
+  gap: 12px;
+}
+
+@media (max-width: 800px) {
+  #memorization {
+    padding: 18px 14px 35px;
+  }
+
+  #memorization .memory-routes,
+  #memorization .flash-layout,
+  #memorization .kana-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #memorization .learning-tips {
+    position: static;
+  }
+
+  #memorization .flashcard {
+    height: 300px;
+  }
+}

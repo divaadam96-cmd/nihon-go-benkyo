@@ -1,0 +1,123 @@
+const lessons = [
+  ["Kalimat nominal dasar","N1 は N2 です","わたしは 学生です。","Saya adalah pelajar.","Memperkenalkan diri dan menjelaskan identitas dengan kalimat sopan."],
+  ["Kata tunjuk dan persamaan","これは N です","これは 辞書です。","Ini adalah kamus.","Menunjuk benda dan menjelaskan kepemilikan atau jenisnya."],
+  ["Tempat, gedung, dan arah","N は ここ／そこ／あそこです","食堂は 二階です。","Kantin berada di lantai dua.","Menanyakan dan menjelaskan tempat, lantai, serta arah."],
+  ["Waktu dan kegiatan harian","Waktu に Vます","六時半に 起きます。","Saya bangun pukul setengah tujuh.","Menyebut waktu dan menceritakan kegiatan sehari-hari."],
+  ["Perjalanan dan perpindahan","Tempat へ 行きます","京都へ 行きます。","Saya pergi ke Kyoto.","Menceritakan tujuan, kendaraan, teman, dan waktu perjalanan."],
+  ["Aktivitas dan ajakan","N を Vます","図書館で 本を 読みます。","Saya membaca buku di perpustakaan.","Menyatakan aktivitas serta mengajak orang melakukan sesuatu."],
+  ["Memberi, menerima, alat, bahasa","Alat で Vます","はしで ご飯を 食べます。","Saya makan nasi dengan sumpit.","Menjelaskan alat, bahasa, serta kegiatan memberi dan menerima."],
+  ["Kata sifat dan perbandingan","N は い／な形容詞です","奈良は 静かな 町です。","Nara adalah kota yang tenang.","Mendeskripsikan sifat, kesan, dan perbandingan sederhana."],
+  ["Kesukaan, kemampuan, dan jumlah","N が 好きです","日本料理が 好きです。","Saya suka masakan Jepang.","Mengungkapkan kesukaan, kemampuan, dan tingkat pemahaman."],
+  ["Keberadaan dan posisi","Tempat に N が あります／います","机の 上に 本が あります。","Ada buku di atas meja.","Menjelaskan keberadaan orang, hewan, dan benda."],
+  ["Bilangan, frekuensi, dan durasi","Periode に Jumlah Vます","一週間に 三回 勉強します。","Saya belajar tiga kali seminggu.","Menggunakan kata bantu bilangan, frekuensi, dan durasi."],
+  ["Bentuk lampau dan perbandingan","N は 形容詞かったです","きのうは 寒かったです。","Kemarin dingin.","Menceritakan keadaan lampau dan membandingkan dua hal."],
+  ["Keinginan dan harapan","N が ほしいです／Vたいです","日本へ 行きたいです。","Saya ingin pergi ke Jepang.","Mengungkapkan benda dan kegiatan yang diinginkan."],
+  ["Bentuk て dan permintaan","Vて ください","ここに 名前を 書いて ください。","Tolong tulis nama di sini.","Membuat permintaan dan menghubungkan tindakan dengan bentuk て."],
+  ["Izin, larangan, dan keadaan","Vても いいです","ここで 写真を 撮っても いいです。","Boleh memotret di sini.","Meminta izin, menyatakan larangan, dan menjelaskan keadaan."],
+  ["Menyambungkan kalimat","Vて、Vて、それから Vます","ご飯を 食べて、勉強します。","Saya makan lalu belajar.","Menyusun beberapa aktivitas dan sifat dalam satu rangkaian."],
+  ["Bentuk ない dan aturan","Vなければ なりません","勉強しなければ なりません。","Saya harus belajar.","Mengungkapkan kewajiban, larangan, dan hal yang tidak perlu."],
+  ["Bentuk kamus dan kemampuan","V辞書形 ことが できます","日本語を 話すことが できます。","Saya bisa berbicara bahasa Jepang.","Menyatakan kemampuan, hobi, dan kegiatan sebelum aktivitas lain."],
+  ["Pengalaman, perubahan, kebiasaan","Vた ことが あります","富士山に 登ったことが あります。","Saya pernah mendaki Gunung Fuji.","Menceritakan pengalaman dan perubahan kebiasaan."],
+  ["Bentuk biasa dan percakapan informal","V普通形","明日 映画を 見る。","Besok saya menonton film.","Menggunakan bentuk biasa dalam percakapan yang akrab."],
+  ["Pendapat dan informasi kutipan","Bentuk biasa と 思います","日本は 便利だと 思います。","Menurut saya Jepang itu praktis.","Menyampaikan pendapat, perkiraan, dan ucapan orang lain."],
+  ["Klausa penjelas untuk kata benda","Klausa biasa + N","これは 先生が 書いた 本です。","Ini buku yang ditulis guru.","Menerangkan orang atau benda menggunakan klausa."],
+  ["Waktu dan hubungan kondisi","V辞書形／Vた とき","日本へ 行くとき、かばんを 買いました。","Saya membeli tas ketika akan pergi ke Jepang.","Menjelaskan kapan sesuatu terjadi dan hasil suatu kondisi."],
+  ["Memberi dan menerima bantuan","Vて あげます／もらいます","友達に 荷物を 持って もらいました。","Saya dibantu teman membawakan barang.","Mengungkapkan bantuan yang diberikan atau diterima."],
+  ["Pengandaian dan syarat","Vたら","雨が 降ったら、家に います。","Kalau hujan, saya tinggal di rumah.","Menyatakan syarat, pengandaian, dan hasil yang mengikuti."],
+];
+
+const status = lessons.map((_,index)=>index<4?"done":index===4?"repeat":"new");
+let currentLesson=0;
+const grid=document.getElementById("lessonGrid");
+const reader=document.getElementById("focusReader");
+const sourceFrame=document.getElementById("sourceApp");
+
+function getFullLessonContent(index){
+  const sourceDocument=sourceFrame.contentDocument;
+  if(!sourceDocument) return null;
+  if(index===0){
+    return sourceDocument.querySelector("#materials .material-reader-body .html-content") ||
+      sourceDocument.querySelector("#materials .html-course > .html-lesson .html-content");
+  }
+  return sourceDocument.querySelectorAll("#materials .html-course > .html-lesson")[index]?.querySelector(".html-content") || null;
+}
+
+function renderCompletePatterns(index,fallback){
+  const patternList=document.getElementById("patternList");
+  const sourceContent=getFullLessonContent(index);
+  if(!sourceContent){
+    patternList.innerHTML=fallback;
+    return;
+  }
+  const clonedContent=sourceContent.cloneNode(true);
+  clonedContent.classList.add("prototype-full-content");
+  clonedContent.querySelectorAll(".lesson-quiz,.html-note,.lesson-dialog-example").forEach(element=>element.remove());
+  const note=document.createElement("p");
+  note.className="full-pattern-note";
+  const totalPatterns=clonedContent.querySelectorAll(":scope > .grammar-point, :scope > .lesson-points > li").length;
+  note.textContent=`✓ Seluruh ${totalPatterns || ""} pola dan poin materi asli ditampilkan tanpa dikurangi.`;
+  patternList.replaceChildren(note,clonedContent);
+}
+
+function renderGrid(){
+  grid.innerHTML="";
+  lessons.forEach((lesson,index)=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className=`lesson-card ${status[index]}${currentLesson===index?" current":""}`;
+    button.innerHTML=`<span class="lesson-card-top"><span class="lesson-number">PELAJARAN ${String(index+1).padStart(2,"0")}</span><i class="lesson-status"></i></span><b>${lesson[0]}</b><small>${status[index]==="done"?"Sudah dipahami":status[index]==="repeat"?"Perlu diulang":"Belum dimulai"}</small>`;
+    button.onclick=()=>openLesson(index,true);
+    grid.appendChild(button);
+  });
+  updateProgress();
+}
+
+function openLesson(index,scroll=false){
+  currentLesson=Math.max(0,Math.min(lessons.length-1,index));
+  const [title,formula,japanese,meaning,goal]=lessons[currentLesson];
+  document.getElementById("readerPosition").textContent=`Pelajaran ${currentLesson+1} dari 25`;
+  document.getElementById("readerEyebrow").textContent=`PELAJARAN ${String(currentLesson+1).padStart(2,"0")} · MODE FOKUS`;
+  document.getElementById("readerTitle").textContent=title;
+  document.getElementById("readerGoal").textContent=goal;
+  const fallbackPattern=`<section class="pattern-card"><span class="pattern-index">MEMUAT MATERI LENGKAP</span><h3>${title}</h3><p>${goal} Seluruh pola dari materi asli akan muncul setelah sumber selesai dimuat.</p><div class="formula">${formula}</div><div class="example"><span class="example-label">CONTOH</span><div><b>${japanese}</b><span>${meaning}</span></div></div></section>`;
+  renderCompletePatterns(currentLesson,fallbackPattern);
+  const choices=[formula,"N を ください","Vては いけません"];
+  document.getElementById("answerGrid").innerHTML=choices.map((choice,i)=>`<button class="answer-option" type="button" data-correct="${i===0}">${choice}</button>`).join("");
+  document.getElementById("checkFeedback").textContent="";
+  document.querySelectorAll(".answer-option").forEach(option=>option.onclick=()=>{
+    document.querySelectorAll(".answer-option").forEach(item=>item.disabled=true);
+    const correct=option.dataset.correct==="true";
+    option.classList.add(correct?"correct":"wrong");
+    if(!correct) document.querySelector('[data-correct="true"]').classList.add("correct");
+    document.getElementById("checkFeedback").textContent=correct?"Benar. Pola utama sudah dikenali.":"Belum tepat. Pola yang benar sudah ditandai.";
+  });
+  document.getElementById("previousLesson").disabled=currentLesson===0;
+  document.getElementById("nextLesson").disabled=currentLesson===24;
+  renderGrid();
+  if(scroll) reader.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+}
+
+function updateProgress(){
+  const done=status.filter(item=>item==="done").length;
+  const repeat=status.filter(item=>item==="repeat").length;
+  const fresh=25-done-repeat;
+  const percent=Math.round(done/25*100);
+  document.getElementById("doneCount").textContent=done;
+  document.getElementById("repeatCount").textContent=repeat;
+  document.getElementById("newCount").textContent=fresh;
+  document.getElementById("topProgress").textContent=`${done} / 25`;
+  document.getElementById("progressPercent").textContent=`${percent}%`;
+  document.getElementById("progressRing").style.setProperty("--progress",`${percent}%`);
+}
+
+document.querySelectorAll("[data-open-lesson]").forEach(button=>button.onclick=()=>openLesson(Number(button.dataset.openLesson),true));
+document.getElementById("backToDirectory").onclick=()=>document.getElementById("lessonDirectory").scrollIntoView({behavior:"smooth"});
+document.getElementById("previousLesson").onclick=()=>openLesson(currentLesson-1,true);
+document.getElementById("nextLesson").onclick=()=>openLesson(currentLesson+1,true);
+document.getElementById("markRepeat").onclick=()=>{status[currentLesson]="repeat";renderGrid()};
+document.getElementById("markUnderstood").onclick=()=>{status[currentLesson]="done";renderGrid();if(currentLesson<24)openLesson(currentLesson+1,true)};
+
+sourceFrame.addEventListener("load",()=>openLesson(currentLesson));
+
+renderGrid();
+openLesson(0);

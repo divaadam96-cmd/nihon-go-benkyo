@@ -1,5 +1,5 @@
-const CACHE_NAME = 'nihon-go-benkyo-v3';
-const ASSETS = ['index.html', 'styles.css', 'app.js', 'data/materi-data.js', 'data/kanji-data.js', 'data/kanji-stroke-data.js', 'data/kana-data.js', 'data/bab-data.js', 'nihon-go-benkyo.webmanifest', 'japan-paper-background.png', 'logo.png'];
+const CACHE_NAME = 'nihon-go-benkyo-v21';
+const ASSETS = ['index.html', 'styles.css?build=21', 'app.js?build=21', 'prototype-kanji-v2.html?v=10', 'prototype-kanji-v2.html?v=10&embed=1', 'prototype-kanji-v2.css?v=10', 'prototype-kanji-v2.js?v=10', 'prototype-tes-v2.html?v=4', 'prototype-tes-v2.html?v=4&embed=1', 'prototype-tes-v2.css?v=4', 'prototype-tes-v2.js?v=4', 'prototype-materi.html?v=2', 'prototype-materi.css?v=2', 'prototype-materi.js?v=2', 'prototype-sidebar-v2.html?v=6', 'prototype-sidebar-v2.css?v=6', 'prototype-sidebar-v2.js?v=6', 'prototype-sidebar-material.css?v=2', 'prototype-sidebar-memory.css?v=1', 'prototype-ui-v2.html?v=2', 'prototype-ui-v2.css?v=2', 'prototype-ui-v2.js?v=2', 'data/materi-data.js', 'data/kanji-data.js', 'data/kanji-stroke-data.js', 'data/kana-data.js', 'data/bab-data.js', 'nihon-go-benkyo.webmanifest', 'japan-paper-background.png', 'logo.png'];
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));

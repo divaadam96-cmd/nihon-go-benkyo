@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prototype Sidebar Adaptif — Nihon GO Benkyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="prototype-sidebar-v2.css?v=6">
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <header class="topbar">
+      <a class="brand" href="index.html?build=21"><img src="logo.png" alt=""><span><b>Nihon GO Benkyo</b><small>日本語勉強</small></span></a>
+      <div class="prototype-label">PROTOTIPE SIDEBAR ADAPTIF</div>
+      <div class="user-stats"><span>火 7 hari</span><b>12.680 XP</b><i>D</i></div>
+    </header>
+
+    <aside class="adaptive-sidebar" id="adaptiveSidebar">
+      <div class="sidebar-heading"><span>NAVIGASI BELAJAR</span><button id="collapseSidebar" aria-label="Ciutkan sidebar">‹</button></div>
+      <nav class="main-nav" id="mainNav">
+        <button data-section="dashboard"><i>⌂</i><span>Ringkasan</span><small>Beranda belajar</small></button>
+        <button class="active" data-section="materials"><i>文</i><span>Materi</span><small>Pelajaran 1–50</small><b>25</b></button>
+        <button data-section="kanji"><i>漢</i><span>Kanji</span><small>N5 sampai N3</small><b>613</b></button>
+        <button data-section="memory"><i>語</i><span>Hafalan</span><small>Kosakata per Bab</small></button>
+        <button data-section="exam"><i>試</i><span>Tes</span><small>JLPT dan JFT</small></button>
+      </nav>
+
+      <section class="course-control">
+        <label for="courseSelect">KELAS AKTIF</label>
+        <div class="select-wrap"><span>一</span><select id="courseSelect"><option value="book1">Buku 1 · Dasar</option><option value="book2">Buku 2 · Menengah</option></select></div>
+      </section>
+
+      <section class="context-panel" id="contextPanel"></section>
+
+      <footer class="sidebar-footer">
+        <div><span>Target harian</span><b>2 dari 4</b></div>
+        <i><em></em></i>
+        <button id="continueLearning"><span>▶</span><b>Lanjutkan belajar</b><small>Pelajaran 1</small></button>
+      </footer>
+    </aside>
+
+    <main class="content" id="contentArea"></main>
+
+    <nav class="mobile-nav" id="mobileNav"><button data-section="dashboard"><i>⌂</i><span>Beranda</span></button><button class="active" data-section="materials"><i>文</i><span>Materi</span></button><button data-section="kanji"><i>漢</i><span>Kanji</span></button><button data-section="memory"><i>語</i><span>Hafalan</span></button><button data-section="exam"><i>試</i><span>Tes</span></button></nav>
+  </div>
+  <script src="prototype-sidebar-v2.js?v=6"></script>
+</body>
+</html>

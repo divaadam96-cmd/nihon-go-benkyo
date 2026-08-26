@@ -1,0 +1,93 @@
+.top,
+.side,
+.mobile-nav {
+  display: none !important;
+}
+
+html,
+body {
+  min-height: 0 !important;
+  background: transparent !important;
+}
+
+.app {
+  max-width: none !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.layout {
+  display: block !important;
+}
+
+.main {
+  min-height: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+#materials,
+#book2 {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 25px 25px 45px;
+}
+
+#materials > .head,
+#book2 > .head {
+  margin-bottom: 16px;
+}
+
+#materials .material-reader,
+#book2 .material-reader,
+#materials .material-picker-layout,
+#book2 .material-picker-layout {
+  max-width: none;
+}
+
+/* Daftar bab dan isi bab menjadi dua layar terpisah. */
+#materials.sidebar-material-list-mode .material-reader,
+#book2.sidebar-material-list-mode .material-reader {
+  display: none !important;
+}
+
+#materials.sidebar-material-reader-mode > .head,
+#book2.sidebar-material-reader-mode > .head,
+#materials.sidebar-material-reader-mode .material-progress-panel,
+#book2.sidebar-material-reader-mode .material-progress-panel,
+#materials.sidebar-material-reader-mode .material-picker,
+#book2.sidebar-material-reader-mode .material-picker {
+  display: none !important;
+}
+
+#materials.sidebar-material-reader-mode .material-learning-layout,
+#book2.sidebar-material-reader-mode .material-learning-layout {
+  display: block !important;
+  margin-top: 0 !important;
+}
+
+#materials.sidebar-material-reader-mode .material-reader,
+#book2.sidebar-material-reader-mode .material-reader {
+  display: block !important;
+  margin-top: 0 !important;
+  min-height: 70vh;
+}
+
+#materials.sidebar-material-reader-mode .material-back-list,
+#book2.sidebar-material-reader-mode .material-back-list {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid #bda777;
+  border-radius: 7px;
+  background: #fffaf0;
+}
+
+@media (max-width: 760px) {
+  #materials,
+  #book2 {
+    padding: 18px 12px 35px;
+  }
+}
