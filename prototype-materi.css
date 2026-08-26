@@ -42,7 +42,7 @@ body.focus-mode .reader-paper{padding:40px 46px}
 .focus-toggle:hover{border-color:var(--gold)}
 .focus-toggle.active{border-color:var(--navy-900);color:#f8e8c4;background:var(--navy-900)}
 .book-switcher{display:grid;gap:6px;margin-top:18px}.book-switcher button{padding:10px 12px;border:1px solid #cdbd9e;border-radius:7px;background:#f5efe3;color:var(--muted);font:700 11px inherit;text-align:left;cursor:pointer}.book-switcher button.active{border-color:var(--green);background:#e2eee8;color:var(--navy-900)}
-.prototype-app{min-height:100vh}
+body:not(.embed-mode) .prototype-app{min-height:100vh}
 .topbar{
   position:sticky;
   top:0;

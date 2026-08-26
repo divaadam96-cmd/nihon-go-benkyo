@@ -4025,3 +4025,39 @@ syncCurriculumDashboard();
     }
   }).observe(view, { attributes: true, attributeFilter: ["class"] });
 })();
+
+/* Terapkan pengalaman Materi V2 (fokus, satu pola per layar) ke aplikasi utama.
+   Dilewati dalam mode source=1 karena prototype-materi.html memakai halaman itu
+   sebagai sumber data mentah (#materials .html-lesson) — mengganti isinya di sana
+   akan membuat iframe bersarang tak berujung. */
+(function mountMateriV2() {
+  if (new URLSearchParams(location.search).get("source") === "1") return;
+  const view = document.getElementById("materials");
+  if (!view) return;
+  view.innerHTML =
+    '<iframe class="production-material-frame" data-src="prototype-materi.html?v=11&embed=1" title="Materi pembelajaran interaktif" loading="lazy"></iframe>';
+  const frame = view.querySelector(".production-material-frame");
+  frame.addEventListener("load", () => {
+    const frameDocument = frame.contentDocument;
+    if (!frameDocument) return;
+    // Hanya pakai body.scrollHeight: documentElement.scrollHeight ikut
+    // terkunci ke tinggi iframe saat ini (jadi viewport-nya sendiri),
+    // sehingga tidak pernah mengecil lagi ketika konten menyusut
+    // (mis. saat Mode fokus menyembunyikan sebagian panel).
+    const resizeFrame = () => {
+      frame.style.height = `${frameDocument.body.scrollHeight + 4}px`;
+    };
+    resizeFrame();
+    if ("ResizeObserver" in window) {
+      const observer = new ResizeObserver(resizeFrame);
+      observer.observe(frameDocument.body);
+    }
+    frameDocument.fonts?.ready.then(resizeFrame);
+  });
+  new MutationObserver(() => {
+    if (view.classList.contains("active")) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      frame.contentWindow?.scrollTo(0, 0);
+    }
+  }).observe(view, { attributes: true, attributeFilter: ["class"] });
+})();
