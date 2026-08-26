@@ -234,5 +234,42 @@ document.querySelectorAll(".answers button").forEach((button) => {
   button.onclick = () => {
     document.querySelectorAll(".answers button").forEach((item) => item.classList.remove("selected"));
     button.classList.add("selected");
+    document.querySelectorAll(".answers button").forEach((item) => item.classList.remove("wrong"));
+    if (button.querySelector("span")?.textContent.trim() === "行きたい") button.classList.add("correct");
+  };
+});
+
+document.querySelector(".example-head button")?.addEventListener("click", (event) => {
+  const text = [...document.querySelectorAll(".example-cards .jp")].map((item) => item.textContent).join("。 ");
+  if (!text || !("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "ja-JP";
+  utterance.rate = 0.82;
+  speechSynthesis.speak(utterance);
+  event.currentTarget.textContent = "■ Hentikan audio";
+});
+
+document.querySelector(".pattern-actions button:not(.primary)")?.addEventListener("click", (event) => {
+  event.currentTarget.textContent = "Ditandai untuk diulang ✓";
+  event.currentTarget.classList.add("selected");
+});
+
+document.querySelector(".question-card footer button:first-child")?.addEventListener("click", (event) => {
+  event.currentTarget.textContent = "Sudah masuk daftar kesalahan ✓";
+});
+
+document.querySelector(".question-card footer .primary")?.addEventListener("click", (event) => {
+  const counter = document.querySelector(".exam-head div:last-child span");
+  const current = Number(counter.textContent.match(/\d+/)?.[0] || 3);
+  counter.textContent = `SOAL ${current >= 8 ? 1 : current + 1} / 8`;
+  document.querySelectorAll(".answers button").forEach((button) => button.classList.remove("selected", "correct", "wrong"));
+  event.currentTarget.textContent = "Soal berikutnya →";
+});
+
+document.querySelectorAll(".topbar nav button").forEach((button, index) => {
+  button.onclick = () => {
+    const destinations = ["dashboard", "materials", "kanji-study", "memorization", "test"];
+    location.href = `index.html?build=28#${destinations[index]}`;
   };
 });

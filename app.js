@@ -40,6 +40,12 @@ function activateProductionFrame(view) {
   const frame = document.querySelector(`#${view} iframe[data-src]`);
   if (frame && !frame.getAttribute("src")) frame.src = frame.dataset.src;
 }
+function openHashView() {
+  const view = location.hash.slice(1);
+  if (view && document.getElementById(view)) open(view);
+}
+window.addEventListener("hashchange", openHashView);
+openHashView();
 document
   .querySelectorAll("[data-view]")
   .forEach((b) => (b.onclick = () => open(b.dataset.view)));
@@ -2954,7 +2960,7 @@ mobileNav.querySelectorAll("button").forEach(
     }),
 );
 if ("serviceWorker" in navigator && location.protocol !== "file:")
-  navigator.serviceWorker.register("sw.js?build=28").catch(() => {});
+  navigator.serviceWorker.register("sw.js?build=29").catch(() => {});
 /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, grid muncul bertahap. */
 const animationEnhancementsStyle = document.createElement("style");
 animationEnhancementsStyle.textContent = `

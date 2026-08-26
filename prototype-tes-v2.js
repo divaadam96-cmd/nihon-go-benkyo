@@ -16,7 +16,7 @@ const defaultQuestions=[
 
 const $=id=>document.getElementById(id);
 const testTypeLabels={vocabulary:"Kosakata",kanji:"Kanji",grammar:"Tata Bahasa",sentence:"Susunan Kalimat",reading:"Bacaan",audio:"Audio",situational:"Situasional"};
-let questions=[...defaultQuestions],examType="jlpt",testType="vocabulary",rangeStart=1,current=0,mode="simulation",answers=Array(questions.length).fill(null),checked=Array(questions.length).fill(false),flags=Array(questions.length).fill(false),furigana=true,timerId=null,seconds=720,reviewOnly=false,reviewIndexes=[];
+let questions=[...defaultQuestions],examType=new URLSearchParams(location.search).get("exam")==="jft"?"jft":"jlpt",testType="vocabulary",rangeStart=1,current=0,mode="simulation",answers=Array(questions.length).fill(null),checked=Array(questions.length).fill(false),flags=Array(questions.length).fill(false),furigana=true,timerId=null,seconds=720,reviewOnly=false,reviewIndexes=[];
 function shuffled(values){return [...values].sort(()=>Math.random()-.5)}
 function collectRangeData(source){const rows=[];for(let bab=rangeStart;bab<rangeStart+5;bab++)(source[bab]||[]).forEach(item=>rows.push({item,bab}));return rows}
 function optionSet(correct,pool){return shuffled([correct,...shuffled(pool.filter(value=>value&&value!==correct)).slice(0,3)])}

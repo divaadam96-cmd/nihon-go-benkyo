@@ -717,6 +717,13 @@ canvas.addEventListener("pointerdown", startDrawing); canvas.addEventListener("p
 document.getElementById("clearCanvas").onclick = () => context.clearRect(0, 0, canvas.width, canvas.height);
 document.getElementById("traceToggle").onclick = () => document.querySelector(".writing-board").classList.toggle("hide-guide");
 
+document.querySelectorAll(".topbar nav button").forEach((button, index) => {
+  button.onclick = () => {
+    const destinations = ["dashboard", "materials", "kanji-study", "memorization", "test"];
+    location.href = `index.html?build=28#${destinations[index]}`;
+  };
+});
+
 updateCounts();
 applyFilters();
 selectKanji(0);
