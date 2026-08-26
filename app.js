@@ -34,6 +34,11 @@ function open(view) {
     .querySelectorAll("[data-view]")
     .forEach((b) => b.classList.toggle("active", b.dataset.view === view));
   window.scrollTo({ top: 0, behavior: "smooth" });
+  activateProductionFrame(view);
+}
+function activateProductionFrame(view) {
+  const frame = document.querySelector(`#${view} iframe[data-src]`);
+  if (frame && !frame.getAttribute("src")) frame.src = frame.dataset.src;
 }
 document
   .querySelectorAll("[data-view]")
@@ -2917,7 +2922,7 @@ if (kanjiStudyGridEl) {
 if (new URLSearchParams(location.search).get("source") !== "1") {
   const materialsView = document.getElementById("materials");
   if (materialsView) {
-    materialsView.innerHTML = '<iframe class="production-material-frame" src="prototype-materi.html?v=2" title="Materi pembelajaran fokus" loading="eager"></iframe>';
+    materialsView.innerHTML = '<iframe class="production-material-frame" data-src="prototype-materi.html?v=2" title="Materi pembelajaran fokus" loading="lazy"></iframe>';
     const materialsFrame = materialsView.querySelector(".production-material-frame");
     materialsFrame.addEventListener("load", () => {
       const frameDocument = materialsFrame.contentDocument;
@@ -2949,7 +2954,7 @@ mobileNav.querySelectorAll("button").forEach(
     }),
 );
 if ("serviceWorker" in navigator && location.protocol !== "file:")
-  navigator.serviceWorker.register("sw.js?build=21").catch(() => {});
+  navigator.serviceWorker.register("sw.js?build=24").catch(() => {});
 /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, grid muncul bertahap. */
 const animationEnhancementsStyle = document.createElement("style");
 animationEnhancementsStyle.textContent = `
@@ -2993,7 +2998,7 @@ document.head.appendChild(animationEnhancementsStyle);
   const view = document.getElementById("test");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-test-frame" src="prototype-tes-v2.html?v=4&embed=1" title="Simulasi JFT dan JLPT" loading="eager"></iframe>';
+    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=4&embed=1" title="Simulasi JFT dan JLPT" loading="lazy"></iframe>';
   const frame = view.querySelector(".production-test-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
@@ -4003,7 +4008,7 @@ syncCurriculumDashboard();
   const view = document.getElementById("kanji-study");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-kanji-frame" src="prototype-kanji-v2.html?v=10&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="eager"></iframe>';
+    '<iframe class="production-kanji-frame" data-src="prototype-kanji-v2.html?v=11&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="lazy"></iframe>';
   const frame = view.querySelector(".production-kanji-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;

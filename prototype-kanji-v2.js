@@ -509,22 +509,26 @@ function startStrokeAnimation() {
       } else {
         const activePath = paths[active];
         const length = pathLengths[active];
-        const eased = easeStroke(progress);
-        const point = activePath.getPointAtLength(length * eased);
-        const nextPoint = activePath.getPointAtLength(
-          Math.min(length, length * eased + Math.max(0.2, length * 0.012)),
-        );
-        const angle = (Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180) / Math.PI + 90;
-        const pressure = 0.82 + Math.sin(Math.PI * progress) * 0.22;
-        brush.setAttribute(
-          "transform",
-          `translate(${point.x} ${point.y}) rotate(${angle}) scale(${pressure} ${0.88 + pressure * 0.08})`,
-        );
-        brush.style.opacity = progress < 0.03
-          ? String(progress / 0.03)
-          : progress > 0.97
-            ? String((1 - progress) / 0.03)
-            : "1";
+        if (!activePath || !Number.isFinite(length)) {
+          brush.style.opacity = "0";
+        } else {
+          const eased = easeStroke(progress);
+          const point = activePath.getPointAtLength(length * eased);
+          const nextPoint = activePath.getPointAtLength(
+            Math.min(length, length * eased + Math.max(0.2, length * 0.012)),
+          );
+          const angle = (Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180) / Math.PI + 90;
+          const pressure = 0.82 + Math.sin(Math.PI * progress) * 0.22;
+          brush.setAttribute(
+            "transform",
+            `translate(${point.x} ${point.y}) rotate(${angle}) scale(${pressure} ${0.88 + pressure * 0.08})`,
+          );
+          brush.style.opacity = progress < 0.03
+            ? String(progress / 0.03)
+            : progress > 0.97
+              ? String((1 - progress) / 0.03)
+              : "1";
+        }
       }
     }
     shownStrokes = drawingFinished ? paths.length : active;
