@@ -2289,7 +2289,7 @@ if (materialHome) {
   if (materialHead)
     materialHead.insertAdjacentHTML(
       "afterend",
-      '<div class="course-nav"><button class="course-switch" data-course="book1"><span class="eyebrow">MINNA NO NIHONGO I</span><b>Dasar - Pelajaran 1-25</b><small>Bangun fondasi pola kalimat, kosakata, hiragana, katakana, dan kanji dasar secara berurutan.</small></button><button class="course-switch" data-course="book2"><span class="eyebrow">MINNA NO NIHONGO II</span><b>Menengah - Pelajaran 26-50</b><small>Lanjutkan ke pola menengah, komunikasi situasional, dan tata bahasa yang lebih kompleks.</small></button></div>',
+      '<div class="course-nav"><button class="course-switch" data-course="book1"><span class="eyebrow">MINNA NO NIHONGO I</span><b>Dasar - Pelajaran 1-25</b><small>Bangun fondasi pola kalimat, kosakata, hiragana, katakana, dan kanji dasar secara berurutan.</small></button></div>',
     );
   materialHome
     .querySelectorAll("[data-course]")
@@ -2949,7 +2949,7 @@ mobileNav.querySelectorAll("button").forEach(
     }),
 );
 if ("serviceWorker" in navigator && location.protocol !== "file:")
-  navigator.serviceWorker.register("sw.js?build=33").catch(() => {});
+  navigator.serviceWorker.register("sw.js?build=34").catch(() => {});
 /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, grid muncul bertahap. */
 const animationEnhancementsStyle = document.createElement("style");
 animationEnhancementsStyle.textContent = `
