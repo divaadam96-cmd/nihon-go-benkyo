@@ -2286,11 +2286,7 @@ document.head.appendChild(curriculumStyle);
 const materialHome = document.getElementById("materials");
 if (materialHome) {
   const materialHead = materialHome.querySelector(".head");
-  if (materialHead)
-    materialHead.insertAdjacentHTML(
-      "afterend",
-      '<div class="course-nav"><button class="course-switch" data-course="book1"><span class="eyebrow">MINNA NO NIHONGO I</span><b>Dasar - Pelajaran 1-25</b><small>Bangun fondasi pola kalimat, kosakata, hiragana, katakana, dan kanji dasar secara berurutan.</small></button></div>',
-    );
+  if (materialHead) materialHead.classList.add("book-one-material-head");
   materialHome
     .querySelectorAll("[data-course]")
     .forEach(
@@ -2949,7 +2945,7 @@ mobileNav.querySelectorAll("button").forEach(
     }),
 );
 if ("serviceWorker" in navigator && location.protocol !== "file:")
-  navigator.serviceWorker.register("sw.js?build=34").catch(() => {});
+  navigator.serviceWorker.register("sw.js?build=35").catch(() => {});
 /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, grid muncul bertahap. */
 const animationEnhancementsStyle = document.createElement("style");
 animationEnhancementsStyle.textContent = `
