@@ -36,6 +36,12 @@ const reader=document.getElementById("focusReader");
 const sourceFrame=document.getElementById("sourceApp");
 let currentBook=1;
 const bookTwoLessons=Array.from({length:25},(_,index)=>`Materi menengah Pelajaran ${index+26}`);
+function bookLessonNames(book=currentBook){
+  if(book===1) return lessons.map((lesson)=>lesson[0]);
+  const root=sourceFrame.contentDocument?.querySelector("#book2");
+  const names=[...root?.querySelectorAll(".html-course > .html-lesson summary")||[]].map((summary)=>summary.textContent.replace(/^\s*\d+\s*Pelajaran\s+\d+\s*[:·-]?\s*/i,"").replace(/^Pelajaran\s+\d+\s*[:·-]?\s*/i,"").trim());
+  return names.length===25?names:bookTwoLessons;
+}
 let checkQuestions=[];
 let checkQuestionIndex=0;
 let checkScore=0;
@@ -121,13 +127,13 @@ function renderCompletePatterns(index,fallback){
 
 function renderGrid(){
   grid.innerHTML="";
-  const sourceLessons=currentBook===1?lessons:bookTwoLessons;
+  const sourceLessons=bookLessonNames();
   const start=currentBook===1?1:26;
   sourceLessons.forEach((lesson,index)=>{
     const button=document.createElement("button");
     button.type="button";
     button.className=`lesson-card ${status[index]}${currentLesson===index?" current":""}`;
-    const title=currentBook===1?lesson[0]:lesson;
+    const title=lesson;
     button.innerHTML=`<span class="lesson-card-top"><span class="lesson-number">PELAJARAN ${String(start+index).padStart(2,"0")}</span><i class="lesson-status"></i></span><b>${title}</b><small>${status[index]==="done"?"Sudah dipahami":status[index]==="repeat"?"Perlu diulang":"Belum dimulai"}</small>`;
     button.onclick=()=>openLesson(index,true);
     grid.appendChild(button);
@@ -137,7 +143,7 @@ function renderGrid(){
 
 function openLesson(index,scroll=false){
   currentLesson=Math.max(0,Math.min(lessons.length-1,index));
-  const lesson=currentBook===1?lessons[currentLesson]:[bookTwoLessons[currentLesson],"Pola tata bahasa buku 2","Materi lengkap Buku 2.","Pelajari materi menengah.","Memahami pola bahasa Jepang tingkat menengah."];
+  const lesson=currentBook===1?lessons[currentLesson]:[bookLessonNames()[currentLesson],"Pola tata bahasa buku 2","Materi lengkap Buku 2.","Pelajari materi menengah.","Memahami pola bahasa Jepang tingkat menengah."];
   const [title,formula,japanese,meaning,goal]=lesson;
   const number=(currentBook===1?1:26)+currentLesson;
   document.getElementById("readerPosition").textContent=`Pelajaran ${number} dari ${currentBook===1?25:50}`;
