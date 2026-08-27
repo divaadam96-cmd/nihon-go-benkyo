@@ -5,6 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Prototype Belajar Kanji · Nihon GO Benkyo</title>
   <script>document.documentElement.classList.toggle("embed-mode", new URLSearchParams(location.search).get("embed") === "1");</script>
+  <style>html:not(.page-authed) body{display:none}</style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script>
+    (function () {
+      var client = window.supabase.createClient(
+        "https://twoerfizembbpuvlzzmt.supabase.co",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3b2VyZml6ZW1iYnB1dmx6em10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MTQ0MDMsImV4cCI6MjEwMzM5MDQwM30._-pgaQ2NIkWj7UQ-osm8PpnRg3xW4axvMn_AAJXkrzc",
+      );
+      client.auth.getSession().then(function (res) {
+        if (res.data && res.data.session) {
+          document.documentElement.classList.add("page-authed");
+        } else {
+          location.replace("index.html");
+        }
+      });
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
@@ -89,7 +106,7 @@
   <div class="mobile-nav"><button>⌂<span>Beranda</span></button><button>文<span>Materi</span></button><button class="active">漢<span>Kanji</span></button><button>試<span>Tes</span></button></div>
   <script src="data/kanji-data.js"></script>
   <script src="data/kanji-stroke-data.js"></script>
-  <script src="srs.js?v=1"></script>
+  <script src="srs.js?v=2"></script>
   <script src="prototype-kanji-v2.js?v=16"></script>
 </body>
 </html>

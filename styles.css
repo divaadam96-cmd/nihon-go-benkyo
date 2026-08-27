@@ -2498,3 +2498,403 @@ body.focus-mode .material-reader {
     transition: none;
   }
 }
+
+/* Gerbang login: sembunyikan seluruh app secara default (bukan lewat JS,
+   supaya tidak sempat "berkedip" menampilkan konten sebelum login
+   dikonfirmasi), munculkan begitu body dapat class "authed". */
+body:not(.authed) .app {
+  display: none;
+}
+body.authed .login-screen {
+  display: none;
+}
+.login-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 20% 20%, #1d3657 0%, var(--navy) 60%, #0a1626 100%);
+  padding: 20px;
+}
+.login-card {
+  display: grid;
+  gap: 14px;
+  width: min(360px, 100%);
+  padding: 34px 30px;
+  border: 1px solid #ffffff22;
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 30px 70px #05101f66;
+  text-align: center;
+}
+.login-card .mark {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.login-card h1 {
+  margin: 4px 0 0;
+  color: var(--navy);
+  font-size: 20px;
+}
+.login-card > p {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.login-card label {
+  display: grid;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+}
+.login-card input {
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: 14px "DM Sans", sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+.login-card input:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+.login-error {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid #e2b3a8;
+  border-radius: 8px;
+  background: #fbe9e5;
+  color: #92382a;
+  font-size: 12px;
+  text-align: left;
+}
+.login-card button {
+  padding: 12px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--navy);
+  color: #f8e8c4;
+  font: 700 14px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+.login-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Kotak akun (nama + peran + keluar) di navbar atas. */
+.account-box {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-left: 18px;
+  padding-left: 18px;
+  border-left: 1px solid #e8e3da;
+  font-size: 12px;
+}
+.account-box span {
+  color: var(--navy);
+  font-weight: 700;
+}
+.account-box small {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.account-box button {
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--ink);
+  font: 700 11px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+.account-box button:hover {
+  border-color: var(--gold);
+}
+/* Navbar atas gelap (lihat .top di atas) - timpa warna terang di atas
+   supaya teks kotak akun tetap terbaca. */
+.account-box {
+  border-left-color: #ffffff26;
+}
+.account-box span {
+  color: #f4dfae;
+}
+.account-box small {
+  background: #ffffff14;
+  color: #c2cbd7;
+}
+.account-box button {
+  border-color: #ffffff30;
+  background: #ffffff12;
+  color: #f3e7cb;
+}
+.account-box button:hover {
+  border-color: #d6ad65;
+}
+
+/* Panel Admin (Operator): form buat akun + daftar akun. */
+.admin-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 18px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+}
+.admin-form-card form {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+.admin-form-card label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.field-hint {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.admin-form-card input,
+.admin-form-card select {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: 14px "DM Sans", sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+.admin-form-card input:focus,
+.admin-form-card select:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+.form-success {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid #a9d1a6;
+  border-radius: 8px;
+  background: #e8f5e6;
+  color: #2f6b2a;
+  font-size: 12px;
+  text-align: left;
+}
+.admin-account-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  max-height: 460px;
+  overflow-y: auto;
+}
+.admin-account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--wash);
+}
+.admin-account-row b {
+  display: block;
+  color: var(--navy);
+  font-size: 13px;
+}
+.admin-account-row small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+.admin-account-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.admin-role-badge {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.admin-delete-btn {
+  padding: 6px 10px;
+  border: 1px solid #e2b3a8;
+  border-radius: 7px;
+  background: #fbe9e5;
+  color: #92382a;
+  font: 700 11px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+.admin-delete-btn:hover {
+  background: #f6d6cd;
+}
+.admin-delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Panel Pantau Siswa (Sensei & Operator). */
+.monitor-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.monitor-card {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+.monitor-card:hover {
+  border-color: var(--gold);
+}
+.monitor-card b {
+  color: var(--navy);
+  font-size: 14px;
+}
+.monitor-card small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.monitor-card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.monitor-card-stats span {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+.monitor-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a1626aa;
+  padding: 20px;
+}
+.monitor-detail-overlay[hidden] {
+  display: none;
+}
+.monitor-detail-card {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  width: min(420px, 100%);
+  padding: 28px 26px;
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: 0 30px 70px #05101f66;
+}
+.monitor-detail-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.monitor-detail-card h3 {
+  margin: 0;
+  padding-right: 24px;
+  color: var(--navy);
+}
+.monitor-detail-card > small {
+  margin-top: -8px;
+  color: var(--muted);
+}
+.monitor-detail-stats {
+  display: grid;
+  gap: 8px;
+}
+.monitor-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--wash);
+  font-size: 12px;
+}
+.monitor-stat-row b {
+  color: var(--navy);
+}
+.monitor-stat-row span {
+  color: var(--muted);
+  text-align: right;
+}
+button.danger {
+  padding: 11px;
+  border: 1px solid #e2b3a8;
+  border-radius: 9px;
+  background: #fbe9e5;
+  color: #92382a;
+  font: 700 13px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+button.danger:hover {
+  background: #f6d6cd;
+}
+button.danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.admin-role-operator {
+  background: #f4dfae;
+  color: #7a5a12;
+}
+.admin-role-sensei {
+  background: #cfe0f7;
+  color: #1f4c85;
+}
+.admin-role-siswa {
+  background: #dcefe0;
+  color: #2f6b2a;
+}

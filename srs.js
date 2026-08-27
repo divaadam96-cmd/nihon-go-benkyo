@@ -52,6 +52,97 @@ function srsLogActivity() {
   } catch {
     // Sama seperti srsSave: abaikan jika penyimpanan tidak tersedia.
   }
+  srsPushActivity(today, log[today]);
+}
+
+/* --- Sinkronisasi ke Supabase ---
+   localStorage tetap sumber kebenaran untuk perangkat ini (instan, tidak
+   perlu menunggu jaringan). Setiap perubahan dikirim ke Supabase di latar
+   belakang (fire-and-forget) supaya Sensei/Operator bisa melihatnya dari
+   perangkat lain, dan supaya progres tidak hilang kalau localStorage
+   perangkat ini dibersihkan. Gagal kirim (offline, dsb.) sengaja dibiarkan
+   diam - tidak boleh mengganggu alur belajar. */
+function srsPushItem(itemId, item) {
+  if (!window.supabaseClient || !window.currentProfile) return;
+  window.supabaseClient
+    .from("srs_progress")
+    .upsert(
+      {
+        user_id: window.currentProfile.id,
+        item_id: itemId,
+        box: item.box,
+        due: item.due,
+        reviews: item.reviews,
+        last_result: item.lastResult,
+        last_reviewed_at: item.lastReviewedAt,
+      },
+      { onConflict: "user_id,item_id" },
+    )
+    .then(({ error }) => {
+      if (error) console.warn("srsPushItem gagal:", error.message);
+    });
+}
+
+function srsPushActivity(dateStr, count) {
+  if (!window.supabaseClient || !window.currentProfile) return;
+  window.supabaseClient
+    .from("activity_log")
+    .upsert(
+      { user_id: window.currentProfile.id, activity_date: dateStr, count },
+      { onConflict: "user_id,activity_date" },
+    )
+    .then(({ error }) => {
+      if (error) console.warn("srsPushActivity gagal:", error.message);
+    });
+}
+
+/* Dipanggil auth.js sekali setelah login: tarik data milik user yang
+   login dari Supabase, timpa localStorage supaya perangkat ini langsung
+   sinkron dengan progres yang mungkin dibuat dari perangkat lain. */
+async function srsHydrateFromRemote(userId) {
+  if (!window.supabaseClient || !userId) return;
+  const [progressRes, activityRes] = await Promise.all([
+    window.supabaseClient.from("srs_progress").select("*").eq("user_id", userId),
+    window.supabaseClient.from("activity_log").select("*").eq("user_id", userId),
+  ]);
+  if (!progressRes.error && progressRes.data) {
+    const data = {};
+    progressRes.data.forEach((row) => {
+      data[row.item_id] = {
+        box: row.box,
+        due: row.due,
+        reviews: row.reviews,
+        lastResult: row.last_result,
+        lastReviewedAt: row.last_reviewed_at,
+      };
+    });
+    srsSave(data);
+  }
+  if (!activityRes.error && activityRes.data) {
+    const log = {};
+    activityRes.data.forEach((row) => {
+      log[row.activity_date] = row.count;
+    });
+    try {
+      localStorage.setItem(SRS_ACTIVITY_KEY, JSON.stringify(log));
+    } catch {
+      // Tidak fatal - lihat catatan di srsSave.
+    }
+  }
+}
+
+/* Untuk panel Sensei/Operator: baca progres user LAIN langsung dari
+   Supabase (bukan localStorage perangkat ini, yang isinya cuma progres
+   pengguna yang sedang login). */
+async function srsFetchRemoteFor(userId) {
+  const [progressRes, activityRes] = await Promise.all([
+    window.supabaseClient.from("srs_progress").select("*").eq("user_id", userId),
+    window.supabaseClient.from("activity_log").select("*").eq("user_id", userId),
+  ]);
+  return {
+    progress: progressRes.data || [],
+    activity: activityRes.data || [],
+  };
 }
 
 function srsGet(itemId) {
@@ -73,6 +164,7 @@ function srsReview(itemId, outcome) {
   data[itemId] = item;
   srsSave(data);
   srsLogActivity();
+  srsPushItem(itemId, item);
   return item;
 }
 

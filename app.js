@@ -1,3 +1,8 @@
+// Seluruh isi file ini dibungkus dalam initApp() dan baru dijalankan oleh
+// auth.js SETELAH login + hidrasi data dari Supabase selesai — supaya app
+// tidak sempat membaca localStorage yang masih kosong/lama sebelum data
+// milik user yang login benar-benar siap.
+function initApp() {
 let state = JSON.parse(
   localStorage.getItem("nihonBenkyoProgress") ||
     '{"xp":12540,"tasks":{},"mastered":0,"tests":[]}',
@@ -85,6 +90,8 @@ function open(view) {
   window.scrollTo({ top: 0, behavior: "smooth" });
   activateProductionFrame(view);
   if (view === "dashboard") renderDashboardActivity();
+  if (view === "admin" && typeof window.loadAdminPanel === "function") window.loadAdminPanel();
+  if (view === "monitor" && typeof window.loadMonitorPanel === "function") window.loadMonitorPanel();
 }
 function activateProductionFrame(view) {
   const frame = document.querySelector(`#${view} iframe[data-src]`);
@@ -1663,7 +1670,7 @@ renderKanjiLesson();
 const nav = document.querySelector(".topnav");
 if (nav)
   nav.innerHTML =
-    '<button class="active" data-view="dashboard">Beranda</button><button data-view="materials">Materi</button><button data-view="kanji-study">Kanji</button><button data-view="memorization">Hafalan</button><button data-view="test">Tes kemampuan</button>';
+    '<button class="active" data-view="dashboard">Beranda</button><button data-view="materials">Materi</button><button data-view="kanji-study">Kanji</button><button data-view="memorization">Hafalan</button><button data-view="test">Tes kemampuan</button><button data-view="monitor" data-role-only="sensei,operator" hidden>Pantau Siswa</button><button data-view="admin" data-role-only="operator" hidden>Admin</button>';
 document
   .querySelectorAll('[data-open="flashcards"]')
   .forEach((button) => (button.dataset.open = "memorization"));
@@ -1679,6 +1686,10 @@ if (side) {
       "beforebegin",
       '<button data-view="kanji-study"><span class="jp">\u6f22</span>Belajar kanji</button>',
     );
+  side.insertAdjacentHTML(
+    "beforeend",
+    '<div class="menu-label" style="margin-top:18px" data-role-only="sensei,operator" hidden>Kelola</div><button data-view="monitor" data-role-only="sensei,operator" hidden><span class="jp">\u76e3</span>Pantau Siswa</button><button data-view="admin" data-role-only="operator" hidden><span class="jp">\u7ba1</span>Panel Admin</button>',
+  );
 }
 document
   .querySelectorAll("[data-view]")
@@ -2986,7 +2997,7 @@ document.head.appendChild(animationEnhancementsStyle);
   const view = document.getElementById("test");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=6&embed=1" title="Simulasi JFT dan JLPT" loading="lazy"></iframe>';
+    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=7&embed=1" title="Simulasi JFT dan JLPT" loading="lazy"></iframe>';
   const frame = view.querySelector(".production-test-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
@@ -4023,7 +4034,7 @@ document.addEventListener("keydown", (event) => {
   const view = document.getElementById("kanji-study");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-kanji-frame" data-src="prototype-kanji-v2.html?v=16&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="lazy"></iframe>';
+    '<iframe class="production-kanji-frame" data-src="prototype-kanji-v2.html?v=18&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="lazy"></iframe>';
   const frame = view.querySelector(".production-kanji-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
@@ -4050,3 +4061,6 @@ document.addEventListener("keydown", (event) => {
   }).observe(view, { attributes: true, attributeFilter: ["class"] });
 })();
 
+
+}
+window.initApp = initApp;

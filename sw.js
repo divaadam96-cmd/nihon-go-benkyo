@@ -1,5 +1,5 @@
-const CACHE_NAME = 'nihon-go-benkyo-v48';
-const ASSETS = ['index.html', 'styles.css?build=38', 'app.js?build=46', 'srs.js?v=1', 'prototype-kanji-v2.html?v=16', 'prototype-kanji-v2.html?v=16&embed=1', 'prototype-kanji-v2.css?v=12', 'prototype-kanji-v2.js?v=16', 'prototype-tes-v2.html?v=6', 'prototype-tes-v2.html?v=6&embed=1', 'prototype-tes-v2.css?v=4', 'prototype-tes-v2.js?v=5', 'data/materi-data.js', 'data/kanji-data.js', 'data/kanji-stroke-data.js', 'data/kana-data.js', 'data/bab-data.js', 'nihon-go-benkyo.webmanifest', 'japan-paper-background.png', 'logo.png'];
+const CACHE_NAME = 'nihon-go-benkyo-v56';
+const ASSETS = ['index.html', 'styles.css?build=45', 'app.js?build=50', 'srs.js?v=2', 'auth.js?v=2', 'admin.js?v=2', 'monitor.js?v=1', 'prototype-kanji-v2.html?v=18', 'prototype-kanji-v2.html?v=18&embed=1', 'prototype-kanji-v2.css?v=12', 'prototype-kanji-v2.js?v=16', 'prototype-tes-v2.html?v=7', 'prototype-tes-v2.html?v=7&embed=1', 'prototype-tes-v2.css?v=4', 'prototype-tes-v2.js?v=5', 'data/materi-data.js', 'data/kanji-data.js', 'data/kanji-stroke-data.js', 'data/kana-data.js', 'data/bab-data.js', 'nihon-go-benkyo.webmanifest', 'japan-paper-background.png', 'logo.png'];
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
