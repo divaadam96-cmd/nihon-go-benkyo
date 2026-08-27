@@ -2994,12 +2994,12 @@ document.head.appendChild(animationEnhancementsStyle);
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
     if (!frameDocument) return;
+    // Hanya pakai body.scrollHeight: documentElement.scrollHeight ikut
+    // terkunci ke tinggi iframe saat ini (jadi viewport-nya sendiri),
+    // sehingga tidak pernah mengecil lagi ketika konten menyusut (mis.
+    // klik "Ulangi tes" setelah bank kesalahan yang panjang tampil).
     const resizeFrame = () => {
-      const height = Math.max(
-        frameDocument.documentElement.scrollHeight,
-        frameDocument.body.scrollHeight,
-      );
-      frame.style.height = `${height + 4}px`;
+      frame.style.height = `${frameDocument.body.scrollHeight + 4}px`;
     };
     resizeFrame();
     if ("ResizeObserver" in window) {
@@ -4027,12 +4027,12 @@ document.addEventListener("keydown", (event) => {
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
     if (!frameDocument) return;
+    // Hanya pakai body.scrollHeight: documentElement.scrollHeight ikut
+    // terkunci ke tinggi iframe saat ini (jadi viewport-nya sendiri),
+    // sehingga tidak pernah mengecil lagi ketika konten menyusut (mis.
+    // hasil pencarian/filter kanji jadi lebih sedikit).
     const resizeFrame = () => {
-      const height = Math.max(
-        frameDocument.documentElement.scrollHeight,
-        frameDocument.body.scrollHeight,
-      );
-      frame.style.height = `${height + 4}px`;
+      frame.style.height = `${frameDocument.body.scrollHeight + 4}px`;
     };
     resizeFrame();
     if ("ResizeObserver" in window) {
