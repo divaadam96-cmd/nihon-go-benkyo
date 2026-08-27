@@ -221,55 +221,9 @@ document.getElementById("next").onclick = () => {
   qi++;
   renderQuestion();
 };
-document.getElementById("materials").innerHTML =
-  `<div class="head"><div><div class="eyebrow">Keterangan tata bahasa</div><h1>Pelajaran 1–25</h1><p>Ringkasan pola inti untuk dipelajari secara bertahap.</p></div></div><div class="grammar-directory">${grammar.map((g, i) => `<details class="grammar-unit"><summary><span class="lesson-number">${i + 1}</span>Pelajaran ${i + 1}: ${g[0]}</summary><div class="grammar-body"><p>${g[1]}</p><span class="grammar-pattern">${g[2]}</span></div></details>`).join("")}</div><div class="source-note">Ringkasan ini disusun dari bagian keterangan tata bahasa Pelajaran 1–25 dalam PDF yang Anda berikan, lalu diparafrasekan untuk pembelajaran web. Bukan salinan isi buku.</div>`;
 sync();
 renderCard();
 updateMaster();
-document.getElementById("materials").innerHTML =
-  `<div class="head"><div><div class="eyebrow">Keterangan tata bahasa</div><h1>Pelajaran 1–25</h1><p>Penjelasan pola inti untuk membangun pemahaman bertahap.</p></div></div><div class="grammar-directory">${detailedGrammar.map((g, i) => `<details class="grammar-unit"><summary><span class="lesson-number">${i + 1}</span>Pelajaran ${i + 1}: ${g[0]}</summary><div class="grammar-body"><p>${g[1]}</p><span class="grammar-pattern">${g[2]}</span></div></details>`).join("")}</div><div class="source-note">Materi ini adalah penjelasan ulang yang ditulis untuk website berdasarkan bagian keterangan tata bahasa PDF. Susunan dan pola belajar dipertahankan, tetapi uraian tidak disalin secara verbatim dari buku.</div>`;
-document.getElementById("materials").innerHTML =
-  `<div class="head"><div><div class="eyebrow">Keterangan tata bahasa asli</div><h1>Pelajaran 1–25</h1><p>Dokumen di bawah menampilkan halaman sumber tanpa perubahan isi.</p></div></div><p class="pdf-note">Mulai dari keterangan tata bahasa Pelajaran 1. Gunakan kontrol PDF untuk berpindah halaman atau memperbesar tampilan.</p><div class="pdf-reader"><iframe title="Keterangan Tata Bahasa Minna no Nihongo I Pelajaran 1 sampai 25" src="minna-no-nihongo-1-keterangan-tata-bahasa-pelajaran-1-25.pdf#page=1&view=FitH"></iframe></div>`;
-const lessonPages = Array.from({ length: 25 }, (_, i) => {
-  const a = String(i * 2 + 1).padStart(2, "0"),
-    b = String(i * 2 + 2).padStart(2, "0");
-  return `<details class="source-lesson" ${i === 0 ? "open" : ""}><summary><span class="lesson-number">${i + 1}</span>Pelajaran ${i + 1} — Keterangan Tata Bahasa</summary><div class="source-pages"><img loading="lazy" src="materi-pages/grammar-${a}.png" alt="Keterangan tata bahasa Pelajaran ${i + 1}, halaman pertama"><img loading="lazy" src="materi-pages/grammar-${b}.png" alt="Keterangan tata bahasa Pelajaran ${i + 1}, halaman kedua"></div></details>`;
-}).join("");
-document.getElementById("materials").innerHTML =
-  `<div class="head"><div><div class="eyebrow">Materi pembelajaran</div><h1>Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Pilih pelajaran untuk membaca materi langsung di dalam website.</p></div></div><p class="web-material-note">Setiap halaman adalah reproduksi visual dari bagian keterangan tata bahasa pada dokumen sumber, tanpa mengubah isi.</p><div class="source-directory">${lessonPages}</div>`;
-let activeLesson = 0;
-function renderWebLesson() {
-  const lesson = detailedGrammar[activeLesson];
-  const lessonNumber = activeLesson + 1;
-  const related = [
-    "Baca pola dengan suara keras, lalu buat satu kalimat sederhana menggunakan pola tersebut.",
-    "Perhatikan partikel atau perubahan bentuk kata yang muncul pada pola.",
-    "Bandingkan bentuk sopan dan bentuk biasa saat mempraktikkan pola dalam percakapan.",
-  ];
-  document.getElementById("lessonArticle").innerHTML =
-    `<div class="eyebrow">Pelajaran ${lessonNumber} · Keterangan tata bahasa</div><h2>${lesson[0]}</h2><h3>Fungsi pola</h3><p>${lesson[1]}</p><h3>Pola utama</h3><div class="lesson-formula">${lesson[2]}</div><h3>Fokus belajar</h3><ul class="lesson-points">${related.map((x) => `<li>${x}</li>`).join("")}</ul><button class="primary next-lesson" id="nextLesson">${lessonNumber === 25 ? "Kembali ke Pelajaran 1" : "Lanjut ke Pelajaran " + (lessonNumber + 1)}</button>`;
-  document
-    .querySelectorAll(".lesson-tab")
-    .forEach((b, i) => b.classList.toggle("active", i === activeLesson));
-  document.getElementById("nextLesson").onclick = () => {
-    activeLesson = activeLesson === 24 ? 0 : activeLesson + 1;
-    renderWebLesson();
-  };
-}
-document.getElementById("materials").innerHTML =
-  `<div class="head"><div><div class="eyebrow">Materi pembelajaran</div><h1>Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Pilih pelajaran dan baca materi sebagai halaman website.</p></div></div><div class="lesson-web"><nav class="lesson-tabs" aria-label="Daftar pelajaran">${detailedGrammar.map((g, i) => `<button class="lesson-tab" data-number="${i + 1}" data-lesson="${i}">${i + 1}. ${g[0]}</button>`).join("")}</nav><article class="lesson-paper" id="lessonArticle"></article></div>`;
-document.querySelectorAll(".lesson-tab").forEach(
-  (b) =>
-    (b.onclick = () => {
-      activeLesson = Number(b.dataset.lesson);
-      renderWebLesson();
-    }),
-);
-renderWebLesson();
-document.getElementById("materials").innerHTML =
-  `<div class="head"><div><div class="eyebrow">Materi pembelajaran lengkap</div><h1>Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Semua halaman materi ditampilkan utuh di dalam website, tanpa diringkas atau dikurangi.</p></div></div><p class="pdf-note">Gunakan panel halaman pada pembaca dokumen untuk memilih pelajaran dan memperbesar teks saat belajar.</p><div class="pdf-reader"><iframe title="Materi lengkap keterangan tata bahasa Pelajaran 1 sampai 25" src="minna-no-nihongo-1-keterangan-tata-bahasa-pelajaran-1-25.pdf#page=1&view=FitH"></iframe></div>`;
-document.getElementById("materials").innerHTML =
-  `<div class="head"><div><div class="eyebrow">Materi pembelajaran HTML</div><h1>Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Materi ditata ulang untuk dibaca nyaman di website, dengan istilah dan urutan pembelajaran yang sama.</p></div></div><div class="html-course">${detailedGrammar.map((g, i) => `<details class="html-lesson" ${i === 0 ? "open" : ""}><summary><span class="lesson-number">${i + 1}</span>Pelajaran ${i + 1}: ${g[0]}</summary><div class="html-content"><h3>Penjelasan</h3><p>${g[1]}</p><h3>Pola tata bahasa</h3><div class="html-pattern">${g[2]}</div><div class="html-note"><div><b>Catatan penggunaan</b>${webNotes[i][0]} — ${webNotes[i][1]}</div><div><b>Latihan mandiri</b>Buat dua kalimat tentang kehidupan sehari-hari menggunakan pola ini, lalu baca kalimat tersebut dengan suara keras.</div></div></div></details>`).join("")}</div>`;
 document.getElementById("materials").innerHTML =
   `<div class="head"><div><div class="eyebrow">Materi pembelajaran HTML lengkap</div><h1>Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Setiap pelajaran memuat seluruh poin inti tata bahasa dalam penulisan ulang yang terstruktur untuk web.</p></div></div><div class="html-course">${fullLessons.map((lesson, i) => `<details class="html-lesson" ${i === 0 ? "open" : ""}><summary><span class="lesson-number">${i + 1}</span>Pelajaran ${i + 1}: ${lesson[0]}</summary><div class="html-content"><h3>Pokok pembahasan</h3><div class="html-pattern">${detailedGrammar[i][2]}</div><ul class="lesson-points">${lesson[1].map((p) => `<li>${p}</li>`).join("")}</ul><div class="html-note"><div><b>Tujuan belajar</b>Memahami fungsi pola dan dapat memilih bentuk yang sesuai untuk percakapan dasar.</div><div><b>Latihan mandiri</b>Tulis minimal dua kalimat tentang kehidupan sehari-hari menggunakan pola Pelajaran ${i + 1}, lalu baca dengan suara keras.</div></div></div></details>`).join("")}</div>`;
 const lessonOne = `<summary><span class="lesson-number">1</span>Pelajaran 1: Kalimat nominal dasar</summary><div class="html-content"><div class="grammar-point"><h3>1. N1 は N2 です</h3><p>Pola ini dipakai untuk memperkenalkan atau menjelaskan identitas. Kata benda sebelum は menjadi topik pembicaraan; kata benda sesudahnya menjadi informasi atau predikat. です membuat pernyataan terdengar sopan.</p><span class="grammar-example">わたし は マイク・ミラー です。<span class="grammar-meaning">Saya Mike Miller.</span></span></div><div class="grammar-point"><h3>2. N1 は N2 じゃありません</h3><p>Ini adalah bentuk negatif dari kalimat です. Dalam percakapan biasa digunakan じゃありません; bentuk ではありません lebih formal dan lebih sering dijumpai pada situasi resmi atau tulisan.</p><span class="grammar-example">サントスさん は 学生 じゃありません。<span class="grammar-meaning">Sdr. Santos bukan mahasiswa.</span></span></div><div class="grammar-point"><h3>3. N1 は N2 ですか</h3><p>Tambahkan か di akhir kalimat untuk membuat pertanyaan. Untuk jawaban ya/tidak, gunakan はい atau いいえ. Jika bagian yang ditanyakan belum diketahui, gantilah bagian itu dengan kata tanya seperti だれ、なん、どなた、atau どのかた.</p><span class="grammar-example">ミラーさん は アメリカ人 ですか。<span class="grammar-meaning">Apakah Sdr. Miller orang Amerika?</span></span></div><div class="grammar-point"><h3>4. N も</h3><p>も berarti juga atau pun. Partikel ini dipakai ketika predikat pada kalimat kedua sama dengan predikat pada kalimat sebelumnya. も menggantikan は pada posisi topik.</p><span class="grammar-example">ミラーさん は 会社員 です。グプタさん も 会社員 です。<span class="grammar-meaning">Sdr. Miller pegawai perusahaan. Sdr. Gupta juga pegawai perusahaan.</span></span></div><div class="grammar-point"><h3>5. N1 の N2</h3><p>の menghubungkan dua kata benda. Kata benda pertama menerangkan kata benda kedua, misalnya asal, kepemilikan, organisasi, atau jenis. Keseluruhan frasa N1 の N2 dianggap satu kelompok kata benda.</p><span class="grammar-example">ミラーさん は IMC の 会社員 です。<span class="grammar-meaning">Sdr. Miller pegawai perusahaan IMC.</span></span></div><div class="grammar-point"><h3>6. ～さん</h3><p>さん diletakkan setelah nama atau marga orang lain sebagai sapaan sopan. Jangan gunakan さん setelah nama diri sendiri. Untuk anak kecil atau orang yang sangat akrab, ～ちゃん dapat dipakai. あなた biasanya dihindari bila nama lawan bicara sudah diketahui; gunakan nama + さん agar lebih wajar.</p><span class="grammar-example">あの かた は ミラーさん です。<span class="grammar-meaning">Orang itu Sdr. Miller.</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 1</b>Perkenalan diri, pekerjaan, asal negara, serta cara bertanya dan menjawab secara sopan.</div><div><b>Latihan mandiri</b>Buat lima kalimat: dua pernyataan です, satu negatif, satu pertanyaan, dan satu kalimat memakai の atau も.</div></div></div>`;
@@ -903,15 +857,6 @@ document.querySelectorAll(".side button").forEach((button) => {
     button.onclick = () => open("book2");
   }
 });
-const bookTwoView = document.getElementById("book2");
-if (bookTwoView) {
-  const list = Array.from(
-    { length: 25 },
-    (_, i) =>
-      `<button class="lesson-tab" data-number="${i + 26}">Pelajaran ${i + 26}</button>`,
-  ).join("");
-  bookTwoView.innerHTML = `<div class="head"><div><div class="eyebrow">Materi pembelajaran menengah</div><h1>Menengah — Buku 2</h1><p>Materi akan disusun dari PDF Buku 2 dengan format poin, penjelasan, contoh, dan latihan yang sama seperti Buku 1.</p></div></div><div class="lesson-web"><nav class="lesson-tabs" aria-label="Daftar Pelajaran Buku 2">${list}</nav><article class="lesson-paper"><div class="eyebrow">Siap disusun</div><h2>Pelajaran 26–50</h2><p>PDF Buku 2 telah diterima dan akan menjadi dasar penyusunan materi menengah. Setiap pelajaran akan ditambahkan secara berurutan agar seluruh poin tata bahasa, contoh, dan latihan tetap lengkap.</p><div class="lesson-formula">Mulai dari Pelajaran 26</div></article></div>`;
-}
 const book2 = document.getElementById("book2");
 if (book2) {
   book2.innerHTML = `<div class="head"><div><div class="eyebrow">Materi pembelajaran menengah</div><h1>Menengah — Buku 2</h1><p>Pelajaran 26–50 disusun bertahap dari materi tata bahasa Buku 2.</p></div></div><div class="html-course"><details class="html-lesson" open><summary><span class="lesson-number">26</span>Pelajaran 26: Meminta bantuan dan menjelaskan alasan</summary><div class="html-content"><div class="grammar-point"><h3>1. Bentuk biasa + んです</h3><p>～んです dipakai untuk menjelaskan alasan, keadaan, atau latar belakang suatu informasi. Sebelum んです digunakan bentuk biasa. Untuk kata benda dan な形容詞, gunakan ～なんです.</p><span class="grammar-example">どうして 遅れたんですか。……電車が 遅れたんです。<span class="grammar-meaning">Mengapa terlambat? …Karena keretanya terlambat.</span></span></div><div class="grammar-point"><h3>2. Vていただけませんか</h3><p>Pola ini adalah cara sangat sopan untuk meminta seseorang melakukan sesuatu. Secara harfiah pembicara meminta lawan bicara berkenan melakukan bantuan untuknya.</p><span class="grammar-example">この 漢字を 読んで いただけませんか。<span class="grammar-meaning">Bisakah Anda berkenan membacakan kanji ini?</span></span></div><div class="grammar-point"><h3>3. Vたら いいですか</h3><p>Digunakan untuk meminta saran mengenai tindakan terbaik dalam suatu keadaan. Kata kerja memakai bentuk lampau た sebelum ら.</p><span class="grammar-example">ごみは どこに 捨てたら いいですか。<span class="grammar-meaning">Sampah sebaiknya dibuang di mana?</span></span></div><div class="grammar-point"><h3>4. N は bagaimana melakukan tindakan</h3><p>Topik dengan は dapat dipakai untuk menanyakan cara menangani benda tertentu, misalnya sampah, barang, atau dokumen. Jawaban menjelaskan tindakan dan tempat/cara yang tepat.</p><span class="grammar-example">この かさは どうしたら いいですか。<span class="grammar-meaning">Payung ini sebaiknya bagaimana?</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 26</b>Menjelaskan penyebab, meminta bantuan dengan sopan, dan meminta saran dalam situasi sehari-hari.</div><div><b>Latihan mandiri</b>Buat tiga pertanyaan: satu memakai んです, satu permintaan Vていただけませんか, dan satu saran Vたらいいですか.</div></div></div></details></div>`;
