@@ -4022,7 +4022,7 @@ document.addEventListener("keydown", (event) => {
   const view = document.getElementById("kanji-study");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-kanji-frame" data-src="prototype-kanji-v2.html?v=14&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="lazy"></iframe>';
+    '<iframe class="production-kanji-frame" data-src="prototype-kanji-v2.html?v=15&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="lazy"></iframe>';
   const frame = view.querySelector(".production-kanji-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;

@@ -723,6 +723,12 @@ document.getElementById("brushMode").onclick = (event) => {
   resetStrokes();
 };
 document.getElementById("nextQuiz").onclick = () => { quizIndex = (quizIndex + 1) % 4; renderQuiz(); };
+document.querySelectorAll(".quiz-types span").forEach((tab, index) => {
+  tab.onclick = () => {
+    quizIndex = index;
+    renderQuiz();
+  };
+});
 document.querySelector(".sound").onclick = () =>
   speakJapanese(kanjiLessons[activeIndex].char);
 document.querySelectorAll("[data-reading-audio]").forEach((button) => {
