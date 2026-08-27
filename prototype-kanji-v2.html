@@ -67,7 +67,7 @@
         <div class="word-section"><div class="section-title"><span>KOSAKATA TERKAIT</span><button id="playAllWords">▶ Putar semua audio</button></div><div id="wordList" class="word-list"></div></div>
         <div class="context-audio"><div><span>CONTOH AUDIO KONTEKSTUAL</span><p id="contextSentenceJapanese">「富士山」という言葉を練習します。</p><small id="contextSentenceMeaning">Mari berlatih menggunakan kosakata tersebut.</small></div><button id="playContextSentence">▶ Dengarkan kalimat</button></div>
         <div class="similar"><span>KANJI YANG SERING TERTUKAR</span><div id="similarList"></div></div>
-        <footer class="srs-actions"><span>Seberapa kuat Anda mengingat kanji ini?</span><div><button data-srs="review">Sulit</button><button data-srs="learning">Masih belajar</button><button class="master" data-srs="mastered">Sudah kuat ✓</button></div></footer>
+        <footer class="srs-actions"><span>Seberapa kuat Anda mengingat kanji ini?<small id="srsHint"></small></span><div><button data-srs="again">Sulit</button><button data-srs="hard">Masih belajar</button><button class="master" data-srs="good">Sudah kuat ✓</button></div></footer>
       </article>
     </section>
 
@@ -89,6 +89,7 @@
   <div class="mobile-nav"><button>⌂<span>Beranda</span></button><button>文<span>Materi</span></button><button class="active">漢<span>Kanji</span></button><button>試<span>Tes</span></button></div>
   <script src="data/kanji-data.js"></script>
   <script src="data/kanji-stroke-data.js"></script>
-  <script src="prototype-kanji-v2.js?v=15"></script>
+  <script src="srs.js?v=1"></script>
+  <script src="prototype-kanji-v2.js?v=16"></script>
 </body>
 </html>

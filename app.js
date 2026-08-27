@@ -21,10 +21,59 @@ function sync() {
   document.getElementById("taskStatus").textContent =
     `${done} dari 4 aktivitas selesai`;
   document.getElementById("taskHeadline").textContent = `${done} dari 4`;
-  document.getElementById("kanjiCount").textContent = 18 + state.mastered;
+  document.getElementById("kanjiCount").textContent = srsMasteredCount("kanji:");
   document
     .querySelectorAll(".todo")
     .forEach((t) => t.classList.toggle("done", !!state.tasks[t.dataset.task]));
+  renderDashboardActivity();
+}
+
+/* Rencana hari ini & grafik aktivitas: dihitung dari data SRS asli
+   (kanji, materi, hafalan), bukan angka contoh statis. */
+function renderDashboardActivity() {
+  const streakEl = document.getElementById("streakDays");
+  if (streakEl) streakEl.textContent = `${srsStreak()} hari`;
+
+  const hafalanDue = srsDueCount("hafalan:");
+  const materiDue = srsDueCount("materi:");
+  const kanjiDue = srsDueCount("kanji:");
+  const subtitle = (due) =>
+    due > 0 ? `${due} perlu diulang hari ini` : "Tidak ada yang due — lanjut materi baru";
+  const hafalanSub = document.getElementById("taskHafalanSub");
+  const materiSub = document.getElementById("taskMateriSub");
+  const kanjiSub = document.getElementById("taskKanjiSub");
+  if (hafalanSub) hafalanSub.textContent = subtitle(hafalanDue);
+  if (materiSub) materiSub.textContent = subtitle(materiDue);
+  if (kanjiSub) kanjiSub.textContent = subtitle(kanjiDue);
+
+  document.querySelectorAll(".todo[data-goto]").forEach((row) => {
+    const label = row.querySelector("span");
+    if (label && !label.dataset.navBound) {
+      label.dataset.navBound = "1";
+      label.style.cursor = "pointer";
+      label.onclick = () => open(row.dataset.goto);
+    }
+  });
+
+  const chartPath = document.getElementById("activityChartPath");
+  if (chartPath) {
+    const weekly = srsWeeklyActivity(6);
+    const max = Math.max(5, ...weekly);
+    const points = weekly.map((count, index) => {
+      const x = (index / (weekly.length - 1)) * 600;
+      const y = 155 - (count / max) * 130;
+      return `${index === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+    });
+    chartPath.setAttribute("d", points.join(" "));
+  }
+  const goalPath = document.getElementById("activityGoalPath");
+  if (goalPath) {
+    const weekly = srsWeeklyActivity(6);
+    const max = Math.max(5, ...weekly);
+    const goal = 14; // target ringan: ~2 ulasan sehari
+    const y = Math.max(5, 155 - (Math.min(goal, max) / max) * 130);
+    goalPath.setAttribute("d", `M0,${y.toFixed(1)} L600,${y.toFixed(1)}`);
+  }
 }
 function open(view) {
   document
@@ -35,6 +84,7 @@ function open(view) {
     .forEach((b) => b.classList.toggle("active", b.dataset.view === view));
   window.scrollTo({ top: 0, behavior: "smooth" });
   activateProductionFrame(view);
+  if (view === "dashboard") renderDashboardActivity();
 }
 function activateProductionFrame(view) {
   const frame = document.querySelector(`#${view} iframe[data-src]`);
@@ -97,6 +147,8 @@ document.querySelectorAll(".filter").forEach(
     }),
 );
 function nextCard(master) {
+  const word = deck[category][index]?.[0];
+  if (word) srsReview(`hafalan:${category}:${word}`, master ? "good" : "again");
   if (master) {
     state.mastered++;
     state.xp += 10;
@@ -3211,20 +3263,18 @@ function addMaterialFurigana(element, directTextOnly = false) {
 }
 
 /* Pilihan materi Buku 1 dan Buku 2: masing-masing 25 pelajaran dalam kisi 5 x 5. */
-function getStoredLessonStatuses(key) {
-  try {
-    const stored = JSON.parse(localStorage.getItem(key) || "null");
-    return Array.isArray(stored) && stored.length === 25
-      ? stored
-      : Array(25).fill("new");
-  } catch {
-    return Array(25).fill("new");
-  }
+function materiStatusesForBook(bookNumber) {
+  return Array.from({ length: 25 }, (_, index) => {
+    const id = `materi:book${bookNumber}:${index}`;
+    const record = srsGet(id);
+    if (!record.reviews) return "new";
+    return srsIsDue(id) ? "repeat" : "done";
+  });
 }
 
 function syncCurriculumDashboard() {
-  const bookOne = getStoredLessonStatuses("nihonBenkyoLessonStatusV1");
-  const bookTwo = getStoredLessonStatuses("nihonBenkyoLessonStatusV2");
+  const bookOne = materiStatusesForBook(1);
+  const bookTwo = materiStatusesForBook(2);
   const bookOneDone = bookOne.filter((status) => status === "done").length;
   const bookTwoDone = bookTwo.filter((status) => status === "done").length;
   const totalDone = bookOneDone + bookTwoDone;
@@ -3294,7 +3344,7 @@ function initMaterialLessonPicker({
   reader.setAttribute("role", "tabpanel");
   reader.setAttribute("tabindex", "-1");
   reader.innerHTML =
-    `<div class="material-reader-toolbar"><button type="button" class="material-back-list">↑ Daftar pelajaran</button><span class="material-reader-position">Pelajaran ${startNumber} dari ${endNumber}</span><button type="button" class="material-focus-toggle" aria-pressed="false">⛶ Mode fokus</button></div><header class="material-reader-head"><div><div class="eyebrow material-reader-number"></div><h2 class="material-reader-title"></h2><p>Seluruh pola, penjelasan, dan contoh asli tetap ditampilkan.</p></div><span class="material-study-time">◷ 8–15 menit</span></header><div class="material-learning-steps" role="tablist" aria-label="Tahapan belajar"><button type="button" class="material-step active" data-material-step="patterns" role="tab" aria-selected="true"><b>1</b>Pahami semua pola</button><button type="button" class="material-step" data-material-step="examples" role="tab" aria-selected="false"><b>2</b>Pelajari contoh</button><button type="button" class="material-step" data-material-step="practice" role="tab" aria-selected="false"><b>3</b>Kerjakan latihan</button></div><div class="material-completeness">✓ Materi lengkap—tidak ada pola yang dikurangi.</div><div class="material-reader-body material-step-panel" data-material-panel="patterns"></div><section class="material-example-study material-step-panel" data-material-panel="examples" hidden></section><section class="material-practice-study material-step-panel" data-material-panel="practice" hidden></section><footer class="material-reader-actions"><button type="button" class="material-secondary-action material-previous">← Sebelumnya</button><div><button type="button" class="material-repeat-action material-mark-repeat">Perlu diulang</button><button type="button" class="material-primary-action material-mark-understood">Sudah paham ✓</button></div><button type="button" class="material-secondary-action material-next">Berikutnya →</button></footer>`;
+    `<div class="material-reader-toolbar"><button type="button" class="material-back-list">↑ Daftar pelajaran</button><span class="material-reader-position">Pelajaran ${startNumber} dari ${endNumber}</span><button type="button" class="material-furigana-toggle active" aria-pressed="true">振 Furigana aktif</button><button type="button" class="material-focus-toggle" aria-pressed="false">⛶ Mode fokus</button></div><header class="material-reader-head"><div><div class="eyebrow material-reader-number"></div><h2 class="material-reader-title"></h2><p>Seluruh pola, penjelasan, dan contoh asli tetap ditampilkan.</p></div><span class="material-study-time">◷ 8–15 menit</span></header><div class="material-learning-steps" role="tablist" aria-label="Tahapan belajar"><button type="button" class="material-step active" data-material-step="patterns" role="tab" aria-selected="true"><b>1</b>Pahami semua pola</button><button type="button" class="material-step" data-material-step="examples" role="tab" aria-selected="false"><b>2</b>Pelajari contoh</button><button type="button" class="material-step" data-material-step="practice" role="tab" aria-selected="false"><b>3</b>Kerjakan latihan</button></div><div class="material-completeness">✓ Materi lengkap—tidak ada pola yang dikurangi.</div><div class="material-reader-body material-step-panel" data-material-panel="patterns"></div><section class="material-example-study material-step-panel" data-material-panel="examples" hidden></section><section class="material-practice-study material-step-panel" data-material-panel="practice" hidden></section><footer class="material-reader-actions"><button type="button" class="material-secondary-action material-previous">← Sebelumnya</button><div><button type="button" class="material-repeat-action material-mark-repeat">Perlu diulang</button><button type="button" class="material-primary-action material-mark-understood">Sudah paham ✓</button></div><button type="button" class="material-secondary-action material-next">Berikutnya →</button></footer>`;
 
   const progressPanel = document.createElement("aside");
   progressPanel.className = "material-progress-panel";
@@ -3312,14 +3362,19 @@ function initMaterialLessonPicker({
   const readerBody = reader.querySelector(".material-reader-body");
   const exampleStudy = reader.querySelector(".material-example-study");
   const practiceStudy = reader.querySelector(".material-practice-study");
-  let lessonStatuses;
-  try {
-    lessonStatuses = JSON.parse(localStorage.getItem(progressKey) || "null");
-  } catch {
-    lessonStatuses = null;
+  function materiSrsId(index) {
+    return `materi:book${bookNumber}:${index}`;
   }
-  if (!Array.isArray(lessonStatuses) || lessonStatuses.length !== 25)
-    lessonStatuses = Array(25).fill("new");
+  function lessonStatusFor(index) {
+    // Beda dari kanji/hafalan: satu pelajaran adalah unit pemahaman besar,
+    // bukan kartu hafalan kecil. "Sudah paham" langsung dianggap selesai
+    // (bukan menunggu box SRS dalam beberapa kali), tapi tetap dijadwalkan
+    // ulang dan berubah jadi "Perlu diulang" begitu due-nya tiba.
+    const id = materiSrsId(index);
+    const record = srsGet(id);
+    if (!record.reviews) return "new";
+    return srsIsDue(id) ? "repeat" : "done";
+  }
   const buttons = [];
   let activeIndex = -1;
   let activeContent = null;
@@ -3356,15 +3411,10 @@ function initMaterialLessonPicker({
     buttons.push(button);
   });
 
-  function persistLessonStatuses() {
-    localStorage.setItem(progressKey, JSON.stringify(lessonStatuses));
-  }
-
   function updateMaterialProgress() {
-    const done = lessonStatuses.filter((status) => status === "done").length;
-    const repeat = lessonStatuses.filter(
-      (status) => status === "repeat",
-    ).length;
+    const statuses = Array.from({ length: 25 }, (_, index) => lessonStatusFor(index));
+    const done = statuses.filter((status) => status === "done").length;
+    const repeat = statuses.filter((status) => status === "repeat").length;
     const fresh = 25 - done - repeat;
     const percent = Math.round((done / 25) * 100);
     progressPanel.querySelector(".material-done-count").textContent = done;
@@ -3376,13 +3426,13 @@ function initMaterialLessonPicker({
       .querySelector(".material-progress-ring")
       .style.setProperty("--material-progress", `${percent}%`);
 
-    const recommendationIndex = lessonStatuses.findIndex(
+    const recommendationIndex = statuses.findIndex(
       (status) => status === "repeat",
     );
     const nextIndex =
       recommendationIndex >= 0
         ? recommendationIndex
-        : lessonStatuses.findIndex((status) => status === "new");
+        : statuses.findIndex((status) => status === "new");
     const recommended = nextIndex >= 0 ? nextIndex : 24;
     const recommendedTitle = buttons[recommended]
       .querySelector(".material-choice-label")
@@ -3395,7 +3445,7 @@ function initMaterialLessonPicker({
       () => selectLesson(recommended, true);
 
     buttons.forEach((button, index) => {
-      const status = lessonStatuses[index];
+      const status = statuses[index];
       button.classList.toggle("done", status === "done");
       button.classList.toggle("repeat", status === "repeat");
       button.querySelector(".material-choice-state").textContent =
@@ -3407,9 +3457,9 @@ function initMaterialLessonPicker({
     });
   }
 
-  function setLessonStatus(index, status) {
-    lessonStatuses[index] = status;
-    persistLessonStatuses();
+  /* outcome: "again" (Perlu diulang) atau "good" (Sudah paham) */
+  function setLessonStatus(index, outcome) {
+    srsReview(materiSrsId(index), outcome);
     updateMaterialProgress();
     syncCurriculumDashboard();
   }
@@ -3968,9 +4018,9 @@ function initMaterialLessonPicker({
   reader.querySelector(".material-next").onclick = () =>
     selectLesson(Math.min(24, activeIndex + 1), true);
   reader.querySelector(".material-mark-repeat").onclick = () =>
-    setLessonStatus(activeIndex, "repeat");
+    setLessonStatus(activeIndex, "again");
   reader.querySelector(".material-mark-understood").onclick = () => {
-    setLessonStatus(activeIndex, "done");
+    setLessonStatus(activeIndex, "good");
     if (activeIndex < 24) selectLesson(activeIndex + 1, true);
   };
   reader.querySelectorAll(".material-step").forEach((button) => {
@@ -3978,6 +4028,12 @@ function initMaterialLessonPicker({
   });
   reader.querySelector(".material-focus-toggle").onclick = () =>
     setMaterialFocusMode(!document.body.classList.contains("focus-mode"));
+  reader.querySelector(".material-furigana-toggle").onclick = (event) => {
+    const on = reader.classList.toggle("hide-furigana");
+    event.currentTarget.classList.toggle("active", !on);
+    event.currentTarget.setAttribute("aria-pressed", String(!on));
+    event.currentTarget.textContent = on ? "振 Furigana mati" : "振 Furigana aktif";
+  };
   updateMaterialProgress();
   selectLesson(0);
 }
@@ -4022,7 +4078,7 @@ document.addEventListener("keydown", (event) => {
   const view = document.getElementById("kanji-study");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-kanji-frame" data-src="prototype-kanji-v2.html?v=15&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="lazy"></iframe>';
+    '<iframe class="production-kanji-frame" data-src="prototype-kanji-v2.html?v=16&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="lazy"></iframe>';
   const frame = view.querySelector(".production-kanji-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;

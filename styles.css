@@ -546,6 +546,25 @@
   font-weight: 700;
   letter-spacing: 0;
 }
+.material-reader.hide-furigana .material-furigana rt {
+  display: none;
+}
+.material-furigana-toggle {
+  flex: none;
+  padding: 7px 11px;
+  border: 1px solid #c4ae84;
+  border-radius: 7px;
+  color: #7d5b22;
+  background: #fffdf8;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.material-furigana-toggle.active {
+  color: #f8e8c4;
+  background: var(--navy);
+  border-color: var(--navy);
+}
 .material-reader-body .grammar-japanese-example,
 .material-example-japanese,
 .material-practice-japanese,

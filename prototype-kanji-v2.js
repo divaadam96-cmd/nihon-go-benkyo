@@ -39,37 +39,41 @@ brushContext.imageSmoothingEnabled = true;
 brushContext.imageSmoothingQuality = "high";
 let quizIndex = 0;
 
-function savedStatuses() {
-  try { return JSON.parse(localStorage.getItem("kanjiPrototypeStatusV1") || "{}"); }
-  catch { return {}; }
+function kanjiSrsId(item) {
+  return `kanji:${item.char}`;
 }
 
-function statusFor(item, index) {
-  const stored = savedStatuses()[item.char];
-  if (stored) return stored;
-  if (index % 7 === 0) return "review";
-  if (index % 4 === 0) return "mastered";
-  return "new";
+function statusFor(item) {
+  return srsStatusLabel(kanjiSrsId(item));
 }
 
-function setStatus(item, status) {
-  const values = savedStatuses();
-  values[item.char] = status;
-  localStorage.setItem("kanjiPrototypeStatusV1", JSON.stringify(values));
+/* outcome: "again" (Sulit), "hard" (Masih belajar), "good" (Sudah kuat) */
+function setStatus(item, outcome) {
+  srsReview(kanjiSrsId(item), outcome);
   applyFilters();
   updateHeroStats();
+  renderSrsHint(item);
 }
 
 function updateHeroStats() {
-  let mastered = 0;
-  let review = 0;
-  kanjiLessons.forEach((item, index) => {
-    const status = statusFor(item, index);
-    if (status === "mastered") mastered++;
-    else if (status === "review") review++;
-  });
-  document.getElementById("masteredCount").textContent = mastered;
-  document.getElementById("reviewCount").textContent = review;
+  document.getElementById("masteredCount").textContent = srsMasteredCount("kanji:");
+  document.getElementById("reviewCount").textContent = srsDueCount("kanji:");
+}
+
+function renderSrsHint(item) {
+  const hint = document.getElementById("srsHint");
+  if (!hint) return;
+  const record = srsGet(kanjiSrsId(item));
+  if (!record.reviews) {
+    hint.textContent = "Belum pernah diulas. Nilai untuk mulai penjadwalan.";
+    return;
+  }
+  const dueDate = new Date(record.due + "T00:00:00");
+  const daysLeft = Math.ceil((dueDate - new Date(srsToday() + "T00:00:00")) / 86400000);
+  hint.textContent =
+    daysLeft <= 0
+      ? "Terjadwal ulang hari ini."
+      : `Terjadwal ulang lagi dalam ${daysLeft} hari.`;
 }
 
 function updateCounts() {
@@ -622,6 +626,7 @@ function selectKanji(index, shouldScroll = false) {
   renderStrokeBoard(item);
   renderWords(item);
   renderSimilar(item);
+  renderSrsHint(item);
   quizIndex = 0;
   renderQuiz();
   renderGrid();
@@ -704,7 +709,7 @@ document.querySelectorAll(".filter-row button").forEach((button) => {
     applyFilters();
   };
 });
-document.querySelectorAll(".srs-actions button").forEach((button) => button.onclick = () => setStatus(kanjiLessons[activeIndex], button.dataset.srs === "learning" ? "new" : button.dataset.srs));
+document.querySelectorAll(".srs-actions button").forEach((button) => button.onclick = () => setStatus(kanjiLessons[activeIndex], button.dataset.srs));
 search.oninput = applyFilters;
 document.getElementById("playStroke").onclick = resetStrokes;
 document.getElementById("stepStroke").onclick = showNextStroke;
