@@ -38,6 +38,8 @@ function sync() {
 function renderDashboardActivity() {
   const streakEl = document.getElementById("streakDays");
   if (streakEl) streakEl.textContent = `${srsStreak()} hari`;
+  if (typeof window.loadStudyReminder === "function") window.loadStudyReminder();
+  if (typeof window.loadSiswaAssignments === "function") window.loadSiswaAssignments();
 
   const hafalanDue = srsDueCount("hafalan:");
   const materiDue = srsDueCount("materi:");
@@ -1688,8 +1690,36 @@ if (side) {
     );
   side.insertAdjacentHTML(
     "beforeend",
-    '<div class="menu-label" style="margin-top:18px" data-role-only="sensei,operator" hidden>Kelola</div><button data-view="monitor" data-role-only="sensei,operator" hidden><span class="jp">\u76e3</span>Pantau Siswa</button><button data-view="admin" data-role-only="operator" hidden><span class="jp">\u7ba1</span>Panel Admin</button>',
+    '<div class="menu-label" data-role-only="sensei,operator" hidden>Kelola</div><button data-view="monitor" data-role-only="sensei,operator" hidden><span class="jp">\u76e3</span>Pantau Siswa</button><button data-view="admin" data-role-only="operator" hidden><span class="jp">\u7ba1</span>Panel Admin</button>',
   );
+  side.querySelectorAll("button[data-view]").forEach((button) => {
+    const label = Array.from(button.childNodes)
+      .filter((node) => node.nodeType === Node.TEXT_NODE)
+      .map((node) => node.textContent.trim())
+      .join(" ")
+      .trim();
+    if (label) button.title = label;
+  });
+}
+/* Sidebar bisa dilipat jadi rail ikon (hemat ruang saat fokus belajar).
+   Status tersimpan di localStorage supaya tetap terlipat/terbuka lain
+   kali dibuka. */
+const layoutEl = document.querySelector(".layout");
+const sidebarToggleBtn = document.getElementById("sidebarToggle");
+function applySidebarCollapsed(collapsed) {
+  if (!layoutEl || !sidebarToggleBtn) return;
+  layoutEl.classList.toggle("sidebar-collapsed", collapsed);
+  const label = collapsed ? "Tampilkan sidebar" : "Sembunyikan sidebar";
+  sidebarToggleBtn.title = label;
+  sidebarToggleBtn.setAttribute("aria-label", label);
+}
+if (layoutEl && sidebarToggleBtn) {
+  applySidebarCollapsed(localStorage.getItem("sidebarCollapsed") === "1");
+  sidebarToggleBtn.onclick = () => {
+    const collapsed = !layoutEl.classList.contains("sidebar-collapsed");
+    applySidebarCollapsed(collapsed);
+    localStorage.setItem("sidebarCollapsed", collapsed ? "1" : "0");
+  };
 }
 document
   .querySelectorAll("[data-view]")
@@ -2952,8 +2982,6 @@ mobileNav.querySelectorAll("button").forEach(
         .forEach((other) => other.classList.toggle("active", other === button));
     }),
 );
-if ("serviceWorker" in navigator && location.protocol !== "file:")
-  navigator.serviceWorker.register("sw.js?build=36").catch(() => {});
 /* Animasi tambahan: kelopak sakura jatuh, underline navbar meluncur, grid muncul bertahap. */
 const animationEnhancementsStyle = document.createElement("style");
 animationEnhancementsStyle.textContent = `

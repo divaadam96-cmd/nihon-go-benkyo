@@ -12,6 +12,9 @@ const monitorDetailStats = document.getElementById("monitorDetailStats");
 const monitorResetBtn = document.getElementById("monitorResetBtn");
 const monitorResetError = document.getElementById("monitorResetError");
 const monitorDetailClose = document.getElementById("monitorDetailClose");
+const monitorAssignmentList = document.getElementById("monitorAssignmentList");
+const monitorAssignmentForm = document.getElementById("monitorAssignmentForm");
+const monitorAssignmentError = document.getElementById("monitorAssignmentError");
 
 let monitorStudents = [];
 let monitorSelectedId = null;
@@ -99,7 +102,35 @@ function renderMonitorDetail(student) {
   monitorResetError.hidden = true;
   monitorResetBtn.disabled = false;
   monitorResetBtn.textContent = "Reset progres siswa ini";
+  monitorAssignmentError.hidden = true;
+  monitorAssignmentForm.reset();
   monitorDetailEl.hidden = false;
+  loadStudentAssignments(student.id);
+}
+
+async function loadStudentAssignments(siswaId) {
+  monitorAssignmentList.innerHTML = '<p class="muted">Memuat tugas…</p>';
+  const { data, error } = await window.supabaseClient
+    .from("assignments")
+    .select("id, title, due_date, completed")
+    .eq("siswa_id", siswaId)
+    .order("completed", { ascending: true })
+    .order("due_date", { ascending: true, nullsFirst: false });
+  if (error) {
+    monitorAssignmentList.innerHTML = `<p class="muted">Gagal memuat tugas: ${error.message}</p>`;
+    return;
+  }
+  if (!data || data.length === 0) {
+    monitorAssignmentList.innerHTML = '<p class="muted">Belum ada tugas.</p>';
+    return;
+  }
+  monitorAssignmentList.innerHTML = data
+    .map((task) => {
+      const dueText = task.due_date ? `Tenggat ${task.due_date}` : "Tanpa tenggat";
+      const statusClass = task.completed ? "assignment-done" : "assignment-pending";
+      return `<div class="monitor-assignment-row ${statusClass}"><div><b>${escapeHtml(task.title)}</b><small>${dueText} · ${task.completed ? "Selesai" : "Belum selesai"}</small></div><button type="button" class="monitor-assignment-delete" data-id="${task.id}">Hapus</button></div>`;
+    })
+    .join("");
 }
 
 monitorListEl.addEventListener("click", (event) => {
@@ -137,6 +168,46 @@ monitorResetBtn.addEventListener("click", async () => {
   student.remote = await srsFetchRemoteFor(student.id);
   renderMonitorDetail(student);
   await loadMonitorPanel();
+});
+
+monitorAssignmentForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const student = monitorStudents.find((s) => s.id === monitorSelectedId);
+  if (!student) return;
+  const title = document.getElementById("monitorAssignmentTitle").value.trim();
+  const dueDate = document.getElementById("monitorAssignmentDue").value || null;
+  monitorAssignmentError.hidden = true;
+
+  const { error } = await window.supabaseClient.from("assignments").insert({
+    sensei_id: window.currentProfile.id,
+    siswa_id: student.id,
+    title,
+    due_date: dueDate,
+  });
+  if (error) {
+    monitorAssignmentError.textContent = `Gagal memberi tugas: ${error.message}`;
+    monitorAssignmentError.hidden = false;
+    return;
+  }
+  monitorAssignmentForm.reset();
+  loadStudentAssignments(student.id);
+});
+
+monitorAssignmentList.addEventListener("click", async (event) => {
+  const button = event.target.closest(".monitor-assignment-delete");
+  if (!button) return;
+  const confirmed = confirm("Hapus tugas ini?");
+  if (!confirmed) return;
+  const { error } = await window.supabaseClient
+    .from("assignments")
+    .delete()
+    .eq("id", button.dataset.id);
+  if (error) {
+    alert(`Gagal menghapus tugas: ${error.message}`);
+    return;
+  }
+  const student = monitorStudents.find((s) => s.id === monitorSelectedId);
+  if (student) loadStudentAssignments(student.id);
 });
 
 window.loadMonitorPanel = loadMonitorPanel;

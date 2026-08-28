@@ -7,6 +7,25 @@
   "background_color": "#f3eee6",
   "theme_color": "#142945",
   "icons": [
-    {"src": "logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {
+      "name": "Belajar Kanji",
+      "url": "index.html#kanji-study",
+      "icons": [{"src": "icon-192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Materi pelajaran",
+      "url": "index.html#materials",
+      "icons": [{"src": "icon-192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Hafalan",
+      "url": "index.html#memorization",
+      "icons": [{"src": "icon-192.png", "sizes": "192x192"}]
+    }
   ]
 }

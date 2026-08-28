@@ -1230,14 +1230,63 @@ body {
   display: grid;
   grid-template-columns: 235px minmax(0, 1fr);
   min-height: calc(100vh - 74px);
+  transition: grid-template-columns 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.layout.sidebar-collapsed {
+  grid-template-columns: 0px minmax(0, 1fr);
+}
+/* Tombol lingkaran garis-3 (hamburger) di navbar atas - selalu terlihat
+   supaya sidebar yang disembunyikan total tetap bisa dibuka lagi. */
+.sidebar-toggle {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #e8e3da;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.sidebar-toggle:hover {
+  border-color: var(--gold);
+  background: #f7f3ec;
+}
+.sidebar-toggle span {
+  display: block;
+  width: 15px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--navy);
+}
+.layout.sidebar-collapsed .side {
+  padding-left: 0;
+  padding-right: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 .side {
   padding: 27px 16px;
   border-right: 1px solid #e9e5dd;
   background: #fdfbf7ed;
   backdrop-filter: blur(6px);
-  position: relative;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  white-space: nowrap;
   z-index: 2;
+  transition:
+    padding 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease;
 }
 .menu-label {
   font-size: 10px;
@@ -1245,18 +1294,31 @@ body {
   letter-spacing: 1.5px;
   color: #a19b91;
   padding: 7px 12px;
+  margin-top: 22px;
+}
+.menu-label:first-child {
+  margin-top: 0;
 }
 .side button {
   width: 100%;
   border: 0;
+  border-left: 3px solid transparent;
   border-radius: 5px;
   background: none;
   text-align: left;
-  padding: 10px 12px;
+  padding: 11px 12px;
   color: #586477;
   font: 500 14px "DM Sans";
   cursor: pointer;
-  margin: 2px 0;
+  margin: 3px 0;
+  position: relative;
+  transition:
+    background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-left-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    margin-right 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .side button:hover {
   background: #f3f0e9;
@@ -1265,6 +1327,46 @@ body {
   background: #f0ebe1;
   color: var(--navy);
   font-weight: 700;
+  border-left-color: var(--gold);
+}
+/* Tab aktif "menonjol" keluar dengan sudut melengkung menyatu ke arah
+   konten - hanya saat sidebar terbuka penuh (di mode rail ikon, tetap
+   pakai highlight datar + garis emas biasa). Lekukan selalu ada di DOM
+   (opacity 0 + sedikit mengecil saat tidak aktif) supaya kemunculannya
+   bisa dianimasikan dengan lembut, bukan muncul-hilang mendadak. */
+.layout:not(.sidebar-collapsed) .side button.active {
+  margin-right: -16px;
+  padding-right: 30px;
+  border-left-color: transparent;
+  border-radius: 26px 8px 8px 26px;
+  z-index: 1;
+}
+.layout:not(.sidebar-collapsed) .side button::before,
+.layout:not(.sidebar-collapsed) .side button::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 22px;
+  height: 22px;
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  transition:
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.layout:not(.sidebar-collapsed) .side button::before {
+  top: -22px;
+  transform-origin: bottom right;
+}
+.layout:not(.sidebar-collapsed) .side button::after {
+  bottom: -22px;
+  transform-origin: top right;
+}
+.layout:not(.sidebar-collapsed) .side button.active::before,
+.layout:not(.sidebar-collapsed) .side button.active::after {
+  opacity: 1;
+  transform: scale(1);
 }
 .jp {
   font: 700 15px "Zen Kaku Gothic New";
@@ -1872,7 +1974,16 @@ body {
 .side button.active {
   background: #314764;
   color: #fff5de;
-  box-shadow: inset 2px 0 #d6ad65;
+  border-left-color: #d6ad65;
+}
+.layout:not(.sidebar-collapsed) .side button.active {
+  box-shadow: 0 6px 16px -6px #05101f80;
+}
+.layout:not(.sidebar-collapsed) .side button::before {
+  background: radial-gradient(circle at bottom left, #314764 21px, #1a2a43 22.5px);
+}
+.layout:not(.sidebar-collapsed) .side button::after {
+  background: radial-gradient(circle at top left, #314764 21px, #1a2a43 22.5px);
 }
 .jp {
   color: #d6ad65;
@@ -2897,4 +3008,180 @@ button.danger:disabled {
 .admin-role-siswa {
   background: #dcefe0;
   color: #2f6b2a;
+}
+
+/* Banner pengingat belajar harian di dashboard. */
+.study-reminder {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 16px;
+  border: 1px solid #d6ad65;
+  border-radius: 10px;
+  background: #fff6e2;
+  color: #7a5a12;
+  font-size: 13px;
+  font-weight: 600;
+}
+.study-reminder button {
+  padding: 8px 12px;
+  border: 1px solid #d6ad65;
+  border-radius: 7px;
+  background: #fff;
+  color: #7a5a12;
+  font: 700 11px "DM Sans", sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.study-reminder button:hover {
+  background: #f4dfae;
+}
+
+/* Kartu "Tugas dari Sensei" di dashboard Siswa. */
+.assignment-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--wash);
+  margin-bottom: 8px;
+}
+.assignment-row b {
+  display: block;
+  color: var(--navy);
+  font-size: 13px;
+}
+.assignment-row small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+.assignment-done-btn {
+  flex-shrink: 0;
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--ink);
+  font: 700 11px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+.assignment-done-btn:hover {
+  border-color: var(--gold);
+}
+.assignment-done-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.assignment-done-label {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #dcefe0;
+  color: #2f6b2a;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Bagian tugas di dalam overlay detail siswa (panel Pantau Siswa). */
+.monitor-assignments {
+  display: grid;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+.monitor-assignments h4 {
+  margin: 4px 0 0;
+  color: var(--navy);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.monitor-assignment-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--wash);
+  font-size: 12px;
+}
+.monitor-assignment-row b {
+  display: block;
+  color: var(--navy);
+  font-size: 12px;
+}
+.monitor-assignment-row small {
+  color: var(--muted);
+  font-size: 10px;
+}
+.monitor-assignment-row.assignment-done {
+  opacity: 0.65;
+}
+.monitor-assignment-delete {
+  flex-shrink: 0;
+  padding: 5px 9px;
+  border: 1px solid #e2b3a8;
+  border-radius: 6px;
+  background: #fbe9e5;
+  color: #92382a;
+  font: 700 10px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+.monitor-assignment-delete:hover {
+  background: #f6d6cd;
+}
+#monitorAssignmentForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#monitorAssignmentForm input[type="text"] {
+  flex: 1 1 160px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: 13px "DM Sans", sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+#monitorAssignmentForm input[type="date"] {
+  padding: 9px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: 12px "DM Sans", sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* Tombol "Install aplikasi" (PWA) + petunjuk manual untuk iOS. */
+.login-card .install-app-btn {
+  margin-top: -2px;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+.login-card .install-app-btn:hover {
+  border-color: var(--gold);
+}
+.ios-install-hint {
+  margin: -2px 0 0;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--wash);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: left;
 }
