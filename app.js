@@ -3268,7 +3268,6 @@ function initMaterialLessonPicker({
         if (!example || !meaning) return null;
         const japaneseClone = example.cloneNode(true);
         japaneseClone.querySelector(".grammar-meaning")?.remove();
-        japaneseClone.querySelector(".grammar-audio-button")?.remove();
         japaneseClone.querySelectorAll("rt").forEach((reading) => reading.remove());
         const titleClone = point.querySelector("h3")?.cloneNode(true);
         titleClone?.querySelectorAll("rt").forEach((reading) => reading.remove());
@@ -3305,8 +3304,6 @@ function initMaterialLessonPicker({
       japanese.className = "material-example-japanese";
       japanese.textContent = point.japanese;
       addMaterialFurigana(japanese);
-      if (typeof createAudioButton === "function")
-        japanese.appendChild(createAudioButton(() => point.japanese));
       const meaning = document.createElement("p");
       meaning.className = "material-example-meaning";
       meaning.textContent = point.meaning;

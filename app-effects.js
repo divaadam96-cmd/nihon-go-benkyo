@@ -47,45 +47,40 @@ function simplifyLessonMaterials() {
     });
 }
 
-/* Ucapkan teks bahasa Jepang lewat Web Speech API - dipakai tombol audio
-   di setiap pola grammar (structureGrammarPoints) dan di kartu "Pelajari
-   contoh" (buildExampleStudy, app.js). Sama seperti speak() di
+/* Ucapkan teks lewat Web Speech API - dipakai tombol audio penjelasan
+   pola grammar (structureGrammarPoints). Sama seperti speak() di
    prototype-tes-v2.js: browser lama tanpa dukungan speechSynthesis
    cukup diabaikan (tombol tetap ada tapi tidak bersuara), bukan error. */
-function speakJapaneseText(text) {
+function speakText(text, lang) {
   if (!("speechSynthesis" in window) || !text) return;
   speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "ja-JP";
-  utterance.rate = 0.82;
+  utterance.lang = lang;
+  utterance.rate = lang === "ja-JP" ? 0.82 : 0.95;
   speechSynthesis.speak(utterance);
 }
 
-/* Ambil teks Jepang bersih dari sebuah elemen contoh (buang arti
-   Indonesia yang menempel di dalamnya, tombol audio itu sendiri, dan
-   furigana <rt> supaya tidak terbaca dua kali). */
-function extractJapaneseText(element) {
-  const clone = element.cloneNode(true);
-  clone.querySelectorAll(".grammar-meaning, .grammar-audio-button, rt").forEach((el) => el.remove());
-  return clone.textContent.trim();
-}
-
-function createAudioButton(getText) {
+function createAudioButton(getText, lang) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "grammar-audio-button";
-  button.setAttribute("aria-label", "Dengarkan pengucapan");
-  button.title = "Dengarkan pengucapan";
+  button.setAttribute("aria-label", "Dengarkan penjelasan");
+  button.title = "Dengarkan penjelasan";
   button.textContent = "🔊";
   button.onclick = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    speakJapaneseText(getText());
+    speakText(getText(), lang);
   };
   return button;
 }
 
-/* Susun setiap pola: penjelasan, contoh Jepang, arti, lalu catatan bila perlu. */
+/* Susun setiap pola: penjelasan, contoh Jepang, arti, lalu catatan bila
+   perlu - dan sisipkan tombol audio di PENJELASAN (bahasa Indonesia,
+   bukan contoh kalimat Jepang-nya) supaya siswa bisa mendengarkan arti
+   & kegunaan pola itu, bukan cuma membacanya. Teks penjelasan diambil
+   SETELAH kalimat penting (kalau ada) dipisah ke catatan tersendiri di
+   bawah, supaya audio persis sama dengan yang tampil di layar. */
 function structureGrammarPoints() {
   const importantPattern =
     /\b(jangan|tidak boleh|tidak dipakai|tidak digunakan|berbeda|perhatikan|khusus|wajib|umumnya|hindari|harus)\b/i;
@@ -101,29 +96,30 @@ function structureGrammarPoints() {
       if (explanation) explanation.classList.add("grammar-short-explanation");
       if (example) example.classList.add("grammar-japanese-example");
       if (meaning) meaning.classList.add("grammar-indonesian-meaning");
-      if (example && !example.querySelector(".grammar-audio-button")) {
-        const audioButton = createAudioButton(() => extractJapaneseText(example));
-        if (meaning) example.insertBefore(audioButton, meaning);
-        else example.appendChild(audioButton);
+
+      if (explanation && !point.querySelector(".grammar-important-note")) {
+        const sentences = explanation.textContent
+          .trim()
+          .split(/(?<=[.!?。])\s+/)
+          .filter(Boolean);
+        const importantIndex =
+          sentences.length >= 2
+            ? sentences.findIndex((sentence) => importantPattern.test(sentence))
+            : -1;
+        if (importantIndex >= 0) {
+          const importantSentence = sentences.splice(importantIndex, 1)[0];
+          explanation.textContent = sentences.join(" ");
+          const note = document.createElement("aside");
+          note.className = "grammar-important-note";
+          note.textContent = importantSentence;
+          if (example) example.insertAdjacentElement("afterend", note);
+          else explanation.insertAdjacentElement("afterend", note);
+        }
       }
 
-      if (!explanation || point.querySelector(".grammar-important-note")) return;
-      const sentences = explanation.textContent
-        .trim()
-        .split(/(?<=[.!?。])\s+/)
-        .filter(Boolean);
-      if (sentences.length < 2) return;
-      const importantIndex = sentences.findIndex((sentence) =>
-        importantPattern.test(sentence),
-      );
-      if (importantIndex < 0) return;
-
-      const importantSentence = sentences.splice(importantIndex, 1)[0];
-      explanation.textContent = sentences.join(" ");
-      const note = document.createElement("aside");
-      note.className = "grammar-important-note";
-      note.textContent = importantSentence;
-      if (example) example.insertAdjacentElement("afterend", note);
-      else explanation.insertAdjacentElement("afterend", note);
+      if (explanation && !explanation.querySelector(".grammar-audio-button")) {
+        const explanationText = explanation.textContent.trim();
+        explanation.appendChild(createAudioButton(() => explanationText, "id-ID"));
+      }
     });
 }
