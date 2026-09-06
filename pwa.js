@@ -4,7 +4,7 @@
    di-cache walau pengunjung belum login. */
 
 if ("serviceWorker" in navigator && location.protocol !== "file:") {
-  navigator.serviceWorker.register("sw.js?build=84").catch(() => {});
+  navigator.serviceWorker.register("sw.js?build=85").catch(() => {});
 }
 
 let deferredInstallPrompt = null;

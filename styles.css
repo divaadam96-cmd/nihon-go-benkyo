@@ -1156,6 +1156,15 @@
 * {
   box-sizing: border-box;
 }
+/* Elemen ber-atribut "hidden" (mis. tombol Pantau Siswa/Panel Admin yang
+   disembunyikan applyRoleVisibility() di auth.js untuk peran yang tidak
+   berhak) HARUS tetap tersembunyi meski elemen itu juga punya aturan
+   "display" sendiri (mis. .side button[data-view]{display:flex}) -
+   tanpa !important di sini, display:flex itu menang (CSS author selalu
+   mengalahkan default UA [hidden], berapa pun specificity-nya). */
+[hidden] {
+  display: none !important;
+}
 body {
   margin: 0;
   background: #ebeae5;
@@ -1455,6 +1464,19 @@ body {
 .menu-label:first-child,
 .side-toggle-row + .menu-label {
   margin-top: 0;
+}
+/* Rail desktop selebar 72px terlalu sempit untuk label kiri-rata
+   ("BELAJAR"/"KELOLA" ikut terpotong overflow-x:hidden milik .side) -
+   pusatkan teksnya dan kecilkan padding/letter-spacing supaya muat
+   rapi. Drawer mobile jauh lebih lebar dan daftar tombolnya rata kiri,
+   jadi label section-nya tetap kiri-rata di sana (lihat @media 700px). */
+@media (min-width: 701px) {
+  .menu-label {
+    text-align: center;
+    padding-left: 2px;
+    padding-right: 2px;
+    letter-spacing: 1px;
+  }
 }
 .side button[data-view] {
   display: flex;
