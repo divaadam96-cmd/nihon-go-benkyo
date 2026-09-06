@@ -3848,6 +3848,48 @@ initMaterialLessonPicker({
 });
 syncCurriculumDashboard();
 
+/* Siswa pilih Buku 1 atau Buku 2 dulu, baru diarahkan ke materi buku itu
+   - bukan langsung menampilkan semua materi sekaligus. Seluruh konten
+   Buku 1 yang sudah dibangun di atas (head + picker interaktif) dipindah
+   ke satu wrapper (#materialsBook1) supaya bisa disembunyikan/
+   ditampilkan sebagai satu kesatuan, sejajar dengan #book2. */
+(function initMaterialBookChooser() {
+  const materialsEl = document.getElementById("materials");
+  const book2El = document.getElementById("book2");
+  if (!materialsEl || !book2El) return;
+
+  const book1El = document.createElement("div");
+  book1El.id = "materialsBook1";
+  Array.from(materialsEl.childNodes).forEach((node) => {
+    if (node !== book2El) book1El.appendChild(node);
+  });
+
+  const chooser = document.createElement("div");
+  chooser.className = "material-book-choice";
+  chooser.innerHTML =
+    '<div class="head"><div><div class="eyebrow">Silabus mandiri</div><h1>Pilih buku materi.</h1><p>Susunan topik mengikuti progres belajar pemula hingga menengah awal, dengan referensi struktur Minna no Nihongo 1–2.</p></div></div><div class="mode-grid"><article class="card mode"><div class="eyebrow">Pemula · N5</div><h2>Dasar — Buku 1</h2><p>Pelajaran 1–25: pola kalimat dasar, kata kerja, kata sifat, dan kegiatan sehari-hari.</p><button type="button" class="primary" data-choose-book="1">Mulai Buku 1</button></article><article class="card mode"><div class="eyebrow">Menengah awal · N4</div><h2>Menengah — Buku 2</h2><p>Pelajaran 26–50: komunikasi situasional, alasan, dan bentuk kalimat yang lebih luas.</p><button type="button" class="primary" data-choose-book="2">Mulai Buku 2</button></article></div>';
+
+  const backButtonHtml = '<button type="button" class="secondary material-book-back">← Ganti buku</button>';
+  book1El.insertAdjacentHTML("afterbegin", backButtonHtml);
+  book2El.insertAdjacentHTML("afterbegin", backButtonHtml);
+
+  materialsEl.append(chooser, book1El, book2El);
+
+  function showBook(number) {
+    chooser.hidden = number != null;
+    book1El.hidden = number !== 1;
+    book2El.hidden = number !== 2;
+  }
+  chooser.querySelectorAll("[data-choose-book]").forEach((button) => {
+    button.onclick = () => showBook(Number(button.dataset.chooseBook));
+  });
+  materialsEl.querySelectorAll(".material-book-back").forEach((button) => {
+    button.onclick = () => showBook(null);
+  });
+
+  showBook(null);
+})();
+
 /* Mode fokus untuk pembaca materi (Buku 1 dan Buku 2 berbagi fungsi yang sama). */
 function setMaterialFocusMode(on) {
   document.body.classList.toggle("focus-mode", on);

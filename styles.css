@@ -1673,6 +1673,10 @@ body {
     transform 0.15s,
     filter 0.15s;
 }
+.material-book-back {
+  display: block;
+  margin-bottom: 18px;
+}
 .primary:hover,
 .secondary:hover {
   transform: translateY(-1px);
