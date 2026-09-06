@@ -805,21 +805,15 @@ const materialsHeading = document.querySelector("#materials .head h1");
 if (materialsHeading)
   materialsHeading.textContent =
     "Dasar — Buku 1: Keterangan Tata Bahasa Pelajaran 1–25";
+/* Buku 2 BUKAN view/nav terpisah lagi ("fitur Kelas" sudah dihapus) -
+   section ini ditaruh di DALAM #materials supaya seluruh materi (Buku 1
+   dan Buku 2) bisa diakses dari satu tempat: menu "Materi pelajaran".
+   id="book2" tetap dipertahankan karena masih dipakai sebagai penanda
+   viewId oleh initMaterialLessonPicker/enrichLessons di bawah. */
 const bookTwo = document.createElement("section");
-bookTwo.className = "view";
 bookTwo.id = "book2";
 bookTwo.innerHTML = `<div class="head"><div><div class="eyebrow">Materi pembelajaran</div><h1>Menengah — Buku 2</h1><p>Bagian ini masih kosong dan akan diisi setelah materi Dasar — Buku 1 selesai.</p></div></div><article class="card" style="max-width:720px"><h2>Materi sedang disiapkan</h2><p style="color:var(--muted);line-height:1.65">Untuk saat ini, silakan selesaikan seluruh materi Dasar — Buku 1 terlebih dahulu.</p></article>`;
-document.querySelector(".main").appendChild(bookTwo);
-document.querySelectorAll(".side button").forEach((button) => {
-  if (button.textContent.includes("Dasar")) {
-    button.dataset.view = "materials";
-    button.onclick = () => open("materials");
-  }
-  if (button.textContent.includes("Menengah")) {
-    button.dataset.view = "book2";
-    button.onclick = () => open("book2");
-  }
-});
+document.getElementById("materials").appendChild(bookTwo);
 const book2 = document.getElementById("book2");
 if (book2) {
   book2.innerHTML = `<div class="head"><div><div class="eyebrow">Materi pembelajaran menengah</div><h1>Menengah — Buku 2</h1><p>Pelajaran 26–50 disusun bertahap dari materi tata bahasa Buku 2.</p></div></div><div class="html-course"><details class="html-lesson" open><summary><span class="lesson-number">26</span>Pelajaran 26: Meminta bantuan dan menjelaskan alasan</summary><div class="html-content"><div class="grammar-point"><h3>1. Bentuk biasa + んです</h3><p>～んです dipakai untuk menjelaskan alasan, keadaan, atau latar belakang suatu informasi. Sebelum んです digunakan bentuk biasa. Untuk kata benda dan な形容詞, gunakan ～なんです.</p><span class="grammar-example">どうして 遅れたんですか。……電車が 遅れたんです。<span class="grammar-meaning">Mengapa terlambat? …Karena keretanya terlambat.</span></span></div><div class="grammar-point"><h3>2. Vていただけませんか</h3><p>Pola ini adalah cara sangat sopan untuk meminta seseorang melakukan sesuatu. Secara harfiah pembicara meminta lawan bicara berkenan melakukan bantuan untuknya.</p><span class="grammar-example">この 漢字を 読んで いただけませんか。<span class="grammar-meaning">Bisakah Anda berkenan membacakan kanji ini?</span></span></div><div class="grammar-point"><h3>3. Vたら いいですか</h3><p>Digunakan untuk meminta saran mengenai tindakan terbaik dalam suatu keadaan. Kata kerja memakai bentuk lampau た sebelum ら.</p><span class="grammar-example">ごみは どこに 捨てたら いいですか。<span class="grammar-meaning">Sampah sebaiknya dibuang di mana?</span></span></div><div class="grammar-point"><h3>4. N は bagaimana melakukan tindakan</h3><p>Topik dengan は dapat dipakai untuk menanyakan cara menangani benda tertentu, misalnya sampah, barang, atau dokumen. Jawaban menjelaskan tindakan dan tempat/cara yang tepat.</p><span class="grammar-example">この かさは どうしたら いいですか。<span class="grammar-meaning">Payung ini sebaiknya bagaimana?</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 26</b>Menjelaskan penyebab, meminta bantuan dengan sopan, dan meminta saran dalam situasi sehari-hari.</div><div><b>Latihan mandiri</b>Buat tiga pertanyaan: satu memakai んです, satu permintaan Vていただけませんか, dan satu saran Vたらいいですか.</div></div></div></details></div>`;
@@ -2241,25 +2235,6 @@ curriculumStyle.textContent = `
       .course-nav,.memory-routes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 18px}.course-switch,.memory-route{border:1px solid #dfd7cb;background:#fffdf9e8;border-radius:10px;padding:18px;text-align:left;color:var(--ink);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.course-switch:hover,.memory-route:hover{transform:translateY(-2px);border-color:#b99152;box-shadow:0 9px 20px #4d351510}.course-switch b,.memory-route b{display:block;color:var(--navy);font-size:16px;margin:4px 0 6px}.course-switch small,.memory-route small{color:var(--muted);line-height:1.55}.memory-routes{grid-template-columns:repeat(2,minmax(0,1fr))}.route-icon{font:600 23px "Zen Kaku Gothic New";color:#a27637}.exam-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.exam-card p{min-height:auto}@media(max-width:780px){.course-nav,.memory-routes,.exam-grid{grid-template-columns:1fr}}
     `;
 document.head.appendChild(curriculumStyle);
-
-const materialHome = document.getElementById("materials");
-if (materialHome) {
-  const materialHead = materialHome.querySelector(".head");
-  if (materialHead) materialHead.classList.add("book-one-material-head");
-  materialHome
-    .querySelectorAll("[data-course]")
-    .forEach(
-      (button) =>
-        (button.onclick = () =>
-          open(button.dataset.course === "book2" ? "book2" : "materials")),
-    );
-}
-document.querySelectorAll(".side button").forEach((button) => {
-  if (button.textContent.includes("Menengah")) {
-    button.dataset.view = "book2";
-    button.onclick = () => open("book2");
-  }
-});
 
 deck.hiragana = [
   ["あ", "a", "Hiragana a"],
@@ -3889,7 +3864,7 @@ document.addEventListener("keydown", (event) => {
 (function exitFocusModeOnNavigate() {
   const originalOpen = open;
   open = function (view) {
-    if (view !== "materials" && view !== "book2") setMaterialFocusMode(false);
+    if (view !== "materials") setMaterialFocusMode(false);
     originalOpen(view);
   };
 })();
