@@ -9,6 +9,7 @@
   --gold: #ad8b50;
   --green: #2d9d79;
   --rose: #bd725b;
+  --rose-soft: #f4e3dc;
   --red: #bd5c55;
 }
 
@@ -1666,6 +1667,9 @@ body {
   margin: 0;
   line-height: 1.55;
 }
+#streakDays {
+  color: var(--rose);
+}
 .card {
   background: #fffdf9f2;
   border: 1px solid var(--line);
@@ -1718,6 +1722,15 @@ body {
   grid-template-columns: 1.35fr repeat(3, 0.75fr);
   gap: 14px;
 }
+/* Kartu ringkasan dashboard dibuat lebih terang & lapang dari kartu
+   lain (--wash, bukan tan pekat .card biasa) supaya terasa lebih
+   segar - preview arah desain baru, belum diterapkan ke seluruh app. */
+.overview .metric {
+  background: var(--wash);
+  border-color: #e2ddd0;
+  box-shadow: 0 3px 10px #1d2a3d05;
+  padding: 22px 21px;
+}
 .metric small {
   display: block;
   color: var(--muted);
@@ -1733,6 +1746,22 @@ body {
   color: var(--muted);
   margin: 8px 0 0;
   line-height: 1.55;
+}
+/* Kartu Total XP dapat aksen warna hangat (--rose) supaya angka
+   pencapaian terasa lebih hidup dibanding kartu statistik netral
+   lainnya - satu-satunya tempat aksen ini dipakai untuk sekarang. */
+.overview .metric:nth-child(2) b {
+  color: var(--rose);
+}
+.overview .metric:nth-child(2) p {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--rose-soft);
+  color: var(--rose);
+  font-weight: 700;
+  line-height: 1.7;
 }
 .dashboard-grid {
   display: grid;
@@ -1819,7 +1848,7 @@ body {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: var(--blue);
+  background: var(--rose);
   margin-right: 5px;
 }
 .legend i.gold {
@@ -1851,6 +1880,12 @@ body {
   height: 100%;
   background: var(--blue);
   border-radius: 8px;
+  transition: width 0.6s cubic-bezier(0.22, 0.75, 0.25, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
 }
 .material-grid {
   display: grid;
