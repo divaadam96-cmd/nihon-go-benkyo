@@ -2767,6 +2767,30 @@ body {
   color: #647188;
   margin-left: 7px;
 }
+.grammar-audio-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: 8px;
+  border: 1px solid #a47e3d66;
+  border-radius: 50%;
+  background: #fffdf9cc;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+.grammar-audio-button:hover {
+  background: #fffdf9;
+  border-color: #a47e3d;
+  transform: scale(1.08);
+}
+.material-example-japanese .grammar-audio-button {
+  vertical-align: text-bottom;
+}
 .inline-example {
   display: block;
   margin: 9px 0 2px;

@@ -47,6 +47,44 @@ function simplifyLessonMaterials() {
     });
 }
 
+/* Ucapkan teks bahasa Jepang lewat Web Speech API - dipakai tombol audio
+   di setiap pola grammar (structureGrammarPoints) dan di kartu "Pelajari
+   contoh" (buildExampleStudy, app.js). Sama seperti speak() di
+   prototype-tes-v2.js: browser lama tanpa dukungan speechSynthesis
+   cukup diabaikan (tombol tetap ada tapi tidak bersuara), bukan error. */
+function speakJapaneseText(text) {
+  if (!("speechSynthesis" in window) || !text) return;
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "ja-JP";
+  utterance.rate = 0.82;
+  speechSynthesis.speak(utterance);
+}
+
+/* Ambil teks Jepang bersih dari sebuah elemen contoh (buang arti
+   Indonesia yang menempel di dalamnya, tombol audio itu sendiri, dan
+   furigana <rt> supaya tidak terbaca dua kali). */
+function extractJapaneseText(element) {
+  const clone = element.cloneNode(true);
+  clone.querySelectorAll(".grammar-meaning, .grammar-audio-button, rt").forEach((el) => el.remove());
+  return clone.textContent.trim();
+}
+
+function createAudioButton(getText) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "grammar-audio-button";
+  button.setAttribute("aria-label", "Dengarkan pengucapan");
+  button.title = "Dengarkan pengucapan";
+  button.textContent = "🔊";
+  button.onclick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    speakJapaneseText(getText());
+  };
+  return button;
+}
+
 /* Susun setiap pola: penjelasan, contoh Jepang, arti, lalu catatan bila perlu. */
 function structureGrammarPoints() {
   const importantPattern =
@@ -63,6 +101,11 @@ function structureGrammarPoints() {
       if (explanation) explanation.classList.add("grammar-short-explanation");
       if (example) example.classList.add("grammar-japanese-example");
       if (meaning) meaning.classList.add("grammar-indonesian-meaning");
+      if (example && !example.querySelector(".grammar-audio-button")) {
+        const audioButton = createAudioButton(() => extractJapaneseText(example));
+        if (meaning) example.insertBefore(audioButton, meaning);
+        else example.appendChild(audioButton);
+      }
 
       if (!explanation || point.querySelector(".grammar-important-note")) return;
       const sentences = explanation.textContent
