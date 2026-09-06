@@ -1235,6 +1235,8 @@ body {
 .layout {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px;
   min-height: calc(100vh - 74px);
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1325,9 +1327,9 @@ body {
    ============================================================ */
 .side {
   position: sticky;
-  top: 0;
+  top: 16px;
   align-self: start;
-  max-height: 100vh;
+  max-height: calc(100vh - 32px);
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 2;
@@ -1342,7 +1344,10 @@ body {
   background-position:
     0 0,
     17px 9px;
-  border-right: 1px solid #24405f;
+  border-radius: 20px;
+  box-shadow:
+    0 16px 40px -18px #05101f70,
+    0 3px 10px -3px #05101f40;
 }
 
 /* Indikator aktif tunggal (bukan per-tombol) yang meluncur vertikal
@@ -1589,6 +1594,8 @@ body {
 }
 .main {
   padding: 42px 48px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
   background:
     linear-gradient(90deg, #f6f5f2d9, #f6f5f2d9),
     url("japan-paper-background.png") center/cover fixed;
@@ -2074,6 +2081,8 @@ body {
 @media (max-width: 700px) {
   .layout {
     display: block;
+    padding: 0;
+    gap: 0;
   }
   /* Di mobile, tombol dalam-sidebar tidak berguna (sidebar geser total
      keluar layar saat tertutup) - pakai tombol navbar sebagai gantinya,
@@ -2092,14 +2101,26 @@ body {
     width: min(82vw, 300px);
     max-height: 100vh;
     padding: 27px 16px;
+    border-radius: 0 20px 20px 0;
+    /* Tanpa shadow saat tertutup - box-shadow tidak ikut "terpotong"
+       oleh transform seperti kotaknya sendiri, jadi blur-nya akan
+       bocor ke tepi layar walau drawer sudah digeser keluar. Shadow
+       baru ditambahkan lewat .sidebar-mobile-open di bawah, saat
+       drawer benar-benar terlihat. */
+    box-shadow: none;
     transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s ease;
     opacity: 1;
     pointer-events: auto;
     z-index: 70;
   }
   .layout.sidebar-mobile-open .side {
     transform: translateX(0);
+    box-shadow:
+      0 16px 40px -18px #05101f70,
+      0 3px 10px -3px #05101f40;
   }
   /* Drawer mobile selalu tampilkan label penuh, terlepas dari
      preferensi rail "collapsed" desktop yang mungkin tersimpan di
