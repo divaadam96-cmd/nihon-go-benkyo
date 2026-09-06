@@ -51,6 +51,16 @@ function remoteLastActive(activityRows) {
   return activityRows.map((row) => row.activity_date).sort().pop();
 }
 
+/* XP siswa dihitung dengan formula sama seperti totalXp() di app.js:
+   5 XP per aksi review SRS (semua kategori, activity_log) + XP dari
+   riwayat quiz_results - dibaca langsung dari Supabase (bukan
+   localStorage perangkat ini), supaya Sensei/Operator bisa memantau. */
+function remoteXp(activityRows, quizRows) {
+  const reviewXp = activityRows.reduce((sum, row) => sum + (row.count || 0), 0) * 5;
+  const quizXp = typeof window.quizXpFromRows === "function" ? window.quizXpFromRows(quizRows) : 0;
+  return reviewXp + quizXp;
+}
+
 async function loadMonitorPanel() {
   monitorListEl.innerHTML = '<p class="muted">Memuat…</p>';
   const { data: students, error } = await window.supabaseClient
@@ -67,8 +77,17 @@ async function loadMonitorPanel() {
     return;
   }
 
-  const remoteData = await Promise.all(students.map((s) => srsFetchRemoteFor(s.id)));
-  monitorStudents = students.map((student, i) => ({ ...student, remote: remoteData[i] }));
+  const [remoteData, quizData] = await Promise.all([
+    Promise.all(students.map((s) => srsFetchRemoteFor(s.id))),
+    Promise.all(
+      students.map((s) => (typeof window.quizFetchRemoteFor === "function" ? window.quizFetchRemoteFor(s.id) : [])),
+    ),
+  ]);
+  monitorStudents = students.map((student, i) => ({
+    ...student,
+    remote: remoteData[i],
+    quiz: quizData[i],
+  }));
 
   monitorListEl.innerHTML = monitorStudents
     .map((student) => {
@@ -78,7 +97,8 @@ async function loadMonitorPanel() {
         remoteDueCount(student.remote.progress, "hafalan:");
       const streak = remoteStreak(student.remote.activity);
       const lastActive = remoteLastActive(student.remote.activity);
-      return `<button type="button" class="monitor-card" data-id="${student.id}"><b>${escapeHtml(student.full_name)}</b><small>${escapeHtml(displayLoginId(student.email))}</small><div class="monitor-card-stats"><span>${streak} hari streak</span><span>${due} due</span><span>${lastActive ? "Terakhir " + lastActive : "Belum pernah belajar"}</span></div></button>`;
+      const xp = remoteXp(student.remote.activity, student.quiz);
+      return `<button type="button" class="monitor-card" data-id="${student.id}"><b>${escapeHtml(student.full_name)}</b><small>${escapeHtml(displayLoginId(student.email))}</small><div class="monitor-card-stats"><span>${streak} hari streak</span><span>${due} due</span><span>${xp.toLocaleString("id-ID")} XP</span><span>${lastActive ? "Terakhir " + lastActive : "Belum pernah belajar"}</span></div></button>`;
     })
     .join("");
 }
@@ -91,7 +111,10 @@ function renderMonitorDetail(student) {
     { prefix: "materi:", label: "Materi" },
     { prefix: "hafalan:", label: "Hafalan" },
   ];
-  monitorDetailStats.innerHTML = categories
+  const xp = remoteXp(student.remote.activity, student.quiz);
+  const quizCount = student.quiz.length;
+  let statsHtml = `<div class="monitor-stat-row"><b>XP</b><span>${xp.toLocaleString("id-ID")} XP total · ${quizCount} sesi quiz diselesaikan</span></div>`;
+  statsHtml += categories
     .map((cat) => {
       const due = remoteDueCount(student.remote.progress, cat.prefix);
       const mastered = remoteMasteredCount(student.remote.progress, cat.prefix);
@@ -99,6 +122,7 @@ function renderMonitorDetail(student) {
       return `<div class="monitor-stat-row"><b>${cat.label}</b><span>${total} item dipelajari · ${mastered} dikuasai · ${due} due</span></div>`;
     })
     .join("");
+  monitorDetailStats.innerHTML = statsHtml;
   monitorResetError.hidden = true;
   monitorResetBtn.disabled = false;
   monitorResetBtn.textContent = "Reset progres siswa ini";

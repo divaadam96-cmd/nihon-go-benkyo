@@ -1226,24 +1226,45 @@ body {
   color: var(--navy);
   margin-left: 7px;
 }
+/* Sidebar desktop sekarang murni ikon - lebarnya TIDAK pernah berubah
+   (tidak ada lagi state "lebar" dengan label teks). Nama tiap fitur
+   cuma terlihat lewat tooltip saat kursor diarahkan ke ikonnya (lihat
+   showSidebarTooltip di app.js). Class "sidebar-collapsed" di .layout
+   sekarang murni mengontrol satu hal saja: apakah ikon-ikon fitur
+   sedang tersembunyi di dalam tombol garis-3, atau sedang terlihat. */
 .layout {
   display: grid;
-  grid-template-columns: 235px minmax(0, 1fr);
+  grid-template-columns: 72px minmax(0, 1fr);
   min-height: calc(100vh - 74px);
-  transition: grid-template-columns 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.layout.sidebar-collapsed {
-  grid-template-columns: 0px minmax(0, 1fr);
+@media (prefers-reduced-motion: reduce) {
+  .layout {
+    transition: none;
+  }
 }
-/* Tombol lingkaran garis-3 (hamburger) di navbar atas - selalu terlihat
-   supaya sidebar yang disembunyikan total tetap bisa dibuka lagi. */
+
+/* Baris tombol garis-3 disamakan tingginya dengan header (.top, 74px)
+   supaya sejajar dan terasa satu komponen dengan navbar, bukan tombol
+   melayang terpisah. */
+.side-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 74px;
+  margin: -27px -10px 4px;
+  border-bottom: 1px solid #24405f;
+}
+/* Tombol lingkaran garis-3 (hamburger) - warna menyatu dengan tema
+   navy+emas sidebar supaya benar-benar terasa satu komponen, bukan
+   elemen navbar terpisah. Versi mobile (di navbar atas) dan versi
+   desktop (di dalam sidebar) berbagi style yang sama. */
 .sidebar-toggle {
   flex-shrink: 0;
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 1px solid #e8e3da;
-  background: #fff;
+  border: 1px solid #2a4568;
+  background: #1c3355;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1255,27 +1276,54 @@ body {
     border-color 0.15s ease;
 }
 .sidebar-toggle:hover {
-  border-color: var(--gold);
-  background: #f7f3ec;
+  border-color: #d3a64c;
+  background: #24405f;
 }
 .sidebar-toggle span {
   display: block;
   width: 15px;
   height: 2px;
   border-radius: 1px;
-  background: var(--navy);
+  background: #d3a64c;
+  transition:
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.layout.sidebar-collapsed .side {
-  padding-left: 0;
-  padding-right: 0;
+/* Ikon hamburger bermetamorfosis jadi "×" saat rail TERBUKA - garis
+   atas/bawah berputar & bergeser ke tengah, garis tengah menghilang,
+   memberi isyarat "klik untuk tutup". Kembali jadi ☰ biasa saat
+   tertutup. Tidak ada rotasi 360 derajat. */
+.layout:not(.sidebar-collapsed) .sidebar-toggle-desktop span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.layout:not(.sidebar-collapsed) .sidebar-toggle-desktop span:nth-child(2) {
   opacity: 0;
-  pointer-events: none;
 }
+.layout:not(.sidebar-collapsed) .sidebar-toggle-desktop span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-toggle span {
+    transition: none;
+  }
+}
+/* Tombol versi navbar cuma dipakai di mobile (drawer sidebar geser
+   total keluar layar saat tertutup, jadi butuh trigger yang selalu
+   terjangkau di luar sidebar itu sendiri). */
+.sidebar-toggle-mobile {
+  display: none;
+}
+.sidebar-backdrop {
+  display: none;
+}
+
+/* ============================================================
+   Sidebar - Curved Outside Active Tab
+   Warna: sidebar #132C4A, permukaan aktif #F5EDDD, teks aktif #17304F,
+   aksen emas #D3A64C. Pola titik ala gelombang Jepang dipertahankan
+   lewat background-image radial-gradient di bawah.
+   ============================================================ */
 .side {
-  padding: 27px 16px;
-  border-right: 1px solid #e9e5dd;
-  background: #fdfbf7ed;
-  backdrop-filter: blur(6px);
   position: sticky;
   top: 0;
   align-self: start;
@@ -1283,110 +1331,259 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 2;
+  padding: 27px 10px;
+  background-color: #132c4a;
+  background-image:
+    radial-gradient(ellipse at 50% 100%, transparent 0 47%, #d3a64c1d 48% 49%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, transparent 0 47%, #d3a64c12 48% 49%, transparent 50%);
+  background-size:
+    34px 17px,
+    34px 17px;
+  background-position:
+    0 0,
+    17px 9px;
+  border-right: 1px solid #24405f;
+}
+
+/* Indikator aktif tunggal (bukan per-tombol) yang meluncur vertikal
+   (translateY) mengikuti menu yang sedang dibuka - dihitung di
+   updateSidebarActiveIndicator() (app.js). Rail selalu ramping/compact
+   (lebar konstan), jadi bentuknya pil kecil membungkus ikon aktif,
+   bukan lekukan menonjol ala sidebar penuh. */
+.active-indicator {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 0;
+  height: 44px;
+  background: #f5eddd;
+  border-radius: 14px;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 6px 16px -6px #05101f66;
   transition:
-    padding 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.3s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.2s ease;
 }
+/* Rail tertutup = tidak ada ikon aktif yang terlihat untuk dibungkus,
+   jadi indikator ikut disembunyikan (menang atas opacity inline yang
+   diset updateSidebarActiveIndicator() lewat !important). Dibatasi ke
+   layar desktop saja - drawer mobile selalu tampil penuh terlepas
+   dari preferensi "collapsed" desktop yang mungkin tersimpan. */
+@media (min-width: 701px) {
+  .layout.sidebar-collapsed .active-indicator {
+    opacity: 0 !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .active-indicator {
+    transition: opacity 0.2s ease;
+  }
+}
+
+/* Seluruh isi menu (ikon + label, judul bagian, kartu "Rencana hari
+   ini") fade out lebih dulu saat collapse (delay 0ms), lalu fade in
+   belakangan (delay dasar 80ms) saat expand - urutannya dibalik lewat
+   cascade transition-delay per arah. Stagger per-item 25-30ms diisi
+   via inline style oleh app.js. Default sidebar cuma menampilkan
+   tombol garis-3 - semua ikon fitur baru muncul setelah diklik. */
+.menu-label,
+.menu-label-text,
+.study-note,
+.side button[data-view] {
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.14s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.16s ease,
+    color 0.16s ease;
+  transition-delay: 80ms;
+}
+.layout.sidebar-collapsed .menu-label,
+.layout.sidebar-collapsed .menu-label-text,
+.layout.sidebar-collapsed .study-note,
+.layout.sidebar-collapsed .side button[data-view] {
+  opacity: 0;
+  transform: translateX(-4px);
+  pointer-events: none;
+  transition-delay: 0ms;
+}
+.menu-label-text {
+  white-space: nowrap;
+  overflow: hidden;
+}
+.layout.sidebar-collapsed .menu-label-text {
+  width: 0;
+}
+/* Kartu "Rencana hari ini" berisi beberapa baris teks - tidak muat
+   dalam rail seramping ini walau sidebar sedang "terbuka" (72px),
+   jadi disembunyikan permanen di desktop. Tetap tampil penuh di
+   drawer mobile yang jauh lebih lebar (lihat @media 700px). */
+@media (min-width: 701px) {
+  .study-note {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-label,
+  .menu-label-text,
+  .study-note,
+  .side button[data-view] {
+    transition: none;
+  }
+}
+
 .menu-label {
+  position: relative;
+  z-index: 1;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #a19b91;
+  color: #7f92ac;
   padding: 7px 12px;
   margin-top: 22px;
 }
-.menu-label:first-child {
+.menu-label:first-child,
+.side-toggle-row + .menu-label {
   margin-top: 0;
 }
-.side button {
-  display: block;
+.side button[data-view] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   border: 0;
-  border-left: 3px solid transparent;
-  border-radius: 5px;
+  border-radius: 8px;
   background: none;
   text-align: left;
   padding: 11px 12px;
-  color: #586477;
+  color: #c3cde0;
   font: 500 14px "DM Sans";
   white-space: normal;
   cursor: pointer;
   margin: 3px 0;
   position: relative;
-  transition:
-    background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    border-left-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    margin-right 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-    padding 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-    border-radius 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.side button:hover {
-  background: #f3f0e9;
-}
-.side button.active {
-  background: #f0ebe1;
-  color: var(--navy);
-  font-weight: 700;
-  border-left-color: var(--gold);
-}
-/* Tab aktif "menonjol" keluar dengan sudut melengkung menyatu ke arah
-   konten - hanya saat sidebar terbuka penuh (di mode rail ikon, tetap
-   pakai highlight datar + garis emas biasa). Lekukan selalu ada di DOM
-   (opacity 0 + sedikit mengecil saat tidak aktif) supaya kemunculannya
-   bisa dianimasikan dengan lembut, bukan muncul-hilang mendadak. */
-.layout:not(.sidebar-collapsed) .side button.active {
-  margin-right: -16px;
-  padding-right: 30px;
-  border-left-color: transparent;
-  border-radius: 26px 8px 8px 26px;
   z-index: 1;
-}
-.layout:not(.sidebar-collapsed) .side button::before,
-.layout:not(.sidebar-collapsed) .side button::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  width: 22px;
-  height: 22px;
-  opacity: 0;
-  transform: scale(0.8);
-  pointer-events: none;
   transition:
-    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background 0.16s ease,
+    color 0.16s ease,
+    transform 0.16s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.14s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 80ms;
 }
-.layout:not(.sidebar-collapsed) .side button::before {
-  top: -22px;
-  transform-origin: bottom right;
+.layout.sidebar-collapsed .side button[data-view] {
+  transition-delay: 0ms;
 }
-.layout:not(.sidebar-collapsed) .side button::after {
-  bottom: -22px;
-  transform-origin: top right;
+.side button[data-view]:not(.active):hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(2px);
+  transition-delay: 0ms;
 }
-.layout:not(.sidebar-collapsed) .side button.active::before,
-.layout:not(.sidebar-collapsed) .side button.active::after {
-  opacity: 1;
-  transform: scale(1);
+.side button[data-view]:not(.active):hover .jp {
+  transform: scale(1.07);
+}
+.side button[data-view].active {
+  color: #17304f;
+  font-weight: 700;
+}
+.side button[data-view].active .jp {
+  color: #17304f;
+}
+@media (prefers-reduced-motion: reduce) {
+  .side button[data-view] {
+    transition: background 0.16s ease, color 0.16s ease;
+  }
+  .side button[data-view]:not(.active):hover {
+    transform: none;
+  }
+  .side button[data-view]:not(.active):hover .jp {
+    transform: none;
+  }
+}
+/* Animasi "tekan" saat ikon diklik - scale turun lalu sedikit lewat
+   baru kembali normal, indikator baru bergerak sesudahnya. Dipicu
+   lewat class .pressing yang ditambah/dilepas app.js. */
+@keyframes icon-press {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(0.9);
+  }
+  70% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.jp.pressing {
+  animation: icon-press 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .jp.pressing {
+    animation: none;
+  }
 }
 .jp {
   font: 700 15px "Zen Kaku Gothic New";
   display: inline-block;
-  width: 28px;
-  color: #a78451;
+  flex-shrink: 0;
+  width: 22px;
+  text-align: center;
+  color: #d3a64c;
+  transition: color 0.16s ease, transform 0.16s ease;
+}
+/* Tooltip saat sidebar collapsed - elemen terpisah (bukan pseudo-
+   element anak sidebar), karena .side pakai overflow-x:hidden yang
+   akan memotong apapun yang coba tampil di luar batasnya. Posisi
+   diatur lewat JS (position:fixed, lihat showSidebarTooltip di
+   app.js) supaya tidak ikut terpotong. */
+.sidebar-tooltip {
+  position: fixed;
+  z-index: 200;
+  padding: 7px 12px;
+  background: #17304f;
+  color: #f5eddd;
+  font: 600 12px "DM Sans";
+  white-space: nowrap;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px -6px #05101f80;
+  opacity: 0;
+  transform: translate(-6px, -50%);
+  pointer-events: none;
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
+}
+.sidebar-tooltip.visible {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-tooltip {
+    transition: none;
+  }
 }
 .study-note {
+  position: relative;
+  z-index: 1;
   margin: 26px 8px 0;
   padding: 16px;
-  border-left: 2px solid var(--gold);
-  background: #f3eee5;
-  color: #667184;
+  border-left: 2px solid #d3a64c;
+  background: #1c3355;
+  color: #b9c4d8;
   font-size: 12px;
   line-height: 1.65;
 }
 .study-note b {
   display: block;
-  color: var(--navy);
+  color: #f5eddd;
   font-size: 13px;
   margin-bottom: 5px;
 }
@@ -1526,7 +1723,11 @@ body {
   border: 1.5px solid #c4c3ba;
   border-radius: 50%;
   background: white;
-  cursor: pointer;
+  cursor: default;
+  /* Bukan tombol interaktif lagi - status dihitung otomatis dari
+     aktivitas SRS/quiz nyata (lihat paintProgressUI di app.js), jadi
+     dibuat tidak fokus-able agar tidak terasa seperti checkbox aktif. */
+  pointer-events: none;
 }
 .todo.done button {
   background: var(--green);
@@ -1865,10 +2066,92 @@ body {
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 610px) {
-  .side {
+/* Sidebar desktop diganti drawer di sini (breakpoint disamakan dengan
+   700px yang dipakai .mobile-nav/.topnav lewat style ter-inject di
+   app.js - lihat mobilePwaStyle) - meluncur dari kiri, dipicu tombol
+   hamburger yang sama, ditutup lewat backdrop atau tombol itu lagi.
+   Bentuk rail/collapse desktop tidak dipakai di sini. */
+@media (max-width: 700px) {
+  .layout {
+    display: block;
+  }
+  /* Di mobile, tombol dalam-sidebar tidak berguna (sidebar geser total
+     keluar layar saat tertutup) - pakai tombol navbar sebagai gantinya,
+     dan baris tombolnya disembunyikan total (bukan cuma tombolnya)
+     supaya tidak menyisakan strip kosong 74px di puncak drawer. */
+  .side-toggle-row {
     display: none;
   }
+  .sidebar-toggle-mobile {
+    display: flex;
+  }
+  .side {
+    position: fixed;
+    inset: 0 auto 0 0;
+    height: 100vh;
+    width: min(82vw, 300px);
+    max-height: 100vh;
+    padding: 27px 16px;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 70;
+  }
+  .layout.sidebar-mobile-open .side {
+    transform: translateX(0);
+  }
+  /* Drawer mobile selalu tampilkan label penuh, terlepas dari
+     preferensi rail "collapsed" desktop yang mungkin tersimpan di
+     localStorage - selector disamakan supaya spesifisitasnya menang. */
+  .layout.sidebar-collapsed .menu-label-text,
+  .menu-label-text {
+    position: static;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .layout.sidebar-collapsed .menu-label,
+  .layout.sidebar-collapsed .study-note {
+    display: block;
+  }
+  .layout.sidebar-collapsed .side button[data-view] {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 11px 12px;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .active-indicator {
+    left: 4px;
+    right: 12px;
+    border-radius: 12px;
+  }
+  .layout.sidebar-collapsed .side {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .sidebar-tooltip {
+    display: none;
+  }
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: #05101f66;
+    z-index: 65;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .layout.sidebar-mobile-open .sidebar-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+@media (max-width: 610px) {
   .layout {
     display: block;
   }
@@ -1939,63 +2222,6 @@ body {
 }
 .identity b {
   color: #f4dfae;
-}
-.side {
-  background-color: #1a2a43;
-  background-image:
-    radial-gradient(
-      ellipse at 50% 100%,
-      transparent 0 47%,
-      #d0a95c1d 48% 49%,
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse at 50% 100%,
-      transparent 0 47%,
-      #d0a95c12 48% 49%,
-      transparent 50%
-    );
-  background-size:
-    34px 17px,
-    34px 17px;
-  background-position:
-    0 0,
-    17px 9px;
-  border-right-color: #2f425d;
-}
-.menu-label {
-  color: #9eafc3;
-}
-.side button {
-  color: #d3dbe3;
-}
-.side button:hover {
-  background: #253852;
-}
-.side button.active {
-  background: #314764;
-  color: #fff5de;
-  border-left-color: #d6ad65;
-}
-.layout:not(.sidebar-collapsed) .side button.active {
-  box-shadow: 0 6px 16px -6px #05101f80;
-}
-.layout:not(.sidebar-collapsed) .side button::before {
-  background: radial-gradient(circle at bottom left, #314764 21px, #1a2a43 22.5px);
-}
-.layout:not(.sidebar-collapsed) .side button::after {
-  background: radial-gradient(circle at top left, #314764 21px, #1a2a43 22.5px);
-}
-.jp {
-  color: #d6ad65;
-}
-.study-note {
-  background: #273a55;
-  color: #cbd3dd;
-  border-left-color: #d6ad65;
-}
-.study-note b {
-  color: #f5e3b8;
 }
 .main {
   background:

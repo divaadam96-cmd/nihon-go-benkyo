@@ -4,32 +4,50 @@
 // milik user yang login benar-benar siap.
 function initApp() {
 let state = JSON.parse(
-  localStorage.getItem("nihonBenkyoProgress") ||
-    '{"xp":12540,"tasks":{},"mastered":0,"tests":[]}',
+  localStorage.getItem("nihonBenkyoProgress") || '{"mastered":0}',
 );
 let category = "noun",
-  index = 0,
-  quiz = [],
-  qi = 0,
-  score = 0;
+  index = 0;
 function save() {
   localStorage.setItem("nihonBenkyoProgress", JSON.stringify(state));
 }
 function format(n) {
   return n.toLocaleString("id-ID");
 }
-function sync() {
-  const done = Object.values(state.tasks).filter(Boolean).length;
+/* XP & status "Rencana hari ini" dihitung murni dari aktivitas SRS/quiz
+   nyata, bukan checkbox manual: srsTotalActivityCount/srsAnyReviewedToday
+   (srs.js) dan quizXpTotal/quizXpThisWeek/quizDoneToday (quiz-results.js). */
+function totalXp() {
+  const quizXp = typeof window.quizXpTotal === "function" ? window.quizXpTotal() : 0;
+  return srsTotalActivityCount() * 5 + quizXp;
+}
+function weeklyXpDelta() {
+  const quizXp = typeof window.quizXpThisWeek === "function" ? window.quizXpThisWeek() : 0;
+  return srsWeeklyActivity(1)[0] * 5 + quizXp;
+}
+function paintProgressUI() {
+  const taskDone = {
+    hafalan: srsAnyReviewedToday("hafalan:"),
+    materi: srsAnyReviewedToday("materi:"),
+    kanji: srsAnyReviewedToday("kanji:"),
+    quiz: typeof window.quizDoneToday === "function" && window.quizDoneToday(),
+  };
+  const done = Object.values(taskDone).filter(Boolean).length;
   document
     .querySelectorAll("#xp,#xpCard")
-    .forEach((e) => (e.textContent = format(state.xp)));
+    .forEach((e) => (e.textContent = format(totalXp())));
+  const xpWeeklyNote = document.getElementById("xpWeeklyNote");
+  if (xpWeeklyNote) xpWeeklyNote.textContent = `+${format(weeklyXpDelta())} XP minggu ini`;
   document.getElementById("taskStatus").textContent =
     `${done} dari 4 aktivitas selesai`;
   document.getElementById("taskHeadline").textContent = `${done} dari 4`;
   document.getElementById("kanjiCount").textContent = srsMasteredCount("kanji:");
   document
     .querySelectorAll(".todo")
-    .forEach((t) => t.classList.toggle("done", !!state.tasks[t.dataset.task]));
+    .forEach((t) => t.classList.toggle("done", !!taskDone[t.dataset.task]));
+}
+function sync() {
+  paintProgressUI();
   renderDashboardActivity();
 }
 
@@ -40,6 +58,8 @@ function renderDashboardActivity() {
   if (streakEl) streakEl.textContent = `${srsStreak()} hari`;
   if (typeof window.loadStudyReminder === "function") window.loadStudyReminder();
   if (typeof window.loadSiswaAssignments === "function") window.loadSiswaAssignments();
+  if (typeof window.loadQuizResultsCache === "function")
+    window.loadQuizResultsCache().then(paintProgressUI);
 
   const hafalanDue = srsDueCount("hafalan:");
   const materiDue = srsDueCount("materi:");
@@ -91,6 +111,7 @@ function open(view) {
     .forEach((b) => b.classList.toggle("active", b.dataset.view === view));
   window.scrollTo({ top: 0, behavior: "smooth" });
   activateProductionFrame(view);
+  updateSidebarActiveIndicator();
   if (view === "dashboard") renderDashboardActivity();
   if (view === "admin" && typeof window.loadAdminPanel === "function") window.loadAdminPanel();
   if (view === "monitor" && typeof window.loadMonitorPanel === "function") window.loadMonitorPanel();
@@ -111,16 +132,6 @@ document
 document
   .querySelectorAll("[data-open]")
   .forEach((b) => (b.onclick = () => open(b.dataset.open)));
-document.querySelectorAll(".todo button").forEach(
-  (b) =>
-    (b.onclick = () => {
-      const t = b.closest(".todo").dataset.task;
-      state.tasks[t] = !state.tasks[t];
-      state.xp += state.tasks[t] ? 25 : -25;
-      save();
-      sync();
-    }),
-);
 const flash = document.getElementById("flashcard");
 function renderCard() {
   let c = deck[category][index];
@@ -160,7 +171,6 @@ function nextCard(master) {
   if (word) srsReview(`hafalan:${category}:${word}`, master ? "good" : "again");
   if (master) {
     state.mastered++;
-    state.xp += 10;
     save();
     sync();
   }
@@ -170,66 +180,10 @@ function nextCard(master) {
 }
 document.getElementById("again").onclick = () => nextCard(false);
 document.getElementById("known").onclick = () => nextCard(true);
-document
-  .querySelectorAll("[data-mode]")
-  .forEach((b) => (b.onclick = () => startTest(b.dataset.mode)));
-function startTest(mode) {
-  quiz = quizzes[mode];
-  qi = 0;
-  score = 0;
-  document.getElementById("testStart").classList.add("hidden");
-  document.getElementById("quizArea").classList.remove("hidden");
-  renderQuestion();
-}
-function renderQuestion() {
-  if (qi >= quiz.length) {
-    document.getElementById("quizArea").innerHTML =
-      `<div class="result"><div class="eyebrow">Latihan selesai</div><h2>Skormu: ${score} / ${quiz.length}</h2><p>Hasil latihan telah masuk ke perkembangan belajar Anda.</p><button class="primary" onclick="location.reload()">Kembali ke dashboard</button></div>`;
-    state.xp += score * 20;
-    state.tests.push(score);
-    state.tasks.quiz = true;
-    save();
-    sync();
-    return;
-  }
-  let q = quiz[qi];
-  document.getElementById("step").textContent =
-    `Soal ${qi + 1} dari ${quiz.length}`;
-  document.getElementById("question").textContent = q.q;
-  let box = document.getElementById("answers");
-  box.innerHTML = "";
-  q.a.forEach((x, i) => {
-    let b = document.createElement("button");
-    b.className = "answer";
-    b.textContent = x;
-    b.onclick = () => answer(i, b);
-    box.appendChild(b);
-  });
-  document.getElementById("feedback").textContent = "";
-  document.getElementById("next").classList.add("hidden");
-}
-function answer(i, chosen) {
-  let q = quiz[qi],
-    good = i === q.c;
-  document.querySelectorAll(".answer").forEach((b, n) => {
-    b.disabled = true;
-    if (n === q.c) b.classList.add("correct");
-  });
-  if (good) {
-    score++;
-    document.getElementById("feedback").textContent =
-      "Jawaban benar. Lanjutkan ke soal berikutnya.";
-  } else {
-    chosen.classList.add("wrong");
-    document.getElementById("feedback").textContent =
-      "Belum tepat. Jawaban benar sudah ditandai.";
-  }
-  document.getElementById("next").classList.remove("hidden");
-}
-document.getElementById("next").onclick = () => {
-  qi++;
-  renderQuestion();
-};
+/* Simulasi JLPT/JFT yang sesungguhnya dipasang oleh mountExamSimulationV2()
+   di bawah (iframe prototype-tes-v2.html) - #testStart/#quizArea di markup
+   asli sudah ditimpa sebelum ini bisa dipakai, jadi tidak ada handler quiz
+   inline lagi di sini. */
 sync();
 renderCard();
 updateMaster();
@@ -1669,61 +1623,28 @@ document.getElementById("nextKanji").onclick = () => {
 };
 renderKanjiLesson();
 
-const nav = document.querySelector(".topnav");
-if (nav)
-  nav.innerHTML =
-    '<button class="active" data-view="dashboard">Beranda</button><button data-view="materials">Materi</button><button data-view="kanji-study">Kanji</button><button data-view="memorization">Hafalan</button><button data-view="test">Tes kemampuan</button><button data-view="monitor" data-role-only="sensei,operator" hidden>Pantau Siswa</button><button data-view="admin" data-role-only="operator" hidden>Admin</button>';
-document
-  .querySelectorAll('[data-open="flashcards"]')
-  .forEach((button) => (button.dataset.open = "memorization"));
-document.querySelectorAll('[data-view="flashcards"]').forEach((button) => {
-  button.dataset.view = "memorization";
-  button.innerHTML = '<span class="jp">\u8a9e</span>Hafalan';
-});
-const side = document.querySelector(".side");
-if (side) {
-  const memorizeButton = side.querySelector('[data-view="memorization"]');
-  if (memorizeButton)
-    memorizeButton.insertAdjacentHTML(
-      "beforebegin",
-      '<button data-view="kanji-study"><span class="jp">\u6f22</span>Belajar kanji</button>',
-    );
-  side.insertAdjacentHTML(
-    "beforeend",
-    '<div class="menu-label" data-role-only="sensei,operator" hidden>Kelola</div><button data-view="monitor" data-role-only="sensei,operator" hidden><span class="jp">\u76e3</span>Pantau Siswa</button><button data-view="admin" data-role-only="operator" hidden><span class="jp">\u7ba1</span>Panel Admin</button>',
-  );
-  side.querySelectorAll("button[data-view]").forEach((button) => {
-    const label = Array.from(button.childNodes)
-      .filter((node) => node.nodeType === Node.TEXT_NODE)
-      .map((node) => node.textContent.trim())
-      .join(" ")
-      .trim();
-    if (label) button.title = label;
-  });
+/* Indikator aktif tunggal yang meluncur vertikal mengikuti menu yang
+   sedang dibuka - posisinya dihitung dari offsetTop tombol aktif
+   (relatif terhadap .side), bukan posisi scroll, supaya tetap presisi
+   walau sidebar sedang di-scroll. Query elemen sendiri (bukan menutup
+   variabel di luar) karena open() bisa terpanggil lebih awal lewat
+   openHashView() sebelum initSidebarNav() (app-sidebar.js) di bawah
+   ini jalan - tetap dipertahankan di sini (bukan di app-sidebar.js)
+   karena open() juga memanggilnya. */
+function updateSidebarActiveIndicator() {
+  const sideEl = document.querySelector(".side");
+  const indicatorEl = document.getElementById("sidebarActiveIndicator");
+  if (!sideEl || !indicatorEl) return;
+  const activeButton = sideEl.querySelector("button[data-view].active");
+  if (!activeButton) {
+    indicatorEl.style.opacity = "0";
+    return;
+  }
+  indicatorEl.style.opacity = "1";
+  indicatorEl.style.transform = `translateY(${activeButton.offsetTop}px)`;
+  indicatorEl.style.height = `${activeButton.offsetHeight}px`;
 }
-/* Sidebar bisa dilipat jadi rail ikon (hemat ruang saat fokus belajar).
-   Status tersimpan di localStorage supaya tetap terlipat/terbuka lain
-   kali dibuka. */
-const layoutEl = document.querySelector(".layout");
-const sidebarToggleBtn = document.getElementById("sidebarToggle");
-function applySidebarCollapsed(collapsed) {
-  if (!layoutEl || !sidebarToggleBtn) return;
-  layoutEl.classList.toggle("sidebar-collapsed", collapsed);
-  const label = collapsed ? "Tampilkan sidebar" : "Sembunyikan sidebar";
-  sidebarToggleBtn.title = label;
-  sidebarToggleBtn.setAttribute("aria-label", label);
-}
-if (layoutEl && sidebarToggleBtn) {
-  applySidebarCollapsed(localStorage.getItem("sidebarCollapsed") === "1");
-  sidebarToggleBtn.onclick = () => {
-    const collapsed = !layoutEl.classList.contains("sidebar-collapsed");
-    applySidebarCollapsed(collapsed);
-    localStorage.setItem("sidebarCollapsed", collapsed ? "1" : "0");
-  };
-}
-document
-  .querySelectorAll("[data-view]")
-  .forEach((button) => (button.onclick = () => open(button.dataset.view)));
+initSidebarNav(open, updateSidebarActiveIndicator);
 const writingAnimationStyle = document.createElement("style");
 writingAnimationStyle.textContent = `
       .writing-grid{overflow:hidden}.writing-grid .writing-char{position:absolute;inset:0;z-index:1;display:grid;place-items:center;width:auto;font-family:"Yu Mincho","YuMincho","Hiragino Mincho ProN","Noto Serif CJK JP",serif;font-weight:500;font-size:142px;color:#1b304d;opacity:.14;line-height:1}.kanji-stroke-svg{position:absolute;inset:0;width:100%;height:100%;z-index:2}.kanji-stroke-svg path{fill:none;stroke:#142b49;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw-kanji-stroke 8s ease-in-out infinite}.kanji-stroke-svg path:nth-child(1){animation-delay:0s}.kanji-stroke-svg path:nth-child(2){animation-delay:1s}.kanji-stroke-svg path:nth-child(3){animation-delay:2s}.kanji-stroke-svg path:nth-child(4){animation-delay:3s}.kanji-stroke-svg path:nth-child(5){animation-delay:4s}.kanji-stroke-svg path:nth-child(6){animation-delay:5s}.kanji-stroke-svg path:nth-child(7){animation-delay:6s}.kanji-stroke-svg path:nth-child(8){animation-delay:7s}@keyframes draw-kanji-stroke{0%,7%{stroke-dashoffset:1;opacity:0}8%,82%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:.42}}.stroke-badge{position:absolute;z-index:3;top:8px;right:8px;background:#fffdf9e8;color:#805f2c;border:1px solid #d5c49f;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:700}.animation-note{font-size:11px;color:#8a806f;margin:2px 0 0;text-align:center}
@@ -2966,7 +2887,7 @@ if (new URLSearchParams(location.search).get("source") === "1") {
   open("materials");
 }
 const mobilePwaStyle = document.createElement("style");
-mobilePwaStyle.textContent = `.mobile-nav{display:none}@media(max-width:700px){.top{height:58px;padding:0 18px;position:sticky;top:0;z-index:30}.brand{font-size:16px}.brand small,.topnav,.identity,.side{display:none}.layout{display:block}.main{padding:20px 15px 92px;background-attachment:scroll}.head h1{font-size:25px}.overview{grid-template-columns:1fr 1fr;gap:10px}.overview .metric:first-child{grid-column:span 2}.metric b{font-size:23px}.card{padding:16px}.dashboard-grid,.flash-layout,.kana-grid,.memory-routes,.course-nav,.exam-grid{grid-template-columns:1fr}.mobile-nav{position:fixed;z-index:50;left:10px;right:10px;bottom:10px;height:64px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:#142945f5;border:1px solid #caa45d55;border-radius:17px;box-shadow:0 12px 28px #0b162b55;padding:4px}.mobile-nav button{border:0;background:transparent;color:#cbd4df;font:600 10px "DM Sans";display:grid;gap:3px;place-items:center;padding:6px 1px}.mobile-nav button span{font:700 18px "Zen Kaku Gothic New"}.mobile-nav button.active{color:#f7dfad}.flashcard{height:270px}.face .kana{font-size:58px}}`;
+mobilePwaStyle.textContent = `.mobile-nav{display:none}@media(max-width:700px){.top{height:58px;padding:0 18px;position:sticky;top:0;z-index:30}.brand{font-size:16px}.brand small,.topnav,.identity{display:none}.layout{display:block}.main{padding:20px 15px 92px;background-attachment:scroll}.head h1{font-size:25px}.overview{grid-template-columns:1fr 1fr;gap:10px}.overview .metric:first-child{grid-column:span 2}.metric b{font-size:23px}.card{padding:16px}.dashboard-grid,.flash-layout,.kana-grid,.memory-routes,.course-nav,.exam-grid{grid-template-columns:1fr}.mobile-nav{position:fixed;z-index:50;left:10px;right:10px;bottom:10px;height:64px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:#142945f5;border:1px solid #caa45d55;border-radius:17px;box-shadow:0 12px 28px #0b162b55;padding:4px}.mobile-nav button{border:0;background:transparent;color:#cbd4df;font:600 10px "DM Sans";display:grid;gap:3px;place-items:center;padding:6px 1px}.mobile-nav button span{font:700 18px "Zen Kaku Gothic New"}.mobile-nav button.active{color:#f7dfad}.flashcard{height:270px}.face .kana{font-size:58px}}`;
 document.head.appendChild(mobilePwaStyle);
 const mobileNav = document.createElement("nav");
 mobileNav.className = "mobile-nav";
@@ -3001,31 +2922,14 @@ animationEnhancementsStyle.textContent = `
     `;
 document.head.appendChild(animationEnhancementsStyle);
 
-(function initSakuraPetals() {
-  const layer = document.createElement("div");
-  layer.className = "sakura-layer";
-  layer.setAttribute("aria-hidden", "true");
-  for (let i = 0; i < 6; i++) {
-    const petal = document.createElement("span");
-    petal.className = "petal";
-    petal.textContent = "🌸";
-    const duration = 18 + Math.random() * 12;
-    petal.style.left = Math.random() * 100 + "vw";
-    petal.style.fontSize = 9 + Math.random() * 7 + "px";
-    petal.style.animationDuration = duration + "s";
-    petal.style.animationDelay = Math.random() * -duration + "s";
-    petal.style.setProperty("--drift", Math.random() * 80 - 40 + "px");
-    layer.appendChild(petal);
-  }
-  document.body.appendChild(layer);
-})();
+initSakuraPetals();
 
 /* Terapkan pusat simulasi JFT/JLPT ke aplikasi utama. Bank soal diaktifkan setelah file pengguna tersedia. */
 (function mountExamSimulationV2() {
   const view = document.getElementById("test");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=7&embed=1" title="Simulasi JFT dan JLPT" loading="lazy"></iframe>';
+    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=8&embed=1" title="Simulasi JFT dan JLPT" loading="lazy"></iframe>';
   const frame = view.querySelector(".production-test-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
@@ -3075,75 +2979,8 @@ document.head.appendChild(animationEnhancementsStyle);
     document.fonts.ready.then(moveIndicator).catch(() => {});
 })();
 
-/* Hilangkan blok tambahan yang tidak diperlukan dari seluruh materi. */
-(function simplifyLessonMaterials() {
-  const removableLabels = [
-    "fokus pelajaran",
-    "fokus pembelajaran",
-    "latihan mandiri",
-  ];
-  document
-    .querySelectorAll("#materials .html-content, #book2 .html-content")
-    .forEach((content) => {
-      content.querySelectorAll(".html-note > div").forEach((note) => {
-        const label = note.querySelector("b")?.textContent.trim().toLowerCase();
-        if (label && removableLabels.some((target) => label.startsWith(target)))
-          note.remove();
-      });
-      content.querySelectorAll(".grammar-point").forEach((section) => {
-        const heading = section.querySelector("h3")?.textContent.trim().toLowerCase();
-        if (
-          heading === "ringkasan praktik" ||
-          heading === "ringkasan perubahan bentuk kalimat" ||
-          heading === "dialog latihan" ||
-          heading === "dialog contoh"
-        )
-          section.remove();
-      });
-      content
-        .querySelectorAll(".html-note:empty")
-        .forEach((emptyNote) => emptyNote.remove());
-
-    });
-})();
-
-/* Susun setiap pola: penjelasan, contoh Jepang, arti, lalu catatan bila perlu. */
-(function structureGrammarPoints() {
-  const importantPattern =
-    /\b(jangan|tidak boleh|tidak dipakai|tidak digunakan|berbeda|perhatikan|khusus|wajib|umumnya|hindari|harus)\b/i;
-  document
-    .querySelectorAll(
-      "#materials .html-content .grammar-point, #book2 .html-content .grammar-point",
-    )
-    .forEach((point) => {
-      if (point.classList.contains("lesson-quiz")) return;
-      const explanation = point.querySelector(":scope > p");
-      const example = point.querySelector(":scope > .grammar-example");
-      const meaning = example?.querySelector(".grammar-meaning");
-      if (explanation) explanation.classList.add("grammar-short-explanation");
-      if (example) example.classList.add("grammar-japanese-example");
-      if (meaning) meaning.classList.add("grammar-indonesian-meaning");
-
-      if (!explanation || point.querySelector(".grammar-important-note")) return;
-      const sentences = explanation.textContent
-        .trim()
-        .split(/(?<=[.!?。])\s+/)
-        .filter(Boolean);
-      if (sentences.length < 2) return;
-      const importantIndex = sentences.findIndex((sentence) =>
-        importantPattern.test(sentence),
-      );
-      if (importantIndex < 0) return;
-
-      const importantSentence = sentences.splice(importantIndex, 1)[0];
-      explanation.textContent = sentences.join(" ");
-      const note = document.createElement("aside");
-      note.className = "grammar-important-note";
-      note.textContent = importantSentence;
-      if (example) example.insertAdjacentElement("afterend", note);
-      else explanation.insertAdjacentElement("afterend", note);
-    });
-})();
+simplifyLessonMaterials();
+structureGrammarPoints();
 
 /* Furigana kontekstual untuk contoh dan latihan materi Buku 1-2. */
 const materialFuriganaReadings = {

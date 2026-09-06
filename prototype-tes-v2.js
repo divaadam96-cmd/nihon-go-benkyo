@@ -57,8 +57,21 @@ function checkOrAdvance(){
 }
 function advance(){if(activeQuestionIndex()===questions.length-1)finishTest();else{current++;renderQuestion()}}
 function categoryScores(){const result={};questions.forEach((q,i)=>{result[q.category]??={correct:0,total:0};result[q.category].total++;if(answers[i]===q.answer)result[q.category].correct++});return result}
+/* Kirim hasil ke Supabase (fire-and-forget, sama seperti srsPushItem di
+   srs.js) supaya XP, status "quiz" di dashboard, dan panel Pantau Siswa
+   ikut mencatat sesi ini. Gagal kirim (offline, dsb.) sengaja dibiarkan
+   diam - tidak boleh mengganggu hasil yang sudah ditampilkan ke siswa. */
+function submitQuizResult(correct,total,catScores){
+  if(!window.supabaseClient)return;
+  window.supabaseClient.auth.getUser().then(({data})=>{
+    const uid=data&&data.user&&data.user.id;
+    if(!uid)return;
+    return window.supabaseClient.from("quiz_results").insert({user_id:uid,exam_type:examType,correct_count:correct,total_count:total,category_scores:catScores});
+  }).then((res)=>{if(res&&res.error)console.warn("submitQuizResult gagal:",res.error.message)}).catch(()=>{});
+}
 function finishTest(){
   clearInterval(timerId);checked=checked.map(()=>true);const correct=questions.filter((q,i)=>answers[i]===q.answer).length,score=Math.round(correct/questions.length*100);$("testScreen").hidden=true;$("resultScreen").hidden=false;$("finalScore").textContent=score;$("resultTitle").textContent=score>=80?"Fondasi kamu sudah kuat.":score>=60?"Fondasi sudah terbentuk.":"Mari perkuat dasar sedikit lagi.";$("resultSummary").textContent=`${correct} dari ${questions.length} soal benar. ${questions.length-correct} soal tersimpan dalam bank kesalahan untuk ditinjau kembali.`;
+  submitQuizResult(correct,questions.length,categoryScores());
   const categoryBox=$("categoryResults");categoryBox.replaceChildren();Object.entries(categoryScores()).forEach(([name,value])=>{const pct=Math.round(value.correct/value.total*100),row=document.createElement("div");row.innerHTML=`<span>${name}</span><i style="--score:${pct}%"></i><b>${pct}%</b>`;categoryBox.append(row)});
   const weakest=Object.entries(categoryScores()).sort((a,b)=>a[1].correct/a[1].total-b[1].correct/b[1].total).slice(0,2);$("recommendations").innerHTML=weakest.map(([name])=>`<div><b>Perkuat ${name}</b>Ulangi materi dan latihan terkait sebelum mencoba simulasi berikutnya.</div>`).join("")+`<div><b>Ulangi bank kesalahan</b>Fokuskan sesi berikutnya pada ${questions.length-correct} soal yang masih salah.</div>`;
   reviewIndexes=questions.map((q,i)=>answers[i]!==q.answer?i:-1).filter(i=>i>=0);const list=$("mistakeList");list.replaceChildren();reviewIndexes.forEach(i=>{const q=questions[i],a=document.createElement("article");a.innerHTML=`<b>Soal ${i+1} · ${q.category}</b><p>Jawabanmu: ${answers[i]===null?"Belum dijawab":q.options[answers[i]]} · Jawaban benar: ${q.options[q.answer]}</p><p>${q.explanation}</p><small>Pelajari kembali: ${q.material}</small>`;list.append(a)});window.scrollTo({top:0,behavior:"smooth"});

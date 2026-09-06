@@ -9,11 +9,11 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script>
     (function () {
-      var client = window.supabase.createClient(
+      window.supabaseClient = window.supabase.createClient(
         "https://twoerfizembbpuvlzzmt.supabase.co",
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3b2VyZml6ZW1iYnB1dmx6em10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MTQ0MDMsImV4cCI6MjEwMzM5MDQwM30._-pgaQ2NIkWj7UQ-osm8PpnRg3xW4axvMn_AAJXkrzc",
       );
-      client.auth.getSession().then(function (res) {
+      window.supabaseClient.auth.getSession().then(function (res) {
         if (res.data && res.data.session) {
           document.documentElement.classList.add("page-authed");
         } else {
@@ -88,6 +88,6 @@
   </main>
   <script src="data/bab-data.js"></script>
   <script src="data/materi-data.js"></script>
-  <script src="prototype-tes-v2.js?v=5"></script>
+  <script src="prototype-tes-v2.js?v=6"></script>
 </body>
 </html>

@@ -202,6 +202,25 @@ function srsMasteredCount(prefix) {
   }).length;
 }
 
+/* Dipakai dashboard untuk mencentang "Rencana hari ini" otomatis (bukan
+   klik manual lagi): true kalau ada minimal satu item kategori ini yang
+   sudah direview hari ini. */
+function srsAnyReviewedToday(prefix) {
+  const data = srsLoad();
+  const today = srsToday();
+  return Object.keys(data).some(
+    (id) => id.startsWith(prefix) && data[id].lastReviewedAt === today,
+  );
+}
+
+/* Jumlah seluruh aksi review (semua kategori, semua waktu) - basis
+   perhitungan XP: setiap review, apa pun hasilnya, dihitung sekali di
+   activity log lewat srsLogActivity(). */
+function srsTotalActivityCount() {
+  const log = srsLoadActivity();
+  return Object.values(log).reduce((sum, count) => sum + count, 0);
+}
+
 function srsStreak() {
   const log = srsLoadActivity();
   let streak = 0;
