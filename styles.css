@@ -2823,6 +2823,61 @@ body {
   border-color: #a47e3d;
   transform: scale(1.08);
 }
+/* Border kiri pola berubah warna sesuai status SRS-nya - hijau/amber
+   yang SAMA PERSIS dengan .status-dot & .material-choice.done/.repeat
+   di picker pelajaran, supaya satu bahasa visual di seluruh Materi. */
+.grammar-point.grammar-point-done,
+.grammar-point.grammar-point-repeat {
+  padding-left: 12px;
+  border-left: 3px solid transparent;
+  transition: border-color 0.2s ease;
+}
+.grammar-point.grammar-point-done {
+  border-left-color: #2e8068;
+}
+.grammar-point.grammar-point-repeat {
+  border-left-color: #b56c38;
+}
+.grammar-rating {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.grammar-rating-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+.grammar-rating-btn:hover {
+  transform: scale(1.08);
+}
+.grammar-rating-good {
+  border: 1px solid #2e806666;
+  background: #fffdf9cc;
+  color: #2e8068;
+}
+.grammar-rating-good:hover {
+  background: #eaf5f0;
+  border-color: #2e8068;
+}
+.grammar-rating-repeat {
+  border: 1px solid #b56c3866;
+  background: #fffdf9cc;
+  color: #b56c38;
+}
+.grammar-rating-repeat:hover {
+  background: #fbf1e9;
+  border-color: #b56c38;
+}
 .inline-example {
   display: block;
   margin: 9px 0 2px;
@@ -3308,6 +3363,36 @@ body.authed .login-screen {
   color: var(--navy);
 }
 .monitor-stat-row span {
+  color: var(--muted);
+  text-align: right;
+}
+.monitor-weak-list {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+.monitor-weak-list h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--navy);
+}
+.monitor-weak-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-left: 3px solid #b9b4aa;
+  border-radius: 6px;
+  background: var(--wash);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.monitor-weak-row.due {
+  border-left-color: var(--rose);
+}
+.monitor-weak-row small {
   color: var(--muted);
   text-align: right;
 }

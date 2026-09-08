@@ -3059,12 +3059,20 @@ function addMaterialFurigana(element, directTextOnly = false) {
 }
 
 /* Pilihan materi Buku 1 dan Buku 2: masing-masing 25 pelajaran dalam kisi 5 x 5. */
+/* Query mandiri (bukan dari closure initMaterialLessonPicker) supaya
+   dashboard bisa hitung progres Buku 1/2 kapan saja tanpa bergantung
+   urutan pemanggilan initMaterialLessonPicker. Jumlah pola per pelajaran
+   dihitung langsung dari DOM (sama seperti patternCounts di
+   initMaterialLessonPicker), lalu diagregasi lewat srsLessonStatus yang
+   sama supaya kedua tempat selalu konsisten. */
 function materiStatusesForBook(bookNumber) {
+  const viewId = bookNumber === 1 ? "materials" : "book2";
+  const courseEl = document.getElementById(viewId)?.querySelector(".html-course");
+  const lessonEls = courseEl ? Array.from(courseEl.querySelectorAll(":scope > .html-lesson")) : [];
   return Array.from({ length: 25 }, (_, index) => {
-    const id = `materi:book${bookNumber}:${index}`;
-    const record = srsGet(id);
-    if (!record.reviews) return "new";
-    return srsIsDue(id) ? "repeat" : "done";
+    const patternCount =
+      lessonEls[index]?.querySelectorAll(".grammar-point:not(.lesson-quiz)").length || 0;
+    return srsLessonStatus(bookNumber, index, patternCount);
   });
 }
 
@@ -3127,6 +3135,12 @@ function initMaterialLessonPicker({
     sourceCourse.querySelectorAll(":scope > .html-lesson"),
   ).filter((lesson) => lesson.querySelector("summary") && lesson.querySelector(".html-content"));
   if (lessons.length !== 25) return;
+  /* Dihitung SEKALI di sini, sebelum selectLesson() mulai memindah-mindah
+     .html-content antara lessons[] dan reader - supaya jumlah pola per
+     pelajaran tetap akurat berapa pun lesson yang sedang aktif. */
+  const patternCounts = lessons.map(
+    (lesson) => lesson.querySelectorAll(".grammar-point:not(.lesson-quiz)").length,
+  );
 
   const picker = document.createElement("section");
   picker.className = "material-picker";
@@ -3158,18 +3172,16 @@ function initMaterialLessonPicker({
   const readerBody = reader.querySelector(".material-reader-body");
   const exampleStudy = reader.querySelector(".material-example-study");
   const practiceStudy = reader.querySelector(".material-practice-study");
-  function materiSrsId(index) {
-    return `materi:book${bookNumber}:${index}`;
+  function materiSrsId(index, patternIndex) {
+    return `materi:book${bookNumber}:${index}:${patternIndex}`;
   }
+  /* Status pelajaran diagregasi dari status semua POLA di dalamnya
+     (srsLessonStatus, srs.js) - bukan lagi satu id per pelajaran, supaya
+     "sudah paham" tidak lagi all-or-nothing padahal satu pelajaran berisi
+     beberapa pola berbeda. Rating per-pola sendiri ada di setiap
+     .grammar-point (lihat createRatingControls, app-effects.js). */
   function lessonStatusFor(index) {
-    // Beda dari kanji/hafalan: satu pelajaran adalah unit pemahaman besar,
-    // bukan kartu hafalan kecil. "Sudah paham" langsung dianggap selesai
-    // (bukan menunggu box SRS dalam beberapa kali), tapi tetap dijadwalkan
-    // ulang dan berubah jadi "Perlu diulang" begitu due-nya tiba.
-    const id = materiSrsId(index);
-    const record = srsGet(id);
-    if (!record.reviews) return "new";
-    return srsIsDue(id) ? "repeat" : "done";
+    return srsLessonStatus(bookNumber, index, patternCounts[index]);
   }
   const buttons = [];
   let activeIndex = -1;
@@ -3253,9 +3265,22 @@ function initMaterialLessonPicker({
     });
   }
 
-  /* outcome: "again" (Perlu diulang) atau "good" (Sudah paham) */
+  /* Jalan pintas "tandai semua pola pelajaran ini sekaligus" (tombol bar
+     bawah reader) - siswa yang mau presisi tetap bisa menilai tiap pola
+     satu-satu lewat tombol rating di masing-masing .grammar-point.
+     outcome: "again" (Perlu diulang) atau "good" (Sudah paham) */
   function setLessonStatus(index, outcome) {
-    srsReview(materiSrsId(index), outcome);
+    const content = lessons[index]?.querySelector(".html-content") || activeContent;
+    const points = content
+      ? Array.from(content.querySelectorAll(".grammar-point")).filter(
+          (point) => !point.classList.contains("lesson-quiz"),
+        )
+      : [];
+    points.forEach((point, patternIndex) => {
+      const id = materiSrsId(index, patternIndex);
+      srsReview(id, outcome);
+      if (typeof refreshPatternStatus === "function") refreshPatternStatus(point, id);
+    });
     updateMaterialProgress();
     syncCurriculumDashboard();
   }
@@ -3830,6 +3855,12 @@ function initMaterialLessonPicker({
     event.currentTarget.setAttribute("aria-pressed", String(!on));
     event.currentTarget.textContent = on ? "振 Furigana mati" : "振 Furigana aktif";
   };
+  /* Diekspos supaya tombol rating per-pola (createRatingControls,
+     app-effects.js) bisa memicu refresh grid picker & ring progres buku
+     ini segera setelah dinilai, tanpa app-effects.js perlu tahu isi
+     closure ini. */
+  window.materialProgressRefreshers = window.materialProgressRefreshers || {};
+  window.materialProgressRefreshers[bookNumber] = updateMaterialProgress;
   updateMaterialProgress();
   selectLesson(0);
 }

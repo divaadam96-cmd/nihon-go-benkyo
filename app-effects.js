@@ -75,51 +75,109 @@ function createAudioButton(getText, lang) {
   return button;
 }
 
+/* Warnai border kiri .grammar-point sesuai status SRS pola itu - bahasa
+   visual yang sama dengan .status-dot/.material-choice done|repeat di
+   picker pelajaran (hijau #2e8068 / amber #b56c38), supaya siswa lihat
+   sekilas pola mana yang sudah kuat & mana yang masih perlu diulang. */
+function refreshPatternStatus(point, patternId) {
+  const item = srsGet(patternId);
+  const due = item.reviews > 0 && srsIsDue(patternId);
+  point.classList.toggle("grammar-point-done", item.reviews > 0 && !due);
+  point.classList.toggle("grammar-point-repeat", due);
+}
+
+/* Dua tombol rating kecil per pola ("✓ Paham" / "↻ Ulangi") - beda dari
+   tombol bar bawah reader yang menandai SATU PELAJARAN sekaligus, ini
+   menyimpan status per-pola (materi:book{N}:{lessonIndex}:{patternIndex})
+   supaya penguasaan tidak lagi all-or-nothing per pelajaran. */
+function createRatingControls(patternId, point, book) {
+  const wrap = document.createElement("span");
+  wrap.className = "grammar-rating";
+  const repeatButton = document.createElement("button");
+  repeatButton.type = "button";
+  repeatButton.className = "grammar-rating-btn grammar-rating-repeat";
+  repeatButton.title = "Tandai perlu diulang";
+  repeatButton.setAttribute("aria-label", "Tandai pola ini perlu diulang");
+  repeatButton.textContent = "↻";
+  const goodButton = document.createElement("button");
+  goodButton.type = "button";
+  goodButton.className = "grammar-rating-btn grammar-rating-good";
+  goodButton.title = "Tandai sudah paham";
+  goodButton.setAttribute("aria-label", "Tandai pola ini sudah paham");
+  goodButton.textContent = "✓";
+  const rate = (outcome) => (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    srsReview(patternId, outcome);
+    refreshPatternStatus(point, patternId);
+    window.materialProgressRefreshers?.[book]?.();
+    if (typeof syncCurriculumDashboard === "function") syncCurriculumDashboard();
+  };
+  repeatButton.onclick = rate("again");
+  goodButton.onclick = rate("good");
+  wrap.append(repeatButton, goodButton);
+  return wrap;
+}
+
 /* Susun setiap pola: penjelasan, contoh Jepang, arti, lalu catatan bila
-   perlu - dan sisipkan tombol audio di PENJELASAN (bahasa Indonesia,
-   bukan contoh kalimat Jepang-nya) supaya siswa bisa mendengarkan arti
-   & kegunaan pola itu, bukan cuma membacanya. Teks penjelasan diambil
-   SETELAH kalimat penting (kalau ada) dipisah ke catatan tersendiri di
-   bawah, supaya audio persis sama dengan yang tampil di layar. */
+   perlu - dan sisipkan tombol audio + rating di PENJELASAN (bahasa
+   Indonesia, bukan contoh kalimat Jepang-nya) supaya siswa bisa
+   mendengarkan arti & kegunaan pola itu, dan menilai penguasaannya
+   satu per satu (bukan lagi satu status untuk seluruh pelajaran).
+   Teks audio diambil SETELAH kalimat penting (kalau ada) dipisah ke
+   catatan tersendiri di bawah, supaya persis sama dengan yang tampil.
+   Diiterasi PER PELAJARAN (bukan flat semua .grammar-point) supaya tiap
+   pola tahu book/lessonIndex/patternIndex-nya untuk id SRS. */
 function structureGrammarPoints() {
   const importantPattern =
     /\b(jangan|tidak boleh|tidak dipakai|tidak digunakan|berbeda|perhatikan|khusus|wajib|umumnya|hindari|harus)\b/i;
-  document
-    .querySelectorAll(
-      "#materials .html-content .grammar-point, #book2 .html-content .grammar-point",
-    )
-    .forEach((point) => {
-      if (point.classList.contains("lesson-quiz")) return;
-      const explanation = point.querySelector(":scope > p");
-      const example = point.querySelector(":scope > .grammar-example");
-      const meaning = example?.querySelector(".grammar-meaning");
-      if (explanation) explanation.classList.add("grammar-short-explanation");
-      if (example) example.classList.add("grammar-japanese-example");
-      if (meaning) meaning.classList.add("grammar-indonesian-meaning");
+  [
+    { selector: "#materials .html-course > .html-lesson", book: 1 },
+    { selector: "#book2 .html-course > .html-lesson", book: 2 },
+  ].forEach(({ selector, book }) => {
+    document.querySelectorAll(selector).forEach((lesson, lessonIndex) => {
+      const points = Array.from(lesson.querySelectorAll(".grammar-point")).filter(
+        (point) => !point.classList.contains("lesson-quiz"),
+      );
+      points.forEach((point, patternIndex) => {
+        const explanation = point.querySelector(":scope > p");
+        const example = point.querySelector(":scope > .grammar-example");
+        const meaning = example?.querySelector(".grammar-meaning");
+        if (explanation) explanation.classList.add("grammar-short-explanation");
+        if (example) example.classList.add("grammar-japanese-example");
+        if (meaning) meaning.classList.add("grammar-indonesian-meaning");
 
-      if (explanation && !point.querySelector(".grammar-important-note")) {
-        const sentences = explanation.textContent
-          .trim()
-          .split(/(?<=[.!?。])\s+/)
-          .filter(Boolean);
-        const importantIndex =
-          sentences.length >= 2
-            ? sentences.findIndex((sentence) => importantPattern.test(sentence))
-            : -1;
-        if (importantIndex >= 0) {
-          const importantSentence = sentences.splice(importantIndex, 1)[0];
-          explanation.textContent = sentences.join(" ");
-          const note = document.createElement("aside");
-          note.className = "grammar-important-note";
-          note.textContent = importantSentence;
-          if (example) example.insertAdjacentElement("afterend", note);
-          else explanation.insertAdjacentElement("afterend", note);
+        if (explanation && !point.querySelector(".grammar-important-note")) {
+          const sentences = explanation.textContent
+            .trim()
+            .split(/(?<=[.!?。])\s+/)
+            .filter(Boolean);
+          const importantIndex =
+            sentences.length >= 2
+              ? sentences.findIndex((sentence) => importantPattern.test(sentence))
+              : -1;
+          if (importantIndex >= 0) {
+            const importantSentence = sentences.splice(importantIndex, 1)[0];
+            explanation.textContent = sentences.join(" ");
+            const note = document.createElement("aside");
+            note.className = "grammar-important-note";
+            note.textContent = importantSentence;
+            if (example) example.insertAdjacentElement("afterend", note);
+            else explanation.insertAdjacentElement("afterend", note);
+          }
         }
-      }
 
-      if (explanation && !explanation.querySelector(".grammar-audio-button")) {
-        const explanationText = explanation.textContent.trim();
-        explanation.appendChild(createAudioButton(() => explanationText, "id-ID"));
-      }
+        if (explanation && !explanation.querySelector(".grammar-audio-button")) {
+          const explanationText = explanation.textContent.trim();
+          explanation.appendChild(createAudioButton(() => explanationText, "id-ID"));
+        }
+
+        const patternId = `materi:book${book}:${lessonIndex}:${patternIndex}`;
+        if (!point.querySelector(".grammar-rating")) {
+          point.appendChild(createRatingControls(patternId, point, book));
+        }
+        refreshPatternStatus(point, patternId);
+      });
     });
+  });
 }

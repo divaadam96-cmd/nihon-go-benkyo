@@ -61,6 +61,41 @@ function remoteXp(activityRows, quizRows) {
   return reviewXp + quizXp;
 }
 
+/* Uraikan item_id jadi label yang bisa dibaca Sensei - bukan cuma
+   "kanji:山" mentah. Format materi ("materi:book{N}:{lessonIndex}:
+   {patternIndex}") dipetakan balik ke nomor Pelajaran + nomor pola. */
+function describeItemId(itemId) {
+  const parts = itemId.split(":");
+  const ns = parts[0];
+  if (ns === "kanji") return `Kanji ${parts[1]}`;
+  if (ns === "hafalan") {
+    const rest = parts.slice(1);
+    const word = rest[rest.length - 1];
+    const category = rest.slice(0, -1).join(" ");
+    return category ? `Kosakata ${word} (${category})` : `Kosakata ${word}`;
+  }
+  if (ns === "materi") {
+    const bookNumber = (parts[1] || "").replace("book", "");
+    const lessonIndex = Number(parts[2]);
+    const patternIndex = parts[3] != null ? Number(parts[3]) : null;
+    const lessonNumber = bookNumber === "1" ? lessonIndex + 1 : lessonIndex + 26;
+    return `Buku ${bookNumber} · Pelajaran ${lessonNumber}${patternIndex != null ? ` · Pola ${patternIndex + 1}` : ""}`;
+  }
+  return itemId;
+}
+
+/* Item yang paling lemah: sudah pernah direview tapi box-nya masih
+   rendah (sering salah/perlu diulang) - diurutkan box naik lalu jumlah
+   review turun (paling sering dicoba tapi belum maju, paling perlu
+   dibantu Sensei duluan). */
+function weakestItems(progressRows, limit = 6) {
+  return progressRows
+    .filter((row) => row.reviews > 0)
+    .slice()
+    .sort((a, b) => a.box - b.box || b.reviews - a.reviews)
+    .slice(0, limit);
+}
+
 async function loadMonitorPanel() {
   monitorListEl.innerHTML = '<p class="muted">Memuat…</p>';
   const { data: students, error } = await window.supabaseClient
@@ -122,6 +157,16 @@ function renderMonitorDetail(student) {
       return `<div class="monitor-stat-row"><b>${cat.label}</b><span>${total} item dipelajari · ${mastered} dikuasai · ${due} due</span></div>`;
     })
     .join("");
+  const today = srsToday();
+  const weakRows = weakestItems(student.remote.progress);
+  if (weakRows.length) {
+    statsHtml += `<div class="monitor-weak-list"><h4>Perlu perhatian</h4>${weakRows
+      .map((row) => {
+        const due = !row.due || row.due <= today;
+        return `<div class="monitor-weak-row${due ? " due" : ""}"><span>${escapeHtml(describeItemId(row.item_id))}</span><small>Box ${row.box} · ${row.reviews}× direview${due ? " · due hari ini" : ""}</small></div>`;
+      })
+      .join("")}</div>`;
+  }
   monitorDetailStats.innerHTML = statsHtml;
   monitorResetError.hidden = true;
   monitorResetBtn.disabled = false;

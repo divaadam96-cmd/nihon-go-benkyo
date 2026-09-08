@@ -202,6 +202,26 @@ function srsMasteredCount(prefix) {
   }).length;
 }
 
+/* Status satu pelajaran materi, diagregasi dari status semua POLA
+   grammar di dalamnya (id "materi:book{N}:{lessonIndex}:{patternIndex}")
+   - bukan lagi satu id per pelajaran. "done" hanya kalau SEMUA pola
+   sudah direview dan tidak ada yang due; "repeat" kalau ada yang due
+   ATAU baru sebagian pola yang dikerjakan (mendorong siswa lanjutkan);
+   "new" kalau belum ada satu pola pun yang disentuh. */
+function srsLessonStatus(book, lessonIndex, patternCount) {
+  if (!patternCount) return "new";
+  let anyReviewed = false;
+  let allDoneNotDue = true;
+  for (let pattern = 0; pattern < patternCount; pattern++) {
+    const id = `materi:book${book}:${lessonIndex}:${pattern}`;
+    const item = srsGet(id);
+    if (item.reviews) anyReviewed = true;
+    if (!item.reviews || srsIsDue(id)) allDoneNotDue = false;
+  }
+  if (!anyReviewed) return "new";
+  return allDoneNotDue ? "done" : "repeat";
+}
+
 /* Dipakai dashboard untuk mencentang "Rencana hari ini" otomatis (bukan
    klik manual lagi): true kalau ada minimal satu item kategori ini yang
    sudah direview hari ini. */
