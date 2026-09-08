@@ -2904,7 +2904,7 @@ initSakuraPetals();
   const view = document.getElementById("test");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=8&embed=1" title="Simulasi JFT dan JLPT" loading="lazy"></iframe>';
+    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=9&embed=1" title="Simulasi JFT dan JLPT" loading="lazy"></iframe>';
   const frame = view.querySelector(".production-test-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
