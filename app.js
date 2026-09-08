@@ -180,7 +180,7 @@ function nextCard(master) {
 }
 document.getElementById("again").onclick = () => nextCard(false);
 document.getElementById("known").onclick = () => nextCard(true);
-/* Simulasi JLPT/JFT yang sesungguhnya dipasang oleh mountExamSimulationV2()
+/* Simulasi ujian yang sesungguhnya dipasang oleh mountExamSimulationV2()
    di bawah (iframe prototype-tes-v2.html) - #testStart/#quizArea di markup
    asli sudah ditimpa sebelum ini bisa dipakai, jadi tidak ada handler quiz
    inline lagi di sini. */
@@ -2899,12 +2899,12 @@ document.head.appendChild(animationEnhancementsStyle);
 
 initSakuraPetals();
 
-/* Terapkan pusat simulasi JFT/JLPT ke aplikasi utama. Bank soal diaktifkan setelah file pengguna tersedia. */
+/* Terapkan pusat simulasi ujian ke aplikasi utama. Bank soal diaktifkan setelah file pengguna tersedia. */
 (function mountExamSimulationV2() {
   const view = document.getElementById("test");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=9&embed=1" title="Simulasi JFT dan JLPT" loading="lazy"></iframe>';
+    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=10&embed=1" title="Simulasi ujian bahasa Jepang" loading="lazy"></iframe>';
   const frame = view.querySelector(".production-test-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;

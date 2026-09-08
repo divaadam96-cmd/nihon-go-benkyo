@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="prototype-tes-v2.css?v=5">
+  <link rel="stylesheet" href="prototype-tes-v2.css?v=6">
 </head>
 <body>
   <header class="topbar">
@@ -36,20 +36,19 @@
 
   <main>
     <section class="hero">
-      <div><span class="eyebrow">SKILL CHECK · JLPT/JFT STYLE</span><h1>Ukur kemampuan, lalu pelajari kelemahannya.</h1><p>Tes tidak berhenti pada nilai. Setiap hasil menunjukkan kategori yang perlu diperkuat dan materi yang sebaiknya dipelajari kembali.</p></div>
-      <div class="hero-stats"><article><span>Simulasi</span><b id="heroExamType">JLPT</b></article><article><span>Soal</span><b id="heroQuestionTotal">—</b></article><article><span>Status</span><b id="heroPackage">Menunggu file</b></article></div>
+      <div><span class="eyebrow">SKILL CHECK · UJIAN BAHASA JEPANG</span><h1>Ukur kemampuan, lalu pelajari kelemahannya.</h1><p>Tes tidak berhenti pada nilai. Setiap hasil menunjukkan kategori yang perlu diperkuat dan materi yang sebaiknya dipelajari kembali.</p></div>
+      <div class="hero-stats"><article><span>Sumber Soal</span><b id="heroExamType">Per 5 Bab</b></article><article><span>Soal</span><b id="heroQuestionTotal">—</b></article><article><span>Cakupan</span><b id="heroPackage">Menunggu file</b></article></div>
     </section>
 
     <section class="start-card" id="startScreen">
-      <header><div><span class="eyebrow">01 · ATUR TES</span><h2>Pilih simulasi ujian</h2></div><span class="prototype-badge ready">Bank soal aktif</span></header>
-      <div class="exam-choice" id="examChoice"><button class="active" data-exam="jlpt"><span class="exam-mark">JLPT</span><div><b>Simulasi JLPT</b><small>Kosakata, kanji, tata bahasa, susunan kalimat, bacaan, dan audio.</small></div><i>日本語能力試験</i></button><button data-exam="jft"><span class="exam-mark">JFT</span><div><b>Simulasi JFT-Basic</b><small>Komunikasi praktis, kosakata, bacaan, dan audio situasional.</small></div><i>生活・仕事の日本語</i></button></div>
+      <header><div><span class="eyebrow">01 · ATUR TES</span><h2>Pilih sumber ujian</h2></div><span class="prototype-badge ready">Bank soal aktif</span></header>
+      <div class="exam-choice" id="sourceChoice"><button class="active" data-package=""><span class="exam-mark">BAB</span><div><b>Ujian per 5 Bab</b><small>Kosakata, kanji, tata bahasa, susunan kalimat, bacaan, dan audio dari rentang bab pilihan.</small></div></button><button data-package="d03"><span class="exam-mark">SET</span><div><b>Paket Ujian Siap Pakai</b><small>35 soal format 4 bagian: cara baca kanji, penulisan kanji, kosakata, dan parafrasa.</small></div></button></div>
       <div class="config-grid">
         <div class="config-block" id="chapterRangeBlock"><label for="chapterRange">Cakupan materi per 5 Bab</label><select id="chapterRange"><option value="1">Bab 1–5</option><option value="6">Bab 6–10</option><option value="11">Bab 11–15</option><option value="16">Bab 16–20</option><option value="21">Bab 21–25</option><option value="26">Bab 26–30</option><option value="31">Bab 31–35</option><option value="36">Bab 36–40</option><option value="41">Bab 41–45</option><option value="46">Bab 46–50</option></select></div>
         <div class="config-block"><label>Format pengerjaan</label><div class="simulation-format"><b>Simulasi ujian</b><small>Jawaban dan pembahasan ditampilkan setelah tes selesai.</small></div></div>
         <div class="config-block"><label>Pengaturan</label><label class="timer-switch"><input id="timerEnabled" type="checkbox" checked><span></span><b>Timer 12 menit</b><small>Dapat dimatikan</small></label></div>
       </div>
-      <div class="config-block mock-package-picker"><label for="mockPackage">Paket soal siap pakai (opsional)</label><select id="mockPackage"><option value="">Acak dari Bab (default)</option><option value="n5-d03">JLPT N5 (D03) · Kosakata &amp; Kanji — 35 soal, format 4 mondai</option></select></div>
-      <div class="coverage"><span>PAKET TERPILIH</span><div class="package-preview"><b id="selectedTestName">Simulasi JLPT · Bab 1–5</b><small id="selectedRangeText">Materi gabungan diambil dari Bab 1, 2, 3, 4, dan 5.</small></div></div>
+      <div class="coverage"><span>PAKET TERPILIH</span><div class="package-preview"><b id="selectedTestName">Ujian per 5 Bab · Bab 1–5</b><small id="selectedRangeText">Materi gabungan diambil dari Bab 1, 2, 3, 4, dan 5.</small></div></div>
       <div class="question-waiting"><b>Bank soal siap digunakan</b><span>Soal latihan dibuat dari data kosakata, kanji, tata bahasa, bacaan, dan audio lokal.</span></div>
       <button class="start-button" id="startTest">Mulai simulasi <span>→</span></button>
     </section>
@@ -84,11 +83,11 @@
         <article><span class="eyebrow">REKOMENDASI BELAJAR</span><h3>Langkah berikutnya</h3><div id="recommendations" class="recommendations"></div></article>
       </div>
       <article class="mistake-bank" id="mistakeBank" hidden><header><div><span class="eyebrow">BANK KESALAHAN</span><h3>Soal yang perlu dipelajari kembali</h3></div><button id="closeMistakes">Tutup</button></header><div id="mistakeList"></div></article>
-      <p class="disclaimer">Soal dibuat untuk pembelajaran mandiri dan bukan soal resmi JLPT atau JFT-Basic. Paket "JLPT N5 (D03)" diadaptasi dari soal latihan publik Uno Japano.</p>
+      <p class="disclaimer">Soal dibuat untuk pembelajaran mandiri dan bukan soal ujian resmi.</p>
     </section>
   </main>
   <script src="data/bab-data.js"></script>
   <script src="data/materi-data.js"></script>
-  <script src="prototype-tes-v2.js?v=8"></script>
+  <script src="prototype-tes-v2.js?v=9"></script>
 </body>
 </html>
