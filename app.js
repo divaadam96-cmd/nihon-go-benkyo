@@ -2904,7 +2904,7 @@ initSakuraPetals();
   const view = document.getElementById("test");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=15&embed=1" title="Simulasi ujian bahasa Jepang" loading="lazy"></iframe>';
+    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=16&embed=1" title="Simulasi ujian bahasa Jepang" loading="lazy"></iframe>';
   const frame = view.querySelector(".production-test-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
