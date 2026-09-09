@@ -282,8 +282,8 @@ const detailedGrammar = [
   ],
   [
     "Keberadaan benda dan makhluk",
-    "あります digunakan untuk benda atau tumbuhan, sedangkan います untuk manusia dan hewan. Pola pertama menekankan sesuatu yang ada di suatu tempat; pola kedua menekankan lokasi sesuatu yang sudah diketahui.",
-    "場所 に N が あります／います",
+    "あります digunakan untuk benda atau tumbuhan, sedangkan います untuk manusia dan hewan. Pola pertama menekankan sesuatu yang ada di suatu tempat; pola kedua menekankan lokasi sesuatu yang sudah diketahui. や menyebutkan contoh benda secara mewakili (tidak lengkap), beda dari と.",
+    "場所 に N が あります／います・N1 や N2",
   ],
   [
     "Bilangan, durasi, frekuensi",
@@ -561,10 +561,10 @@ const fullLessons = [
     "Keberadaan dan posisi",
     [
       "あります digunakan untuk benda atau tumbuhan, sedangkan います digunakan untuk manusia dan hewan.",
-      "場所にNがあります／います menekankan apa yang ada di suatu tempat. Nは場所にあります／います menekankan lokasi dari benda atau makhluk yang sudah diketahui.",
-      "Kata posisi seperti うえ、した、まえ、うしろ、みぎ、ひだり、なか、そと biasanya dihubungkan dengan の.",
-      "N1のN2 menyatakan lokasi relatif, misalnya di atas meja atau di dalam kotak.",
-      "Kata tanya どこ dapat menggantikan informasi tempat yang belum diketahui.",
+      "場所にNがあります／います menekankan apa yang ada di suatu tempat (tanya benda: なにが, tanya orang: だれが). Nは場所にあります／います menekankan lokasi dari benda atau makhluk yang sudah diketahui, bisa juga diganti Nは場所です.",
+      "Kata posisi seperti うえ、した、まえ、うしろ、みぎ、ひだり、なか、そと biasanya dihubungkan dengan の; juga bisa memakai で untuk tempat aksi.",
+      "や menyebutkan beberapa contoh benda secara mewakili (tidak lengkap), beda dari と yang menyebutkan semua; など menambahkan arti dan lain-lain.",
+      "Dalam percakapan, lawan bicara sering mengulang inti pertanyaan dulu sebelum menjawabnya.",
     ],
   ],
   [
