@@ -157,7 +157,7 @@ forgotFormEl.addEventListener("submit", async (event) => {
   forgotSubmitEl.disabled = false;
   forgotSubmitEl.textContent = "Kirim link reset";
   if (error) {
-    forgotErrorEl.textContent = "Gagal mengirim link reset. Coba lagi.";
+    forgotErrorEl.textContent = `Gagal mengirim link reset: ${error.message} (${error.status || "?"})`;
     forgotErrorEl.hidden = false;
     return;
   }
