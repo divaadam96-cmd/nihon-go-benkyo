@@ -3085,6 +3085,17 @@ body.authed .login-screen {
   opacity: 0.6;
   cursor: not-allowed;
 }
+.login-card button.link-btn {
+  padding: 2px;
+  background: none;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-decoration: underline;
+}
+.login-card button.link-btn:hover {
+  color: var(--navy);
+}
 
 /* Kotak akun (nama + peran + keluar) di navbar atas. */
 .account-box {

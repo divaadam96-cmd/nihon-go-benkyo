@@ -311,9 +311,9 @@ const detailedGrammar = [
     "Vても いいです・Vては いけません",
   ],
   [
-    "Menghubungkan kalimat",
-    "Bentuk て dapat menyambung dua tindakan atau dua informasi yang berkaitan. Kata sifat い berubah menjadi ～くて, kata sifat な dan kata benda memakai で. Untuk menyatakan cara melakukan sesuatu, gunakan kata tanya どうやって.",
-    "Vて・Aくて・Nで",
+    "Menyambung kalimat & pola tambahan",
+    "Bentuk て menyambung dua tindakan atau informasi berkaitan (い→くて, な形容詞/kata benda→で). てから menyatakan tindakan dilakukan setelah tindakan pertama selesai. Pola N1は N2が Kata Sifat menjelaskan sifat dari N1, sedangkan partikel を pada でます・おります menandai titik keberangkatan. どうやって menanyakan cara, dan どれ／どのN dipakai memilih dari lebih dari tiga pilihan.",
+    "Vて・Vてから・N1は N2が Adj",
   ],
   [
     "Bentuk negatif ない",
@@ -621,11 +621,11 @@ const fullLessons = [
   [
     "Menyambungkan kalimat",
     [
-      "Vて dapat menghubungkan dua kegiatan yang berurutan atau dua informasi terkait.",
-      "い形容詞 berubah menjadi ～くて, sedangkan な形容詞 dan kata benda memakai で saat disambungkan.",
-      "どうやって menanyakan cara atau langkah melakukan sesuatu.",
-      "どのN menunjukkan pilihan tertentu dalam kelompok kata benda.",
-      "Kata tanya dapat digabung dengan も untuk makna semua atau tidak satu pun, bergantung bentuk kalimat.",
+      "Bentuk て menyambungkan dua kegiatan atau informasi berurutan; い形容詞 berubah menjadi ～くて, sedangkan な形容詞 dan kata benda memakai で. Waktu ditentukan oleh kata kerja terakhir.",
+      "Vてから、V menyatakan kata kerja kedua dilakukan setelah kata kerja pertama selesai; subjek anak kalimat ditandai partikel が.",
+      "N1は N2が Kata Sifat menjelaskan bahwa N2 adalah sifat dari N1, misalnya 大阪は食べ物がおいしいです (Osaka makanannya enak).",
+      "を pada でます・おります menandai titik awal atau tempat keberangkatan, bukan objek langsung, misalnya 大学を出ます (tamat dari universitas).",
+      "どうやって menanyakan cara melakukan sesuatu, sedangkan どれ／どのN dipakai memilih satu dari lebih dari tiga pilihan.",
     ],
   ],
   [

@@ -543,13 +543,37 @@ add(
       "Tas ini murah dan praktis.",
     ],
     [
+      "Vてから、V",
+      "Kata kerja kedua dilakukan setelah kata kerja pertama selesai.",
+      "お金を 入れてから、ボタンを 押します。",
+      "Setelah memasukkan uang, tekan tombolnya.",
+    ],
+    [
+      "Nは Nが A",
+      "Menjelaskan bahwa topik (N1) memiliki sifat N2.",
+      "マリアさんは 髪が 長いです。",
+      "Rambut Sdr. Maria panjang.",
+    ],
+    [
+      "Nを + でます／おります",
+      "を menandai titik awal atau tempat keberangkatan, bukan objek.",
+      "梅田で 電車を 降ります。",
+      "Turun dari kereta di Umeda.",
+    ],
+    [
       "どうやって",
       "Menanyakan cara atau sarana.",
       "どうやって 駅へ 行きますか。",
       "Bagaimana pergi ke stasiun?",
     ],
+    [
+      "どれ／どの N",
+      "Menanyakan pilihan dari lebih dari tiga benda; どれ berdiri sendiri, どの diikuti kata benda.",
+      "ミラーさんの 傘は どれですか。",
+      "Yang mana payung Sdr. Miller?",
+    ],
   ],
-  "Menghubungkan kegiatan dan keadaan.",
+  "Menghubungkan kegiatan, sifat, urutan waktu, dan cara/pilihan.",
 );
 add(
   16,

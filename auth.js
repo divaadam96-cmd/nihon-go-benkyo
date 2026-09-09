@@ -25,6 +25,26 @@ const loginScreenEl = document.getElementById("loginScreen");
 const loginFormEl = document.getElementById("loginForm");
 const loginErrorEl = document.getElementById("loginError");
 const loginSubmitEl = document.getElementById("loginSubmit");
+const forgotPasswordLinkEl = document.getElementById("forgotPasswordLink");
+const forgotFormEl = document.getElementById("forgotForm");
+const forgotEmailEl = document.getElementById("forgotEmail");
+const forgotErrorEl = document.getElementById("forgotError");
+const forgotSuccessEl = document.getElementById("forgotSuccess");
+const forgotSubmitEl = document.getElementById("forgotSubmit");
+const backToLoginLinkEl = document.getElementById("backToLoginLink");
+const resetPasswordFormEl = document.getElementById("resetPasswordForm");
+const newPasswordEl = document.getElementById("newPassword");
+const newPasswordConfirmEl = document.getElementById("newPasswordConfirm");
+const resetErrorEl = document.getElementById("resetError");
+const resetSubmitEl = document.getElementById("resetSubmit");
+
+/* Link reset password Supabase mendarat di sini dengan #access_token=...&type=recovery
+   (atau ?code=...&type=recovery) di URL. Supabase-js otomatis membuat sesi dari token
+   itu, tapi kita TIDAK boleh langsung revealApp() seperti login biasa - harus tampilkan
+   form "buat password baru" dulu. Flag ini mencegah trySession() mendahului form itu. */
+let isPasswordRecoveryLink =
+  window.location.hash.includes("type=recovery") ||
+  window.location.search.includes("type=recovery");
 
 function showLoginError(message) {
   loginErrorEl.textContent = message;
@@ -71,6 +91,7 @@ async function revealApp(profile) {
 }
 
 async function trySession() {
+  if (isPasswordRecoveryLink) return;
   const { data } = await window.supabaseClient.auth.getSession();
   const session = data?.session;
   if (!session) return;
@@ -109,6 +130,73 @@ loginFormEl.addEventListener("submit", async (event) => {
     return;
   }
   await revealApp(profile);
+});
+
+forgotPasswordLinkEl.addEventListener("click", () => {
+  loginFormEl.hidden = true;
+  forgotFormEl.hidden = false;
+  forgotErrorEl.hidden = true;
+  forgotSuccessEl.hidden = true;
+});
+
+backToLoginLinkEl.addEventListener("click", () => {
+  forgotFormEl.hidden = true;
+  loginFormEl.hidden = false;
+});
+
+forgotFormEl.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  forgotErrorEl.hidden = true;
+  forgotSuccessEl.hidden = true;
+  forgotSubmitEl.disabled = true;
+  forgotSubmitEl.textContent = "Mengirim…";
+  const { error } = await window.supabaseClient.auth.resetPasswordForEmail(
+    forgotEmailEl.value.trim(),
+    { redirectTo: window.location.origin + window.location.pathname },
+  );
+  forgotSubmitEl.disabled = false;
+  forgotSubmitEl.textContent = "Kirim link reset";
+  if (error) {
+    forgotErrorEl.textContent = "Gagal mengirim link reset. Coba lagi.";
+    forgotErrorEl.hidden = false;
+    return;
+  }
+  forgotSuccessEl.textContent = "Link reset sudah dikirim. Cek email Anda (termasuk folder spam), lalu klik link di email itu.";
+  forgotSuccessEl.hidden = false;
+});
+
+resetPasswordFormEl.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  resetErrorEl.hidden = true;
+  if (newPasswordEl.value !== newPasswordConfirmEl.value) {
+    resetErrorEl.textContent = "Password baru dan pengulangannya tidak sama.";
+    resetErrorEl.hidden = false;
+    return;
+  }
+  resetSubmitEl.disabled = true;
+  resetSubmitEl.textContent = "Menyimpan…";
+  const { error } = await window.supabaseClient.auth.updateUser({
+    password: newPasswordEl.value,
+  });
+  resetSubmitEl.disabled = false;
+  resetSubmitEl.textContent = "Simpan password baru";
+  if (error) {
+    resetErrorEl.textContent = "Gagal menyimpan password baru. Link mungkin sudah kedaluwarsa - minta link reset baru.";
+    resetErrorEl.hidden = false;
+    return;
+  }
+  resetPasswordFormEl.hidden = true;
+  isPasswordRecoveryLink = false;
+  history.replaceState(null, "", window.location.pathname);
+  await trySession();
+});
+
+window.supabaseClient.auth.onAuthStateChange((event) => {
+  if (event === "PASSWORD_RECOVERY") {
+    loginFormEl.hidden = true;
+    forgotFormEl.hidden = true;
+    resetPasswordFormEl.hidden = false;
+  }
 });
 
 document.getElementById("logoutButton").addEventListener("click", async () => {
