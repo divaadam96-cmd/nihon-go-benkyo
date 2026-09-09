@@ -276,9 +276,9 @@ const detailedGrammar = [
     "N は A です",
   ],
   [
-    "Kesukaan dan kemampuan",
-    "すき・きらい・じょうず・へた・わかります umumnya memakai partikel が untuk hal yang disukai, dipahami, atau dikuasai. Pola ini sering dipakai untuk menjelaskan minat dan kemampuan pribadi.",
-    "N が わかります／すきです",
+    "Kesukaan, kemampuan, dan alasan",
+    "すき・きらい・じょうず・へた・わかります umumnya memakai partikel が untuk hal yang disukai, dipahami, atau dikuasai; どんな N dijawab dengan nama konkret. よく・だいたい・あまり・ぜんぜん menyatakan tingkat, たくさん・すこし menyatakan kuantitas. から menandai alasan, dan どうして menanyakan alasan tersebut.",
+    "N が すきです／～から、～",
   ],
   [
     "Keberadaan benda dan makhluk",
@@ -551,10 +551,10 @@ const fullLessons = [
     "Kesukaan, kemampuan, dan jumlah",
     [
       "すき、きらい、じょうず、へた、わかります memakai が untuk hal yang disukai, dikuasai, atau dipahami.",
-      "程度 seperti よく、だいたい、あまり、ぜんぜん menunjukkan tingkat kemampuan atau pemahaman.",
-      "Kata bantu bilangan harus disesuaikan dengan benda yang dihitung, misalnya orang, lembar, atau buah.",
-      "なんにん、なんまい dan bentuk tanya lain dipakai untuk menanyakan jumlah.",
-      "Kata kerja dapat berubah menjadi bentuk kamus atau bentuk negatif untuk menjelaskan kebiasaan sederhana.",
+      "どんな N dapat dijawab dengan menyebutkan nama secara konkret, mis. どんなスポーツが好きですか → サッカーが好きです.",
+      "程度 seperti よく、だいたい、あまり、ぜんぜん menunjukkan tingkat kemampuan; たくさん、すこし menunjukkan kuantitas. Ketiganya (すこし、あまり、ぜんぜん) juga bisa menerangkan kata sifat.",
+      "～から menandai alasan, diletakkan sebelum akibatnya atau dijawab tersendiri dengan ～からです.",
+      "どうして menanyakan alasan, dijawab dengan ～から; どうしてですか dipakai untuk menanyakan alasan tanpa mengulang kata lawan bicara.",
     ],
   ],
   [

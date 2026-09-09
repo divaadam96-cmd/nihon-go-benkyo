@@ -676,7 +676,7 @@ const babKosakataData = {
     ["\u30d0\u30ec\u30fc\u30dc\u30fc\u30eb", "Voli"],
     ["\u30c6\u30cb\u30b9", "Tenis"],
     ["\u30dc\u30a6\u30ea\u30f3\u30b0", "Bowling"],
-    ["\u30b9\u30ad\u30fc", "Sky"],
+    ["\u30b9\u30ad\u30fc", "Ski"],
     ["\u30b9\u30b1\u30fc\u30c8", "Skate"],
     [
       "\u305f\u3063\u304d\u3085\u3046\uff0f\u30d4\u30f3\u30dd\u30f3",
