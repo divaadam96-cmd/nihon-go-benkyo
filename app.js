@@ -3969,11 +3969,22 @@ syncCurriculumDashboard();
 /* Mode fokus untuk pembaca materi (Buku 1 dan Buku 2 berbagi fungsi yang sama). */
 function setMaterialFocusMode(on) {
   document.body.classList.toggle("focus-mode", on);
+  let visibleToggle = null;
   document.querySelectorAll(".material-focus-toggle").forEach((button) => {
     button.classList.toggle("active", on);
     button.setAttribute("aria-pressed", String(on));
     button.textContent = on ? "✕ Keluar fokus" : "⛶ Mode fokus";
+    if (!visibleToggle && button.offsetParent) visibleToggle = button;
   });
+  /* Masuk/keluar mode fokus menyembunyikan atau memunculkan navbar, judul
+     halaman, daftar pelajaran, dan panel progres - tinggi halaman berubah
+     drastis. Tanpa scroll ulang ke toolbar, posisi scroll lama bisa
+     membuat toolbar (berisi tombol keluar) terlempar jauh dari layar,
+     sehingga mode fokus terkesan "tidak bisa dimatikan" di HP. */
+  if (visibleToggle) {
+    const toolbar = visibleToggle.closest(".material-reader-toolbar");
+    if (toolbar) toolbar.scrollIntoView({ block: "start" });
+  }
 }
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && document.body.classList.contains("focus-mode"))
