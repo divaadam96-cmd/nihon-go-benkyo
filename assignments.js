@@ -53,7 +53,7 @@ async function loadSiswaAssignments() {
   assignmentsList.innerHTML = '<p class="muted">Memuat…</p>';
   const { data, error } = await window.supabaseClient
     .from("assignments")
-    .select("id, title, due_date, completed")
+    .select("id, title, due_date, completed, test_kind, test_ref")
     .eq("siswa_id", window.currentProfile.id)
     .order("completed", { ascending: true })
     .order("due_date", { ascending: true, nullsFirst: false });
@@ -68,16 +68,29 @@ async function loadSiswaAssignments() {
   assignmentsList.innerHTML = data
     .map((task) => {
       const dueText = task.due_date ? `Tenggat ${task.due_date}` : "Tanpa tenggat";
-      const doneButton = task.completed
+      const isTestAccess = !!task.test_kind;
+      // Akses tes kemampuan tidak boleh ditandai selesai secara manual -
+      // status "selesai"-nya hanya diisi otomatis oleh prototype-tes-v2.js
+      // setelah siswa benar-benar mengerjakan tesnya (lihat mark_assignment_done
+      // di finishTest()), supaya siswa tidak bisa curang lewat tombol ini.
+      const actionButton = task.completed
         ? '<span class="assignment-done-label">Selesai</span>'
-        : `<button type="button" class="assignment-done-btn" data-id="${task.id}">Tandai selesai</button>`;
-      return `<div class="assignment-row"><div><b>${escapeHtml(task.title)}</b><small>${dueText}</small></div>${doneButton}</div>`;
+        : isTestAccess
+          ? '<button type="button" class="assignment-test-btn" data-goto-test="1">Kerjakan tes →</button>'
+          : `<button type="button" class="assignment-done-btn" data-id="${task.id}">Tandai selesai</button>`;
+      const typeTag = isTestAccess ? '<span class="assignment-type-tag">Akses Tes Kemampuan</span>' : "";
+      return `<div class="assignment-row"><div><b>${escapeHtml(task.title)}</b>${typeTag}<small>${dueText}</small></div>${actionButton}</div>`;
     })
     .join("");
 }
 
 if (assignmentsList) {
   assignmentsList.addEventListener("click", async (event) => {
+    const testButton = event.target.closest(".assignment-test-btn");
+    if (testButton) {
+      if (typeof window.open === "function") window.open("test");
+      return;
+    }
     const button = event.target.closest(".assignment-done-btn");
     if (!button) return;
     button.disabled = true;

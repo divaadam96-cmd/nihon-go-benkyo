@@ -15,9 +15,35 @@ const monitorDetailClose = document.getElementById("monitorDetailClose");
 const monitorAssignmentList = document.getElementById("monitorAssignmentList");
 const monitorAssignmentForm = document.getElementById("monitorAssignmentForm");
 const monitorAssignmentError = document.getElementById("monitorAssignmentError");
+const monitorAssignmentTitle = document.getElementById("monitorAssignmentTitle");
+const monitorAssignmentBab = document.getElementById("monitorAssignmentBab");
+const monitorAssignmentPaket = document.getElementById("monitorAssignmentPaket");
 
 let monitorStudents = [];
 let monitorSelectedId = null;
+
+/* Label paket harus sinkron dengan mockTestPackages di prototype-tes-v2.js
+   (halaman itu tidak dimuat di sini, jadi labelnya diduplikasi manual). */
+const TEST_PAKET_LABELS = { d03: "Paket Ujian · Kosakata & Kanji (Set 03)" };
+
+function currentAssignmentType() {
+  const checked = monitorAssignmentForm.querySelector('input[name="assignmentType"]:checked');
+  return checked ? checked.value : "umum";
+}
+
+function updateAssignmentFormMode() {
+  const type = currentAssignmentType();
+  monitorAssignmentBab.hidden = type !== "bab";
+  monitorAssignmentPaket.hidden = type !== "paket";
+  const isTestAccess = type !== "umum";
+  monitorAssignmentTitle.hidden = isTestAccess;
+  monitorAssignmentTitle.required = !isTestAccess;
+}
+
+monitorAssignmentForm.querySelectorAll('input[name="assignmentType"]').forEach((radio) => {
+  radio.addEventListener("change", updateAssignmentFormMode);
+});
+updateAssignmentFormMode();
 
 function remoteDueCount(progressRows, prefix) {
   const today = srsToday();
@@ -173,15 +199,30 @@ function renderMonitorDetail(student) {
   monitorResetBtn.textContent = "Reset progres siswa ini";
   monitorAssignmentError.hidden = true;
   monitorAssignmentForm.reset();
+  updateAssignmentFormMode();
   monitorDetailEl.hidden = false;
   loadStudentAssignments(student.id);
+}
+
+function describeTestAccess(task) {
+  if (task.test_kind === "paket") {
+    return { tag: "Akses tes · Paket", limitText: "Batas waktu 60 menit" };
+  }
+  if (task.test_kind === "bab") {
+    const start = Number(task.test_ref);
+    return {
+      tag: `Akses tes · Bab ${start}–${start + 4}`,
+      limitText: "Batas waktu 45 menit",
+    };
+  }
+  return null;
 }
 
 async function loadStudentAssignments(siswaId) {
   monitorAssignmentList.innerHTML = '<p class="muted">Memuat tugas…</p>';
   const { data, error } = await window.supabaseClient
     .from("assignments")
-    .select("id, title, due_date, completed")
+    .select("id, title, due_date, completed, test_kind, test_ref")
     .eq("siswa_id", siswaId)
     .order("completed", { ascending: true })
     .order("due_date", { ascending: true, nullsFirst: false });
@@ -197,7 +238,12 @@ async function loadStudentAssignments(siswaId) {
     .map((task) => {
       const dueText = task.due_date ? `Tenggat ${task.due_date}` : "Tanpa tenggat";
       const statusClass = task.completed ? "assignment-done" : "assignment-pending";
-      return `<div class="monitor-assignment-row ${statusClass}"><div><b>${escapeHtml(task.title)}</b><small>${dueText} · ${task.completed ? "Selesai" : "Belum selesai"}</small></div><button type="button" class="monitor-assignment-delete" data-id="${task.id}">Hapus</button></div>`;
+      const access = describeTestAccess(task);
+      const tagHtml = access ? `<span class="assignment-type-tag">${access.tag}</span>` : "";
+      const detailText = access
+        ? `${dueText} · ${access.limitText} · ${task.completed ? "Selesai" : "Belum dikerjakan"}`
+        : `${dueText} · ${task.completed ? "Selesai" : "Belum selesai"}`;
+      return `<div class="monitor-assignment-row ${statusClass}"><div><b>${escapeHtml(task.title)}</b>${tagHtml}<small>${detailText}</small></div><button type="button" class="monitor-assignment-delete" data-id="${task.id}">Hapus</button></div>`;
     })
     .join("");
 }
@@ -243,15 +289,33 @@ monitorAssignmentForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const student = monitorStudents.find((s) => s.id === monitorSelectedId);
   if (!student) return;
-  const title = document.getElementById("monitorAssignmentTitle").value.trim();
   const dueDate = document.getElementById("monitorAssignmentDue").value || null;
+  const type = currentAssignmentType();
   monitorAssignmentError.hidden = true;
+
+  let title, testKind, testRef;
+  if (type === "bab") {
+    const start = Number(monitorAssignmentBab.value);
+    testKind = "bab";
+    testRef = String(start);
+    title = `Latihan per 5 Bab · Bab ${start}–${start + 4}`;
+  } else if (type === "paket") {
+    testKind = "paket";
+    testRef = monitorAssignmentPaket.value;
+    title = `Simulasi Paket · ${TEST_PAKET_LABELS[testRef] || testRef}`;
+  } else {
+    testKind = null;
+    testRef = null;
+    title = monitorAssignmentTitle.value.trim();
+  }
 
   const { error } = await window.supabaseClient.from("assignments").insert({
     sensei_id: window.currentProfile.id,
     siswa_id: student.id,
     title,
     due_date: dueDate,
+    test_kind: testKind,
+    test_ref: testRef,
   });
   if (error) {
     monitorAssignmentError.textContent = `Gagal memberi tugas: ${error.message}`;
@@ -259,6 +323,7 @@ monitorAssignmentForm.addEventListener("submit", async (event) => {
     return;
   }
   monitorAssignmentForm.reset();
+  updateAssignmentFormMode();
   loadStudentAssignments(student.id);
 });
 

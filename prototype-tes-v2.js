@@ -380,6 +380,13 @@ const curatedBabPackages={
 const $=id=>document.getElementById(id);
 const testTypeLabels={vocabulary:"Kosakata",kanji:"Kanji",grammar:"Tata Bahasa",sentence:"Susunan Kalimat",reading:"Bacaan",audio:"Audio",situational:"Situasional"};
 let questions=[...defaultQuestions],testType="vocabulary",rangeStart=1,mockPackage="",current=0,mode="simulation",answers=Array(questions.length).fill(null),checked=Array(questions.length).fill(false),flags=Array(questions.length).fill(false),furigana=true,timerId=null,seconds=720,reviewOnly=false,reviewIndexes=[];
+/* Kontrol akses tes kemampuan: siswa cuma boleh mulai tes lewat akses yang
+   sudah diberikan Sensei/Operator (baris `assignments` dengan test_kind
+   terisi). Sensei/Operator sendiri tetap pakai form pilih-bebas di bawah
+   (dipakai untuk menyiapkan/mengecek soal), jadi gating ini hanya aktif
+   kalau peran login-nya "siswa". */
+let restrictedMode=false,accessAssignments=[],activeAssignmentId=null;
+function escapeHtmlTes(text){const div=document.createElement("div");div.textContent=text==null?"":String(text);return div.innerHTML}
 function shuffled(values){return [...values].sort(()=>Math.random()-.5)}
 function collectRangeData(source){const rows=[];for(let bab=rangeStart;bab<rangeStart+5;bab++)(source[bab]||[]).forEach(item=>rows.push({item,bab}));return rows}
 function optionSet(correct,pool){return shuffled([correct,...shuffled(pool.filter(value=>value&&value!==correct)).slice(0,3)])}
@@ -404,7 +411,15 @@ function buildSelectedQuestions(){
   questions=[...vocabulary.slice(0,2),...kanji.slice(0,2),...grammar.slice(0,2),sentence[0],reading[0],audio[0],situational[0]];
   questions=questions.filter(Boolean);if(!questions.length)questions=[...defaultQuestions];$("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`;
 }
+/* Batas waktu wajib (tidak bisa dimatikan siswa): latihan per 5 bab
+   maksimal 45 menit, simulasi paket maksimal 60 menit. */
+function timeLimitSeconds(){return mockPackage?3600:2700}
+function updateTimerInfo(){
+  const minutes=timeLimitSeconds()/60;
+  $("timerInfo").querySelector("b").textContent=`Timer ${minutes} menit`;
+}
 function updatePackagePreview(){
+  updateTimerInfo();
   if(mockPackage){const pack=mockTestPackages[mockPackage];$("selectedTestName").textContent=pack.label;$("selectedRangeText").textContent="Paket soal siap pakai dengan format ujian resmi (4 bagian), untuk latihan mandiri.";$("heroExamType").textContent="Paket Siap Pakai";$("heroPackage").textContent=pack.label;return}
   const curated=curatedBabPackages[rangeStart];
   $("selectedTestName").textContent=`Ujian per 5 Bab · Bab ${rangeStart}–${rangeStart+4}`;$("selectedRangeText").textContent=curated?`Soal disusun manual dari kosakata, kanji, dan pola kalimat Bab ${rangeStart}–${rangeStart+4}.`:`Materi gabungan diambil dari Bab ${rangeStart}, ${rangeStart+1}, ${rangeStart+2}, ${rangeStart+3}, dan ${rangeStart+4}.`;$("heroExamType").textContent="Per 5 Bab";$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`}
@@ -414,6 +429,12 @@ function renderNavigator(){
   const grid=$("numberGrid");grid.replaceChildren();
   questions.forEach((_,index)=>{const b=document.createElement("button");b.textContent=index+1;b.classList.toggle("current",index===activeQuestionIndex());b.classList.toggle("answered",answers[index]!==null);b.classList.toggle("flagged",flags[index]);b.onclick=()=>{reviewOnly=false;current=index;renderQuestion()};grid.append(b)});
   $("answeredCount").textContent=`${answers.filter(v=>v!==null).length} / ${questions.length}`;$("temporaryScore").textContent=questions.filter((q,i)=>checked[i]&&answers[i]===q.answer).length;$("flaggedCount").textContent=flags.filter(Boolean).length;
+  // Tombol "Selesaikan tes" baru boleh ditekan setelah semua soal terjawab -
+  // siswa masih bisa lompat antar nomor lewat grid ini tanpa menjawab semua
+  // dulu, jadi pengecekan lengkap ini yang mencegah selesai sebelum waktunya.
+  const allAnswered=answers.every(value=>value!==null);
+  $("finishEarly").disabled=!allAnswered;
+  $("finishHint").hidden=allAnswered;
 }
 function renderQuestion(){
   const index=activeQuestionIndex(),q=questions[index];
@@ -457,15 +478,30 @@ function pushQuizAnswersToSrs(){
     try{window.parent.srsReview(q.srsId,answers[i]===q.answer?"good":"again")}catch(e){}
   });
 }
+/* Tandai akses tes ini "selesai" di Supabase begitu tes berakhir (manual
+   maupun otomatis karena waktu habis) - pakai RPC yang sama dengan tombol
+   "Tandai selesai" di dashboard (lihat assignments.js), supaya siswa tidak
+   bisa menandai selesai tanpa benar-benar mengerjakan tesnya. */
+function completeActiveAssignment(){
+  if(!activeAssignmentId||!window.supabaseClient)return;
+  window.supabaseClient.rpc("mark_assignment_done",{assignment_id:activeAssignmentId})
+    .then(({error})=>{if(error)console.warn("mark_assignment_done gagal:",error.message)})
+    .catch(()=>{});
+  activeAssignmentId=null;
+}
 function finishTest(){
   clearInterval(timerId);checked=checked.map(()=>true);const correct=questions.filter((q,i)=>answers[i]===q.answer).length,score=Math.round(correct/questions.length*100);$("testScreen").hidden=true;$("resultScreen").hidden=false;$("finalScore").textContent=score;$("resultTitle").textContent=score>=80?"Fondasi kamu sudah kuat.":score>=60?"Fondasi sudah terbentuk.":"Mari perkuat dasar sedikit lagi.";$("resultSummary").textContent=`${correct} dari ${questions.length} soal benar. ${questions.length-correct} soal tersimpan dalam bank kesalahan untuk ditinjau kembali.`;
   submitQuizResult(correct,questions.length,categoryScores());
   pushQuizAnswersToSrs();
+  completeActiveAssignment();
   const categoryBox=$("categoryResults");categoryBox.replaceChildren();Object.entries(categoryScores()).forEach(([name,value])=>{const pct=Math.round(value.correct/value.total*100),row=document.createElement("div");row.innerHTML=`<span>${name}</span><i style="--score:${pct}%"></i><b>${pct}%</b>`;categoryBox.append(row)});
   const weakest=Object.entries(categoryScores()).sort((a,b)=>a[1].correct/a[1].total-b[1].correct/b[1].total).slice(0,2);$("recommendations").innerHTML=weakest.map(([name])=>`<div><b>Perkuat ${name}</b>Ulangi materi dan latihan terkait sebelum mencoba simulasi berikutnya.</div>`).join("")+`<div><b>Ulangi bank kesalahan</b>Fokuskan sesi berikutnya pada ${questions.length-correct} soal yang masih salah.</div>`;
   reviewIndexes=questions.map((q,i)=>answers[i]!==q.answer?i:-1).filter(i=>i>=0);const list=$("mistakeList");list.replaceChildren();reviewIndexes.forEach(i=>{const q=questions[i],a=document.createElement("article");a.innerHTML=`<b>Soal ${i+1} · ${q.category}</b><p>Jawabanmu: ${answers[i]===null?"Belum dijawab":q.options[answers[i]]} · Jawaban benar: ${q.options[q.answer]}</p><p>${q.explanation}</p><small>Pelajari kembali: ${q.material}</small>`;list.append(a)});window.scrollTo({top:0,behavior:"smooth"});
 }
-function startTimer(){clearInterval(timerId);seconds=Math.max(720,questions.length*40);const m0=String(Math.floor(seconds/60)).padStart(2,"0"),s0=String(seconds%60).padStart(2,"0");$("timer").textContent=`${m0}:${s0}`;if(!$("timerEnabled").checked){$("timer").textContent="Tanpa timer";return}timerId=setInterval(()=>{seconds--;const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`;if(seconds<=0)finishTest()},1000)}
+/* Timer sekarang wajib dan tidak bisa dimatikan siswa (lihat timeLimitSeconds):
+   latihan per 5 bab 45 menit, simulasi paket 60 menit. Saat waktu habis,
+   tes otomatis selesai lewat finishTest() meski belum semua soal terjawab. */
+function startTimer(){clearInterval(timerId);seconds=timeLimitSeconds();const render=()=>{const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`};render();timerId=setInterval(()=>{seconds--;render();if(seconds<=0)finishTest()},1000)}
 function startTest(){if(!questionBankReady)return;buildSelectedQuestions();current=0;answers=Array(questions.length).fill(null);checked=Array(questions.length).fill(false);flags=Array(questions.length).fill(false);reviewOnly=false;$("startScreen").hidden=true;$("resultScreen").hidden=true;$("testScreen").hidden=false;startTimer();renderQuestion();window.scrollTo({top:0,behavior:"smooth"})}
 document.querySelectorAll("#sourceChoice button").forEach(button=>button.onclick=()=>{
   mockPackage=button.dataset.package||"";
@@ -477,4 +513,71 @@ document.querySelectorAll("#sourceChoice button").forEach(button=>button.onclick
 $("chapterRange").onchange=()=>{rangeStart=Number($("chapterRange").value);updatePackagePreview()};
 document.querySelectorAll("#modeChoice button").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll("#modeChoice button").forEach(x=>x.classList.toggle("active",x===b))});
 updatePackagePreview();
-$("startTest").onclick=startTest;$("checkAnswer").onclick=checkOrAdvance;$("nextQuestion").onclick=advance;$("previousQuestion").onclick=()=>{if(current>0){current--;renderQuestion()}};$("flagQuestion").onclick=()=>{const i=activeQuestionIndex();flags[i]=!flags[i];renderQuestion()};$("furiganaToggle").onclick=()=>{furigana=!furigana;$("furiganaToggle").textContent=`振 Furigana: ${furigana?"aktif":"mati"}`;renderQuestion()};$("finishEarly").onclick=finishTest;$("restartTest").onclick=()=>{$("resultScreen").hidden=true;$("startScreen").hidden=false;window.scrollTo({top:0,behavior:"smooth"})};$("reviewMistakes").onclick=()=>{$("mistakeBank").hidden=false;$("mistakeBank").scrollIntoView({behavior:"smooth"})};$("closeMistakes").onclick=()=>{$("mistakeBank").hidden=true};
+$("startTest").onclick=startTest;$("checkAnswer").onclick=checkOrAdvance;$("nextQuestion").onclick=advance;$("previousQuestion").onclick=()=>{if(current>0){current--;renderQuestion()}};$("flagQuestion").onclick=()=>{const i=activeQuestionIndex();flags[i]=!flags[i];renderQuestion()};$("furiganaToggle").onclick=()=>{furigana=!furigana;$("furiganaToggle").textContent=`振 Furigana: ${furigana?"aktif":"mati"}`;renderQuestion()};$("finishEarly").onclick=()=>{if(answers.some(value=>value===null))return;finishTest()};$("restartTest").onclick=()=>{$("resultScreen").hidden=true;$("startScreen").hidden=false;window.scrollTo({top:0,behavior:"smooth"});if(restrictedMode)loadAccessAssignments()};$("reviewMistakes").onclick=()=>{$("mistakeBank").hidden=false;$("mistakeBank").scrollIntoView({behavior:"smooth"})};$("closeMistakes").onclick=()=>{$("mistakeBank").hidden=true};
+
+/* --- Akses tes kemampuan: gating khusus siswa --- */
+async function resolveRole(){
+  try{if(window.parent&&window.parent!==window&&window.parent.currentProfile)return window.parent.currentProfile.role}catch(e){}
+  try{
+    const {data}=await window.supabaseClient.auth.getUser();
+    const user=data&&data.user;
+    if(!user)return null;
+    const profileRes=await window.supabaseClient.from("profiles").select("role").eq("id",user.id).single();
+    return profileRes.data&&profileRes.data.role;
+  }catch(e){return null}
+}
+function renderAccessGate(){
+  const empty=accessAssignments.length===0;
+  $("accessEmpty").hidden=!empty;
+  $("accessList").innerHTML=accessAssignments.map(a=>{
+    const isPaket=a.test_kind==="paket";
+    const start=Number(a.test_ref);
+    const limitMinutes=isPaket?60:45;
+    const dueText=a.due_date?`Tenggat ${a.due_date}`:"Tanpa tenggat";
+    return `<button type="button" class="access-card" data-id="${a.id}"><span class="access-mark">${isPaket?"SET":"BAB"}</span><div><b>${escapeHtmlTes(a.title)}</b><small>${dueText} · Batas waktu ${limitMinutes} menit</small></div><span class="access-go">Mulai →</span></button>`;
+  }).join("");
+}
+async function loadAccessAssignments(){
+  $("accessList").innerHTML="";
+  $("accessEmpty").hidden=false;
+  const {data}=await window.supabaseClient.auth.getUser();
+  const user=data&&data.user;
+  if(!user){accessAssignments=[];renderAccessGate();return}
+  const {data:rows,error}=await window.supabaseClient
+    .from("assignments")
+    .select("id, title, due_date, test_kind, test_ref")
+    .eq("siswa_id",user.id)
+    .eq("completed",false)
+    .not("test_kind","is",null)
+    .order("due_date",{ascending:true,nullsFirst:false});
+  accessAssignments=error?[]:(rows||[]);
+  renderAccessGate();
+}
+$("accessList").addEventListener("click",(event)=>{
+  const card=event.target.closest(".access-card");
+  if(!card)return;
+  const assignment=accessAssignments.find(a=>String(a.id)===card.dataset.id);
+  if(!assignment)return;
+  activeAssignmentId=assignment.id;
+  mockPackage=assignment.test_kind==="paket"?assignment.test_ref:"";
+  rangeStart=assignment.test_kind==="bab"?Number(assignment.test_ref):rangeStart;
+  startTest();
+});
+/* Dipanggil dari app.js (mountExamSimulationV2) tiap kali tab Tes
+   Kemampuan dibuka kembali, supaya akses baru dari Sensei langsung
+   muncul tanpa perlu memuat ulang seluruh halaman. Tidak melakukan
+   apa-apa kalau siswa sedang mengerjakan tes (testScreen tampil). */
+window.refreshTestAccess=function(){
+  if(restrictedMode&&$("testScreen").hidden)loadAccessAssignments();
+};
+async function initAccessControl(){
+  const role=await resolveRole();
+  restrictedMode=role==="siswa";
+  $("accessGate").hidden=!restrictedMode;
+  $("manualConfig").hidden=restrictedMode;
+  if(restrictedMode){
+    $("heroExamType").textContent="Akses dari Sensei";$("heroPackage").textContent="Pilih dari daftar";$("heroQuestionTotal").textContent="—";
+    await loadAccessAssignments();
+  }
+}
+initAccessControl();

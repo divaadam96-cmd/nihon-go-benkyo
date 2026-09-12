@@ -105,7 +105,15 @@ create table if not exists public.assignments (
   due_date date,
   completed boolean not null default false,
   completed_at timestamptz,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  -- Akses tes kemampuan (lihat add-assignment-test-access.sql): saat diisi,
+  -- baris ini bukan tugas umum tapi akses ke satu tes tertentu yang harus
+  -- dikerjakan siswa. test_kind='bab' -> test_ref = bab awal rentang 5 bab
+  -- (mis. "1", "6", ...); test_kind='paket' -> test_ref = kunci paket
+  -- (mis. "d03"). Siswa hanya boleh memulai tes kemampuan lewat baris yang
+  -- belum completed di sini.
+  test_kind text check (test_kind in ('bab', 'paket')),
+  test_ref text
 );
 
 alter table public.assignments enable row level security;

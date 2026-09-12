@@ -2946,7 +2946,7 @@ initSakuraPetals();
   const view = document.getElementById("test");
   if (!view) return;
   view.innerHTML =
-    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=18&embed=1" title="Simulasi ujian bahasa Jepang" loading="lazy"></iframe>';
+    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=19&embed=1" title="Simulasi ujian bahasa Jepang" loading="lazy"></iframe>';
   const frame = view.querySelector(".production-test-frame");
   frame.addEventListener("load", () => {
     const frameDocument = frame.contentDocument;
@@ -2969,6 +2969,9 @@ initSakuraPetals();
     if (view.classList.contains("active")) {
       window.scrollTo({ top: 0, behavior: "auto" });
       frame.contentWindow?.scrollTo(0, 0);
+      // Muat ulang daftar akses tes siswa tiap tab ini dibuka, supaya
+      // akses baru dari Sensei (lihat monitor.js) langsung terlihat.
+      frame.contentWindow?.refreshTestAccess?.();
     }
   }).observe(view, { attributes: true, attributeFilter: ["class"] });
 })();

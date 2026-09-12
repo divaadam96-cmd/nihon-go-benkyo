@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="prototype-tes-v2.css?v=6">
+  <link rel="stylesheet" href="prototype-tes-v2.css?v=7">
 </head>
 <body>
   <header class="topbar">
@@ -42,15 +42,21 @@
 
     <section class="start-card" id="startScreen">
       <header><div><span class="eyebrow">01 · ATUR TES</span><h2>Pilih sumber ujian</h2></div><span class="prototype-badge ready">Bank soal aktif</span></header>
-      <div class="exam-choice" id="sourceChoice"><button class="active" data-package=""><span class="exam-mark">BAB</span><div><b>Ujian per 5 Bab</b><small>Kosakata, kanji, tata bahasa, susunan kalimat, bacaan, dan audio dari rentang bab pilihan.</small></div></button><button data-package="d03"><span class="exam-mark">SET</span><div><b>Paket Ujian Siap Pakai</b><small>35 soal format 4 bagian: cara baca kanji, penulisan kanji, kosakata, dan parafrasa.</small></div></button></div>
-      <div class="config-grid">
-        <div class="config-block" id="chapterRangeBlock"><label for="chapterRange">Cakupan materi per 5 Bab</label><select id="chapterRange"><option value="1">Bab 1–5</option><option value="6">Bab 6–10</option><option value="11">Bab 11–15</option><option value="16">Bab 16–20</option><option value="21">Bab 21–25</option><option value="26">Bab 26–30</option><option value="31">Bab 31–35</option><option value="36">Bab 36–40</option><option value="41">Bab 41–45</option><option value="46">Bab 46–50</option></select></div>
-        <div class="config-block"><label>Format pengerjaan</label><div class="simulation-format"><b>Simulasi ujian</b><small>Jawaban dan pembahasan ditampilkan setelah tes selesai.</small></div></div>
-        <div class="config-block"><label>Pengaturan</label><label class="timer-switch"><input id="timerEnabled" type="checkbox" checked><span></span><b>Timer 12 menit</b><small>Dapat dimatikan</small></label></div>
+      <div class="access-gate" id="accessGate" hidden>
+        <div class="access-empty" id="accessEmpty"><b>Belum ada akses tes dari Sensei</b><span>Tes kemampuan hanya bisa dikerjakan setelah Sensei/Operator memberikan akses lewat menu Tugas. Hubungi Sensei kalau kamu siap mengerjakan tes berikutnya.</span></div>
+        <div class="access-list" id="accessList"></div>
       </div>
-      <div class="coverage"><span>PAKET TERPILIH</span><div class="package-preview"><b id="selectedTestName">Ujian per 5 Bab · Bab 1–5</b><small id="selectedRangeText">Materi gabungan diambil dari Bab 1, 2, 3, 4, dan 5.</small></div></div>
-      <div class="question-waiting"><b>Bank soal siap digunakan</b><span>Soal latihan dibuat dari data kosakata, kanji, tata bahasa, bacaan, dan audio lokal.</span></div>
-      <button class="start-button" id="startTest">Mulai simulasi <span>→</span></button>
+      <div id="manualConfig">
+        <div class="exam-choice" id="sourceChoice"><button class="active" data-package=""><span class="exam-mark">BAB</span><div><b>Ujian per 5 Bab</b><small>Kosakata, kanji, tata bahasa, susunan kalimat, bacaan, dan audio dari rentang bab pilihan.</small></div></button><button data-package="d03"><span class="exam-mark">SET</span><div><b>Paket Ujian Siap Pakai</b><small>35 soal format 4 bagian: cara baca kanji, penulisan kanji, kosakata, dan parafrasa.</small></div></button></div>
+        <div class="config-grid">
+          <div class="config-block" id="chapterRangeBlock"><label for="chapterRange">Cakupan materi per 5 Bab</label><select id="chapterRange"><option value="1">Bab 1–5</option><option value="6">Bab 6–10</option><option value="11">Bab 11–15</option><option value="16">Bab 16–20</option><option value="21">Bab 21–25</option><option value="26">Bab 26–30</option><option value="31">Bab 31–35</option><option value="36">Bab 36–40</option><option value="41">Bab 41–45</option><option value="46">Bab 46–50</option></select></div>
+          <div class="config-block"><label>Format pengerjaan</label><div class="simulation-format"><b>Simulasi ujian</b><small>Jawaban dan pembahasan ditampilkan setelah tes selesai.</small></div></div>
+          <div class="config-block"><label>Batas waktu</label><div class="simulation-format" id="timerInfo"><b>Timer 45 menit</b><small>Wajib aktif. Tes selesai otomatis saat waktu habis.</small></div></div>
+        </div>
+        <div class="coverage"><span>PAKET TERPILIH</span><div class="package-preview"><b id="selectedTestName">Ujian per 5 Bab · Bab 1–5</b><small id="selectedRangeText">Materi gabungan diambil dari Bab 1, 2, 3, 4, dan 5.</small></div></div>
+        <div class="question-waiting"><b>Bank soal siap digunakan</b><span>Soal latihan dibuat dari data kosakata, kanji, tata bahasa, bacaan, dan audio lokal.</span></div>
+        <button class="start-button" id="startTest">Mulai simulasi <span>→</span></button>
+      </div>
     </section>
 
     <section class="test-shell" id="testScreen" hidden>
@@ -72,7 +78,8 @@
         <div class="number-grid" id="numberGrid"></div>
         <div class="legend"><span><i class="current"></i>Saat ini</span><span><i class="answered"></i>Terjawab</span><span><i class="flagged"></i>Ditandai</span></div>
         <dl><div><dt>Terjawab</dt><dd id="answeredCount">0 / 10</dd></div><div><dt>Benar sementara</dt><dd id="temporaryScore">0</dd></div><div><dt>Ditandai</dt><dd id="flaggedCount">0</dd></div></dl>
-        <button class="finish-button" id="finishEarly">Selesaikan tes</button>
+        <button class="finish-button" id="finishEarly" disabled>Selesaikan tes</button>
+        <small class="finish-hint" id="finishHint">Jawab semua soal untuk mengaktifkan tombol ini.</small>
       </aside>
     </section>
 
@@ -88,6 +95,6 @@
   </main>
   <script src="data/bab-data.js"></script>
   <script src="data/materi-data.js"></script>
-  <script src="prototype-tes-v2.js?v=17"></script>
+  <script src="prototype-tes-v2.js?v=18"></script>
 </body>
 </html>
