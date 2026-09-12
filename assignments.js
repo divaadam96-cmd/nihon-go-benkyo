@@ -88,7 +88,10 @@ if (assignmentsList) {
   assignmentsList.addEventListener("click", async (event) => {
     const testButton = event.target.closest(".assignment-test-btn");
     if (testButton) {
-      if (typeof window.open === "function") window.open("test");
+      // Bukan window.open("test") - itu API bawaan browser (buka tab baru
+      // ke URL "test", yang tidak ada). Pakai hash yang sudah didengarkan
+      // app.js (openHashView) untuk pindah ke tab SPA yang benar.
+      location.hash = "test";
       return;
     }
     const button = event.target.closest(".assignment-done-btn");
