@@ -23,7 +23,7 @@ function loadStudyReminder() {
     if (!sessionStorage.getItem("studyReminderShownToday")) {
       new Notification("Nihon GO Benkyo", {
         body: "Kamu belum belajar hari ini. Yuk sisihkan beberapa menit!",
-        icon: "icon-192.png",
+        icon: "assets/icons/icon-192.png",
       });
       sessionStorage.setItem("studyReminderShownToday", "1");
     }
@@ -42,7 +42,7 @@ if (studyReminderEnableBtn) {
       studyReminderEnableBtn.hidden = true;
       new Notification("Nihon GO Benkyo", {
         body: "Pengingat belajar aktif. Kami akan mengingatkanmu saat kamu belum belajar hari ini.",
-        icon: "icon-192.png",
+        icon: "assets/icons/icon-192.png",
       });
     }
   });
