@@ -49,7 +49,7 @@ function simplifyLessonMaterials() {
 
 /* Ucapkan teks lewat Web Speech API - dipakai tombol audio penjelasan
    pola grammar (structureGrammarPoints). Sama seperti speak() di
-   prototype-tes-v2.js: browser lama tanpa dukungan speechSynthesis
+   js/pages/latihan.js: browser lama tanpa dukungan speechSynthesis
    cukup diabaikan (tombol tetap ada tapi tidak bersuara), bukan error. */
 function speakText(text, lang) {
   if (!("speechSynthesis" in window) || !text) return;

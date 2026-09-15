@@ -1,6 +1,6 @@
 /* Riwayat hasil simulasi Tes Kemampuan (JLPT/JFT), dipakai untuk XP dan
    status "quiz" di kartu "Rencana hari ini" (app.js), serta panel Pantau
-   Siswa (monitor.js). Baris hasil dikirim dari prototype-tes-v2.js lewat
+   Siswa (monitor.js). Baris hasil dikirim dari js/pages/latihan.js lewat
    window.supabaseClient langsung ke tabel quiz_results.
    Dimuat setelah srs.js (pakai srsToday). */
 

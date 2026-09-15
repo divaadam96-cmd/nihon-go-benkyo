@@ -14,7 +14,7 @@
   "shortcuts": [
     {
       "name": "Belajar Kanji",
-      "url": "index.html#kanji-study",
+      "url": "pages/kanji.html",
       "icons": [{"src": "assets/icons/icon-192.png", "sizes": "192x192"}]
     },
     {

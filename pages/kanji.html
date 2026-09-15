@@ -17,7 +17,7 @@
         if (res.data && res.data.session) {
           document.documentElement.classList.add("page-authed");
         } else {
-          location.replace("index.html");
+          location.replace("../index.html");
         }
       });
     })();
@@ -25,13 +25,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="prototype-kanji-v2.css?v=12">
+  <link rel="stylesheet" href="../css/pages/kanji.css?v=13">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="index.html?build=29"><img src="assets/images/logo.png" alt=""><span><b>Nihon GO Benkyo</b><small>日本語勉強</small></span></a>
+    <a class="brand" href="../index.html?build=29"><img src="../assets/images/logo.png" alt=""><span><b>Nihon GO Benkyo</b><small>日本語勉強</small></span></a>
     <nav><button>Beranda</button><button>Materi</button><button class="active">Kanji</button><button>Hafalan</button><button>Tes</button></nav>
-    <a class="back-app" href="index.html?build=29">Aplikasi utama →</a>
+    <a class="back-app" href="../index.html?build=29">Aplikasi utama →</a>
   </header>
 
   <aside class="sidebar">
@@ -104,9 +104,9 @@
   </main>
 
   <div class="mobile-nav"><button>⌂<span>Beranda</span></button><button>文<span>Materi</span></button><button class="active">漢<span>Kanji</span></button><button>試<span>Tes</span></button></div>
-  <script src="data/kanji-data.js"></script>
-  <script src="data/kanji-stroke-data.js"></script>
-  <script src="srs.js?v=2"></script>
-  <script src="prototype-kanji-v2.js?v=16"></script>
+  <script src="../data/kanji-data.js"></script>
+  <script src="../data/kanji-stroke-data.js"></script>
+  <script src="../js/srs.js?v=3"></script>
+  <script src="kanji.js?v=17"></script>
 </body>
 </html>

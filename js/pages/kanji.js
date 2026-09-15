@@ -792,7 +792,7 @@ document.getElementById("traceToggle").onclick = () => document.querySelector(".
 document.querySelectorAll(".topbar nav button").forEach((button, index) => {
   button.onclick = () => {
     const destinations = ["dashboard", "materials", "kanji-study", "memorization", "test"];
-    location.href = `index.html?build=28#${destinations[index]}`;
+    location.href = `../index.html?build=28#${destinations[index]}`;
   };
 });
 

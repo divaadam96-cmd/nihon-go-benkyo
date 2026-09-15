@@ -17,7 +17,7 @@
         if (res.data && res.data.session) {
           document.documentElement.classList.add("page-authed");
         } else {
-          location.replace("index.html");
+          location.replace("../index.html");
         }
       });
     })();
@@ -25,13 +25,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="prototype-tes-v2.css?v=7">
+  <link rel="stylesheet" href="../css/pages/latihan.css?v=8">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="index.html?build=29"><img src="assets/images/logo.png" alt=""><span><b>Nihon GO Benkyo</b><small>日本語勉強</small></span></a>
+    <a class="brand" href="../index.html?build=29"><img src="../assets/images/logo.png" alt=""><span><b>Nihon GO Benkyo</b><small>日本語勉強</small></span></a>
     <nav>TES KEMAMPUAN</nav>
-    <a class="back-app" href="index.html?build=29">Aplikasi utama →</a>
+    <a class="back-app" href="../index.html?build=29">Aplikasi utama →</a>
   </header>
 
   <main>
@@ -93,8 +93,8 @@
       <p class="disclaimer">Soal dibuat untuk pembelajaran mandiri dan bukan soal ujian resmi.</p>
     </section>
   </main>
-  <script src="data/bab-data.js"></script>
-  <script src="data/materi-data.js"></script>
-  <script src="prototype-tes-v2.js?v=18"></script>
+  <script src="../data/bab-data.js"></script>
+  <script src="../data/materi-data.js"></script>
+  <script src="latihan.js?v=19"></script>
 </body>
 </html>

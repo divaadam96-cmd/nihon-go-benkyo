@@ -103,6 +103,19 @@ function renderDashboardActivity() {
   }
 }
 function open(view) {
+  // Kanji dan Tes kemampuan sekarang halaman sungguhan (pages/kanji.html,
+  // pages/latihan.html), bukan lagi <section> di dalam dokumen ini - alihkan
+  // navigasi apa pun ke "kanji-study"/"test" (klik sidebar/topnav/mobile-nav,
+  // hash lama, tombol "Kerjakan tes") ke halaman itu sebelum logika SPA lama
+  // di bawah ini dijalankan.
+  if (view === "kanji-study") {
+    location.href = "pages/kanji.html";
+    return;
+  }
+  if (view === "test") {
+    location.href = "pages/latihan.html";
+    return;
+  }
   document
     .querySelectorAll(".view")
     .forEach((v) => v.classList.toggle("active", v.id === view));
@@ -180,10 +193,10 @@ function nextCard(master) {
 }
 document.getElementById("again").onclick = () => nextCard(false);
 document.getElementById("known").onclick = () => nextCard(true);
-/* Simulasi ujian yang sesungguhnya dipasang oleh mountExamSimulationV2()
-   di bawah (iframe prototype-tes-v2.html) - #testStart/#quizArea di markup
-   asli sudah ditimpa sebelum ini bisa dipakai, jadi tidak ada handler quiz
-   inline lagi di sini. */
+/* Simulasi ujian yang sesungguhnya sekarang halaman sendiri
+   (pages/latihan.html, lihat redirect "test" di open() di bawah) -
+   #testStart/#quizArea di markup asli sudah tidak pernah aktif, jadi
+   tidak ada handler quiz inline lagi di sini. */
 sync();
 renderCard();
 updateMaster();
@@ -2941,41 +2954,6 @@ document.head.appendChild(animationEnhancementsStyle);
 
 initSakuraPetals();
 
-/* Terapkan pusat simulasi ujian ke aplikasi utama. Bank soal diaktifkan setelah file pengguna tersedia. */
-(function mountExamSimulationV2() {
-  const view = document.getElementById("test");
-  if (!view) return;
-  view.innerHTML =
-    '<iframe class="production-test-frame" data-src="prototype-tes-v2.html?v=19&embed=1" title="Simulasi ujian bahasa Jepang" loading="lazy"></iframe>';
-  const frame = view.querySelector(".production-test-frame");
-  frame.addEventListener("load", () => {
-    const frameDocument = frame.contentDocument;
-    if (!frameDocument) return;
-    // Hanya pakai body.scrollHeight: documentElement.scrollHeight ikut
-    // terkunci ke tinggi iframe saat ini (jadi viewport-nya sendiri),
-    // sehingga tidak pernah mengecil lagi ketika konten menyusut (mis.
-    // klik "Ulangi tes" setelah bank kesalahan yang panjang tampil).
-    const resizeFrame = () => {
-      frame.style.height = `${frameDocument.body.scrollHeight + 4}px`;
-    };
-    resizeFrame();
-    if ("ResizeObserver" in window) {
-      const observer = new ResizeObserver(resizeFrame);
-      observer.observe(frameDocument.body);
-    }
-    frameDocument.fonts?.ready.then(resizeFrame);
-  });
-  new MutationObserver(() => {
-    if (view.classList.contains("active")) {
-      window.scrollTo({ top: 0, behavior: "auto" });
-      frame.contentWindow?.scrollTo(0, 0);
-      // Muat ulang daftar akses tes siswa tiap tab ini dibuka, supaya
-      // akses baru dari Sensei (lihat monitor.js) langsung terlihat.
-      frame.contentWindow?.refreshTestAccess?.();
-    }
-  }).observe(view, { attributes: true, attributeFilter: ["class"] });
-})();
-
 (function initNavIndicator() {
   const nav = document.querySelector(".topnav");
   if (!nav) return;
@@ -3997,39 +3975,6 @@ document.addEventListener("keydown", (event) => {
     originalOpen(view);
   };
 })();
-
-/* Terapkan pengalaman Belajar Kanji V2 yang telah disetujui ke aplikasi utama. */
-(function mountKanjiLearningV2() {
-  const view = document.getElementById("kanji-study");
-  if (!view) return;
-  view.innerHTML =
-    '<iframe class="production-kanji-frame" data-src="prototype-kanji-v2.html?v=18&embed=1" title="Belajar Kanji interaktif" allow="fullscreen" allowfullscreen loading="lazy"></iframe>';
-  const frame = view.querySelector(".production-kanji-frame");
-  frame.addEventListener("load", () => {
-    const frameDocument = frame.contentDocument;
-    if (!frameDocument) return;
-    // Hanya pakai body.scrollHeight: documentElement.scrollHeight ikut
-    // terkunci ke tinggi iframe saat ini (jadi viewport-nya sendiri),
-    // sehingga tidak pernah mengecil lagi ketika konten menyusut (mis.
-    // hasil pencarian/filter kanji jadi lebih sedikit).
-    const resizeFrame = () => {
-      frame.style.height = `${frameDocument.body.scrollHeight + 4}px`;
-    };
-    resizeFrame();
-    if ("ResizeObserver" in window) {
-      const observer = new ResizeObserver(resizeFrame);
-      observer.observe(frameDocument.body);
-    }
-    frameDocument.fonts?.ready.then(resizeFrame);
-  });
-  new MutationObserver(() => {
-    if (view.classList.contains("active")) {
-      window.scrollTo({ top: 0, behavior: "auto" });
-      frame.contentWindow?.scrollTo(0, 0);
-    }
-  }).observe(view, { attributes: true, attributeFilter: ["class"] });
-})();
-
 
 }
 window.initApp = initApp;
