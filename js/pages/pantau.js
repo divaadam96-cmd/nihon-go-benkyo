@@ -28,6 +28,9 @@ const monitorDetailId = document.getElementById("monitorDetailId");
 const monitorDetailAvatar = document.getElementById("monitorDetailAvatar");
 const monitorDetailStats = document.getElementById("monitorDetailStats");
 const monitorAttentionSlot = document.getElementById("monitorAttentionSlot");
+const monitorQuizSection = document.getElementById("monitorQuizSection");
+const monitorQuizCount = document.getElementById("monitorQuizCount");
+const monitorQuizList = document.getElementById("monitorQuizList");
 const monitorResetBtn = document.getElementById("monitorResetBtn");
 const monitorResetError = document.getElementById("monitorResetError");
 const monitorDetailClose = document.getElementById("monitorDetailClose");
@@ -108,6 +111,56 @@ function formatActivityDate(value) {
     month: "short",
     year: "numeric",
   }).format(date);
+}
+
+function formatQuizDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value || "-";
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
+function quizScorePercent(row) {
+  return row.total_count ? Math.round((row.correct_count / row.total_count) * 100) : 0;
+}
+
+function quizAveragePercent(quizRows) {
+  if (!quizRows.length) return null;
+  const sum = quizRows.reduce((total, row) => total + quizScorePercent(row), 0);
+  return Math.round(sum / quizRows.length);
+}
+
+/* Rincian nilai per sesi tes untuk Sensei/Operator: skor keseluruhan lalu
+   bagian (kategori soal, lihat categoryScores() di js/pages/latihan.js)
+   yang masih banyak salah, diurutkan dari sesi terbaru. */
+function quizHistoryHtml(quizRows) {
+  if (!quizRows.length) {
+    return '<p class="muted">Belum ada tes yang dikerjakan.</p>';
+  }
+  const sorted = quizRows.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  return sorted
+    .map((row) => {
+      const percent = quizScorePercent(row);
+      const categories = Object.entries(row.category_scores || {});
+      const tagsHtml = categories.length
+        ? categories
+            .map(([label, score]) => {
+              const correct = (score && score.correct) || 0;
+              const total = (score && score.total) || 0;
+              const wrong = total - correct;
+              const tagClass = wrong > 0 ? "monitor-quiz-tag wrong" : "monitor-quiz-tag";
+              return `<span class="${tagClass}">${escapeHtml(label)} · ${correct}/${total}${wrong > 0 ? ` (${wrong} salah)` : ""}</span>`;
+            })
+            .join("")
+        : '<span class="monitor-quiz-tag">Rincian bagian tidak tersedia</span>';
+      return `<div class="monitor-quiz-row${percent < 60 ? " due" : ""}"><div class="monitor-quiz-row-head"><b>${percent}%</b><span>${row.correct_count}/${row.total_count} benar</span><small>${formatQuizDate(row.created_at)}</small></div><div class="monitor-quiz-breakdown">${tagsHtml}</div></div>`;
+    })
+    .join("");
 }
 
 /* XP siswa dihitung dengan formula sama seperti totalXp() di app.js:
@@ -208,6 +261,7 @@ function renderMonitorDetail(student) {
   ];
   const xp = remoteXp(student.remote.activity, student.quiz);
   const quizCount = student.quiz.length;
+  const quizAvg = quizAveragePercent(student.quiz);
   const streak = remoteStreak(student.remote.activity);
   const lastActive = remoteLastActive(student.remote.activity);
   const reviewCount = student.remote.activity.reduce((sum, row) => sum + (row.count || 0), 0);
@@ -231,14 +285,17 @@ function renderMonitorDetail(student) {
         .join("")}</div></details>`
     : '<div class="monitor-all-clear"><span>✓</span><div><b>Tidak ada item yang perlu perhatian</b><small>Progres yang sudah direkam berada dalam kondisi baik.</small></div></div>';
 
-  monitorDetailStats.innerHTML = `<div class="monitor-summary-grid"><article><span>XP</span><b>${xp.toLocaleString("id-ID")}</b><small>Total pengalaman</small></article><article><span>STREAK</span><b>${streak} hari</b><small>Konsistensi belajar</small></article><article><span>TES</span><b>${quizCount} sesi</b><small>Tes diselesaikan</small></article><article><span>AKTIF</span><b>${formatActivityDate(lastActive)}</b><small>${reviewCount.toLocaleString("id-ID")} aktivitas tercatat</small></article></div><section class="monitor-progress-overview"><header><div><span>PROGRES BELAJAR</span><h4>Penguasaan per kategori</h4></div><small>${student.remote.progress.length} item tersimpan</small></header><div class="monitor-progress-grid">${categoryCards}</div></section>`;
+  monitorDetailStats.innerHTML = `<div class="monitor-summary-grid"><article><span>XP</span><b>${xp.toLocaleString("id-ID")}</b><small>Total pengalaman</small></article><article><span>STREAK</span><b>${streak} hari</b><small>Konsistensi belajar</small></article><article><span>TES</span><b>${quizCount} sesi</b><small>${quizAvg === null ? "Tes diselesaikan" : `Rata-rata nilai ${quizAvg}%`}</small></article><article><span>AKTIF</span><b>${formatActivityDate(lastActive)}</b><small>${reviewCount.toLocaleString("id-ID")} aktivitas tercatat</small></article></div><section class="monitor-progress-overview"><header><div><span>PROGRES BELAJAR</span><h4>Penguasaan per kategori</h4></div><small>${student.remote.progress.length} item tersimpan</small></header><div class="monitor-progress-grid">${categoryCards}</div></section>`;
   monitorAttentionSlot.innerHTML = attentionHtml;
+  monitorQuizCount.textContent = `${quizCount} sesi`;
+  monitorQuizList.innerHTML = quizHistoryHtml(student.quiz);
   monitorResetError.hidden = true;
   monitorResetBtn.disabled = false;
   monitorResetBtn.textContent = "Reset progres siswa ini";
   monitorAssignmentError.hidden = true;
   monitorAssignmentForm.reset();
   updateAssignmentFormMode();
+  monitorQuizSection.open = false;
   monitorAssignmentSection.open = false;
   monitorDangerSection.open = false;
   monitorAssignmentCount.textContent = "Memuat…";

@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="../css/legacy-part-2.css?build=80">
   <link rel="stylesheet" href="../css/legacy-part-3.css?build=80">
   <link rel="stylesheet" href="../css/legacy-part-4.css?build=81">
-  <link rel="stylesheet" href="../css/pages/pantau.css?v=2">
+  <link rel="stylesheet" href="../css/pages/pantau.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body class="auth-checking">
@@ -33,6 +33,11 @@
 
           <div class="monitor-secondary-list">
             <div id="monitorAttentionSlot"></div>
+
+            <details class="monitor-disclosure" id="monitorQuizSection">
+              <summary><span><b>Riwayat tes</b><small>Nilai dan bagian yang masih salah tiap sesi.</small></span><strong id="monitorQuizCount">Memuat…</strong></summary>
+              <div class="monitor-quiz-list" id="monitorQuizList"></div>
+            </details>
 
             <details class="monitor-disclosure" id="monitorAssignmentSection">
               <summary><span><b>Tugas &amp; akses tes</b><small>Kelola tugas aktif dan riwayatnya.</small></span><strong id="monitorAssignmentCount">Memuat…</strong></summary>
@@ -63,10 +68,10 @@
 </main>
 <script src="../js/pwa.js?v=2"></script>
 <script src="../js/srs.js?v=5"></script>
-<script src="../js/quiz-results.js?v=2"></script>
+<script src="../js/quiz-results.js?v=3"></script>
 <script src="../js/app-effects.js?v=5"></script>
 <script src="../js/app-sidebar.js?v=2"></script>
 <script src="../js/app-shell.js?v=3"></script>
-<script src="../js/pages/pantau.js?v=3"></script>
+<script src="../js/pages/pantau.js?v=4"></script>
 <script src="../js/auth.js?v=7"></script>
 </body></html>
