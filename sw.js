@@ -1,8 +1,8 @@
-const CACHE_NAME = 'nihon-go-benkyo-v111';
+const CACHE_NAME = 'nihon-go-benkyo-v113';
 const ASSETS = [
   'index.html',
   'css/legacy-part-1.css?build=80', 'css/legacy-part-2.css?build=80', 'css/legacy-part-3.css?build=80', 'css/legacy-part-4.css?build=80',
-  'js/app-shell.js?v=1', 'js/app-sidebar.js?v=2', 'js/app-effects.js?v=5', 'js/quiz-results.js?v=2', 'js/srs.js?v=5', 'js/auth.js?v=6', 'js/assignments.js?v=4', 'js/pwa.js?v=2',
+  'js/app-shell.js?v=2', 'js/app-sidebar.js?v=2', 'js/app-effects.js?v=5', 'js/quiz-results.js?v=2', 'js/srs.js?v=5', 'js/auth.js?v=6', 'js/assignments.js?v=5', 'js/pwa.js?v=2',
   'js/pages/dashboard.js?v=1',
   'nihon-go-benkyo.webmanifest',
   'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png',

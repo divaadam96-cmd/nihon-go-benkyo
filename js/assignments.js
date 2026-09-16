@@ -1,7 +1,7 @@
 /* Dashboard Siswa: daftar "Tugas dari Sensei" + banner pengingat belajar
-   harian. Dimuat setelah admin.js (escapeHtml) dan srs.js (srsTodayCount,
-   srsStreak). Dipanggil dari app.js (renderDashboardActivity) setiap kali
-   dashboard dibuka/di-refresh. */
+   harian. Dimuat setelah app-shell.js (escapeHtml) dan srs.js (srsTodayCount,
+   srsStreak). Dipanggil dari js/pages/dashboard.js (renderDashboardActivity)
+   setiap kali dashboard dibuka/di-refresh. */
 
 const studyReminderBanner = document.getElementById("studyReminderBanner");
 const studyReminderText = document.getElementById("studyReminderText");
@@ -88,10 +88,10 @@ if (assignmentsList) {
   assignmentsList.addEventListener("click", async (event) => {
     const testButton = event.target.closest(".assignment-test-btn");
     if (testButton) {
-      // Bukan window.open("test") - itu API bawaan browser (buka tab baru
-      // ke URL "test", yang tidak ada). Pakai hash yang sudah didengarkan
-      // app.js (openHashView) untuk pindah ke tab SPA yang benar.
-      location.hash = "test";
+      // app-shell.js sengaja menyediakan window.open(view) sebagai satu pintu
+      // navigasi. Setelah migrasi multi-halaman, view "test" mengarah ke
+      // pages/latihan.html, bukan lagi section/hash SPA di index.html.
+      window.open("test");
       return;
     }
     const button = event.target.closest(".assignment-done-btn");

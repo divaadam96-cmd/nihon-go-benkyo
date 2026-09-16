@@ -137,7 +137,9 @@
 
   function openHashView() {
     const view = location.hash.slice(1);
-    if (view && document.getElementById(view)) open(view);
+    // Terima hash dari bookmark/shortcut versi SPA lama, lalu teruskan ke
+    // halaman barunya. Dashboard masih memakai elemen #dashboard di index.
+    if (view && (PAGE_FOR_VIEW[view] || document.getElementById(view))) open(view);
   }
   window.addEventListener("hashchange", openHashView);
 

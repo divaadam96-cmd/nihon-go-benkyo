@@ -19,12 +19,12 @@
     },
     {
       "name": "Materi pelajaran",
-      "url": "index.html#materials",
+      "url": "pages/materi.html",
       "icons": [{"src": "assets/icons/icon-192.png", "sizes": "192x192"}]
     },
     {
       "name": "Hafalan",
-      "url": "index.html#memorization",
+      "url": "pages/hafalan.html",
       "icons": [{"src": "assets/icons/icon-192.png", "sizes": "192x192"}]
     }
   ]
