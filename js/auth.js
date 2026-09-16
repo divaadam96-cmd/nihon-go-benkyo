@@ -81,6 +81,7 @@ async function revealApp(profile) {
   document.getElementById("accountName").textContent = profile.full_name;
   document.getElementById("accountRole").textContent = ROLE_LABELS[profile.role] || profile.role;
   await srsHydrateFromRemote(profile.id);
+  document.body.classList.remove("auth-checking");
   document.body.classList.add("authed");
   loginScreenEl.style.display = "none";
   // initPage() (didefinisikan js/pages/*.js, beda-beda per halaman) mengisi
@@ -99,17 +100,33 @@ async function revealApp(profile) {
 }
 
 async function trySession() {
-  if (isPasswordRecoveryLink) return;
-  const { data } = await window.supabaseClient.auth.getSession();
-  const session = data?.session;
-  if (!session) return;
-  const profile = await fetchProfile(session.user.id);
-  if (!profile) {
-    showLoginError("Akun ini belum punya profil peran. Hubungi Operator.");
-    await window.supabaseClient.auth.signOut();
+  if (isPasswordRecoveryLink) {
+    loginFormEl.hidden = true;
+    forgotFormEl.hidden = true;
+    resetPasswordFormEl.hidden = false;
+    document.body.classList.remove("auth-checking");
     return;
   }
-  await revealApp(profile);
+  try {
+    const { data, error } = await window.supabaseClient.auth.getSession();
+    const session = data?.session;
+    if (error || !session) {
+      document.body.classList.remove("auth-checking");
+      return;
+    }
+    const profile = await fetchProfile(session.user.id);
+    if (!profile) {
+      showLoginError("Akun ini belum punya profil peran. Hubungi Operator.");
+      await window.supabaseClient.auth.signOut();
+      document.body.classList.remove("auth-checking");
+      return;
+    }
+    await revealApp(profile);
+  } catch (error) {
+    console.error("Gagal memeriksa sesi:", error);
+    showLoginError("Sesi belum dapat diperiksa. Periksa koneksi lalu muat ulang halaman.");
+    document.body.classList.remove("auth-checking");
+  }
 }
 
 loginFormEl.addEventListener("submit", async (event) => {
