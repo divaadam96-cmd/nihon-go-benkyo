@@ -383,7 +383,6 @@ const curatedBabPackages={
 };
 
 const $=id=>document.getElementById(id);
-const testTypeLabels={vocabulary:"Kosakata",kanji:"Kanji",grammar:"Tata Bahasa",sentence:"Susunan Kalimat",reading:"Bacaan",audio:"Audio",situational:"Situasional"};
 let questions=[...defaultQuestions],testType="vocabulary",rangeStart=1,mockPackage="",current=0,mode="simulation",answers=Array(questions.length).fill(null),checked=Array(questions.length).fill(false),flags=Array(questions.length).fill(false),furigana=true,timerId=null,seconds=720,reviewOnly=false,reviewIndexes=[];
 /* Kontrol akses tes kemampuan: siswa cuma boleh mulai tes lewat akses yang
    sudah diberikan Sensei/Operator (baris `assignments` dengan test_kind
