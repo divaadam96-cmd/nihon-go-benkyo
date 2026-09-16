@@ -27,6 +27,7 @@ const monitorDetailName = document.getElementById("monitorDetailName");
 const monitorDetailId = document.getElementById("monitorDetailId");
 const monitorDetailAvatar = document.getElementById("monitorDetailAvatar");
 const monitorDetailStats = document.getElementById("monitorDetailStats");
+const monitorAttentionSlot = document.getElementById("monitorAttentionSlot");
 const monitorResetBtn = document.getElementById("monitorResetBtn");
 const monitorResetError = document.getElementById("monitorResetError");
 const monitorDetailClose = document.getElementById("monitorDetailClose");
@@ -230,7 +231,8 @@ function renderMonitorDetail(student) {
         .join("")}</div></details>`
     : '<div class="monitor-all-clear"><span>✓</span><div><b>Tidak ada item yang perlu perhatian</b><small>Progres yang sudah direkam berada dalam kondisi baik.</small></div></div>';
 
-  monitorDetailStats.innerHTML = `<div class="monitor-summary-grid"><article><span>XP</span><b>${xp.toLocaleString("id-ID")}</b><small>Total pengalaman</small></article><article><span>STREAK</span><b>${streak} hari</b><small>Konsistensi belajar</small></article><article><span>TES</span><b>${quizCount} sesi</b><small>Tes diselesaikan</small></article><article><span>AKTIF</span><b>${formatActivityDate(lastActive)}</b><small>${reviewCount.toLocaleString("id-ID")} aktivitas tercatat</small></article></div><section class="monitor-progress-overview"><header><div><span>PROGRES BELAJAR</span><h4>Penguasaan per kategori</h4></div><small>${student.remote.progress.length} item tersimpan</small></header><div class="monitor-progress-grid">${categoryCards}</div></section>${attentionHtml}`;
+  monitorDetailStats.innerHTML = `<div class="monitor-summary-grid"><article><span>XP</span><b>${xp.toLocaleString("id-ID")}</b><small>Total pengalaman</small></article><article><span>STREAK</span><b>${streak} hari</b><small>Konsistensi belajar</small></article><article><span>TES</span><b>${quizCount} sesi</b><small>Tes diselesaikan</small></article><article><span>AKTIF</span><b>${formatActivityDate(lastActive)}</b><small>${reviewCount.toLocaleString("id-ID")} aktivitas tercatat</small></article></div><section class="monitor-progress-overview"><header><div><span>PROGRES BELAJAR</span><h4>Penguasaan per kategori</h4></div><small>${student.remote.progress.length} item tersimpan</small></header><div class="monitor-progress-grid">${categoryCards}</div></section>`;
+  monitorAttentionSlot.innerHTML = attentionHtml;
   monitorResetError.hidden = true;
   monitorResetBtn.disabled = false;
   monitorResetBtn.textContent = "Reset progres siswa ini";

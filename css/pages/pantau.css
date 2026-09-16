@@ -91,6 +91,7 @@ body.monitor-modal-open {
 }
 
 .monitor-detail-close:focus-visible,
+.monitor-attention > summary:focus-visible,
 .monitor-disclosure > summary:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
@@ -98,7 +99,8 @@ body.monitor-modal-open {
 
 .monitor-detail-body {
   display: grid;
-  gap: 14px;
+  align-content: start;
+  gap: 12px;
   padding: 18px 22px 22px;
   overflow-y: auto;
   min-height: 0;
@@ -106,21 +108,27 @@ body.monitor-modal-open {
 }
 
 .monitor-detail-stats {
-  gap: 14px;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
 }
 
 .monitor-summary-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 9px;
+  gap: 0;
+  border-bottom: 1px solid var(--line);
 }
 
 .monitor-summary-grid article {
   min-width: 0;
-  padding: 12px 13px;
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  background: #fff;
+  padding: 13px 15px;
+}
+
+.monitor-summary-grid article + article {
+  border-left: 1px solid var(--line);
 }
 
 .monitor-summary-grid span,
@@ -155,9 +163,6 @@ body.monitor-modal-open {
 
 .monitor-progress-overview {
   padding: 15px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  background: #fff;
 }
 
 .monitor-progress-overview > header {
@@ -183,15 +188,24 @@ body.monitor-modal-open {
 .monitor-progress-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 9px;
+  gap: 0;
 }
 
 .monitor-progress-card {
   min-width: 0;
-  padding: 11px;
-  border: 1px solid #e2ddd2;
-  border-radius: 10px;
-  background: var(--wash);
+  padding: 4px 13px;
+}
+
+.monitor-progress-card:first-child {
+  padding-left: 0;
+}
+
+.monitor-progress-card:last-child {
+  padding-right: 0;
+}
+
+.monitor-progress-card + .monitor-progress-card {
+  border-left: 1px solid var(--line);
 }
 
 .monitor-progress-card header {
@@ -207,7 +221,7 @@ body.monitor-modal-open {
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: #fff;
+  background: var(--wash);
   color: var(--navy);
   font-weight: 700;
 }
@@ -270,17 +284,27 @@ body.monitor-modal-open {
   font-weight: 700;
 }
 
-.monitor-attention,
-.monitor-disclosure,
-.monitor-all-clear {
+.monitor-secondary-list {
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: #fff;
 }
 
+.monitor-secondary-list > * + * {
+  border-top: 1px solid var(--line);
+}
+
+.monitor-secondary-list > #monitorAttentionSlot:empty {
+  display: none;
+}
+
 .monitor-attention,
 .monitor-disclosure {
   overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .monitor-attention > summary,
@@ -375,8 +399,7 @@ body.monitor-modal-open {
   align-items: center;
   gap: 11px;
   padding: 12px 14px;
-  border-color: #c7ddcb;
-  background: #f2f8f3;
+  background: #f5f9f5;
 }
 
 .monitor-all-clear > span {
@@ -464,8 +487,39 @@ body.monitor-modal-open {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .monitor-summary-grid article + article {
+    border-left: 0;
+  }
+
+  .monitor-summary-grid article:nth-child(even) {
+    border-left: 1px solid var(--line);
+  }
+
+  .monitor-summary-grid article:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+
   .monitor-progress-grid {
     grid-template-columns: 1fr;
+  }
+
+  .monitor-progress-card,
+  .monitor-progress-card:first-child,
+  .monitor-progress-card:last-child {
+    padding: 10px 0;
+  }
+
+  .monitor-progress-card:first-child {
+    padding-top: 2px;
+  }
+
+  .monitor-progress-card:last-child {
+    padding-bottom: 2px;
+  }
+
+  .monitor-progress-card + .monitor-progress-card {
+    border-top: 1px solid var(--line);
+    border-left: 0;
   }
 
   .monitor-progress-card footer {
