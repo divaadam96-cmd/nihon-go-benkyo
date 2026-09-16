@@ -1,0 +1,533 @@
+/* Detail Pantau Siswa: ringkas di awal, detail dibuka saat diperlukan. */
+body.monitor-modal-open {
+  overflow: hidden;
+}
+
+.monitor-detail-overlay {
+  align-items: center;
+  padding: clamp(12px, 3vw, 28px);
+  backdrop-filter: blur(5px);
+}
+
+.monitor-detail-card {
+  width: min(920px, 100%);
+  max-height: min(88vh, 820px);
+  grid-template-rows: auto minmax(0, 1fr);
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid #ffffff4d;
+  border-radius: 18px;
+}
+
+.monitor-detail-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(135deg, #fff 0%, var(--wash) 100%);
+}
+
+.monitor-student-avatar {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid #cba66b;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  font: 700 18px "DM Sans", sans-serif;
+}
+
+.monitor-detail-header > div {
+  min-width: 0;
+}
+
+.monitor-detail-kicker {
+  display: block;
+  margin-bottom: 2px;
+  color: #9b712e;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.monitor-detail-card .monitor-detail-header h3 {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--navy);
+  font-size: 19px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monitor-detail-header small {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monitor-detail-close {
+  position: static;
+  width: 34px;
+  height: 34px;
+  font-size: 20px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.monitor-detail-close:hover {
+  background: #e7dfd0;
+  transform: rotate(6deg);
+}
+
+.monitor-detail-close:focus-visible,
+.monitor-disclosure > summary:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.monitor-detail-body {
+  display: grid;
+  gap: 14px;
+  padding: 18px 22px 22px;
+  overflow-y: auto;
+  min-height: 0;
+  overscroll-behavior: contain;
+}
+
+.monitor-detail-stats {
+  gap: 14px;
+}
+
+.monitor-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.monitor-summary-grid article {
+  min-width: 0;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #fff;
+}
+
+.monitor-summary-grid span,
+.monitor-progress-overview > header span {
+  display: block;
+  color: #9b712e;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.monitor-summary-grid b {
+  display: block;
+  margin: 4px 0 1px;
+  overflow: hidden;
+  color: var(--navy);
+  font-size: clamp(15px, 2vw, 20px);
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monitor-summary-grid small {
+  display: block;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monitor-progress-overview {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+}
+
+.monitor-progress-overview > header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+
+.monitor-progress-overview h4 {
+  margin: 3px 0 0;
+  color: var(--navy);
+  font-size: 14px;
+}
+
+.monitor-progress-overview > header > small {
+  color: var(--muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.monitor-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.monitor-progress-card {
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid #e2ddd2;
+  border-radius: 10px;
+  background: var(--wash);
+}
+
+.monitor-progress-card header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.monitor-progress-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.monitor-progress-card header div {
+  min-width: 0;
+}
+
+.monitor-progress-card header b,
+.monitor-progress-card header small {
+  display: block;
+}
+
+.monitor-progress-card header b {
+  color: var(--navy);
+  font-size: 12px;
+}
+
+.monitor-progress-card header small {
+  margin-top: 1px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.monitor-progress-card header strong {
+  color: var(--navy);
+  font-size: 13px;
+}
+
+.monitor-progress-track {
+  height: 5px;
+  margin: 11px 0 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #ded9cf;
+}
+
+.monitor-progress-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #c9a45f, var(--navy));
+}
+
+.monitor-progress-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.monitor-progress-card footer span:last-child {
+  text-align: right;
+}
+
+.monitor-progress-card footer .is-due {
+  color: #a54234;
+  font-weight: 700;
+}
+
+.monitor-attention,
+.monitor-disclosure,
+.monitor-all-clear {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.monitor-attention,
+.monitor-disclosure {
+  overflow: hidden;
+}
+
+.monitor-attention > summary,
+.monitor-disclosure > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 15px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.monitor-attention > summary::-webkit-details-marker,
+.monitor-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.monitor-attention > summary::after,
+.monitor-disclosure > summary::after {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--wash);
+  color: var(--navy);
+  content: "+";
+  font-size: 16px;
+  line-height: 1;
+}
+
+.monitor-attention[open] > summary::after,
+.monitor-disclosure[open] > summary::after {
+  content: "−";
+}
+
+.monitor-attention summary span,
+.monitor-disclosure summary span {
+  min-width: 0;
+}
+
+.monitor-attention summary b,
+.monitor-attention summary small,
+.monitor-disclosure summary b,
+.monitor-disclosure summary small {
+  display: block;
+}
+
+.monitor-attention summary b,
+.monitor-disclosure summary b {
+  color: var(--navy);
+  font-size: 12px;
+}
+
+.monitor-attention summary small,
+.monitor-disclosure summary small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.monitor-attention summary strong,
+.monitor-disclosure summary strong {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--muted);
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.monitor-weak-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 0 14px 14px;
+}
+
+.monitor-weak-row {
+  min-width: 0;
+  margin: 0;
+}
+
+.monitor-weak-row span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.monitor-all-clear {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 14px;
+  border-color: #c7ddcb;
+  background: #f2f8f3;
+}
+
+.monitor-all-clear > span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #dcefe0;
+  color: #2f6b2a;
+  font-weight: 800;
+}
+
+.monitor-all-clear b,
+.monitor-all-clear small {
+  display: block;
+}
+
+.monitor-all-clear b {
+  color: #2f6b2a;
+  font-size: 12px;
+}
+
+.monitor-all-clear small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.monitor-assignments {
+  gap: 10px;
+  padding: 14px 15px 15px;
+  border-top: 1px solid var(--line);
+}
+
+#monitorAssignmentForm {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--wash);
+}
+
+#monitorAssignmentForm input,
+#monitorAssignmentForm select,
+#monitorAssignmentForm button {
+  min-width: 0;
+}
+
+.monitor-danger-zone > summary b {
+  color: #92382a;
+}
+
+.monitor-danger-zone > div {
+  padding: 0 15px 15px;
+}
+
+.monitor-danger-zone button.danger {
+  width: auto;
+}
+
+@media (max-width: 760px) {
+  .monitor-detail-overlay {
+    align-items: stretch;
+    padding: 0;
+  }
+
+  .monitor-detail-card {
+    width: 100%;
+    height: 100dvh;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .monitor-detail-header {
+    padding: 14px 16px;
+  }
+
+  .monitor-detail-body {
+    padding: 14px 16px 20px;
+  }
+
+  .monitor-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .monitor-progress-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .monitor-progress-card footer {
+    font-size: 10px;
+  }
+
+  .monitor-weak-items {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 430px) {
+  .monitor-student-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .monitor-detail-header {
+    gap: 10px;
+  }
+
+  .monitor-detail-card .monitor-detail-header h3 {
+    font-size: 16px;
+  }
+
+  .monitor-summary-grid article {
+    padding: 10px;
+  }
+
+  .monitor-progress-overview > header {
+    align-items: start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .monitor-attention > summary,
+  .monitor-disclosure > summary {
+    padding: 12px;
+  }
+
+  .monitor-weak-row,
+  .monitor-assignment-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .monitor-weak-row small,
+  .monitor-progress-card footer span:last-child {
+    text-align: left;
+  }
+
+  #monitorAssignmentForm input[type="text"],
+  #monitorAssignmentForm input[type="date"],
+  #monitorAssignmentForm select,
+  #monitorAssignmentForm button {
+    width: 100%;
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .monitor-detail-close {
+    transition: none;
+  }
+}

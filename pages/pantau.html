@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="../css/legacy-part-2.css?build=80">
   <link rel="stylesheet" href="../css/legacy-part-3.css?build=80">
   <link rel="stylesheet" href="../css/legacy-part-4.css?build=80">
+  <link rel="stylesheet" href="../css/pages/pantau.css?v=1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
@@ -21,27 +22,37 @@
     <div class="head"><div><div class="eyebrow">Pantau perkembangan</div><h1>Progres siswa.</h1><p>Lihat progres belajar setiap siswa. Klik satu siswa untuk detail dan opsi reset.</p></div></div>
     <div id="monitorList" class="monitor-list"><p class="muted">Memuat…</p></div>
     <div id="monitorDetail" class="monitor-detail-overlay" hidden>
-      <div class="monitor-detail-card">
-        <button type="button" class="monitor-detail-close" id="monitorDetailClose">&times;</button>
-        <h3 id="monitorDetailName"></h3>
-        <small id="monitorDetailId"></small>
-        <div class="monitor-detail-stats" id="monitorDetailStats"></div>
-        <div class="monitor-assignments">
-          <h4>Tugas</h4>
-          <div id="monitorAssignmentList"></div>
-          <form id="monitorAssignmentForm">
-            <div class="assignment-type-choice"><label><input type="radio" name="assignmentType" value="umum" checked><span>Tugas umum</span></label><label><input type="radio" name="assignmentType" value="bab"><span>Akses latihan per 5 Bab</span></label><label><input type="radio" name="assignmentType" value="paket"><span>Akses simulasi paket</span></label></div>
-            <input type="text" id="monitorAssignmentTitle" placeholder="Judul tugas, mis. Selesaikan Pelajaran 3" required autocomplete="off">
-            <select id="monitorAssignmentBab" hidden><option value="1">Bab 1–5</option><option value="6">Bab 6–10</option><option value="11">Bab 11–15</option><option value="16">Bab 16–20</option><option value="21">Bab 21–25</option><option value="26">Bab 26–30</option><option value="31">Bab 31–35</option><option value="36">Bab 36–40</option><option value="41">Bab 41–45</option><option value="46">Bab 46–50</option></select>
-            <select id="monitorAssignmentPaket" hidden><option value="d03">Paket Ujian · Kosakata &amp; Kanji (Set 03)</option></select>
-            <input type="date" id="monitorAssignmentDue">
-            <button type="submit" class="secondary">Beri tugas</button>
-          </form>
-          <p id="monitorAssignmentHint" class="muted">Akses tes: siswa hanya bisa mengerjakan tes kemampuan tersebut setelah diberi akses di sini. Latihan per 5 Bab dibatasi 45 menit, simulasi paket dibatasi 60 menit — tes selesai otomatis saat waktu habis.</p>
-          <p id="monitorAssignmentError" class="login-error" hidden></p>
+      <div class="monitor-detail-card" role="dialog" aria-modal="true" aria-labelledby="monitorDetailName">
+        <header class="monitor-detail-header">
+          <span class="monitor-student-avatar" id="monitorDetailAvatar" aria-hidden="true">S</span>
+          <div><span class="monitor-detail-kicker">Ringkasan siswa</span><h3 id="monitorDetailName"></h3><small id="monitorDetailId"></small></div>
+          <button type="button" class="monitor-detail-close" id="monitorDetailClose" aria-label="Tutup detail siswa">&times;</button>
+        </header>
+        <div class="monitor-detail-body">
+          <div class="monitor-detail-stats" id="monitorDetailStats"></div>
+
+          <details class="monitor-disclosure" id="monitorAssignmentSection">
+            <summary><span><b>Tugas &amp; akses tes</b><small>Kelola tugas aktif dan riwayatnya.</small></span><strong id="monitorAssignmentCount">Memuat…</strong></summary>
+            <div class="monitor-assignments">
+              <div id="monitorAssignmentList"></div>
+              <form id="monitorAssignmentForm">
+                <div class="assignment-type-choice"><label><input type="radio" name="assignmentType" value="umum" checked><span>Tugas umum</span></label><label><input type="radio" name="assignmentType" value="bab"><span>Akses latihan per 5 Bab</span></label><label><input type="radio" name="assignmentType" value="paket"><span>Akses simulasi paket</span></label></div>
+                <input type="text" id="monitorAssignmentTitle" placeholder="Judul tugas, mis. Selesaikan Pelajaran 3" required autocomplete="off">
+                <select id="monitorAssignmentBab" hidden><option value="1">Bab 1–5</option><option value="6">Bab 6–10</option><option value="11">Bab 11–15</option><option value="16">Bab 16–20</option><option value="21">Bab 21–25</option><option value="26">Bab 26–30</option><option value="31">Bab 31–35</option><option value="36">Bab 36–40</option><option value="41">Bab 41–45</option><option value="46">Bab 46–50</option></select>
+                <select id="monitorAssignmentPaket" hidden><option value="d03">Paket Ujian · Kosakata &amp; Kanji (Set 03)</option></select>
+                <input type="date" id="monitorAssignmentDue">
+                <button type="submit" class="secondary">Beri tugas</button>
+              </form>
+              <p id="monitorAssignmentHint" class="muted">Akses tes: latihan per 5 Bab dibatasi 45 menit dan simulasi paket 60 menit. Tes selesai otomatis saat waktu habis.</p>
+              <p id="monitorAssignmentError" class="login-error" hidden></p>
+            </div>
+          </details>
+
+          <details class="monitor-disclosure monitor-danger-zone" id="monitorDangerSection">
+            <summary><span><b>Pengaturan progres</b><small>Tindakan khusus untuk data belajar siswa.</small></span></summary>
+            <div><p id="monitorResetError" class="login-error" hidden></p><button type="button" class="danger" id="monitorResetBtn">Reset seluruh progres siswa</button></div>
+          </details>
         </div>
-        <p id="monitorResetError" class="login-error" hidden></p>
-        <button type="button" class="danger" id="monitorResetBtn">Reset progres siswa ini</button>
       </div>
     </div>
   </div>
@@ -52,6 +63,6 @@
 <script src="../js/app-effects.js?v=5"></script>
 <script src="../js/app-sidebar.js?v=2"></script>
 <script src="../js/app-shell.js?v=2"></script>
-<script src="../js/pages/pantau.js?v=1"></script>
+<script src="../js/pages/pantau.js?v=2"></script>
 <script src="../js/auth.js?v=6"></script>
 </body></html>

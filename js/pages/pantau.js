@@ -25,10 +25,14 @@ const monitorListEl = document.getElementById("monitorList");
 const monitorDetailEl = document.getElementById("monitorDetail");
 const monitorDetailName = document.getElementById("monitorDetailName");
 const monitorDetailId = document.getElementById("monitorDetailId");
+const monitorDetailAvatar = document.getElementById("monitorDetailAvatar");
 const monitorDetailStats = document.getElementById("monitorDetailStats");
 const monitorResetBtn = document.getElementById("monitorResetBtn");
 const monitorResetError = document.getElementById("monitorResetError");
 const monitorDetailClose = document.getElementById("monitorDetailClose");
+const monitorAssignmentSection = document.getElementById("monitorAssignmentSection");
+const monitorDangerSection = document.getElementById("monitorDangerSection");
+const monitorAssignmentCount = document.getElementById("monitorAssignmentCount");
 const monitorAssignmentList = document.getElementById("monitorAssignmentList");
 const monitorAssignmentForm = document.getElementById("monitorAssignmentForm");
 const monitorAssignmentError = document.getElementById("monitorAssignmentError");
@@ -92,6 +96,17 @@ function remoteStreak(activityRows) {
 function remoteLastActive(activityRows) {
   if (!activityRows.length) return null;
   return activityRows.map((row) => row.activity_date).sort().pop();
+}
+
+function formatActivityDate(value) {
+  if (!value) return "Belum pernah";
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
 }
 
 /* XP siswa dihitung dengan formula sama seperti totalXp() di app.js:
@@ -184,40 +199,50 @@ async function loadMonitorPanel() {
 function renderMonitorDetail(student) {
   monitorDetailName.textContent = student.full_name;
   monitorDetailId.textContent = displayLoginId(student.email);
+  monitorDetailAvatar.textContent = (student.full_name || "S").trim().charAt(0).toUpperCase();
   const categories = [
-    { prefix: "kanji:", label: "Kanji" },
-    { prefix: "materi:", label: "Materi" },
-    { prefix: "hafalan:", label: "Hafalan" },
+    { prefix: "kanji:", label: "Kanji", icon: "漢" },
+    { prefix: "materi:", label: "Materi", icon: "文" },
+    { prefix: "hafalan:", label: "Hafalan", icon: "語" },
   ];
   const xp = remoteXp(student.remote.activity, student.quiz);
   const quizCount = student.quiz.length;
-  let statsHtml = `<div class="monitor-stat-row"><b>XP</b><span>${xp.toLocaleString("id-ID")} XP total · ${quizCount} sesi quiz diselesaikan</span></div>`;
-  statsHtml += categories
+  const streak = remoteStreak(student.remote.activity);
+  const lastActive = remoteLastActive(student.remote.activity);
+  const reviewCount = student.remote.activity.reduce((sum, row) => sum + (row.count || 0), 0);
+  const categoryCards = categories
     .map((cat) => {
       const due = remoteDueCount(student.remote.progress, cat.prefix);
       const mastered = remoteMasteredCount(student.remote.progress, cat.prefix);
       const total = student.remote.progress.filter((row) => row.item_id.startsWith(cat.prefix)).length;
-      return `<div class="monitor-stat-row"><b>${cat.label}</b><span>${total} item dipelajari · ${mastered} dikuasai · ${due} due</span></div>`;
+      const percentage = total ? Math.round((mastered / total) * 100) : 0;
+      return `<article class="monitor-progress-card"><header><span class="monitor-progress-icon">${cat.icon}</span><div><b>${cat.label}</b><small>${mastered} dari ${total} dikuasai</small></div><strong>${percentage}%</strong></header><div class="monitor-progress-track"><i style="width:${percentage}%"></i></div><footer><span>${total} dipelajari</span><span class="${due ? "is-due" : ""}">${due ? `${due} perlu diulang` : "Tidak ada yang jatuh tempo"}</span></footer></article>`;
     })
     .join("");
   const today = srsToday();
   const weakRows = weakestItems(student.remote.progress);
-  if (weakRows.length) {
-    statsHtml += `<div class="monitor-weak-list"><h4>Perlu perhatian</h4>${weakRows
-      .map((row) => {
-        const due = !row.due || row.due <= today;
-        return `<div class="monitor-weak-row${due ? " due" : ""}"><span>${escapeHtml(describeItemId(row.item_id))}</span><small>Box ${row.box} · ${row.reviews}× direview${due ? " · due hari ini" : ""}</small></div>`;
-      })
-      .join("")}</div>`;
-  }
-  monitorDetailStats.innerHTML = statsHtml;
+  const attentionHtml = weakRows.length
+    ? `<details class="monitor-attention"><summary><span><b>Perlu perhatian</b><small>Item yang sering diulang atau masih berada di box rendah.</small></span><strong>${weakRows.length} item</strong></summary><div class="monitor-weak-items">${weakRows
+        .map((row) => {
+          const due = !row.due || row.due <= today;
+          return `<div class="monitor-weak-row${due ? " due" : ""}"><span>${escapeHtml(describeItemId(row.item_id))}</span><small>Box ${row.box} · ${row.reviews}× direview${due ? " · perlu diulang" : ""}</small></div>`;
+        })
+        .join("")}</div></details>`
+    : '<div class="monitor-all-clear"><span>✓</span><div><b>Tidak ada item yang perlu perhatian</b><small>Progres yang sudah direkam berada dalam kondisi baik.</small></div></div>';
+
+  monitorDetailStats.innerHTML = `<div class="monitor-summary-grid"><article><span>XP</span><b>${xp.toLocaleString("id-ID")}</b><small>Total pengalaman</small></article><article><span>STREAK</span><b>${streak} hari</b><small>Konsistensi belajar</small></article><article><span>TES</span><b>${quizCount} sesi</b><small>Tes diselesaikan</small></article><article><span>AKTIF</span><b>${formatActivityDate(lastActive)}</b><small>${reviewCount.toLocaleString("id-ID")} aktivitas tercatat</small></article></div><section class="monitor-progress-overview"><header><div><span>PROGRES BELAJAR</span><h4>Penguasaan per kategori</h4></div><small>${student.remote.progress.length} item tersimpan</small></header><div class="monitor-progress-grid">${categoryCards}</div></section>${attentionHtml}`;
   monitorResetError.hidden = true;
   monitorResetBtn.disabled = false;
   monitorResetBtn.textContent = "Reset progres siswa ini";
   monitorAssignmentError.hidden = true;
   monitorAssignmentForm.reset();
   updateAssignmentFormMode();
+  monitorAssignmentSection.open = false;
+  monitorDangerSection.open = false;
+  monitorAssignmentCount.textContent = "Memuat…";
   monitorDetailEl.hidden = false;
+  document.body.classList.add("monitor-modal-open");
+  monitorDetailClose.focus();
   loadStudentAssignments(student.id);
 }
 
@@ -237,6 +262,7 @@ function describeTestAccess(task) {
 
 async function loadStudentAssignments(siswaId) {
   monitorAssignmentList.innerHTML = '<p class="muted">Memuat tugas…</p>';
+  monitorAssignmentCount.textContent = "Memuat…";
   const { data, error } = await window.supabaseClient
     .from("assignments")
     .select("id, title, due_date, completed, test_kind, test_ref")
@@ -245,12 +271,16 @@ async function loadStudentAssignments(siswaId) {
     .order("due_date", { ascending: true, nullsFirst: false });
   if (error) {
     monitorAssignmentList.innerHTML = `<p class="muted">Gagal memuat tugas: ${error.message}</p>`;
+    monitorAssignmentCount.textContent = "Gagal dimuat";
     return;
   }
   if (!data || data.length === 0) {
     monitorAssignmentList.innerHTML = '<p class="muted">Belum ada tugas.</p>';
+    monitorAssignmentCount.textContent = "0 tugas";
     return;
   }
+  const activeCount = data.filter((task) => !task.completed).length;
+  monitorAssignmentCount.textContent = `${activeCount} aktif · ${data.length} total`;
   monitorAssignmentList.innerHTML = data
     .map((task) => {
       const dueText = task.due_date ? `Tenggat ${task.due_date}` : "Tanpa tenggat";
@@ -273,9 +303,20 @@ monitorListEl.addEventListener("click", (event) => {
   if (student) renderMonitorDetail(student);
 });
 
-monitorDetailClose.addEventListener("click", () => {
+function closeMonitorDetail() {
   monitorDetailEl.hidden = true;
   monitorSelectedId = null;
+  document.body.classList.remove("monitor-modal-open");
+}
+
+monitorDetailClose.addEventListener("click", closeMonitorDetail);
+
+monitorDetailEl.addEventListener("click", (event) => {
+  if (event.target === monitorDetailEl) closeMonitorDetail();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !monitorDetailEl.hidden) closeMonitorDetail();
 });
 
 monitorResetBtn.addEventListener("click", async () => {

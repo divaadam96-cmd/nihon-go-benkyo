@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nihon-go-benkyo-v114';
+const CACHE_NAME = 'nihon-go-benkyo-v115';
 const ASSETS = [
   'index.html',
   'css/legacy-part-1.css?build=80', 'css/legacy-part-2.css?build=80', 'css/legacy-part-3.css?build=80', 'css/legacy-part-4.css?build=80',
@@ -10,7 +10,7 @@ const ASSETS = [
   'pages/hafalan.html?v=1', 'js/pages/hafalan.js?v=1',
   'pages/kanji.html?v=20', 'css/pages/kanji.css?v=14', 'js/pages/kanji.js?v=18',
   'pages/latihan.html?v=21', 'css/pages/latihan.css?v=9', 'js/pages/latihan.js?v=21',
-  'pages/pantau.html?v=1', 'js/pages/pantau.js?v=1',
+  'pages/pantau.html?v=2', 'css/pages/pantau.css?v=1', 'js/pages/pantau.js?v=2',
   'pages/admin.html?v=1', 'js/pages/admin.js?v=1',
   'data/materi-data.js?v=2', 'data/kanji-data.js', 'data/kanji-stroke-data.js?v=2', 'data/kana-data.js', 'data/bab-data.js',
   'assets/images/japan-paper-background.png', 'assets/images/logo.png',

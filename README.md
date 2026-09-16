@@ -42,6 +42,7 @@ css/
                            dimuat di index.html & semua pages/*.html
   pages/kanji.css          gaya konten khusus halaman Kanji
   pages/latihan.css        gaya konten khusus halaman Tes Kemampuan
+  pages/pantau.css         gaya panel ringkasan progres Pantau Siswa
 
 js/
   app-shell.js             login-screen + header + sidebar + mobile-nav -
