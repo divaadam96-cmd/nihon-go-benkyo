@@ -1,3 +1,8 @@
+/* Halaman Tes Kemampuan (pages/latihan.html). Dulu prototype-tes-v2.js yang
+   jalan langsung begitu skrip termuat; sekarang dibungkus initPage() dan
+   dijalankan auth.js SETELAH login, sama seperti halaman lain, supaya
+   header/sidebar bersama (js/app-shell.js) selalu terpasang dulu. */
+function initPage() {
 const examEmbedMode=new URLSearchParams(location.search).get("embed")==="1";
 document.body.classList.toggle("embed-mode",examEmbedMode);
 const questionBankReady=true;
@@ -581,3 +586,5 @@ async function initAccessControl(){
   }
 }
 initAccessControl();
+}
+window.initPage = initPage;

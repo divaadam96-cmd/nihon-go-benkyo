@@ -1,45 +1,16 @@
-/* Topnav + sidebar: rebuild menu (kanji/hafalan/monitor/admin), toggle
-   rail desktop/drawer mobile, tooltip mode rail, dan re-binding klik
-   [data-view]. Dipanggil sekali dari initApp() (app.js) lewat
-   initSidebarNav(open, updateSidebarActiveIndicator) - dua dependensi
-   ini dioper eksplisit sebagai parameter (bukan lewat window) supaya
-   tidak menimpa window.open bawaan browser dan tidak kena masalah
-   temporal-dead-zone kalau dipanggil lebih awal (mis. saat ada hash
-   URL) sebelum bagian ini sempat jalan. updateSidebarActiveIndicator
-   sendiri tetap didefinisikan di app.js karena dipakai juga oleh
-   open() di sana. */
+/* Interaksi sidebar: toggle rail desktop/drawer mobile, tooltip mode rail.
+   Dipanggil sekali dari js/app-shell.js lewat
+   initSidebarNav(open, updateSidebarActiveIndicator) - dua dependensi ini
+   dioper eksplisit sebagai parameter (bukan lewat window) supaya tidak
+   menimpa window.open bawaan browser dan tidak kena masalah temporal-dead-
+   zone kalau dipanggil lebih awal (mis. saat ada hash URL) sebelum bagian
+   ini sempat jalan. updateSidebarActiveIndicator sendiri didefinisikan di
+   app-shell.js karena dipakai juga oleh open() di sana.
+   Markup topnav/sidebar (tombol Kanji/Hafalan/Pantau Siswa/Admin, judul
+   tombol untuk tooltip, dst) sudah lengkap sejak dibangun app-shell.js,
+   jadi file ini HANYA memasang perilaku, bukan lagi menyusun ulang DOM. */
 function initSidebarNav(openView, updateActiveIndicator) {
-  const nav = document.querySelector(".topnav");
-  if (nav)
-    nav.innerHTML =
-      '<button class="active" data-view="dashboard">Beranda</button><button data-view="materials">Materi</button><button data-view="kanji-study">Kanji</button><button data-view="memorization">Hafalan</button><button data-view="test">Tes kemampuan</button><button data-view="monitor" data-role-only="sensei,operator" hidden>Pantau Siswa</button><button data-view="admin" data-role-only="operator" hidden>Admin</button>';
-  document
-    .querySelectorAll('[data-open="flashcards"]')
-    .forEach((button) => (button.dataset.open = "memorization"));
-  document.querySelectorAll('[data-view="flashcards"]').forEach((button) => {
-    button.dataset.view = "memorization";
-    button.innerHTML = button.closest(".side")
-      ? '<span class="jp">語</span><span class="menu-label-text">Hafalan</span>'
-      : '<span class="jp">語</span>Hafalan';
-  });
   const side = document.querySelector(".side");
-  if (side) {
-    const memorizeButton = side.querySelector('[data-view="memorization"]');
-    if (memorizeButton)
-      memorizeButton.insertAdjacentHTML(
-        "beforebegin",
-        '<button data-view="kanji-study"><span class="jp">漢</span><span class="menu-label-text">Belajar kanji</span></button>',
-      );
-    side.insertAdjacentHTML(
-      "beforeend",
-      '<div class="menu-label" data-role-only="sensei,operator" hidden>Kelola</div><button data-view="monitor" data-role-only="sensei,operator" hidden><span class="jp">監</span><span class="menu-label-text">Pantau Siswa</span></button><button data-view="admin" data-role-only="operator" hidden><span class="jp">管</span><span class="menu-label-text">Panel Admin</span></button>',
-    );
-    side.querySelectorAll("button[data-view]").forEach((button) => {
-      const labelEl = button.querySelector(".menu-label-text");
-      const label = labelEl ? labelEl.textContent.trim() : "";
-      if (label) button.title = label;
-    });
-  }
   /* Sidebar dan tombol garis-3 jadi satu komponen: versi desktop hidup
      DI DALAM sidebar (menyatu), versi mobile tetap di navbar (karena
      drawer mobile geser total keluar layar saat tertutup, jadi butuh

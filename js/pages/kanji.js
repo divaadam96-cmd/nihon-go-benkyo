@@ -1,3 +1,11 @@
+/* Halaman Kanji (pages/kanji.html). Dulu prototype-kanji-v2.js yang jalan
+   langsung begitu skrip termuat (dengan pengecekan login sendiri di
+   kanji.html); sekarang dibungkus initPage() dan dijalankan auth.js
+   SETELAH login, sama seperti halaman lain, supaya header/sidebar bersama
+   (js/app-shell.js) selalu terpasang dulu. embed-mode/?embed=1 di bawah
+   sudah tidak pernah dipakai lagi (halaman ini tidak lagi dimuat lewat
+   iframe), dibiarkan karena tidak berdampak apa pun bila tidak ada. */
+function initPage() {
 const kanjiEmbedMode = new URLSearchParams(location.search).get("embed") === "1";
 document.body.classList.toggle("embed-mode", kanjiEmbedMode);
 
@@ -77,12 +85,13 @@ function renderSrsHint(item) {
 }
 
 function updateCounts() {
-  document.getElementById("allCount").textContent = kanjiLessons.length;
+  // #allCount/#n5Count/#n4Count/#n3Count dulu ada di panel "JALUR BELAJAR"
+  // pada sidebar khusus halaman ini - sudah tidak ada lagi karena diganti
+  // sidebar navigasi bersama (js/app-shell.js, sama di semua halaman).
+  // Filter level + jumlahnya tetap ada lewat .level-row (#browserAllCount dkk).
   document.getElementById("browserAllCount").textContent = kanjiLessons.length;
   ["N5", "N4", "N3"].forEach((level) => {
-    const id = level.toLowerCase() + "Count";
     const count = kanjiLessons.filter((item) => item.level === level).length;
-    document.getElementById(id).textContent = count;
     document.getElementById(`browser${level}Count`).textContent = count;
   });
 }
@@ -789,14 +798,9 @@ canvas.addEventListener("pointerdown", startDrawing); canvas.addEventListener("p
 document.getElementById("clearCanvas").onclick = () => context.clearRect(0, 0, canvas.width, canvas.height);
 document.getElementById("traceToggle").onclick = () => document.querySelector(".writing-board").classList.toggle("hide-guide");
 
-document.querySelectorAll(".topbar nav button").forEach((button, index) => {
-  button.onclick = () => {
-    const destinations = ["dashboard", "materials", "kanji-study", "memorization", "test"];
-    location.href = `../index.html?build=28#${destinations[index]}`;
-  };
-});
-
 updateCounts();
 applyFilters();
 updateHeroStats();
 selectKanji(0);
+}
+window.initPage = initPage;

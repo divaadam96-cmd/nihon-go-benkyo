@@ -3,98 +3,89 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Prototype Tes Kemampuan — Nihon GO Benkyo</title>
-  <script>document.documentElement.classList.toggle("embed-mode", new URLSearchParams(location.search).get("embed") === "1");</script>
-  <style>html:not(.page-authed) body{display:none}</style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-  <script>
-    (function () {
-      window.supabaseClient = window.supabase.createClient(
-        "https://twoerfizembbpuvlzzmt.supabase.co",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3b2VyZml6ZW1iYnB1dmx6em10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MTQ0MDMsImV4cCI6MjEwMzM5MDQwM30._-pgaQ2NIkWj7UQ-osm8PpnRg3xW4axvMn_AAJXkrzc",
-      );
-      window.supabaseClient.auth.getSession().then(function (res) {
-        if (res.data && res.data.session) {
-          document.documentElement.classList.add("page-authed");
-        } else {
-          location.replace("../index.html");
-        }
-      });
-    })();
-  </script>
+  <title>Tes Kemampuan — Nihon GO Benkyo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/pages/latihan.css?v=8">
+  <meta name="theme-color" content="#142945">
+  <link rel="manifest" href="../nihon-go-benkyo.webmanifest">
+  <link rel="icon" type="image/png" href="../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+  <link rel="stylesheet" href="../css/legacy-part-1.css?build=80">
+  <link rel="stylesheet" href="../css/legacy-part-2.css?build=80">
+  <link rel="stylesheet" href="../css/legacy-part-3.css?build=80">
+  <link rel="stylesheet" href="../css/legacy-part-4.css?build=80">
+  <link rel="stylesheet" href="../css/pages/latihan.css?v=9">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="../index.html?build=29"><img src="../assets/images/logo.png" alt=""><span><b>Nihon GO Benkyo</b><small>日本語勉強</small></span></a>
-    <nav>TES KEMAMPUAN</nav>
-    <a class="back-app" href="../index.html?build=29">Aplikasi utama →</a>
-  </header>
+<main class="main" id="pageMain">
+  <section class="hero">
+    <div><span class="eyebrow">SKILL CHECK · UJIAN BAHASA JEPANG</span><h1>Ukur kemampuan, lalu pelajari kelemahannya.</h1><p>Tes tidak berhenti pada nilai. Setiap hasil menunjukkan kategori yang perlu diperkuat dan materi yang sebaiknya dipelajari kembali.</p></div>
+    <div class="hero-stats"><article><span>Sumber Soal</span><b id="heroExamType">Per 5 Bab</b></article><article><span>Soal</span><b id="heroQuestionTotal">—</b></article><article><span>Cakupan</span><b id="heroPackage">Menunggu file</b></article></div>
+  </section>
 
-  <main>
-    <section class="hero">
-      <div><span class="eyebrow">SKILL CHECK · UJIAN BAHASA JEPANG</span><h1>Ukur kemampuan, lalu pelajari kelemahannya.</h1><p>Tes tidak berhenti pada nilai. Setiap hasil menunjukkan kategori yang perlu diperkuat dan materi yang sebaiknya dipelajari kembali.</p></div>
-      <div class="hero-stats"><article><span>Sumber Soal</span><b id="heroExamType">Per 5 Bab</b></article><article><span>Soal</span><b id="heroQuestionTotal">—</b></article><article><span>Cakupan</span><b id="heroPackage">Menunggu file</b></article></div>
-    </section>
-
-    <section class="start-card" id="startScreen">
-      <header><div><span class="eyebrow">01 · ATUR TES</span><h2>Pilih sumber ujian</h2></div><span class="prototype-badge ready">Bank soal aktif</span></header>
-      <div class="access-gate" id="accessGate" hidden>
-        <div class="access-empty" id="accessEmpty"><b>Belum ada akses tes dari Sensei</b><span>Tes kemampuan hanya bisa dikerjakan setelah Sensei/Operator memberikan akses lewat menu Tugas. Hubungi Sensei kalau kamu siap mengerjakan tes berikutnya.</span></div>
-        <div class="access-list" id="accessList"></div>
+  <section class="start-card" id="startScreen">
+    <header><div><span class="eyebrow">01 · ATUR TES</span><h2>Pilih sumber ujian</h2></div><span class="prototype-badge ready">Bank soal aktif</span></header>
+    <div class="access-gate" id="accessGate" hidden>
+      <div class="access-empty" id="accessEmpty"><b>Belum ada akses tes dari Sensei</b><span>Tes kemampuan hanya bisa dikerjakan setelah Sensei/Operator memberikan akses lewat menu Tugas. Hubungi Sensei kalau kamu siap mengerjakan tes berikutnya.</span></div>
+      <div class="access-list" id="accessList"></div>
+    </div>
+    <div id="manualConfig">
+      <div class="exam-choice" id="sourceChoice"><button class="active" data-package=""><span class="exam-mark">BAB</span><div><b>Ujian per 5 Bab</b><small>Kosakata, kanji, tata bahasa, susunan kalimat, bacaan, dan audio dari rentang bab pilihan.</small></div></button><button data-package="d03"><span class="exam-mark">SET</span><div><b>Paket Ujian Siap Pakai</b><small>35 soal format 4 bagian: cara baca kanji, penulisan kanji, kosakata, dan parafrasa.</small></div></button></div>
+      <div class="config-grid">
+        <div class="config-block" id="chapterRangeBlock"><label for="chapterRange">Cakupan materi per 5 Bab</label><select id="chapterRange"><option value="1">Bab 1–5</option><option value="6">Bab 6–10</option><option value="11">Bab 11–15</option><option value="16">Bab 16–20</option><option value="21">Bab 21–25</option><option value="26">Bab 26–30</option><option value="31">Bab 31–35</option><option value="36">Bab 36–40</option><option value="41">Bab 41–45</option><option value="46">Bab 46–50</option></select></div>
+        <div class="config-block"><label>Format pengerjaan</label><div class="simulation-format"><b>Simulasi ujian</b><small>Jawaban dan pembahasan ditampilkan setelah tes selesai.</small></div></div>
+        <div class="config-block"><label>Batas waktu</label><div class="simulation-format" id="timerInfo"><b>Timer 45 menit</b><small>Wajib aktif. Tes selesai otomatis saat waktu habis.</small></div></div>
       </div>
-      <div id="manualConfig">
-        <div class="exam-choice" id="sourceChoice"><button class="active" data-package=""><span class="exam-mark">BAB</span><div><b>Ujian per 5 Bab</b><small>Kosakata, kanji, tata bahasa, susunan kalimat, bacaan, dan audio dari rentang bab pilihan.</small></div></button><button data-package="d03"><span class="exam-mark">SET</span><div><b>Paket Ujian Siap Pakai</b><small>35 soal format 4 bagian: cara baca kanji, penulisan kanji, kosakata, dan parafrasa.</small></div></button></div>
-        <div class="config-grid">
-          <div class="config-block" id="chapterRangeBlock"><label for="chapterRange">Cakupan materi per 5 Bab</label><select id="chapterRange"><option value="1">Bab 1–5</option><option value="6">Bab 6–10</option><option value="11">Bab 11–15</option><option value="16">Bab 16–20</option><option value="21">Bab 21–25</option><option value="26">Bab 26–30</option><option value="31">Bab 31–35</option><option value="36">Bab 36–40</option><option value="41">Bab 41–45</option><option value="46">Bab 46–50</option></select></div>
-          <div class="config-block"><label>Format pengerjaan</label><div class="simulation-format"><b>Simulasi ujian</b><small>Jawaban dan pembahasan ditampilkan setelah tes selesai.</small></div></div>
-          <div class="config-block"><label>Batas waktu</label><div class="simulation-format" id="timerInfo"><b>Timer 45 menit</b><small>Wajib aktif. Tes selesai otomatis saat waktu habis.</small></div></div>
-        </div>
-        <div class="coverage"><span>PAKET TERPILIH</span><div class="package-preview"><b id="selectedTestName">Ujian per 5 Bab · Bab 1–5</b><small id="selectedRangeText">Materi gabungan diambil dari Bab 1, 2, 3, 4, dan 5.</small></div></div>
-        <div class="question-waiting"><b>Bank soal siap digunakan</b><span>Soal latihan dibuat dari data kosakata, kanji, tata bahasa, bacaan, dan audio lokal.</span></div>
-        <button class="start-button" id="startTest">Mulai simulasi <span>→</span></button>
+      <div class="coverage"><span>PAKET TERPILIH</span><div class="package-preview"><b id="selectedTestName">Ujian per 5 Bab · Bab 1–5</b><small id="selectedRangeText">Materi gabungan diambil dari Bab 1, 2, 3, 4, dan 5.</small></div></div>
+      <div class="question-waiting"><b>Bank soal siap digunakan</b><span>Soal latihan dibuat dari data kosakata, kanji, tata bahasa, bacaan, dan audio lokal.</span></div>
+      <button class="start-button" id="startTest">Mulai simulasi <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="test-shell" id="testScreen" hidden>
+    <article class="question-card">
+      <header class="question-head"><div><span class="category-badge" id="categoryBadge">KOSAKATA</span><small id="questionCounter">Soal 1 dari 10</small></div><div class="test-tools"><button id="furiganaToggle">振 Furigana: aktif</button><span id="timer">12:00</span></div></header>
+      <div class="progress"><i id="testProgress"></i></div>
+      <div class="question-content">
+        <span class="instruction" id="instruction"></span>
+        <div class="question-text" id="questionText"></div>
+        <button class="audio-button" id="audioButton" hidden>▶ Putar audio</button>
+        <div class="answers" id="answers"></div>
+        <div class="explanation" id="explanation" hidden></div>
       </div>
-    </section>
+      <footer><button class="ghost" id="previousQuestion">← Sebelumnya</button><button class="flag" id="flagQuestion">☆ Tandai soal</button><button class="primary" id="checkAnswer">Periksa jawaban</button><button class="primary" id="nextQuestion" hidden>Soal berikutnya →</button></footer>
+    </article>
 
-    <section class="test-shell" id="testScreen" hidden>
-      <article class="question-card">
-        <header class="question-head"><div><span class="category-badge" id="categoryBadge">KOSAKATA</span><small id="questionCounter">Soal 1 dari 10</small></div><div class="test-tools"><button id="furiganaToggle">振 Furigana: aktif</button><span id="timer">12:00</span></div></header>
-        <div class="progress"><i id="testProgress"></i></div>
-        <div class="question-content">
-          <span class="instruction" id="instruction"></span>
-          <div class="question-text" id="questionText"></div>
-          <button class="audio-button" id="audioButton" hidden>▶ Putar audio</button>
-          <div class="answers" id="answers"></div>
-          <div class="explanation" id="explanation" hidden></div>
-        </div>
-        <footer><button class="ghost" id="previousQuestion">← Sebelumnya</button><button class="flag" id="flagQuestion">☆ Tandai soal</button><button class="primary" id="checkAnswer">Periksa jawaban</button><button class="primary" id="nextQuestion" hidden>Soal berikutnya →</button></footer>
-      </article>
+    <aside class="navigator-card">
+      <span class="eyebrow">NAVIGASI SOAL</span><h3>Progres latihan</h3>
+      <div class="number-grid" id="numberGrid"></div>
+      <div class="legend"><span><i class="current"></i>Saat ini</span><span><i class="answered"></i>Terjawab</span><span><i class="flagged"></i>Ditandai</span></div>
+      <dl><div><dt>Terjawab</dt><dd id="answeredCount">0 / 10</dd></div><div><dt>Benar sementara</dt><dd id="temporaryScore">0</dd></div><div><dt>Ditandai</dt><dd id="flaggedCount">0</dd></div></dl>
+      <button class="finish-button" id="finishEarly" disabled>Selesaikan tes</button>
+      <small class="finish-hint" id="finishHint">Jawab semua soal untuk mengaktifkan tombol ini.</small>
+    </aside>
+  </section>
 
-      <aside class="navigator-card">
-        <span class="eyebrow">NAVIGASI SOAL</span><h3>Progres latihan</h3>
-        <div class="number-grid" id="numberGrid"></div>
-        <div class="legend"><span><i class="current"></i>Saat ini</span><span><i class="answered"></i>Terjawab</span><span><i class="flagged"></i>Ditandai</span></div>
-        <dl><div><dt>Terjawab</dt><dd id="answeredCount">0 / 10</dd></div><div><dt>Benar sementara</dt><dd id="temporaryScore">0</dd></div><div><dt>Ditandai</dt><dd id="flaggedCount">0</dd></div></dl>
-        <button class="finish-button" id="finishEarly" disabled>Selesaikan tes</button>
-        <small class="finish-hint" id="finishHint">Jawab semua soal untuk mengaktifkan tombol ini.</small>
-      </aside>
-    </section>
-
-    <section class="result-card" id="resultScreen" hidden>
-      <div class="result-hero"><div class="score-ring"><b id="finalScore">0</b><span>/ 100</span></div><div><span class="eyebrow">HASIL LATIHAN</span><h2 id="resultTitle">Fondasi sudah terbentuk.</h2><p id="resultSummary"></p><div class="result-actions"><button id="reviewMistakes">Tinjau jawaban salah</button><button id="restartTest">Ulangi tes</button></div></div></div>
-      <div class="result-grid">
-        <article><span class="eyebrow">PETA KEMAMPUAN</span><h3>Akurasi per kategori</h3><div id="categoryResults" class="category-results"></div></article>
-        <article><span class="eyebrow">REKOMENDASI BELAJAR</span><h3>Langkah berikutnya</h3><div id="recommendations" class="recommendations"></div></article>
-      </div>
-      <article class="mistake-bank" id="mistakeBank" hidden><header><div><span class="eyebrow">BANK KESALAHAN</span><h3>Soal yang perlu dipelajari kembali</h3></div><button id="closeMistakes">Tutup</button></header><div id="mistakeList"></div></article>
-      <p class="disclaimer">Soal dibuat untuk pembelajaran mandiri dan bukan soal ujian resmi.</p>
-    </section>
-  </main>
-  <script src="../data/bab-data.js"></script>
-  <script src="../data/materi-data.js"></script>
-  <script src="latihan.js?v=19"></script>
+  <section class="result-card" id="resultScreen" hidden>
+    <div class="result-hero"><div class="score-ring"><b id="finalScore">0</b><span>/ 100</span></div><div><span class="eyebrow">HASIL LATIHAN</span><h2 id="resultTitle">Fondasi sudah terbentuk.</h2><p id="resultSummary"></p><div class="result-actions"><button id="reviewMistakes">Tinjau jawaban salah</button><button id="restartTest">Ulangi tes</button></div></div></div>
+    <div class="result-grid">
+      <article><span class="eyebrow">PETA KEMAMPUAN</span><h3>Akurasi per kategori</h3><div id="categoryResults" class="category-results"></div></article>
+      <article><span class="eyebrow">REKOMENDASI BELAJAR</span><h3>Langkah berikutnya</h3><div id="recommendations" class="recommendations"></div></article>
+    </div>
+    <article class="mistake-bank" id="mistakeBank" hidden><header><div><span class="eyebrow">BANK KESALAHAN</span><h3>Soal yang perlu dipelajari kembali</h3></div><button id="closeMistakes">Tutup</button></header><div id="mistakeList"></div></article>
+    <p class="disclaimer">Soal dibuat untuk pembelajaran mandiri dan bukan soal ujian resmi.</p>
+  </section>
+</main>
+<script src="../js/pwa.js?v=2"></script>
+<script src="../data/bab-data.js"></script>
+<script src="../data/materi-data.js"></script>
+<script src="../js/srs.js?v=5"></script>
+<script src="../js/app-effects.js?v=5"></script>
+<script src="../js/app-sidebar.js?v=2"></script>
+<script src="../js/app-shell.js?v=1"></script>
+<script src="../js/pages/latihan.js?v=20"></script>
+<script src="../js/auth.js?v=6"></script>
 </body>
 </html>

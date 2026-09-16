@@ -83,11 +83,19 @@ async function revealApp(profile) {
   await srsHydrateFromRemote(profile.id);
   document.body.classList.add("authed");
   loginScreenEl.style.display = "none";
-  // initApp() membangun ulang nav (topnav/sidebar) lewat innerHTML, jadi
-  // elemen ber-atribut data-role-only baru benar-benar ada di DOM SETELAH
-  // ini dipanggil - applyRoleVisibility harus jalan lagi sesudahnya.
-  if (typeof window.initApp === "function") window.initApp();
+  // initPage() (didefinisikan js/pages/*.js, beda-beda per halaman) mengisi
+  // konten & interaksi khusus halaman ini. Markup shell (header/sidebar,
+  // termasuk elemen data-role-only) sudah lengkap dari app-shell.js sejak
+  // awal, tapi applyRoleVisibility tetap dipanggil SESUDAH initPage() jaga-
+  // jaga kalau initPage() menambah elemen data-role-only baru sendiri.
+  if (typeof window.initPage === "function") window.initPage();
   applyRoleVisibility(profile.role);
+  // Sidebar/topnav dibangun (js/app-shell.js) SEBELUM baris ini - saat itu
+  // .app masih disembunyikan (display:none) oleh gerbang login, jadi ukuran/
+  // posisi tombol aktif yang dihitung waktu itu selalu nol. Ukur ulang di
+  // sini, SETELAH .app benar-benar terlihat, supaya indikator aktif sidebar
+  // (pil terang) tidak hilang.
+  if (typeof window.refreshShellNav === "function") window.refreshShellNav();
 }
 
 async function trySession() {
