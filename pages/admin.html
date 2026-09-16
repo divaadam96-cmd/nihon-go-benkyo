@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Panel Admin — Nihon GO Benkyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@500;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#142945">
+  <link rel="manifest" href="../nihon-go-benkyo.webmanifest">
+  <link rel="icon" type="image/png" href="../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+  <link rel="stylesheet" href="../css/legacy-part-1.css?build=80">
+  <link rel="stylesheet" href="../css/legacy-part-2.css?build=80">
+  <link rel="stylesheet" href="../css/legacy-part-3.css?build=80">
+  <link rel="stylesheet" href="../css/legacy-part-4.css?build=80">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body>
+<main class="main" id="pageMain">
+  <div data-role-only="operator" hidden>
+    <div class="head"><div><div class="eyebrow">Kontrol penuh</div><h1>Panel Admin.</h1><p>Buat akun Sensei atau Siswa baru. Hanya Operator yang bisa membuat akun.</p></div></div>
+    <div class="admin-layout">
+      <div class="card admin-form-card">
+        <h3>Buat akun baru</h3>
+        <form id="adminCreateForm">
+          <label>Nama lengkap<input type="text" id="adminFullName" required autocomplete="off"></label>
+          <label>ID login<small class="field-hint">Bebas, mis. "budi.siswa". Bisa juga isi email asli kalau ada.</small><input type="text" id="adminEmail" required autocomplete="off"></label>
+          <label>Password sementara<input type="text" id="adminPassword" required minlength="6" autocomplete="off"></label>
+          <label>Peran<select id="adminRole"><option value="siswa">Siswa</option><option value="sensei">Sensei</option></select></label>
+          <p id="adminFormError" class="login-error" hidden></p>
+          <p id="adminFormSuccess" class="form-success" hidden></p>
+          <button type="submit" class="primary" id="adminSubmit">Buat akun</button>
+        </form>
+      </div>
+      <div class="card admin-list-card">
+        <h3>Daftar akun</h3>
+        <div id="adminAccountList" class="admin-account-list"><p class="muted">Memuat…</p></div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="../js/pwa.js?v=2"></script>
+<script src="../js/srs.js?v=5"></script>
+<script src="../js/app-effects.js?v=5"></script>
+<script src="../js/app-sidebar.js?v=2"></script>
+<script src="../js/app-shell.js?v=1"></script>
+<script src="../js/pages/admin.js?v=1"></script>
+<script src="../js/auth.js?v=6"></script>
+</body></html>

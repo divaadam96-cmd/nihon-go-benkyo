@@ -1,8 +1,12 @@
-/* Panel Admin (khusus Operator): buat & hapus akun Sensei/Siswa lewat Edge
-   Function create-user/delete-user, dan tampilkan daftar akun yang sudah ada.
-   Dimuat setelah auth.js supaya window.supabaseClient/SUPABASE_URL/toLoginEmail
-   siap dipakai. */
-
+/* Halaman Panel Admin (pages/admin.html, khusus Operator): buat & hapus
+   akun Sensei/Siswa lewat Edge Function create-user/delete-user, dan
+   tampilkan daftar akun yang sudah ada. Dibungkus initPage(), dijalankan
+   auth.js SETELAH login sukses (jadi window.supabaseClient/SUPABASE_URL/
+   toLoginEmail sudah pasti siap) - loadAdminPanel() langsung dipanggil di
+   akhir karena seluruh halaman ini memang panel itu. escapeHtml sekarang
+   fungsi bersama (window.escapeHtml, lihat js/app-shell.js). */
+function initPage() {
+const escapeHtml = window.escapeHtml;
 const ROLE_LABELS_ADMIN = { operator: "Operator", sensei: "Sensei", siswa: "Siswa" };
 
 const adminForm = document.getElementById("adminCreateForm");
@@ -21,12 +25,6 @@ function showAdminSuccess(message) {
   adminFormError.hidden = true;
   adminFormSuccess.textContent = message;
   adminFormSuccess.hidden = false;
-}
-
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text == null ? "" : String(text);
-  return div.innerHTML;
 }
 
 /* Akun Sensei/Siswa disimpan pakai email sintetis (lihat toLoginEmail di
@@ -154,3 +152,7 @@ adminListEl.addEventListener("click", async (event) => {
 });
 
 window.loadAdminPanel = loadAdminPanel;
+
+loadAdminPanel();
+}
+window.initPage = initPage;

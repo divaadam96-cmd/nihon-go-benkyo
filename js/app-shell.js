@@ -27,6 +27,17 @@
   const pageMain = document.getElementById("pageMain");
   if (!pageMain) return;
 
+  /* Dipakai beberapa halaman berbeda (dashboard lewat assignments.js, Pantau
+     Siswa, Panel Admin) untuk menghindari HTML-injection saat menampilkan
+     teks dari database (nama akun, judul tugas, dst) - satu definisi
+     bersama di sini supaya semua halaman itu tidak perlu saling memuat
+     skrip satu sama lain hanya demi fungsi kecil ini. */
+  window.escapeHtml = function (text) {
+    const div = document.createElement("div");
+    div.textContent = text == null ? "" : String(text);
+    return div.innerHTML;
+  };
+
   const shellHtml = `
 <div class="login-screen" id="loginScreen"><form class="login-card" id="loginForm"><img class="mark" src="${ROOT}assets/images/logo.png" alt="Logo Nihon GO Benkyo"><h1>Nihon GO Benkyo</h1><p>Masuk untuk melanjutkan belajar. Akun Sensei &amp; Siswa dibuat oleh Operator.</p><label>Email / ID<input type="text" id="loginEmail" autocomplete="username" required></label><label>Password<input type="password" id="loginPassword" autocomplete="current-password" required></label><p class="login-error" id="loginError" hidden></p><button type="submit" class="primary" id="loginSubmit">Masuk</button><button type="button" class="link-btn" id="forgotPasswordLink">Lupa password?</button><button type="button" class="install-app-btn" hidden>Install aplikasi</button><p class="ios-install-hint" hidden>Di iPhone/iPad: buka menu Bagikan (Share) lalu pilih "Tambah ke Layar Utama".</p></form><form class="login-card" id="forgotForm" hidden><img class="mark" src="${ROOT}assets/images/logo.png" alt="Logo Nihon GO Benkyo"><h1>Lupa password</h1><p>Masukkan email akun Anda (hanya berlaku untuk akun yang login pakai email asli, mis. akun Operator). Link reset akan dikirim ke email tersebut.</p><label>Email<input type="email" id="forgotEmail" autocomplete="username" required></label><p class="login-error" id="forgotError" hidden></p><p class="form-success" id="forgotSuccess" hidden></p><button type="submit" class="primary" id="forgotSubmit">Kirim link reset</button><button type="button" class="link-btn" id="backToLoginLink">← Kembali ke login</button></form><form class="login-card" id="resetPasswordForm" hidden><img class="mark" src="${ROOT}assets/images/logo.png" alt="Logo Nihon GO Benkyo"><h1>Buat password baru</h1><p>Masukkan password baru untuk akun Anda.</p><label>Password baru<input type="password" id="newPassword" autocomplete="new-password" required minlength="6"></label><label>Ulangi password baru<input type="password" id="newPasswordConfirm" autocomplete="new-password" required minlength="6"></label><p class="login-error" id="resetError" hidden></p><button type="submit" class="primary" id="resetSubmit">Simpan password baru</button></form></div>
 <div class="app">
@@ -51,13 +62,16 @@
     if (label) button.title = label;
   });
 
-  /* Peta view -> halaman asli. Materi/Hafalan/Kanji/Tes sudah jadi halaman
-     sungguhan (bukan <section> SPA lagi) - lihat Fase 2/3 restrukturisasi. */
+  /* Peta view -> halaman asli. Semua view sudah jadi halaman sungguhan
+     (bukan <section> SPA lagi) kecuali "dashboard" (index.html sendiri) -
+     lihat Fase 2/3/4 restrukturisasi. */
   const PAGE_FOR_VIEW = {
     materials: "pages/materi.html",
     memorization: "pages/hafalan.html",
     "kanji-study": "pages/kanji.html",
     test: "pages/latihan.html",
+    monitor: "pages/pantau.html",
+    admin: "pages/admin.html",
   };
 
   function updateSidebarActiveIndicator() {
@@ -97,8 +111,10 @@
     }
     const viewEl = document.getElementById(view);
     if (!viewEl) {
-      // view ini (dashboard/monitor/admin) tidak ada di halaman ini - pindah
-      // ke index.html dengan hash yang sama, biar diproses di sana.
+      // Satu-satunya view yang tidak ada di PAGE_FOR_VIEW dan bisa tidak
+      // ditemukan di halaman saat ini adalah "dashboard" (kalau dipanggil
+      // dari halaman selain index.html) - pindah ke sana dengan hash yang
+      // sama, biar diproses di situ.
       location.href = `${ROOT}index.html#${view}`;
       return;
     }
@@ -116,10 +132,6 @@
     requestAnimationFrame(moveTopnavIndicator);
     if (view === "dashboard" && typeof window.renderDashboardActivity === "function")
       window.renderDashboardActivity();
-    if (view === "admin" && typeof window.loadAdminPanel === "function")
-      window.loadAdminPanel();
-    if (view === "monitor" && typeof window.loadMonitorPanel === "function")
-      window.loadMonitorPanel();
   }
   window.open = open;
 
@@ -218,9 +230,14 @@
   // Halaman default: kalau tidak ada hash, tandai "dashboard"/view utama
   // halaman ini sebagai aktif di sidebar/topnav/mobile-nav.
   const CURRENT_PAGE_VIEW =
-    { "materi.html": "materials", "hafalan.html": "memorization", "kanji.html": "kanji-study", "latihan.html": "test" }[
-      location.pathname.split("/").pop()
-    ] || "dashboard";
+    {
+      "materi.html": "materials",
+      "hafalan.html": "memorization",
+      "kanji.html": "kanji-study",
+      "latihan.html": "test",
+      "pantau.html": "monitor",
+      "admin.html": "admin",
+    }[location.pathname.split("/").pop()] || "dashboard";
   document
     .querySelectorAll(`[data-view="${CURRENT_PAGE_VIEW}"], [data-mobile-view="${CURRENT_PAGE_VIEW}"]`)
     .forEach((b) => b.classList.add("active"));
