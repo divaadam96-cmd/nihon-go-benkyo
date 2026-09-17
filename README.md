@@ -37,12 +37,18 @@ pages/                   halaman lain, masing-masing dokumen HTML sendiri
   admin.html               panel Operator: kelola akun
 
 css/
-  legacy-part-1..4.css     gaya seluruh aplikasi, dipecah BERURUTAN dari
-                           satu styles.css lama (lihat catatan di bawah) -
-                           dimuat di index.html & semua pages/*.html
+  base.css                 variabel warna (:root), reset dasar, [hidden] -
+                           dimuat PERTAMA di index.html & semua pages/*.html
+  shell.css                header/sidebar/nav + kartu/tombol dasar dipakai
+                           semua halaman (lihat catatan di bawah)
+  auth.css                 layar login + account-box, dimuat semua halaman
+  pages/dashboard.css      gaya konten khusus Beranda (index.html)
+  pages/materi.css         gaya konten khusus halaman Materi
+  pages/hafalan.css        gaya konten khusus halaman Hafalan (flashcard)
   pages/kanji.css          gaya konten khusus halaman Kanji
   pages/latihan.css        gaya konten khusus halaman Tes Kemampuan
   pages/pantau.css         gaya panel ringkasan progres Pantau Siswa
+  pages/admin.css          gaya konten khusus Panel Admin
 
 js/
   app-shell.js             login-screen + header + sidebar + mobile-nav -
@@ -80,18 +86,28 @@ dibuka browser saat mengunjungi domain aplikasi ini (`/`) atau lewat
 shortcut PWA. Service worker (`sw.js`) juga wajib berada di root folder
 supaya cache-nya berlaku untuk seluruh situs, bukan cuma folder `pages/`.
 
-### `css/legacy-part-1..4.css` — kenapa dipecah "berurutan", bukan per-tema?
+### Kenapa CSS dipecah jadi `base.css` + `shell.css` + `auth.css` + `pages/*.css`?
 
-`styles.css` lama (3671 baris) ternyata **tidak bisa** dipecah bebas
-menurut jenisnya (variabel/komponen/responsive) — beberapa selector yang
-sama (`.card`, `.top`, dst) sengaja didefinisikan ulang lebih jauh di
-bawah untuk menimpa definisi sebelumnya (dikomentari eksplisit di file
-aslinya, mis. "timpa warna terang di atas"). Kalau dipecah menurut jenis
-dan urutan pemuatannya berubah, tampilan bisa diam-diam berubah. Karena
-itu file ini dipecah **persis berurutan** (isi ke-4 file kalau digabung
-lagi = identik byte-demi-byte dengan `styles.css` asli) — aman dari
-risiko itu, tapi belum rapi per-topik. Pemecahan yang lebih rapi per
-halaman bisa dikerjakan bertahap nanti, dengan uji visual per langkah.
+Sebelumnya seluruh CSS ada di 4 file `legacy-part-1..4.css` hasil
+pemecahan BERURUTAN dari satu `styles.css` lama (3671 baris) — dipecah
+persis berurutan, bukan per-topik, karena beberapa selector yang sama
+(`.card`, `.top`, `.main`, dst) sengaja didefinisikan ulang lebih jauh
+di bawah untuk menimpa definisi sebelumnya, dan waktu itu belum
+dipastikan aman memecahnya tanpa mengubah urutan override tersebut.
+
+Reorganisasi berikutnya menelusuri SETIAP selector yang didefinisikan
+ulang (termasuk `.main` yang override-nya berlapis 4× untuk overlay
+background) untuk memastikan urutan efektifnya tidak berubah, lalu
+memindahkannya ke file per-fungsi: `base.css` (variabel + reset,
+dimuat pertama), `shell.css` (header/sidebar/nav + komponen dasar
+dipakai semua halaman, termasuk override reponsive-nya), `auth.css`
+(layar login, tampil di semua halaman), dan `css/pages/<nama>.css`
+per halaman (dimuat terakhir, cuma di halaman yang butuh). Sudah diuji
+visual di ke-7 halaman (screenshot sebelum/sesudah identik) dan cek
+jaringan (semua aset 200, tanpa 404). Kode yang ternyata sudah tidak
+dipakai (dicek lewat grep) TIDAK dihapus dalam pemindahan ini — cuma
+ditandai jelas dengan komentar di akhir `shell.css`, supaya
+reorganisasi ini murni pemindahan, bukan pembersihan.
 
 ## Setup Supabase dari nol
 

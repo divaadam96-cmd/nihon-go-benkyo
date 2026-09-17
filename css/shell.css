@@ -1,23 +1,3 @@
-* {
-  box-sizing: border-box;
-}
-/* Elemen ber-atribut "hidden" (mis. tombol Pantau Siswa/Panel Admin yang
-   disembunyikan applyRoleVisibility() di auth.js untuk peran yang tidak
-   berhak) HARUS tetap tersembunyi meski elemen itu juga punya aturan
-   "display" sendiri (mis. .side button[data-view]{display:flex}) -
-   tanpa !important di sini, display:flex itu menang (CSS author selalu
-   mengalahkan default UA [hidden], berapa pun specificity-nya). */
-[hidden] {
-  display: none !important;
-}
-body {
-  margin: 0;
-  background: #ebeae5;
-  color: var(--ink);
-  font:
-    14px "DM Sans",
-    sans-serif;
-}
 .app {
   max-width: 1440px;
   margin: auto;
@@ -543,10 +523,6 @@ body {
     transform 0.15s,
     filter 0.15s;
 }
-.material-book-back {
-  display: block;
-  margin-bottom: 18px;
-}
 .primary:hover,
 .secondary:hover {
   transform: translateY(-1px);
@@ -560,159 +536,6 @@ body {
 .secondary {
   background: #f0ebe1;
   color: #715f3e;
-}
-.overview {
-  display: grid;
-  grid-template-columns: 1.35fr repeat(3, 0.75fr);
-  gap: 14px;
-}
-/* Kartu ringkasan dashboard dibuat lebih terang & lapang dari kartu
-   lain (--wash, bukan tan pekat .card biasa) supaya terasa lebih
-   segar - preview arah desain baru, belum diterapkan ke seluruh app. */
-.overview .metric {
-  background: var(--wash);
-  border-color: #e2ddd0;
-  box-shadow: 0 3px 10px #1d2a3d05;
-  padding: 22px 21px;
-}
-.metric small {
-  display: block;
-  color: var(--muted);
-}
-.metric b {
-  display: block;
-  font-size: 28px;
-  letter-spacing: -1px;
-  color: var(--navy);
-  margin-top: 8px;
-}
-.metric p {
-  color: var(--muted);
-  margin: 8px 0 0;
-  line-height: 1.55;
-}
-/* Kartu Total XP dapat aksen warna hangat (--rose) supaya angka
-   pencapaian terasa lebih hidup dibanding kartu statistik netral
-   lainnya - satu-satunya tempat aksen ini dipakai untuk sekarang. */
-.overview .metric:nth-child(2) b {
-  color: var(--rose);
-}
-.overview .metric:nth-child(2) p {
-  display: inline-block;
-  margin: 10px 0 0;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: var(--rose-soft);
-  color: var(--rose);
-  font-weight: 700;
-  line-height: 1.7;
-}
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 0.95fr;
-  gap: 14px;
-  margin-top: 14px;
-}
-.todo {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #eeeae3;
-}
-.todo:last-child {
-  border: 0;
-}
-.todo button {
-  width: 20px;
-  height: 20px;
-  border: 1.5px solid #c4c3ba;
-  border-radius: 50%;
-  background: white;
-  cursor: default;
-  /* Bukan tombol interaktif lagi - status dihitung otomatis dari
-     aktivitas SRS/quiz nyata (lihat paintProgressUI di app.js), jadi
-     dibuat tidak fokus-able agar tidak terasa seperti checkbox aktif. */
-  pointer-events: none;
-}
-.todo.done button {
-  background: var(--green);
-  border-color: var(--green);
-}
-.todo.done button:after {
-  content: "✓";
-  font-weight: bold;
-  color: white;
-}
-.todo span {
-  flex: 1;
-}
-.todo small {
-  color: var(--muted);
-}
-.chart {
-  height: 165px;
-  position: relative;
-  border-left: 1px solid #dbd8d1;
-  border-bottom: 1px solid #dbd8d1;
-  margin: 17px 6px 0 30px;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 40px,
-    #e8e5df 41px
-  );
-}
-.chart svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.axis {
-  position: absolute;
-  bottom: -23px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  color: #8d958f;
-  font-size: 11px;
-}
-.legend {
-  display: flex;
-  gap: 15px;
-  margin-top: 28px;
-  font-size: 12px;
-  color: var(--muted);
-}
-.legend i {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--rose);
-  margin-right: 5px;
-}
-.legend i.gold {
-  background: var(--gold);
-}
-.levels {
-  display: grid;
-  gap: 11px;
-}
-.level {
-  display: grid;
-  grid-template-columns: 60px 1fr auto;
-  gap: 13px;
-  align-items: center;
-  border: 1px solid #ebe6de;
-  padding: 12px;
-  border-radius: 7px;
-}
-.level b {
-  color: var(--navy);
 }
 .track {
   height: 7px;
@@ -730,6 +553,329 @@ body {
   .fill {
     transition: none;
   }
+}
+/* Kotak akun (nama + peran + keluar) di navbar atas. */
+.account-box {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-left: 18px;
+  padding-left: 18px;
+  border-left: 1px solid #e8e3da;
+  font-size: 12px;
+}
+.account-box span {
+  color: var(--navy);
+  font-weight: 700;
+}
+.account-box small {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.account-box button {
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--ink);
+  font: 700 11px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+.account-box button:hover {
+  border-color: var(--gold);
+}
+/* Navbar atas gelap (lihat .top di atas) - timpa warna terang di atas
+   supaya teks kotak akun tetap terbaca. */
+.account-box {
+  border-left-color: #ffffff26;
+}
+.account-box span {
+  color: #f4dfae;
+}
+.account-box small {
+  background: #ffffff14;
+  color: #c2cbd7;
+}
+.account-box button {
+  border-color: #ffffff30;
+  background: #ffffff12;
+  color: #f3e7cb;
+}
+.account-box button:hover {
+  border-color: #d6ad65;
+}
+@media (max-width: 900px) {
+  .main {
+    padding: 30px 23px;
+  }
+  .top {
+    padding: 0 22px;
+  }
+  .topnav {
+    margin-left: 0;
+    gap: 17px;
+  }
+}
+/* Sidebar desktop diganti drawer di sini (breakpoint disamakan dengan
+   700px yang dipakai .mobile-nav/.topnav lewat style ter-inject di
+   app.js - lihat mobilePwaStyle) - meluncur dari kiri, dipicu tombol
+   hamburger yang sama, ditutup lewat backdrop atau tombol itu lagi.
+   Bentuk rail/collapse desktop tidak dipakai di sini. */
+@media (max-width: 700px) {
+  .layout {
+    display: block;
+    padding: 0;
+    gap: 0;
+  }
+  /* Di mobile, tombol dalam-sidebar tidak berguna (sidebar geser total
+     keluar layar saat tertutup) - pakai tombol navbar sebagai gantinya,
+     dan baris tombolnya disembunyikan total (bukan cuma tombolnya)
+     supaya tidak menyisakan strip kosong 74px di puncak drawer. */
+  .side-toggle-row {
+    display: none;
+  }
+  .sidebar-toggle-mobile {
+    display: flex;
+  }
+  .side {
+    position: fixed;
+    inset: 0 auto 0 0;
+    height: 100vh;
+    width: min(82vw, 300px);
+    max-height: 100vh;
+    padding: 27px 16px;
+    border-radius: 0 20px 20px 0;
+    /* Tanpa shadow saat tertutup - box-shadow tidak ikut "terpotong"
+       oleh transform seperti kotaknya sendiri, jadi blur-nya akan
+       bocor ke tepi layar walau drawer sudah digeser keluar. Shadow
+       baru ditambahkan lewat .sidebar-mobile-open di bawah, saat
+       drawer benar-benar terlihat. */
+    box-shadow: none;
+    transform: translateX(-100%);
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s ease;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 70;
+  }
+  .layout.sidebar-mobile-open .side {
+    transform: translateX(0);
+    box-shadow:
+      0 16px 40px -18px #05101f70,
+      0 3px 10px -3px #05101f40;
+  }
+  /* Drawer mobile selalu tampilkan label penuh, terlepas dari
+     preferensi rail "collapsed" desktop yang mungkin tersimpan di
+     localStorage - selector disamakan supaya spesifisitasnya menang. */
+  .layout.sidebar-collapsed .menu-label-text,
+  .menu-label-text {
+    position: static;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .layout.sidebar-collapsed .menu-label,
+  .layout.sidebar-collapsed .study-note {
+    display: block;
+  }
+  .layout.sidebar-collapsed .side button[data-view] {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 11px 12px;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .active-indicator {
+    left: 4px;
+    right: 12px;
+    border-radius: 12px;
+  }
+  .layout.sidebar-collapsed .side {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .sidebar-tooltip {
+    display: none;
+  }
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: #05101f66;
+    z-index: 65;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .layout.sidebar-mobile-open .sidebar-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+@media (max-width: 610px) {
+  .layout {
+    display: block;
+  }
+  .top {
+    height: 62px;
+    padding: 0 16px;
+  }
+  .topnav {
+    display: none;
+  }
+  .main {
+    padding: 24px 16px;
+    background-attachment: scroll;
+  }
+  .head {
+    display: block;
+  }
+  .head > p {
+    margin-top: 8px;
+  }
+}
+/* Latar Jepang tampak jelas dengan overlay 10%. */
+.main {
+  background:
+    linear-gradient(90deg, #f6f5f21a, #f6f5f21a),
+    url("../assets/images/japan-paper-background.webp") center/cover fixed;
+}
+.app {
+  background: #d8d1c3;
+  box-shadow: 0 25px 80px #0b142c2b;
+}
+.top {
+  background-color: #13243e;
+  background-image:
+    radial-gradient(circle at 14% 50%, #d3ad6630 0 1px, transparent 1.5px),
+    radial-gradient(circle at 19% 50%, #d3ad6622 0 1px, transparent 1.5px);
+  background-size: 20px 20px;
+  border-bottom-color: #b5904e;
+}
+.brand {
+  color: #f3e7cb;
+}
+.brand small {
+  color: #d0b478;
+}
+.topnav button {
+  color: #c9d0d9;
+}
+.topnav button.active {
+  color: #fff3d7;
+  border-bottom-color: #d6ad65;
+}
+.identity {
+  color: #c2cbd7;
+}
+.identity b {
+  color: #f4dfae;
+}
+.main {
+  background:
+    linear-gradient(90deg, #dcd4c6cc, #dcd4c6cc),
+    url("../assets/images/japan-paper-background.webp") center/cover fixed;
+}
+.head {
+  border-bottom-color: #a58d62;
+}
+.eyebrow {
+  color: #876424;
+}
+.head h1,
+.card h2,
+.card h3 {
+  color: #172740;
+}
+.head p {
+  color: #59667b;
+}
+.card,
+.course,
+.answer {
+  background: #e9e1d2;
+  border-color: #cbb991;
+  box-shadow: 0 8px 24px #1d2a3d18;
+}
+.card:before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid #b7985533;
+  border-radius: 7px;
+  pointer-events: none;
+}
+.primary {
+  background: #142945;
+  color: #f6e8c8;
+  box-shadow: 0 5px 14px #1020373d;
+}
+.secondary {
+  background: #d9c39a;
+  color: #3d3020;
+}
+.track {
+  background: #d6d0c3;
+}
+.fill {
+  background: #234f87;
+}
+.card {
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+.card:after {
+  content: "✦";
+  position: absolute;
+  right: 13px;
+  top: 8px;
+  color: #9b793826;
+  font-size: 15px;
+}
+.main {
+  background:
+    linear-gradient(90deg, #dcd4c61a, #dcd4c61a),
+    url("../assets/images/japan-paper-background.webp") center/cover fixed;
+}
+
+/* ===================================================================
+   Kode di bawah ini tidak lagi dirujuk oleh HTML/JS mana pun (sudah
+   dicek lewat grep ke seluruh repo). Dipindah dari legacy-part-*.css
+   apa adanya (bukan dihapus) supaya reorganisasi ini murni pemindahan,
+   bukan pembersihan kode. Aman dihapus di kesempatan lain kalau sudah
+   dikonfirmasi tidak dipakai.
+   =================================================================== */
+.production-kanji-frame {
+  display: block;
+  width: 100%;
+  min-height: 1100px;
+  border: 0;
+  background: transparent;
+}
+.production-material-frame {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 1100px;
+  border: 0;
+  background: transparent;
+}
+.production-test-frame {
+  display: block;
+  width: 100%;
+  min-height: 760px;
+  border: 0;
+  background: transparent;
 }
 .material-grid {
   display: grid;
@@ -777,121 +923,8 @@ body {
   font-size: 12px;
   line-height: 1.6;
 }
-.flash-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 295px;
-  gap: 15px;
-}
-.filters {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-.filter {
-  border: 1px solid #ded9d0;
-  background: #fffdf9;
-  color: #5e6878;
-  border-radius: 20px;
-  padding: 8px 13px;
-  font: 600 12px "DM Sans";
-  cursor: pointer;
-}
-.filter.active {
-  background: var(--navy);
-  color: white;
-  border-color: var(--navy);
-}
-.flashcard {
-  height: 320px;
-  perspective: 1000px;
-  cursor: pointer;
-}
-.flash-inner {
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.5s;
-}
-.flashcard.flipped .flash-inner {
-  transform: rotateY(180deg);
-}
-.face {
-  position: absolute;
-  inset: 0;
-  border: 1px solid #e4ded4;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  backface-visibility: hidden;
-  background: linear-gradient(140deg, #fffefb, #f4f0e8);
-  box-shadow: 0 12px 30px #1d2a3d0a;
-}
-.face .kana {
-  font: 700 76px "Zen Kaku Gothic New";
-  color: var(--navy);
-}
-.face small {
-  display: block;
-  color: var(--muted);
-  margin-top: 11px;
-}
-.back {
-  transform: rotateY(180deg);
-  background: linear-gradient(140deg, #eee6d8, #faf7f0);
-}
-.back b {
-  font-size: 34px;
-  color: var(--navy);
-}
-.back p {
-  color: #5b6778;
-  margin: 8px;
-}
-.flash-controls {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 16px;
-}
-.card-count {
-  text-align: center;
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 15px;
-}
-.learning-tips p {
-  color: var(--muted);
-  line-height: 1.6;
-}
-.learning-tips hr {
-  border: 0;
-  border-top: 1px solid var(--line);
-  margin: 20px 0;
-}
 .test-intro {
   max-width: 775px;
-}
-.mode-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 17px;
-}
-.mode {
-  padding: 21px;
-}
-.mode p {
-  color: var(--muted);
-  line-height: 1.55;
-  min-height: 44px;
-}
-.mode ul {
-  padding-left: 18px;
-  color: #667184;
-  line-height: 1.8;
-  font-size: 13px;
 }
 .question-box {
   max-width: 760px;
@@ -951,3 +984,22 @@ body {
   margin-top: 18px;
   line-height: 1.55;
 }
+.today {
+  background: linear-gradient(120deg, #eee6d7, #d7d9ca);
+}
+.question {
+  color: #13243e;
+}
+.answer:hover {
+  background: #f2eadb;
+  border-color: #a47e3d;
+}
+.lesson:before {
+  content: "❀";
+  position: absolute;
+  right: 17px;
+  bottom: 12px;
+  color: #a3654c1c;
+  font-size: 28px;
+  font-family: serif;
+} /* Ilustrasi Jepang tetap dominan; overlay hanya 10%. */

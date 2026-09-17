@@ -1,0 +1,157 @@
+/* Gerbang login: sembunyikan seluruh app secara default (bukan lewat JS,
+   supaya tidak sempat "berkedip" menampilkan konten sebelum login
+   dikonfirmasi), munculkan begitu body dapat class "authed". */
+body:not(.authed) .app {
+  display: none;
+}
+body.authed .login-screen {
+  display: none;
+}
+.login-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 20% 20%, #1d3657 0%, var(--navy) 60%, #0a1626 100%);
+  padding: 20px;
+}
+.auth-session-loader {
+  display: none;
+  place-items: center;
+  gap: 10px;
+  color: #f8e8c4;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+body.auth-checking .auth-session-loader {
+  display: grid;
+}
+body.auth-checking .login-card {
+  display: none !important;
+}
+.auth-session-loader img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+.auth-session-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ffffff40;
+  border-top-color: #d7b66f;
+  border-radius: 50%;
+  animation: auth-session-spin 0.8s linear infinite;
+}
+@keyframes auth-session-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-session-spinner { animation: none; }
+}
+.login-card {
+  display: grid;
+  gap: 14px;
+  width: min(360px, 100%);
+  padding: 34px 30px;
+  border: 1px solid #ffffff22;
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 30px 70px #05101f66;
+  text-align: center;
+}
+.login-card .mark {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.login-card h1 {
+  margin: 4px 0 0;
+  color: var(--navy);
+  font-size: 20px;
+}
+.login-card > p {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.login-card label {
+  display: grid;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+}
+.login-card input {
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: 14px "DM Sans", sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+.login-card input:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+.login-error {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid #e2b3a8;
+  border-radius: 8px;
+  background: #fbe9e5;
+  color: #92382a;
+  font-size: 12px;
+  text-align: left;
+}
+.login-card button {
+  padding: 12px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--navy);
+  color: #f8e8c4;
+  font: 700 14px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+.login-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.login-card button.link-btn {
+  padding: 2px;
+  background: none;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-decoration: underline;
+}
+.login-card button.link-btn:hover {
+  color: var(--navy);
+}
+
+
+/* Tombol "Install aplikasi" (PWA) + petunjuk manual untuk iOS. */
+.login-card .install-app-btn {
+  margin-top: -2px;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+.login-card .install-app-btn:hover {
+  border-color: var(--gold);
+}
+.ios-install-hint {
+  margin: -2px 0 0;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--wash);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: left;
+}

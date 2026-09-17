@@ -19,7 +19,7 @@ dashboard yang tenang. Ciri utamanya:
 ## Warna utama
 
 Sumber warna bersama berada di bagian paling atas
-`css/legacy-part-1.css` sebagai CSS custom properties.
+`css/base.css` sebagai CSS custom properties.
 
 | Variabel | Nilai | Pemakaian umum |
 |---|---:|---|
@@ -107,14 +107,20 @@ warna, teks, `aria-pressed`, atau status aktif.
 
 ## Urutan pemuatan CSS
 
-`css/legacy-part-1.css` sampai `legacy-part-4.css` adalah hasil pemecahan
-berurutan dari satu stylesheet lama. Urutannya merupakan bagian dari desain:
-aturan di file berikutnya dapat sengaja menimpa aturan sebelumnya. Karena itu:
+Setiap halaman memuat CSS dengan urutan tetap: `base.css` (variabel +
+reset) → `shell.css` (header/sidebar/nav + komponen dasar) → `auth.css`
+(layar login) → `css/pages/<nama>.css` (konten khusus halaman itu).
+Urutan ini bagian dari desain: beberapa selector (mis. `.main`, `.card`,
+`.top`) sengaja didefinisikan ulang di file yang dimuat belakangan untuk
+menimpa definisi sebelumnya. Karena itu:
 
-1. jangan menukar urutan empat `<link>` tersebut;
-2. jangan memindahkan selector antar-file tanpa uji visual menyeluruh;
-3. letakkan CSS halaman (`css/pages/*.css`) setelah empat file legacy;
-4. naikkan versi cache di HTML dan `sw.js` jika CSS diubah.
+1. jangan menukar urutan `<link>` tersebut;
+2. jangan memindahkan selector antar-file tanpa uji visual menyeluruh
+   (cek juga apakah selector itu didefinisikan ulang di tempat lain);
+3. CSS khusus halaman (`css/pages/*.css`) selalu dimuat PALING TERAKHIR;
+4. naikkan `CACHE_NAME` di `sw.js` kalau ada file CSS yang isinya diubah
+   (lihat "Konvensi cache-busting" di `README.md` — sekarang cuma satu
+   angka itu yang perlu dinaikkan, tidak ada lagi query string `?v=`).
 
 ## Checklist sebelum mengubah tampilan
 

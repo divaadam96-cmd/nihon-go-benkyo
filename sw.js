@@ -1,20 +1,21 @@
 // Satu-satunya angka yang perlu dinaikkan setiap kali ada file di ASSETS
 // yang isinya berubah (JS/CSS/data/gambar). Tanpa ini, service worker
 // akan terus menyajikan versi lama dari cache ke user yang sudah install.
-const CACHE_NAME = 'nihon-go-benkyo-v120';
+const CACHE_NAME = 'nihon-go-benkyo-v121';
 const ASSETS = [
   'index.html',
-  'css/legacy-part-1.css', 'css/legacy-part-2.css', 'css/legacy-part-3.css', 'css/legacy-part-4.css',
+  'css/base.css', 'css/shell.css', 'css/auth.css',
   'js/app-shell.js', 'js/app-sidebar.js', 'js/app-effects.js', 'js/quiz-results.js', 'js/srs.js', 'js/auth.js', 'js/assignments.js', 'js/pwa.js',
   'js/pages/dashboard.js',
   'nihon-go-benkyo.webmanifest',
   'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png',
-  'pages/materi.html', 'js/pages/materi.js',
-  'pages/hafalan.html', 'js/pages/hafalan.js',
+  'css/pages/dashboard.css',
+  'pages/materi.html', 'css/pages/materi.css', 'js/pages/materi.js',
+  'pages/hafalan.html', 'css/pages/hafalan.css', 'js/pages/hafalan.js',
   'pages/kanji.html', 'css/pages/kanji.css', 'js/pages/kanji.js',
   'pages/latihan.html', 'css/pages/latihan.css', 'js/pages/latihan.js',
   'pages/pantau.html', 'css/pages/pantau.css', 'js/pages/pantau.js',
-  'pages/admin.html', 'js/pages/admin.js',
+  'pages/admin.html', 'css/pages/admin.css', 'js/pages/admin.js',
   'data/materi-data.js', 'data/kanji-data.js', 'data/kanji-stroke-data.js', 'data/kana-data.js', 'data/bab-data.js',
   'assets/images/japan-paper-background.webp', 'assets/images/logo.webp',
 ];

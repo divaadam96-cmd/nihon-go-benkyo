@@ -1,0 +1,123 @@
+/* Panel Admin (Operator): form buat akun + daftar akun. */
+.admin-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 18px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+}
+.admin-form-card form {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+.admin-form-card label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.field-hint {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.admin-form-card input,
+.admin-form-card select {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: 14px "DM Sans", sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+.admin-form-card input:focus,
+.admin-form-card select:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+.form-success {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid #a9d1a6;
+  border-radius: 8px;
+  background: #e8f5e6;
+  color: #2f6b2a;
+  font-size: 12px;
+  text-align: left;
+}
+.admin-account-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  max-height: 460px;
+  overflow-y: auto;
+}
+.admin-account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--wash);
+}
+.admin-account-row b {
+  display: block;
+  color: var(--navy);
+  font-size: 13px;
+}
+.admin-account-row small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+.admin-account-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.admin-role-badge {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.admin-delete-btn {
+  padding: 6px 10px;
+  border: 1px solid #e2b3a8;
+  border-radius: 7px;
+  background: #fbe9e5;
+  color: #92382a;
+  font: 700 11px "DM Sans", sans-serif;
+  cursor: pointer;
+}
+.admin-delete-btn:hover {
+  background: #f6d6cd;
+}
+.admin-delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.admin-role-operator {
+  background: #f4dfae;
+  color: #7a5a12;
+}
+.admin-role-sensei {
+  background: #cfe0f7;
+  color: #1f4c85;
+}
+.admin-role-siswa {
+  background: #dcefe0;
+  color: #2f6b2a;
+}
