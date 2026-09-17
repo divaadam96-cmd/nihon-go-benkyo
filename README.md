@@ -146,13 +146,19 @@ diblokir CORS saat diakses dari domain baru tersebut.
 
 ## Konvensi cache-busting
 
-File statis dimuat dengan query string versi (`dashboard.js?v=1`,
-`srs.js?v=5`, dst.) dan didaftarkan juga di `sw.js` (`ASSETS` +
-`CACHE_NAME`). **Setiap kali sebuah file diubah, naikkan angka versinya
-di SEMUA tempat ia dirujuk** (tag `<script>`/`<link>` di `index.html`
-dan/atau `pages/*.html` yang memuatnya, dan entri di `sw.js`), lalu
-naikkan juga `CACHE_NAME` di `sw.js` — kalau tidak, pengguna yang sudah
-meng-install PWA bisa tetap memakai versi lama dari cache.
+File statis dimuat tanpa query string versi — URL-nya apa adanya
+(`dashboard.js`, `srs.js`, dst.) baik di `index.html`/`pages/*.html`
+maupun di `ASSETS` pada `sw.js`. Satu-satunya sumber kebenaran versi
+adalah **`CACHE_NAME` di baris pertama `sw.js`**. Saat `install`,
+service worker mengambil semua file di `ASSETS` dengan `{cache:
+'reload'}` (bypass HTTP cache browser, langsung ke network), jadi
+tidak perlu query string per file lagi.
+
+**Setiap kali ada file di `ASSETS` yang isinya diubah, naikkan
+`CACHE_NAME` di `sw.js` (satu tempat saja)** — kalau tidak, pengguna
+yang sudah meng-install PWA bisa tetap memakai versi lama dari cache.
+Kalau menambah file baru yang perlu bisa diakses offline, tambahkan
+juga path-nya ke `ASSETS`.
 
 ## Testing
 

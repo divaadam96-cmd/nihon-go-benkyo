@@ -1,23 +1,32 @@
-const CACHE_NAME = 'nihon-go-benkyo-v119';
+// Satu-satunya angka yang perlu dinaikkan setiap kali ada file di ASSETS
+// yang isinya berubah (JS/CSS/data/gambar). Tanpa ini, service worker
+// akan terus menyajikan versi lama dari cache ke user yang sudah install.
+const CACHE_NAME = 'nihon-go-benkyo-v120';
 const ASSETS = [
   'index.html',
-  'css/legacy-part-1.css?build=80', 'css/legacy-part-2.css?build=80', 'css/legacy-part-3.css?build=80', 'css/legacy-part-4.css?build=81',
-  'js/app-shell.js?v=3', 'js/app-sidebar.js?v=2', 'js/app-effects.js?v=5', 'js/quiz-results.js?v=3', 'js/srs.js?v=5', 'js/auth.js?v=7', 'js/assignments.js?v=5', 'js/pwa.js?v=2',
-  'js/pages/dashboard.js?v=1',
+  'css/legacy-part-1.css', 'css/legacy-part-2.css', 'css/legacy-part-3.css', 'css/legacy-part-4.css',
+  'js/app-shell.js', 'js/app-sidebar.js', 'js/app-effects.js', 'js/quiz-results.js', 'js/srs.js', 'js/auth.js', 'js/assignments.js', 'js/pwa.js',
+  'js/pages/dashboard.js',
   'nihon-go-benkyo.webmanifest',
   'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png',
-  'pages/materi.html?v=3', 'js/pages/materi.js?v=2',
-  'pages/hafalan.html?v=3', 'js/pages/hafalan.js?v=1',
-  'pages/kanji.html?v=21', 'css/pages/kanji.css?v=14', 'js/pages/kanji.js?v=18',
-  'pages/latihan.html?v=22', 'css/pages/latihan.css?v=9', 'js/pages/latihan.js?v=21',
-  'pages/pantau.html?v=5', 'css/pages/pantau.css?v=3', 'js/pages/pantau.js?v=4',
-  'pages/admin.html?v=2', 'js/pages/admin.js?v=1',
-  'data/materi-data.js?v=2', 'data/kanji-data.js', 'data/kanji-stroke-data.js?v=2', 'data/kana-data.js', 'data/bab-data.js',
+  'pages/materi.html', 'js/pages/materi.js',
+  'pages/hafalan.html', 'js/pages/hafalan.js',
+  'pages/kanji.html', 'css/pages/kanji.css', 'js/pages/kanji.js',
+  'pages/latihan.html', 'css/pages/latihan.css', 'js/pages/latihan.js',
+  'pages/pantau.html', 'css/pages/pantau.css', 'js/pages/pantau.js',
+  'pages/admin.html', 'js/pages/admin.js',
+  'data/materi-data.js', 'data/kanji-data.js', 'data/kanji-stroke-data.js', 'data/kana-data.js', 'data/bab-data.js',
   'assets/images/japan-paper-background.webp', 'assets/images/logo.webp',
 ];
 self.addEventListener('install', event => {
   self.skipWaiting();
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache =>
+      // cache: 'reload' memaksa fetch lewat network, bukan HTTP cache browser,
+      // supaya bump CACHE_NAME di atas cukup untuk membawa file terbaru.
+      Promise.all(ASSETS.map(url => fetch(url, { cache: 'reload' }).then(res => cache.put(url, res))))
+    )
+  );
 });
 self.addEventListener('activate', event => {
   event.waitUntil(
