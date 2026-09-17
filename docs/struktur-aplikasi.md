@@ -48,7 +48,11 @@ Ambil contoh membuka `pages/materi.html`:
    `.app` benar-benar terlihat), lalu memanggil **`window.initPage()`**.
 6. `initPage()` didefinisikan oleh file JS **khusus halaman itu** —
    untuk `materi.html`, itu adalah `js/pages/materi.js`. Fungsi inilah
-   yang benar-benar mengisi konten (daftar pelajaran, dst).
+   yang benar-benar mengisi konten (daftar pelajaran, dst). Khusus
+   `materi.js`: teks pelajaran (grammar Pelajaran 1-50) sendiri ada di
+   `data/materi-grammar-data.js` (dipasang lewat satu pemanggilan
+   `installMateriGrammarContent()` di awal `initPage()`) — kalau mau
+   edit teks pelajaran, di situ tempatnya, bukan di `materi.js`.
 
 Pola `initPage()` ini SAMA untuk ketujuh halaman — kalau ingin tahu apa
 yang terjadi saat sebuah halaman dibuka, cari `function initPage()` di

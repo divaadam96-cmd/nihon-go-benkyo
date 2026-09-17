@@ -1,7 +1,7 @@
 // Satu-satunya angka yang perlu dinaikkan setiap kali ada file di ASSETS
 // yang isinya berubah (JS/CSS/data/gambar). Tanpa ini, service worker
 // akan terus menyajikan versi lama dari cache ke user yang sudah install.
-const CACHE_NAME = 'nihon-go-benkyo-v121';
+const CACHE_NAME = 'nihon-go-benkyo-v122';
 const ASSETS = [
   'index.html',
   'css/base.css', 'css/shell.css', 'css/auth.css',
@@ -10,7 +10,7 @@ const ASSETS = [
   'nihon-go-benkyo.webmanifest',
   'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png',
   'css/pages/dashboard.css',
-  'pages/materi.html', 'css/pages/materi.css', 'js/pages/materi.js',
+  'pages/materi.html', 'css/pages/materi.css', 'data/materi-grammar-data.js', 'js/pages/materi.js',
   'pages/hafalan.html', 'css/pages/hafalan.css', 'js/pages/hafalan.js',
   'pages/kanji.html', 'css/pages/kanji.css', 'js/pages/kanji.js',
   'pages/latihan.html', 'css/pages/latihan.css', 'js/pages/latihan.js',
