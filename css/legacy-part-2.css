@@ -465,7 +465,7 @@ body {
   border: 1px solid var(--line);
   background:
     linear-gradient(90deg, #f6f5f2d9, #f6f5f2d9),
-    url("../assets/images/japan-paper-background.png") center/cover fixed;
+    url("../assets/images/japan-paper-background.webp") center/cover fixed;
 }
 .view {
   display: none;

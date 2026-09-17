@@ -35,7 +35,7 @@ button,input,select{font:inherit}.hero{display:flex;align-items:flex-end;justify
 .context-audio p{margin:6px 0 3px;color:var(--navy);font:700 13px/1.7 "Noto Serif JP"}
 .context-audio small{color:#72808c;font-size:8px}
 .context-audio button{flex:none;padding:7px 9px;border:1px solid #cbb78f;border-radius:6px;color:#75572d;background:#fffaf1;font-size:8px;font-weight:800;cursor:pointer}
-.kanji-stage:fullscreen,.kanji-stage.calligraphy-expanded{width:100vw;height:100vh;margin:0;padding:24px;border:0;border-radius:0;background:linear-gradient(#f9f4e9f2,#f9f4e9fa),url("../../assets/images/japan-paper-background.png") center/cover;box-shadow:none}
+.kanji-stage:fullscreen,.kanji-stage.calligraphy-expanded{width:100vw;height:100vh;margin:0;padding:24px;border:0;border-radius:0;background:linear-gradient(#f9f4e9f2,#f9f4e9fa),url("../../assets/images/japan-paper-background.webp") center/cover;box-shadow:none}
 .kanji-stage:fullscreen{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;align-items:center}
 .kanji-stage:fullscreen>header>span{display:none}
 .kanji-stage:fullscreen .fullscreen-calligraphy{font-size:10px}

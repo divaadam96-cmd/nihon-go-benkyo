@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nihon-go-benkyo-v118';
+const CACHE_NAME = 'nihon-go-benkyo-v119';
 const ASSETS = [
   'index.html',
   'css/legacy-part-1.css?build=80', 'css/legacy-part-2.css?build=80', 'css/legacy-part-3.css?build=80', 'css/legacy-part-4.css?build=81',
@@ -13,7 +13,7 @@ const ASSETS = [
   'pages/pantau.html?v=5', 'css/pages/pantau.css?v=3', 'js/pages/pantau.js?v=4',
   'pages/admin.html?v=2', 'js/pages/admin.js?v=1',
   'data/materi-data.js?v=2', 'data/kanji-data.js', 'data/kanji-stroke-data.js?v=2', 'data/kana-data.js', 'data/bab-data.js',
-  'assets/images/japan-paper-background.png', 'assets/images/logo.png',
+  'assets/images/japan-paper-background.webp', 'assets/images/logo.webp',
 ];
 self.addEventListener('install', event => {
   self.skipWaiting();

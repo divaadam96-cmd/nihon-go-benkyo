@@ -163,7 +163,7 @@
 .main {
   background:
     linear-gradient(90deg, #f6f5f21a, #f6f5f21a),
-    url("../assets/images/japan-paper-background.png") center/cover fixed;
+    url("../assets/images/japan-paper-background.webp") center/cover fixed;
 }
 .app {
   background: #d8d1c3;
@@ -199,7 +199,7 @@
 .main {
   background:
     linear-gradient(90deg, #dcd4c6cc, #dcd4c6cc),
-    url("../assets/images/japan-paper-background.png") center/cover fixed;
+    url("../assets/images/japan-paper-background.webp") center/cover fixed;
 }
 .head {
   border-bottom-color: #a58d62;
@@ -297,7 +297,7 @@
 .main {
   background:
     linear-gradient(90deg, #dcd4c61a, #dcd4c61a),
-    url("../assets/images/japan-paper-background.png") center/cover fixed;
+    url("../assets/images/japan-paper-background.webp") center/cover fixed;
 }
 .grammar-directory {
   display: grid;
