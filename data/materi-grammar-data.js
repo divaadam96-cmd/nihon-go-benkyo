@@ -1,120 +1,103 @@
-/* Konten teks pelajaran (grammar Pelajaran 1-50 + kerangka Buku 1/2) untuk
-   halaman Materi. Dipisah dari js/pages/materi.js (2267 baris, sebagian
-   besar teks pelajaran bercampur dengan logika render/quiz/progress)
-   supaya konten dan logika tidak tercampur - lihat README.md/docs/desain.md.
-   installMateriGrammarContent() dipanggil SEKALI oleh initPage() di
-   materi.js, di awal fungsi. Isinya PERSIS sama seperti sebelum dipisah
-   (dipindah apa adanya, bukan ditulis ulang) - kalau mau ubah teks
-   pelajaran, di sinilah tempatnya; kalau mau ubah cara pelajaran
-   dirender/logika quiz, itu tetap di materi.js.
-   Butuh fullLessons/detailedGrammar/pointExamples dari data/materi-data.js
-   (harus dimuat SEBELUM file ini). */
+/* Konten teks pelajaran (grammar Pelajaran 1-50, Buku 1 & Buku 2) untuk
+   halaman Materi. installMateriGrammarContent() dipanggil SEKALI oleh
+   initPage() di materi.js, di awal fungsi.
+
+   Buku 1 dan Buku 2 dulu punya cara pasang konten yang BEDA (Buku 2 tadinya
+   fitur terpisah "Kelas" di sidebar, digabung belakangan cuma di tampilan -
+   lihat README.md/docs/desain.md). Sekarang KEDUANYA memakai bentuk yang
+   sama: satu array data (MATERI_BOOK1_LESSONS / MATERI_BOOK2_LESSONS), satu
+   fungsi render bersama (buildLessonHtml). Mau tambah/hapus/ubah 1 pelajaran?
+   Tinggal ubah 1 entri array - tidak perlu utak-atik fungsi render atau
+   file lain.
+
+   Isi tiap pelajaran (teks, urutan, nomor tampil) PERSIS SAMA seperti
+   sebelum restrukturisasi ini - diverifikasi byte-demi-byte di browser
+   sungguhan untuk seluruh 50 pelajaran sebelum di-commit. Ini murni
+   perubahan STRUKTUR kode, bukan konten. */
+
+function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel, practice) {
+  return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${title}</summary><div class="html-content">${items.map((x, i) => `<div class="grammar-point"><h3>${i + 1}. ${x[0]}</h3><p>${x[1]}</p><span class="grammar-example">${x[2]}<span class="grammar-meaning">${x[3]}</span></span></div>`).join("")}<div class="html-note"><div><b>${focusLabel}</b>${focus}</div><div><b>${practiceLabel}</b>${practice}</div></div></div></details>`;
+}
+
 function installMateriGrammarContent() {
-/* Mode embed (?source=1): sembunyikan header/sidebar/mobile-nav, tampilkan
-   hanya konten materi - dipakai untuk menyematkan materi ini di tempat lain
-   (mis. iframe eksternal). Dulu juga perlu memaksa "view" materials aktif
-   dan menyembunyikan view lain; sekarang halaman ini isinya cuma materi,
-   jadi bagian itu tidak diperlukan lagi. */
 if (new URLSearchParams(location.search).get("source") === "1") {
   const sourceModeStyle = document.createElement("style");
   sourceModeStyle.textContent =
     ".top,.side,.mobile-nav{display:none!important}.layout{display:block;min-height:0}.main{padding:0;background:transparent}#materials .head,#materials>.material-grid,#materials>.notice{display:none!important}#materials{padding:0}.app{max-width:none;box-shadow:none;background:transparent}";
   document.head.appendChild(sourceModeStyle);
 }
+
 document.getElementById("materials").innerHTML =
-  `<div class="head"><div><div class="eyebrow">Materi pembelajaran HTML lengkap</div><h1>Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Setiap pelajaran memuat seluruh poin inti tata bahasa dalam penulisan ulang yang terstruktur untuk web.</p></div></div><div class="html-course">${fullLessons.map((lesson, i) => `<details class="html-lesson" ${i === 0 ? "open" : ""}><summary><span class="lesson-number">${i + 1}</span>Pelajaran ${i + 1}: ${lesson[0]}</summary><div class="html-content"><h3>Pokok pembahasan</h3><div class="html-pattern">${detailedGrammar[i][2]}</div><ul class="lesson-points">${lesson[1].map((p) => `<li>${p}</li>`).join("")}</ul><div class="html-note"><div><b>Tujuan belajar</b>Memahami fungsi pola dan dapat memilih bentuk yang sesuai untuk percakapan dasar.</div><div><b>Latihan mandiri</b>Tulis minimal dua kalimat tentang kehidupan sehari-hari menggunakan pola Pelajaran ${i + 1}, lalu baca dengan suara keras.</div></div></div></details>`).join("")}</div>`;
-const lessonOne = `<summary><span class="lesson-number">1</span>Pelajaran 1: Kalimat nominal dasar</summary><div class="html-content"><div class="grammar-point"><h3>1. N1 は N2 です</h3><p>Pola ini dipakai untuk memperkenalkan atau menjelaskan identitas. Kata benda sebelum は menjadi topik pembicaraan; kata benda sesudahnya menjadi informasi atau predikat. です membuat pernyataan terdengar sopan.</p><span class="grammar-example">わたし は マイク・ミラー です。<span class="grammar-meaning">Saya Mike Miller.</span></span></div><div class="grammar-point"><h3>2. N1 は N2 じゃありません</h3><p>Ini adalah bentuk negatif dari kalimat です. Dalam percakapan biasa digunakan じゃありません; bentuk ではありません lebih formal dan lebih sering dijumpai pada situasi resmi atau tulisan.</p><span class="grammar-example">サントスさん は 学生 じゃありません。<span class="grammar-meaning">Sdr. Santos bukan mahasiswa.</span></span></div><div class="grammar-point"><h3>3. N1 は N2 ですか</h3><p>Tambahkan か di akhir kalimat untuk membuat pertanyaan. Untuk jawaban ya/tidak, gunakan はい atau いいえ. Jika bagian yang ditanyakan belum diketahui, gantilah bagian itu dengan kata tanya seperti だれ、なん、どなた、atau どのかた.</p><span class="grammar-example">ミラーさん は アメリカ人 ですか。<span class="grammar-meaning">Apakah Sdr. Miller orang Amerika?</span></span></div><div class="grammar-point"><h3>4. N も</h3><p>も berarti juga atau pun. Partikel ini dipakai ketika predikat pada kalimat kedua sama dengan predikat pada kalimat sebelumnya. も menggantikan は pada posisi topik.</p><span class="grammar-example">ミラーさん は 会社員 です。グプタさん も 会社員 です。<span class="grammar-meaning">Sdr. Miller pegawai perusahaan. Sdr. Gupta juga pegawai perusahaan.</span></span></div><div class="grammar-point"><h3>5. N1 の N2</h3><p>の menghubungkan dua kata benda. Kata benda pertama menerangkan kata benda kedua, misalnya asal, kepemilikan, organisasi, atau jenis. Keseluruhan frasa N1 の N2 dianggap satu kelompok kata benda.</p><span class="grammar-example">ミラーさん は IMC の 会社員 です。<span class="grammar-meaning">Sdr. Miller pegawai perusahaan IMC.</span></span></div><div class="grammar-point"><h3>6. ～さん</h3><p>さん diletakkan setelah nama atau marga orang lain sebagai sapaan sopan. Jangan gunakan さん setelah nama diri sendiri. Untuk anak kecil atau orang yang sangat akrab, ～ちゃん dapat dipakai. あなた biasanya dihindari bila nama lawan bicara sudah diketahui; gunakan nama + さん agar lebih wajar.</p><span class="grammar-example">あの かた は ミラーさん です。<span class="grammar-meaning">Orang itu Sdr. Miller.</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 1</b>Perkenalan diri, pekerjaan, asal negara, serta cara bertanya dan menjawab secara sopan.</div><div><b>Latihan mandiri</b>Buat lima kalimat: dua pernyataan です, satu negatif, satu pertanyaan, dan satu kalimat memakai の atau も.</div></div></div>`;
-const firstLesson = document.querySelector("#materials .html-lesson");
-if (firstLesson) {
-  firstLesson.innerHTML = lessonOne;
-  firstLesson.open = true;
-}
-document
-  .querySelectorAll("#materials .html-lesson")
-  .forEach((lesson, lessonIndex) => {
-    if (lessonIndex === 0) return;
-    lesson.querySelectorAll(".lesson-points li").forEach((point, i) => {
-      const source =
-        pointExamples[lessonIndex][i % pointExamples[lessonIndex].length];
-      const [jp, id] = source.split("|");
-      point.insertAdjacentHTML(
-        "beforeend",
-        `<span class="inline-example">Contoh: ${jp}<em>${id}</em></span>`,
-      );
-    });
-  });
-const lessonTwo = `<summary><span class="lesson-number">2</span>Pelajaran 2: Kata tunjuk dan persamaan</summary><div class="html-content"><div class="grammar-point"><h3>1. これ／それ／あれ</h3><p>Ketiganya menunjuk benda dan dapat berdiri sendiri sebagai kata benda. これ untuk benda dekat pembicara, それ dekat lawan bicara, dan あれ jauh dari keduanya.</p><span class="grammar-example">これは じしょですか。<span class="grammar-meaning">Apakah ini kamus?</span></span></div><div class="grammar-point"><h3>2. この N／その N／あの N</h3><p>Gunakan bentuk ini ketika kata tunjuk menerangkan kata benda. この dekat pembicara, その dekat lawan bicara, dan あの jauh dari kedua pihak. Berbeda dengan これ, bentuk ini wajib diikuti kata benda.</p><span class="grammar-example">この 本は わたしのです。<span class="grammar-meaning">Buku ini kepunyaan saya.</span></span></div><div class="grammar-point"><h3>3. そうです</h3><p>Dalam kalimat nominal, そうです menjawab bahwa informasi atau dugaan lawan bicara benar. Untuk menyangkal, gunakan ちがいます atau bentuk negatif yang sesuai, bukan そうではありません.</p><span class="grammar-example">それは じしょですか。はい、そうです。<span class="grammar-meaning">Apakah itu kamus? Ya, benar.</span></span></div><div class="grammar-point"><h3>4. ～か、～か</h3><p>Pola ini memberi pilihan dari dua atau lebih kemungkinan. Jawaban tidak memakai はい atau いいえ, tetapi langsung menyebut pilihan yang benar.</p><span class="grammar-example">これは 「9」ですか、「7」ですか。……「9」です。<span class="grammar-meaning">Ini “9” atau “7”? …“9”.</span></span></div><div class="grammar-point"><h3>5. N1 の N2</h3><p>の menghubungkan dua kata benda. N1 dapat menerangkan jenis atau asal N2, misalnya buku komputer, dan juga dapat menyatakan kepemilikan, misalnya buku saya.</p><span class="grammar-example">これは コンピューターの 本です。<span class="grammar-meaning">Ini buku komputer.</span></span></div><div class="grammar-point"><h3>6. の sebagai pengganti kata benda</h3><p>の dapat menggantikan kata benda yang sudah disebut bila konteksnya jelas. Penggunaan ini lazim untuk benda, tetapi tidak dipakai untuk menggantikan orang.</p><span class="grammar-example">これは だれの かばんですか。……佐藤さんのです。<span class="grammar-meaning">Tas ini milik siapa? …Milik Sato.</span></span></div><div class="grammar-point"><h3>7. お～</h3><p>Awalan お dapat ditempatkan di depan beberapa kata benda untuk memberi nuansa sopan. Contoh umum adalah おみやげ dan おさけ.</p><span class="grammar-example">これは おみやげです。<span class="grammar-meaning">Ini oleh-oleh.</span></span></div><div class="grammar-point"><h3>8. そうですか</h3><p>Ekspresi ini dipakai ketika menerima informasi baru dan menunjukkan bahwa pembicara memahami atau menyadari informasi tersebut. Intonasi biasanya menurun.</p><span class="grammar-example">これは シュミットさんの かさです。……そうですか。<span class="grammar-meaning">Ini payung milik Sdr. Schmidt. …Oh, begitu.</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 2</b>Menunjuk benda, membedakan jarak, menanyakan kepemilikan, dan memberi jawaban atas informasi.</div><div><b>Latihan mandiri</b>Pilih lima benda di sekitar Anda. Buat pertanyaan memakai これ／それ／あれ lalu jawab dengan そうです atau ちがいます.</div></div></div>`;
-const lessonTwoElement = document.querySelectorAll(
-  "#materials .html-lesson",
-)[1];
-if (lessonTwoElement) {
-  lessonTwoElement.innerHTML = lessonTwo;
-}
-const lessonThree = `<summary><span class="lesson-number">3</span>Pelajaran 3: Tempat, arah, dan asal produk</summary><div class="html-content"><div class="grammar-point"><h3>1. ここ／そこ／あそこ／こちら／そちら／あちら</h3><p>ここ・そこ・あそこ menunjuk tempat. ここ dekat pembicara, そこ dekat lawan bicara, dan あそこ jauh dari keduanya. こちら・そちら・あちら dapat menunjuk arah atau tempat dengan nuansa lebih sopan.</p><span class="grammar-example">おてあらいは あそこです。<span class="grammar-meaning">Kamar kecil di sana.</span></span></div><div class="grammar-point"><h3>2. N は tempat です</h3><p>Pola ini menyatakan lokasi benda, fasilitas, atau orang. Tempat berada sesudah topik dan diikuti です.</p><span class="grammar-example">でんわは 2かいです。<span class="grammar-meaning">Telepon di lantai dua.</span></span></div><div class="grammar-point"><h3>3. どこ／どちら</h3><p>どこ adalah kata tanya tempat. どちら terutama untuk arah dan dapat dipakai untuk tempat dengan cara yang lebih sopan. Saat bertanya nama negara, sekolah, atau perusahaan, pakailah どこ atau どちら, bukan なん.</p><span class="grammar-example">エレベーターは どちらですか。……あちらです。<span class="grammar-meaning">Lift di sebelah mana? …Di sebelah sana.</span></span></div><div class="grammar-point"><h3>4. N1 の N2: asal atau pembuat</h3><p>Jika N1 adalah negara dan N2 adalah produk, N1 の menunjukkan produk buatan negara tersebut. Jika N1 adalah perusahaan dan N2 adalah produk, maknanya menunjukkan produk buatan perusahaan itu.</p><span class="grammar-example">これは にほんの コンピューターです。<span class="grammar-meaning">Ini komputer buatan Jepang.</span></span></div><div class="grammar-point"><h3>5. Daftar kata penunjuk</h3><p>Kelompok こ, そ, dan あ berlaku konsisten: これ・それ・あれ untuk barang; このN・そのN・あのN untuk barang/orang; ここ・そこ・あそこ untuk tempat; serta こちら・そちら・あちら untuk arah atau tempat yang sopan. Bentuk tanya pasangannya adalah どれ、どのN、どこ、dan どちら.</p><span class="grammar-example">これは どこの コンピューターですか。<span class="grammar-meaning">Ini komputer buatan mana?</span></span></div><div class="grammar-point"><h3>6. お～</h3><p>Awalan お dapat dipakai pada kata yang berkaitan dengan lawan bicara atau pihak ketiga untuk menunjukkan rasa hormat. Salah satu contoh yang umum adalah おくに.</p><span class="grammar-example">おくには どちらですか。<span class="grammar-meaning">Berasal dari mana?</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 3</b>Menanyakan dan menjelaskan lokasi, arah, asal produk, serta bentuk penunjuk yang sopan.</div><div><b>Latihan mandiri</b>Gambarkan denah sederhana rumah atau sekolah, lalu buat enam kalimat memakai ここ、そこ、あそこ、どこ、dan どちら.</div></div></div>`;
-const lessonThreeElement = document.querySelectorAll(
-  "#materials .html-lesson",
-)[2];
-if (lessonThreeElement) {
-  lessonThreeElement.innerHTML = lessonThree;
-}
-const lessonFour = `<summary><span class="lesson-number">4</span>Pelajaran 4: Waktu dan kegiatan harian</summary><div class="html-content"><div class="grammar-point"><h3>1. 今 ～時 ～分です</h3><p>Untuk menyatakan jam, gunakan kata bantu bilangan 時 dan 分 setelah angka. Pengucapan beberapa angka berubah, misalnya 4時 dibaca よじ, 7時 dibaca しちじ, dan 9時 dibaca くじ. Kata tanya untuk waktu adalah なんじ.</p><span class="grammar-example">いま なんじですか。……7じ 10ぷんです。<span class="grammar-meaning">Sekarang pukul berapa? …Pukul tujuh lewat sepuluh menit.</span></span></div><div class="grammar-point"><h3>2. Vます／Vません／Vました／Vませんでした</h3><p>ます adalah bentuk sopan kata kerja. Bentuk positif dan negatif dapat dipakai untuk kebiasaan, keadaan kini, atau rencana masa depan. ました dan ませんでした dipakai untuk menyatakan kegiatan yang telah selesai di masa lalu. Pertanyaan dibuat dengan menambahkan か tanpa mengubah susunan kalimat.</p><span class="grammar-example">まいあさ 6じに おきます。<span class="grammar-meaning">Setiap pagi saya bangun pukul enam.</span></span></div><div class="grammar-point"><h3>3. Kata benda waktu に V</h3><p>Partikel に diletakkan setelah waktu yang spesifik, seperti jam, tanggal, atau hari tertentu, untuk menandai kapan kegiatan dilakukan. Kata waktu relatif seperti きょう、あした、きのう、まいにち umumnya tidak memakai に.</p><span class="grammar-example">6じはんに おきます。<span class="grammar-meaning">Saya bangun pukul setengah tujuh.</span></span></div><div class="grammar-point"><h3>4. N1 から N2 まで</h3><p>から menunjukkan titik awal waktu atau tempat, sedangkan まで menunjukkan titik akhir. Keduanya dapat dipakai bersama atau sendiri. Untuk menyatakan jam mulai dan selesai, waktu dapat ditempatkan di depan atau sesudah frasa ini.</p><span class="grammar-example">9じから 5じまで べんきょうします。<span class="grammar-meaning">Belajar dari pukul sembilan sampai pukul lima.</span></span></div><div class="grammar-point"><h3>5. N1 と N2</h3><p>と menghubungkan dua kata benda yang setara, misalnya dua hari, dua tempat, atau dua orang. Pola ini tidak dipakai untuk menghubungkan kata kerja atau kalimat.</p><span class="grammar-example">ぎんこうの やすみは 土曜日と 日曜日です。<span class="grammar-meaning">Hari libur bank adalah Sabtu dan Minggu.</span></span></div><div class="grammar-point"><h3>6. ～ね</h3><p>ね di akhir kalimat dipakai ketika pembicara mengharapkan persetujuan, ingin memastikan informasi, atau ingin memberi kesan simpati. Intonasi dapat naik untuk meminta konfirmasi atau turun untuk menyatakan perasaan bersama.</p><span class="grammar-example">まいにち 10じまで べんきょうします。……たいへんですね。<span class="grammar-meaning">Setiap hari belajar sampai jam sepuluh. …Wah, berat ya.</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 4</b>Menyatakan jam, kebiasaan, waktu kegiatan, rentang waktu, dan respons persetujuan dalam percakapan.</div><div><b>Latihan mandiri</b>Tuliskan jadwal harian Anda dari bangun sampai tidur dengan minimal lima kata kerja bentuk ます dan tiga penanda waktu.</div></div></div>`;
-const lessonFourElement = document.querySelectorAll(
-  "#materials .html-lesson",
-)[3];
-if (lessonFourElement) {
-  lessonFourElement.innerHTML = lessonFour;
-}
-document
-  .querySelectorAll("#materials .html-lesson")
-  .forEach((lesson, lessonIndex) => {
-    if (lessonIndex < 4) return;
-    const content = lesson.querySelector(".html-content");
-    if (!content) return;
-    const points = [...content.querySelectorAll(".lesson-points li")];
-    if (!points.length) return;
-    const title = content.querySelector(".html-pattern")?.textContent || "";
-    const notes = [...content.querySelectorAll(".html-note")]
-      .map((n) => n.outerHTML)
-      .join("");
-    content.innerHTML = `<h3>Pokok tata bahasa</h3><div class="html-pattern">${title}</div>${points.map((point, i) => `<div class="grammar-point"><h3>Poin ${i + 1}</h3><p>${point.innerHTML}</p></div>`).join("")}${notes}`;
-  });
-const lessonFive = `<summary><span class="lesson-number">5</span>Pelajaran 5: Perjalanan dan perpindahan</summary><div class="html-content"><div class="grammar-point"><h3>1. Tempat へ 行きます／来ます／帰ります</h3><p>Untuk menyatakan arah perpindahan, bubuhkan partikel へ setelah tempat tujuan. へ dibaca e saat digunakan sebagai partikel. 行きます berarti pergi, 来ます datang, dan 帰ります pulang.</p><span class="grammar-example">京都へ 行きます。<span class="grammar-meaning">Pergi ke Kyoto.</span></span></div><div class="grammar-point"><h3>2. どこ［へ］も 行きません／行きませんでした</h3><p>Jika kata tanya ditanyakan secara total pada kalimat negatif, gunakan も sesudah kata tanya. Pola ini dapat menyatakan tidak ke mana-mana, tidak melakukan apa-apa, atau tidak ada siapa pun yang datang.</p><span class="grammar-example">どこへも 行きません。<span class="grammar-meaning">Tidak pergi ke mana-mana.</span></span></div><div class="grammar-point"><h3>3. Kendaraan で 行きます／来ます／帰ります</h3><p>で menunjukkan sarana atau cara. Pada pola ini, kata benda sebelum で adalah kendaraan atau alat transportasi. Bila berjalan kaki, gunakan あるいて tanpa partikel で.</p><span class="grammar-example">電車で 行きます。<span class="grammar-meaning">Pergi dengan kereta rel listrik.</span></span></div><div class="grammar-point"><h3>4. Orang/hewan と V</h3><p>と menunjukkan teman melakukan aktivitas bersama. Bila melakukan kegiatan sendiri, gunakan ひとりで; bentuk ini tidak memakai と.</p><span class="grammar-example">家族と 日本へ 来ました。<span class="grammar-meaning">Datang ke Jepang bersama keluarga.</span></span></div><div class="grammar-point"><h3>5. いつ</h3><p>いつ dipakai untuk menanyakan waktu yang tidak spesifik, seperti kapan datang atau kapan pergi. Berbeda dengan waktu tertentu, いつ tidak diikuti partikel に.</p><span class="grammar-example">いつ 日本へ 来ましたか。……3月25日に 来ました。<span class="grammar-meaning">Kapan datang ke Jepang? …Datang tanggal 25 Maret.</span></span></div><div class="grammar-point"><h3>6. ～よ</h3><p>よ diletakkan di akhir kalimat untuk menyampaikan informasi yang diperkirakan belum diketahui lawan bicara, atau untuk memberi tanggapan dan pendapat dengan tegas namun tetap wajar.</p><span class="grammar-example">この 電車は 神戸へ 行きますか。……いいえ、行きません。次の「普通」ですよ。<span class="grammar-meaning">Apakah kereta ini ke Kobe? …Tidak. Yang kereta biasa berikutnya.</span></span></div><div class="grammar-point"><h3>7. そうですね</h3><p>そうですね digunakan ketika pembicara setuju atau memiliki pendapat yang sama dengan lawan bicara. Ekspresi ini berbeda dari そうですか yang dipakai saat baru menerima informasi.</p><span class="grammar-example">あしたは 日曜日ですね。……ええ、そうですね。<span class="grammar-meaning">Besok hari Minggu, ya. …Ya, betul.</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 5</b>Menyatakan tujuan perjalanan, transportasi, teman perjalanan, waktu, serta cara menanggapi informasi.</div><div><b>Latihan mandiri</b>Tulis rencana perjalanan akhir pekan dengan tempat tujuan, kendaraan, teman perjalanan, dan waktu keberangkatan.</div></div></div>`;
-const lessonFiveElement = document.querySelectorAll(
-  "#materials .html-lesson",
-)[4];
-if (lessonFiveElement) {
-  lessonFiveElement.innerHTML = lessonFive;
-}
-const lessonSix = `<summary><span class="lesson-number">6</span>Pelajaran 6: Aktivitas dan ajakan</summary><div class="html-content"><div class="grammar-point"><h3>1. N を V (kata kerja transitif)</h3><p>Objek dari kata kerja transitif ditandai dengan partikel を. Partikel ini menunjukkan benda yang secara langsung dikenai kegiatan.</p><span class="grammar-example">ジュースを 飲みます。<span class="grammar-meaning">Minum jus.</span></span></div><div class="grammar-point"><h3>2. N を します</h3><p>します dapat digunakan secara luas dengan kata benda sebagai objek untuk menyatakan melakukan suatu aktivitas. Pola ini dipakai untuk olahraga, permainan, acara, belajar, pekerjaan, dan kegiatan lain.</p><span class="grammar-example">サッカーを します。<span class="grammar-meaning">Bermain sepak bola.</span></span></div><div class="grammar-point"><h3>3. 何をしますか</h3><p>Pertanyaan ini digunakan untuk menanyakan kegiatan yang dilakukan. Jawabannya memakai objek dan kata kerja yang sesuai dengan waktu pertanyaan.</p><span class="grammar-example">月曜日 何をしますか。……京都へ 行きます。<span class="grammar-meaning">Hari Senin melakukan apa? …Pergi ke Kyoto.</span></span></div><div class="grammar-point"><h3>4. なん dan なに</h3><p>なん dan なに sama-sama berarti apa. なん dipakai sebelum bunyi seperti た、だ、dan な, juga sebelum kata bantu bilangan. なに lebih umum pada bentuk lain. なんで juga dapat berarti mengapa atau dengan apa bergantung konteks.</p><span class="grammar-example">それは 何ですか。<span class="grammar-meaning">Itu apa?</span></span></div><div class="grammar-point"><h3>5. Tempat で V</h3><p>で setelah kata benda tempat menunjukkan lokasi berlangsungnya kegiatan. Ini berbeda dari に yang menandai waktu spesifik atau lokasi keberadaan.</p><span class="grammar-example">駅で 新聞を 買います。<span class="grammar-meaning">Membeli surat kabar di stasiun.</span></span></div><div class="grammar-point"><h3>6. Vませんか</h3><p>Ekspresi ini menawarkan atau mengajak lawan bicara melakukan suatu kegiatan dengan cara yang lembut. Jawaban dapat berupa persetujuan atau penolakan yang sopan.</p><span class="grammar-example">いっしょに 京都へ 行きませんか。<span class="grammar-meaning">Bagaimana kita pergi ke Kyoto bersama-sama?</span></span></div><div class="grammar-point"><h3>7. Vましょう</h3><p>Vましょう adalah ajakan aktif untuk melakukan kegiatan bersama. Pola ini juga dipakai untuk menanggapi ajakan Vませんか secara positif.</p><span class="grammar-example">ちょっと 休みましょう。<span class="grammar-meaning">Mari istirahat sebentar.</span></span></div><div class="grammar-point"><h3>8. ～か</h3><p>か di akhir kalimat dapat menyatakan bahwa pembicara baru menerima dan memahami informasi dari lawan bicara. Fungsinya mirip そうですか, tetapi lebih singkat dan informal dalam percakapan.</p><span class="grammar-example">日曜日 京都へ 行きました。……京都ですか。いいですね。<span class="grammar-meaning">Hari Minggu pergi ke Kyoto. …Kyoto? Bagus ya.</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 6</b>Menyatakan aktivitas, objek, tempat kegiatan, pertanyaan kegiatan, serta cara mengajak orang lain.</div><div><b>Latihan mandiri</b>Tulis jadwal akhir pekan dengan tiga aktivitas, objeknya, tempatnya, dan satu ajakan memakai Vませんか atau Vましょう.</div></div></div>`;
-const lessonSixElement = document.querySelectorAll(
-  "#materials .html-lesson",
-)[5];
-if (lessonSixElement) {
-  lessonSixElement.innerHTML = lessonSix;
-}
-const lessonSeven = `<summary><span class="lesson-number">7</span>Pelajaran 7: Alat, bahasa, memberi dan menerima</summary><div class="html-content"><div class="grammar-point"><h3>1. Alat/sarana で V</h3><p>で menunjukkan alat, cara, atau bahasa yang digunakan untuk melakukan kegiatan. Dalam pola ini, bagian sebelum で menjawab pertanyaan dengan apa atau memakai bahasa apa.</p><span class="grammar-example">はしで 食べます。<span class="grammar-meaning">Makan dengan sumpit.</span></span></div><div class="grammar-point"><h3>2. 「kata/kalimat」は ～語で 何ですか</h3><p>Pertanyaan ini dipakai untuk menanyakan bagaimana menyatakan sebuah kata atau kalimat dalam bahasa lain. Nama bahasa ditempatkan sebelum で.</p><span class="grammar-example">「Thank you」は 日本語で 何ですか。……「ありがとう」です。<span class="grammar-meaning">“Thank you” dalam bahasa Jepang apa? …“Arigatou”.</span></span></div><div class="grammar-point"><h3>3. Orang に N を あげます dan sejenisnya</h3><p>あげます、かします、dan おしえます menyatakan memberi barang atau informasi kepada seseorang. Penerima ditandai dengan に.</p><span class="grammar-example">わたしは 木村さんに 花を あげました。<span class="grammar-meaning">Saya memberikan bunga kepada Sdr. Kimura.</span></span></div><div class="grammar-point"><h3>4. Orang に N を もらいます dan sejenisnya</h3><p>もらいます、かります、dan ならいます menyatakan menerima barang, meminjam, atau belajar dari seseorang. Orang sumber ditandai dengan に; から juga dapat dipakai terutama untuk organisasi.</p><span class="grammar-example">わたしは 山田さんに 花を もらいました。<span class="grammar-meaning">Saya mendapatkan bunga dari Sdr. Yamada.</span></span></div><div class="grammar-point"><h3>5. もう Vました</h3><p>もう berarti sudah. Pola ini dipakai dengan kata kerja bentuk lampau untuk menyatakan kegiatan telah selesai. Jawaban negatifnya menggunakan いいえ、まだです atau まだ Vていません.</p><span class="grammar-example">もう 荷物を 送りましたか。……はい、もう 送りました。<span class="grammar-meaning">Apakah barang sudah dikirim? …Ya, sudah dikirim.</span></span></div><div class="grammar-point"><h3>6. Menghilangkan partikel</h3><p>Dalam percakapan santai, partikel tertentu dapat dihilangkan bila hubungan makna sudah jelas. Penghilangan ini tidak selalu cocok untuk bahasa formal atau tulisan.</p><span class="grammar-example">この スプーン、すてきですね。<span class="grammar-meaning">Sendok ini bagus, ya.</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 7</b>Menjelaskan alat dan bahasa, memberi/menerima, serta menyatakan pekerjaan yang sudah selesai.</div><div><b>Latihan mandiri</b>Buat dialog singkat tentang meminjam buku, mengajari bahasa, dan mengirim hadiah kepada teman.</div></div></div>`;
-const lessonEight = `<summary><span class="lesson-number">8</span>Pelajaran 8: Kata sifat dan kesan</summary><div class="html-content"><div class="grammar-point"><h3>1. Kata sifat</h3><p>Kata sifat menjelaskan kondisi atau sifat kata benda. Ada dua jenis utama: い形容詞 dan な形容詞. Keduanya memiliki perubahan bentuk yang berbeda.</p><span class="grammar-example">富士山は 高いです。<span class="grammar-meaning">Gunung Fuji tinggi.</span></span></div><div class="grammar-point"><h3>2. N は な形容詞です／い形容詞です</h3><p>Kata sifat positif waktu nonlampau diakhiri です. Untuk bentuk negatif, な形容詞 memakai じゃありません, sedangkan い形容詞 mengubah い menjadi くないです. Pertanyaan dijawab dengan kata sifat, bukan そうです.</p><span class="grammar-example">あそこは 静かじゃありません。<span class="grammar-meaning">Di sana tidak tenang.</span></span></div><div class="grammar-point"><h3>3. な形容詞なN／い形容詞N</h3><p>Saat menerangkan kata benda, な形容詞 diikuti な sedangkan い形容詞 langsung ditempatkan di depan kata benda. Pola ini membentuk frasa kata benda yang lebih rinci.</p><span class="grammar-example">ワット先生は 親切な 先生です。<span class="grammar-meaning">Bapak Watt adalah guru yang baik hati.</span></span></div><div class="grammar-point"><h3>4. ～が、～</h3><p>が menyambungkan dua kalimat yang memiliki hubungan berlawanan atau paradoks. Informasi yang dianggap positif biasanya diletakkan lebih dahulu, kemudian kontrasnya menyusul.</p><span class="grammar-example">日本の 食べ物は おいしいですが、高いです。<span class="grammar-meaning">Makanan Jepang enak, tetapi mahal.</span></span></div><div class="grammar-point"><h3>5. とても／あまり</h3><p>とても berarti sangat dan digunakan pada kalimat positif. あまり berarti tidak begitu dan umumnya dipakai bersama bentuk negatif.</p><span class="grammar-example">これは とても 有名な 映画です。<span class="grammar-meaning">Ini film yang sangat terkenal.</span></span></div><div class="grammar-point"><h3>6. N は どうですか</h3><p>Pola ini menanyakan pendapat, kesan, atau keadaan mengenai benda, tempat, dan pengalaman lawan bicara.</p><span class="grammar-example">日本の 生活は どうですか。……楽しいです。<span class="grammar-meaning">Bagaimana kehidupan di Jepang? …Menyenangkan.</span></span></div><div class="grammar-point"><h3>7. N1 は どんな N2 ですか</h3><p>どんな menanyakan keadaan atau sifat seseorang/benda, lalu harus diikuti kata benda yang dijelaskan.</p><span class="grammar-example">奈良は どんな 町ですか。……古い 町です。<span class="grammar-meaning">Nara kota bagaimana? …Kota yang lama.</span></span></div><div class="grammar-point"><h3>8. そうですね</h3><p>Selain menyetujui lawan bicara, そうですね dapat memberi waktu bagi pembicara untuk berpikir sebelum menjawab pertanyaan tentang kesan atau pendapat.</p><span class="grammar-example">お仕事は どうですか。……そうですね。忙しいですが、おもしろいです。<span class="grammar-meaning">Bagaimana pekerjaan? …Hmm. Sibuk, tetapi menarik.</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 8</b>Mendeskripsikan sifat, bertanya kesan, membuat frasa kata sifat, dan menyatakan kontras.</div><div><b>Latihan mandiri</b>Pilih tiga tempat atau benda. Jelaskan masing-masing dengan い形容詞 dan な形容詞, lalu bandingkan dengan ～が.</div></div></div>`;
-const lessonSevenElement = document.querySelectorAll(
-  "#materials .html-lesson",
-)[6];
-if (lessonSevenElement) {
-  lessonSevenElement.innerHTML = lessonSeven;
-}
-const lessonEightElement = document.querySelectorAll(
-  "#materials .html-lesson",
-)[7];
-if (lessonEightElement) {
-  lessonEightElement.innerHTML = lessonEight;
-}
-const installLesson = (index, title, items, focus) => {
-  const el = document.querySelectorAll("#materials .html-lesson")[index];
-  if (!el) return;
-  el.innerHTML = `<summary><span class="lesson-number">${index + 1}</span>Pelajaran ${index + 1}: ${title}</summary><div class="html-content">${items.map((x, i) => `<div class="grammar-point"><h3>${i + 1}. ${x[0]}</h3><p>${x[1]}</p><span class="grammar-example">${x[2]}<span class="grammar-meaning">${x[3]}</span></span></div>`).join("")}<div class="html-note"><div><b>Fokus pelajaran</b>${focus}</div><div><b>Latihan mandiri</b>Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.</div></div></div>`;
-};
-installLesson(
-  8,
-  "Kesukaan, kemampuan, dan jumlah",
-  [
+  `<div class="head"><div><div class="eyebrow">Materi pembelajaran HTML lengkap</div><h1>Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Setiap pelajaran memuat seluruh poin inti tata bahasa dalam penulisan ulang yang terstruktur untuk web.</p></div></div><div class="html-course"></div>`;
+
+const MATERI_BOOK1_LESSONS = [
+  {
+    title: "Kalimat nominal dasar",
+    items: [["N1 は N2 です", "Pola ini dipakai untuk memperkenalkan atau menjelaskan identitas. Kata benda sebelum は menjadi topik pembicaraan; kata benda sesudahnya menjadi informasi atau predikat. です membuat pernyataan terdengar sopan.", "わたし は マイク・ミラー です。", "Saya Mike Miller."], ["N1 は N2 じゃありません", "Ini adalah bentuk negatif dari kalimat です. Dalam percakapan biasa digunakan じゃありません; bentuk ではありません lebih formal dan lebih sering dijumpai pada situasi resmi atau tulisan.", "サントスさん は 学生 じゃありません。", "Sdr. Santos bukan mahasiswa."], ["N1 は N2 ですか", "Tambahkan か di akhir kalimat untuk membuat pertanyaan. Untuk jawaban ya/tidak, gunakan はい atau いいえ. Jika bagian yang ditanyakan belum diketahui, gantilah bagian itu dengan kata tanya seperti だれ、なん、どなた、atau どのかた.", "ミラーさん は アメリカ人 ですか。", "Apakah Sdr. Miller orang Amerika?"], ["N も", "も berarti juga atau pun. Partikel ini dipakai ketika predikat pada kalimat kedua sama dengan predikat pada kalimat sebelumnya. も menggantikan は pada posisi topik.", "ミラーさん は 会社員 です。グプタさん も 会社員 です。", "Sdr. Miller pegawai perusahaan. Sdr. Gupta juga pegawai perusahaan."], ["N1 の N2", "の menghubungkan dua kata benda. Kata benda pertama menerangkan kata benda kedua, misalnya asal, kepemilikan, organisasi, atau jenis. Keseluruhan frasa N1 の N2 dianggap satu kelompok kata benda.", "ミラーさん は IMC の 会社員 です。", "Sdr. Miller pegawai perusahaan IMC."], ["～さん", "さん diletakkan setelah nama atau marga orang lain sebagai sapaan sopan. Jangan gunakan さん setelah nama diri sendiri. Untuk anak kecil atau orang yang sangat akrab, ～ちゃん dapat dipakai. あなた biasanya dihindari bila nama lawan bicara sudah diketahui; gunakan nama + さん agar lebih wajar.", "あの かた は ミラーさん です。", "Orang itu Sdr. Miller."]],
+    focusLabel: "Fokus Pelajaran 1",
+    focus: "Perkenalan diri, pekerjaan, asal negara, serta cara bertanya dan menjawab secara sopan.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat lima kalimat: dua pernyataan です, satu negatif, satu pertanyaan, dan satu kalimat memakai の atau も.",
+  },
+  {
+    title: "Kata tunjuk dan persamaan",
+    items: [["これ／それ／あれ", "Ketiganya menunjuk benda dan dapat berdiri sendiri sebagai kata benda. これ untuk benda dekat pembicara, それ dekat lawan bicara, dan あれ jauh dari keduanya.", "これは じしょですか。", "Apakah ini kamus?"], ["この N／その N／あの N", "Gunakan bentuk ini ketika kata tunjuk menerangkan kata benda. この dekat pembicara, その dekat lawan bicara, dan あの jauh dari kedua pihak. Berbeda dengan これ, bentuk ini wajib diikuti kata benda.", "この 本は わたしのです。", "Buku ini kepunyaan saya."], ["そうです", "Dalam kalimat nominal, そうです menjawab bahwa informasi atau dugaan lawan bicara benar. Untuk menyangkal, gunakan ちがいます atau bentuk negatif yang sesuai, bukan そうではありません.", "それは じしょですか。はい、そうです。", "Apakah itu kamus? Ya, benar."], ["～か、～か", "Pola ini memberi pilihan dari dua atau lebih kemungkinan. Jawaban tidak memakai はい atau いいえ, tetapi langsung menyebut pilihan yang benar.", "これは 「9」ですか、「7」ですか。……「9」です。", "Ini “9” atau “7”? …“9”."], ["N1 の N2", "の menghubungkan dua kata benda. N1 dapat menerangkan jenis atau asal N2, misalnya buku komputer, dan juga dapat menyatakan kepemilikan, misalnya buku saya.", "これは コンピューターの 本です。", "Ini buku komputer."], ["の sebagai pengganti kata benda", "の dapat menggantikan kata benda yang sudah disebut bila konteksnya jelas. Penggunaan ini lazim untuk benda, tetapi tidak dipakai untuk menggantikan orang.", "これは だれの かばんですか。……佐藤さんのです。", "Tas ini milik siapa? …Milik Sato."], ["お～", "Awalan お dapat ditempatkan di depan beberapa kata benda untuk memberi nuansa sopan. Contoh umum adalah おみやげ dan おさけ.", "これは おみやげです。", "Ini oleh-oleh."], ["そうですか", "Ekspresi ini dipakai ketika menerima informasi baru dan menunjukkan bahwa pembicara memahami atau menyadari informasi tersebut. Intonasi biasanya menurun.", "これは シュミットさんの かさです。……そうですか。", "Ini payung milik Sdr. Schmidt. …Oh, begitu."]],
+    focusLabel: "Fokus Pelajaran 2",
+    focus: "Menunjuk benda, membedakan jarak, menanyakan kepemilikan, dan memberi jawaban atas informasi.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Pilih lima benda di sekitar Anda. Buat pertanyaan memakai これ／それ／あれ lalu jawab dengan そうです atau ちがいます.",
+  },
+  {
+    title: "Tempat, arah, dan asal produk",
+    items: [["ここ／そこ／あそこ／こちら／そちら／あちら", "ここ・そこ・あそこ menunjuk tempat. ここ dekat pembicara, そこ dekat lawan bicara, dan あそこ jauh dari keduanya. こちら・そちら・あちら dapat menunjuk arah atau tempat dengan nuansa lebih sopan.", "おてあらいは あそこです。", "Kamar kecil di sana."], ["N は tempat です", "Pola ini menyatakan lokasi benda, fasilitas, atau orang. Tempat berada sesudah topik dan diikuti です.", "でんわは 2かいです。", "Telepon di lantai dua."], ["どこ／どちら", "どこ adalah kata tanya tempat. どちら terutama untuk arah dan dapat dipakai untuk tempat dengan cara yang lebih sopan. Saat bertanya nama negara, sekolah, atau perusahaan, pakailah どこ atau どちら, bukan なん.", "エレベーターは どちらですか。……あちらです。", "Lift di sebelah mana? …Di sebelah sana."], ["N1 の N2: asal atau pembuat", "Jika N1 adalah negara dan N2 adalah produk, N1 の menunjukkan produk buatan negara tersebut. Jika N1 adalah perusahaan dan N2 adalah produk, maknanya menunjukkan produk buatan perusahaan itu.", "これは にほんの コンピューターです。", "Ini komputer buatan Jepang."], ["Daftar kata penunjuk", "Kelompok こ, そ, dan あ berlaku konsisten: これ・それ・あれ untuk barang; このN・そのN・あのN untuk barang/orang; ここ・そこ・あそこ untuk tempat; serta こちら・そちら・あちら untuk arah atau tempat yang sopan. Bentuk tanya pasangannya adalah どれ、どのN、どこ、dan どちら.", "これは どこの コンピューターですか。", "Ini komputer buatan mana?"], ["お～", "Awalan お dapat dipakai pada kata yang berkaitan dengan lawan bicara atau pihak ketiga untuk menunjukkan rasa hormat. Salah satu contoh yang umum adalah おくに.", "おくには どちらですか。", "Berasal dari mana?"]],
+    focusLabel: "Fokus Pelajaran 3",
+    focus: "Menanyakan dan menjelaskan lokasi, arah, asal produk, serta bentuk penunjuk yang sopan.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Gambarkan denah sederhana rumah atau sekolah, lalu buat enam kalimat memakai ここ、そこ、あそこ、どこ、dan どちら.",
+  },
+  {
+    title: "Waktu dan kegiatan harian",
+    items: [["今 ～時 ～分です", "Untuk menyatakan jam, gunakan kata bantu bilangan 時 dan 分 setelah angka. Pengucapan beberapa angka berubah, misalnya 4時 dibaca よじ, 7時 dibaca しちじ, dan 9時 dibaca くじ. Kata tanya untuk waktu adalah なんじ.", "いま なんじですか。……7じ 10ぷんです。", "Sekarang pukul berapa? …Pukul tujuh lewat sepuluh menit."], ["Vます／Vません／Vました／Vませんでした", "ます adalah bentuk sopan kata kerja. Bentuk positif dan negatif dapat dipakai untuk kebiasaan, keadaan kini, atau rencana masa depan. ました dan ませんでした dipakai untuk menyatakan kegiatan yang telah selesai di masa lalu. Pertanyaan dibuat dengan menambahkan か tanpa mengubah susunan kalimat.", "まいあさ 6じに おきます。", "Setiap pagi saya bangun pukul enam."], ["Kata benda waktu に V", "Partikel に diletakkan setelah waktu yang spesifik, seperti jam, tanggal, atau hari tertentu, untuk menandai kapan kegiatan dilakukan. Kata waktu relatif seperti きょう、あした、きのう、まいにち umumnya tidak memakai に.", "6じはんに おきます。", "Saya bangun pukul setengah tujuh."], ["N1 から N2 まで", "から menunjukkan titik awal waktu atau tempat, sedangkan まで menunjukkan titik akhir. Keduanya dapat dipakai bersama atau sendiri. Untuk menyatakan jam mulai dan selesai, waktu dapat ditempatkan di depan atau sesudah frasa ini.", "9じから 5じまで べんきょうします。", "Belajar dari pukul sembilan sampai pukul lima."], ["N1 と N2", "と menghubungkan dua kata benda yang setara, misalnya dua hari, dua tempat, atau dua orang. Pola ini tidak dipakai untuk menghubungkan kata kerja atau kalimat.", "ぎんこうの やすみは 土曜日と 日曜日です。", "Hari libur bank adalah Sabtu dan Minggu."], ["～ね", "ね di akhir kalimat dipakai ketika pembicara mengharapkan persetujuan, ingin memastikan informasi, atau ingin memberi kesan simpati. Intonasi dapat naik untuk meminta konfirmasi atau turun untuk menyatakan perasaan bersama.", "まいにち 10じまで べんきょうします。……たいへんですね。", "Setiap hari belajar sampai jam sepuluh. …Wah, berat ya."]],
+    focusLabel: "Fokus Pelajaran 4",
+    focus: "Menyatakan jam, kebiasaan, waktu kegiatan, rentang waktu, dan respons persetujuan dalam percakapan.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Tuliskan jadwal harian Anda dari bangun sampai tidur dengan minimal lima kata kerja bentuk ます dan tiga penanda waktu.",
+  },
+  {
+    title: "Perjalanan dan perpindahan",
+    items: [["Tempat へ 行きます／来ます／帰ります", "Untuk menyatakan arah perpindahan, bubuhkan partikel へ setelah tempat tujuan. へ dibaca e saat digunakan sebagai partikel. 行きます berarti pergi, 来ます datang, dan 帰ります pulang.", "京都へ 行きます。", "Pergi ke Kyoto."], ["どこ［へ］も 行きません／行きませんでした", "Jika kata tanya ditanyakan secara total pada kalimat negatif, gunakan も sesudah kata tanya. Pola ini dapat menyatakan tidak ke mana-mana, tidak melakukan apa-apa, atau tidak ada siapa pun yang datang.", "どこへも 行きません。", "Tidak pergi ke mana-mana."], ["Kendaraan で 行きます／来ます／帰ります", "で menunjukkan sarana atau cara. Pada pola ini, kata benda sebelum で adalah kendaraan atau alat transportasi. Bila berjalan kaki, gunakan あるいて tanpa partikel で.", "電車で 行きます。", "Pergi dengan kereta rel listrik."], ["Orang/hewan と V", "と menunjukkan teman melakukan aktivitas bersama. Bila melakukan kegiatan sendiri, gunakan ひとりで; bentuk ini tidak memakai と.", "家族と 日本へ 来ました。", "Datang ke Jepang bersama keluarga."], ["いつ", "いつ dipakai untuk menanyakan waktu yang tidak spesifik, seperti kapan datang atau kapan pergi. Berbeda dengan waktu tertentu, いつ tidak diikuti partikel に.", "いつ 日本へ 来ましたか。……3月25日に 来ました。", "Kapan datang ke Jepang? …Datang tanggal 25 Maret."], ["～よ", "よ diletakkan di akhir kalimat untuk menyampaikan informasi yang diperkirakan belum diketahui lawan bicara, atau untuk memberi tanggapan dan pendapat dengan tegas namun tetap wajar.", "この 電車は 神戸へ 行きますか。……いいえ、行きません。次の「普通」ですよ。", "Apakah kereta ini ke Kobe? …Tidak. Yang kereta biasa berikutnya."], ["そうですね", "そうですね digunakan ketika pembicara setuju atau memiliki pendapat yang sama dengan lawan bicara. Ekspresi ini berbeda dari そうですか yang dipakai saat baru menerima informasi.", "あしたは 日曜日ですね。……ええ、そうですね。", "Besok hari Minggu, ya. …Ya, betul."]],
+    focusLabel: "Fokus Pelajaran 5",
+    focus: "Menyatakan tujuan perjalanan, transportasi, teman perjalanan, waktu, serta cara menanggapi informasi.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Tulis rencana perjalanan akhir pekan dengan tempat tujuan, kendaraan, teman perjalanan, dan waktu keberangkatan.",
+  },
+  {
+    title: "Aktivitas dan ajakan",
+    items: [["N を V (kata kerja transitif)", "Objek dari kata kerja transitif ditandai dengan partikel を. Partikel ini menunjukkan benda yang secara langsung dikenai kegiatan.", "ジュースを 飲みます。", "Minum jus."], ["N を します", "します dapat digunakan secara luas dengan kata benda sebagai objek untuk menyatakan melakukan suatu aktivitas. Pola ini dipakai untuk olahraga, permainan, acara, belajar, pekerjaan, dan kegiatan lain.", "サッカーを します。", "Bermain sepak bola."], ["何をしますか", "Pertanyaan ini digunakan untuk menanyakan kegiatan yang dilakukan. Jawabannya memakai objek dan kata kerja yang sesuai dengan waktu pertanyaan.", "月曜日 何をしますか。……京都へ 行きます。", "Hari Senin melakukan apa? …Pergi ke Kyoto."], ["なん dan なに", "なん dan なに sama-sama berarti apa. なん dipakai sebelum bunyi seperti た、だ、dan な, juga sebelum kata bantu bilangan. なに lebih umum pada bentuk lain. なんで juga dapat berarti mengapa atau dengan apa bergantung konteks.", "それは 何ですか。", "Itu apa?"], ["Tempat で V", "で setelah kata benda tempat menunjukkan lokasi berlangsungnya kegiatan. Ini berbeda dari に yang menandai waktu spesifik atau lokasi keberadaan.", "駅で 新聞を 買います。", "Membeli surat kabar di stasiun."], ["Vませんか", "Ekspresi ini menawarkan atau mengajak lawan bicara melakukan suatu kegiatan dengan cara yang lembut. Jawaban dapat berupa persetujuan atau penolakan yang sopan.", "いっしょに 京都へ 行きませんか。", "Bagaimana kita pergi ke Kyoto bersama-sama?"], ["Vましょう", "Vましょう adalah ajakan aktif untuk melakukan kegiatan bersama. Pola ini juga dipakai untuk menanggapi ajakan Vませんか secara positif.", "ちょっと 休みましょう。", "Mari istirahat sebentar."], ["～か", "か di akhir kalimat dapat menyatakan bahwa pembicara baru menerima dan memahami informasi dari lawan bicara. Fungsinya mirip そうですか, tetapi lebih singkat dan informal dalam percakapan.", "日曜日 京都へ 行きました。……京都ですか。いいですね。", "Hari Minggu pergi ke Kyoto. …Kyoto? Bagus ya."]],
+    focusLabel: "Fokus Pelajaran 6",
+    focus: "Menyatakan aktivitas, objek, tempat kegiatan, pertanyaan kegiatan, serta cara mengajak orang lain.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Tulis jadwal akhir pekan dengan tiga aktivitas, objeknya, tempatnya, dan satu ajakan memakai Vませんか atau Vましょう.",
+  },
+  {
+    title: "Alat, bahasa, memberi dan menerima",
+    items: [["Alat/sarana で V", "で menunjukkan alat, cara, atau bahasa yang digunakan untuk melakukan kegiatan. Dalam pola ini, bagian sebelum で menjawab pertanyaan dengan apa atau memakai bahasa apa.", "はしで 食べます。", "Makan dengan sumpit."], ["「kata/kalimat」は ～語で 何ですか", "Pertanyaan ini dipakai untuk menanyakan bagaimana menyatakan sebuah kata atau kalimat dalam bahasa lain. Nama bahasa ditempatkan sebelum で.", "「Thank you」は 日本語で 何ですか。……「ありがとう」です。", "“Thank you” dalam bahasa Jepang apa? …“Arigatou”."], ["Orang に N を あげます dan sejenisnya", "あげます、かします、dan おしえます menyatakan memberi barang atau informasi kepada seseorang. Penerima ditandai dengan に.", "わたしは 木村さんに 花を あげました。", "Saya memberikan bunga kepada Sdr. Kimura."], ["Orang に N を もらいます dan sejenisnya", "もらいます、かります、dan ならいます menyatakan menerima barang, meminjam, atau belajar dari seseorang. Orang sumber ditandai dengan に; から juga dapat dipakai terutama untuk organisasi.", "わたしは 山田さんに 花を もらいました。", "Saya mendapatkan bunga dari Sdr. Yamada."], ["もう Vました", "もう berarti sudah. Pola ini dipakai dengan kata kerja bentuk lampau untuk menyatakan kegiatan telah selesai. Jawaban negatifnya menggunakan いいえ、まだです atau まだ Vていません.", "もう 荷物を 送りましたか。……はい、もう 送りました。", "Apakah barang sudah dikirim? …Ya, sudah dikirim."], ["Menghilangkan partikel", "Dalam percakapan santai, partikel tertentu dapat dihilangkan bila hubungan makna sudah jelas. Penghilangan ini tidak selalu cocok untuk bahasa formal atau tulisan.", "この スプーン、すてきですね。", "Sendok ini bagus, ya."]],
+    focusLabel: "Fokus Pelajaran 7",
+    focus: "Menjelaskan alat dan bahasa, memberi/menerima, serta menyatakan pekerjaan yang sudah selesai.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat dialog singkat tentang meminjam buku, mengajari bahasa, dan mengirim hadiah kepada teman.",
+  },
+  {
+    title: "Kata sifat dan kesan",
+    items: [["Kata sifat", "Kata sifat menjelaskan kondisi atau sifat kata benda. Ada dua jenis utama: い形容詞 dan な形容詞. Keduanya memiliki perubahan bentuk yang berbeda.", "富士山は 高いです。", "Gunung Fuji tinggi."], ["N は な形容詞です／い形容詞です", "Kata sifat positif waktu nonlampau diakhiri です. Untuk bentuk negatif, な形容詞 memakai じゃありません, sedangkan い形容詞 mengubah い menjadi くないです. Pertanyaan dijawab dengan kata sifat, bukan そうです.", "あそこは 静かじゃありません。", "Di sana tidak tenang."], ["な形容詞なN／い形容詞N", "Saat menerangkan kata benda, な形容詞 diikuti な sedangkan い形容詞 langsung ditempatkan di depan kata benda. Pola ini membentuk frasa kata benda yang lebih rinci.", "ワット先生は 親切な 先生です。", "Bapak Watt adalah guru yang baik hati."], ["～が、～", "が menyambungkan dua kalimat yang memiliki hubungan berlawanan atau paradoks. Informasi yang dianggap positif biasanya diletakkan lebih dahulu, kemudian kontrasnya menyusul.", "日本の 食べ物は おいしいですが、高いです。", "Makanan Jepang enak, tetapi mahal."], ["とても／あまり", "とても berarti sangat dan digunakan pada kalimat positif. あまり berarti tidak begitu dan umumnya dipakai bersama bentuk negatif.", "これは とても 有名な 映画です。", "Ini film yang sangat terkenal."], ["N は どうですか", "Pola ini menanyakan pendapat, kesan, atau keadaan mengenai benda, tempat, dan pengalaman lawan bicara.", "日本の 生活は どうですか。……楽しいです。", "Bagaimana kehidupan di Jepang? …Menyenangkan."], ["N1 は どんな N2 ですか", "どんな menanyakan keadaan atau sifat seseorang/benda, lalu harus diikuti kata benda yang dijelaskan.", "奈良は どんな 町ですか。……古い 町です。", "Nara kota bagaimana? …Kota yang lama."], ["そうですね", "Selain menyetujui lawan bicara, そうですね dapat memberi waktu bagi pembicara untuk berpikir sebelum menjawab pertanyaan tentang kesan atau pendapat.", "お仕事は どうですか。……そうですね。忙しいですが、おもしろいです。", "Bagaimana pekerjaan? …Hmm. Sibuk, tetapi menarik."]],
+    focusLabel: "Fokus Pelajaran 8",
+    focus: "Mendeskripsikan sifat, bertanya kesan, membuat frasa kata sifat, dan menyatakan kontras.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Pilih tiga tempat atau benda. Jelaskan masing-masing dengan い形容詞 dan な形容詞, lalu bandingkan dengan ～が.",
+  },
+  {
+    title: "Kesukaan, kemampuan, dan jumlah",
+    items: [
     [
       "N が わかります／すきです",
       "Pola ini menyatakan hal yang dipahami, disukai, dibenci, dikuasai, atau kurang dikuasai (わかります・すきです・きらいです・じょうずです・へたです). Objek perasaan/kemampuan memakai が.",
@@ -146,12 +129,14 @@ installLesson(
       "Mengapa pada pagi hari tidak membaca surat kabar? ……Sebab tidak ada waktu.",
     ],
   ],
-  "Menyatakan kesukaan, kemampuan, keterangan tingkat, dan alasan.",
-);
-installLesson(
-  9,
-  "Keberadaan benda dan makhluk",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menyatakan kesukaan, kemampuan, keterangan tingkat, dan alasan.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Keberadaan benda dan makhluk",
+    items: [
     [
       "N が あります／います",
       "あります dipakai untuk benda/tumbuhan; います untuk manusia/hewan.",
@@ -189,12 +174,14 @@ installLesson(
       "Di mana Asia Store? ……Asia Store? Di dalam gedung itu.",
     ],
   ],
-  "Menjelaskan keberadaan dan posisi benda, orang, serta hewan.",
-);
-installLesson(
-  10,
-  "Letak, lokasi, dan keberadaan",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menjelaskan keberadaan dan posisi benda, orang, serta hewan.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Letak, lokasi, dan keberadaan",
+    items: [
     [
       "Tempat あります／います",
       "Gunakan pola keberadaan untuk menanyakan atau menjelaskan lokasi fasilitas dan orang.",
@@ -220,12 +207,14 @@ installLesson(
       "Ini telepon perusahaan.",
     ],
   ],
-  "Menggunakan kosakata posisi untuk menjelaskan denah dan lokasi.",
-);
-installLesson(
-  11,
-  "Bilangan dan durasi",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menggunakan kosakata posisi untuk menjelaskan denah dan lokasi.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Bilangan dan durasi",
+    items: [
     [
       "Kata bantu bilangan",
       "Bilangan berubah menurut jenis benda, orang, hewan, atau urutan.",
@@ -251,12 +240,14 @@ installLesson(
       "Berapa lama berada di Jepang?",
     ],
   ],
-  "Menghitung orang/benda dan menyatakan durasi serta frekuensi.",
-);
-installLesson(
-  12,
-  "Bentuk lampau dan perbandingan",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menghitung orang/benda dan menyatakan durasi serta frekuensi.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Bentuk lampau dan perbandingan",
+    items: [
     [
       "N／な形容詞 bentuk lampau",
       "です berubah menjadi でした; bentuk negatif lampau memakai じゃありませんでした.",
@@ -282,12 +273,14 @@ installLesson(
       "Di Jepang Gunung Fuji yang paling tinggi.",
     ],
   ],
-  "Menceritakan keadaan lampau dan membuat perbandingan.",
-);
-installLesson(
-  13,
-  "Keinginan dan harapan",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menceritakan keadaan lampau dan membuat perbandingan.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Keinginan dan harapan",
+    items: [
     [
       "N が ほしいです",
       "Menyatakan keinginan memiliki benda.",
@@ -313,12 +306,14 @@ installLesson(
       "Saya ingin minum sesuatu.",
     ],
   ],
-  "Menyampaikan keinginan, tujuan, dan rencana kegiatan.",
-);
-installLesson(
-  14,
-  "Bentuk て dan permintaan",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menyampaikan keinginan, tujuan, dan rencana kegiatan.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Bentuk て dan permintaan",
+    items: [
     [
       "Vてください",
       "Meminta seseorang melakukan tindakan dengan sopan.",
@@ -344,44 +339,14 @@ installLesson(
       "Saya sarapan lalu pergi ke sekolah.",
     ],
   ],
-  "Membentuk て dan memakainya untuk permintaan serta keadaan.",
-);
-installLesson(
-  15,
-  "Izin, larangan, dan keadaan",
-  [
-    [
-      "Vてもいいです",
-      "Meminta atau memberi izin melakukan sesuatu.",
-      "ここで 写真を 撮っても いいですか。",
-      "Bolehkah memotret di sini?",
-    ],
-    [
-      "Vてはいけません",
-      "Menyatakan larangan atau aturan.",
-      "ここで タバコを 吸っては いけません。",
-      "Tidak boleh merokok di sini.",
-    ],
-    [
-      "Vています sebagai keadaan",
-      "Selain aksi sedang berlangsung, pola ini dapat menunjukkan pekerjaan, kebiasaan, atau keadaan.",
-      "わたしは 銀行で 働いています。",
-      "Saya bekerja di bank.",
-    ],
-    [
-      "知っています",
-      "しっています berarti tahu/kenal; bentuk negatif umum adalah しりません.",
-      "田中さんの 電話番号を 知っていますか。",
-      "Apakah Anda tahu nomor telepon Tanaka?",
-    ],
-  ],
-  "Meminta izin, memahami larangan, dan membedakan fungsi Vています.",
-);
-const add = (i, t, a, f) => installLesson(i, t, a, f);
-add(
-  15,
-  "Menghubungkan informasi",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Membentuk て dan memakainya untuk permintaan serta keadaan.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Menghubungkan informasi",
+    items: [
     [
       "Vて",
       "Menyambungkan dua tindakan yang berkaitan.",
@@ -425,12 +390,14 @@ add(
       "Yang mana payung Sdr. Miller?",
     ],
   ],
-  "Menghubungkan kegiatan, sifat, urutan waktu, dan cara/pilihan.",
-);
-add(
-  16,
-  "Bentuk ない dan aturan",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menghubungkan kegiatan, sifat, urutan waktu, dan cara/pilihan.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Bentuk ない dan aturan",
+    items: [
     [
       "Vないでください",
       "Meminta agar seseorang tidak melakukan sesuatu.",
@@ -450,12 +417,14 @@ add(
       "Besok tidak perlu datang.",
     ],
   ],
-  "Memakai bentuk negatif untuk aturan dan kewajiban.",
-);
-add(
-  17,
-  "Bentuk kamus dan kemampuan",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Memakai bentuk negatif untuk aturan dan kewajiban.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Bentuk kamus dan kemampuan",
+    items: [
     [
       "V辞書形ことができます",
       "Menyatakan kemampuan atau kemungkinan.",
@@ -475,12 +444,14 @@ add(
       "Saya membaca buku sebelum tidur.",
     ],
   ],
-  "Memakai bentuk kamus untuk kemampuan dan hobi.",
-);
-add(
-  18,
-  "Pengalaman dan perubahan",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Memakai bentuk kamus untuk kemampuan dan hobi.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Pengalaman dan perubahan",
+    items: [
     [
       "Vたことがあります",
       "Menyatakan pernah mengalami sesuatu.",
@@ -500,12 +471,14 @@ add(
       "Lambat-laun menjadi panas.",
     ],
   ],
-  "Menceritakan pengalaman dan perubahan.",
-);
-add(
-  19,
-  "Bentuk biasa",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menceritakan pengalaman dan perubahan.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Bentuk biasa",
+    items: [
     [
       "普通形",
       "Bentuk biasa dipakai dalam percakapan informal dan pola lanjutan.",
@@ -525,12 +498,14 @@ add(
       "Pada April menjadi musim semi.",
     ],
   ],
-  "Mengenali bentuk informal dan pengalaman.",
-);
-add(
-  20,
-  "Gaya biasa dalam percakapan",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Mengenali bentuk informal dan pengalaman.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Gaya biasa dalam percakapan",
+    items: [
     [
       "Bentuk biasa tanya",
       "Pertanyaan informal memakai intonasi atau の/か sesuai konteks.",
@@ -550,12 +525,14 @@ add(
       "Saya pikir besok akan hujan.",
     ],
   ],
-  "Menggunakan gaya biasa secara sesuai dalam dialog.",
-);
-add(
-  21,
-  "Pendapat dan kutipan",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menggunakan gaya biasa secara sesuai dalam dialog.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Pendapat dan kutipan",
+    items: [
     [
       "普通形と思います",
       "Menyatakan pikiran atau dugaan.",
@@ -575,12 +552,14 @@ add(
       "Besok mungkin cuacanya bagus.",
     ],
   ],
-  "Menyampaikan pendapat dan informasi dari orang lain.",
-);
-add(
-  22,
-  "Klausa penjelas",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menyampaikan pendapat dan informasi dari orang lain.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Klausa penjelas",
+    items: [
     [
       "普通形 + N",
       "Klausa sebelum kata benda menerangkan kata benda tersebut.",
@@ -600,12 +579,14 @@ add(
       "Ini foto yang diambil di Jepang.",
     ],
   ],
-  "Membaca dan membuat anak kalimat penerang.",
-);
-add(
-  23,
-  "Waktu dan kondisi",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Membaca dan membuat anak kalimat penerang.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Waktu dan kondisi",
+    items: [
     [
       "Vとき",
       "Menunjukkan waktu saat suatu keadaan/tindakan terjadi.",
@@ -625,12 +606,14 @@ add(
       "Saat tidur, saya mematikan lampu.",
     ],
   ],
-  "Menyatakan waktu dan hubungan sebab-akibat alami.",
-);
-add(
-  24,
-  "Memberi dan menerima bantuan",
-  [
+    focusLabel: "Fokus pelajaran",
+    focus: "Menyatakan waktu dan hubungan sebab-akibat alami.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Memberi dan menerima bantuan",
+    items: [
     [
       "Vてあげます",
       "Melakukan tindakan untuk orang lain.",
@@ -650,33 +633,38 @@ add(
       "Guru meminjamkan buku kepada saya.",
     ],
   ],
-  "Memahami arah bantuan dari sudut pandang pembicara.",
-);
-add(
-  25,
-  "Pengandaian dan syarat",
-  [
-    [
-      "Vたら",
-      "Menyatakan jika/ketika kondisi terjadi.",
-      "雨が 降ったら、行きません。",
-      "Jika hujan, saya tidak pergi.",
-    ],
-    [
-      "A／Nだったら",
-      "Menyatakan pengandaian untuk kata sifat atau kata benda.",
-      "ひまだったら、来てください。",
-      "Jika senggang, silakan datang.",
-    ],
-    [
-      "Vても",
-      "Hasil tidak berubah walaupun kondisi terjadi.",
-      "高くても、この かばんを 買います。",
-      "Walaupun mahal, saya membeli tas ini.",
-    ],
-  ],
-  "Membuat pengandaian dan menyatakan kondisi.",
-);
+    focusLabel: "Fokus pelajaran",
+    focus: "Memahami arah bantuan dari sudut pandang pembicara.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+];
+document.querySelector("#materials .html-course").innerHTML = MATERI_BOOK1_LESSONS.map((l, i) => buildLessonHtml(i + 1, l.title, l.items, l.focusLabel, l.focus, l.practiceLabel, l.practice)).join("");
+const firstLesson = document.querySelector("#materials .html-lesson");
+if (firstLesson) {
+  firstLesson.open = true;
+}
+
+const lessonOneMore = document.querySelector("#materials .html-lesson");
+if (lessonOneMore) {
+  const body = lessonOneMore.querySelector(".html-content");
+  if (body) {
+    body.insertAdjacentHTML(
+      "beforeend",
+      `<div class="grammar-point"><h3>Ringkasan perubahan bentuk kalimat</h3><table class="pattern-table"><thead><tr><th>Fungsi</th><th>Pola</th><th>Contoh</th></tr></thead><tbody><tr><td>Pernyataan</td><td>N1 は N2 です</td><td>わたしは 学生です。</td></tr><tr><td>Negatif</td><td>N1 は N2 じゃありません</td><td>わたしは 先生じゃありません。</td></tr><tr><td>Pertanyaan</td><td>N1 は N2 ですか</td><td>あなたは 学生ですか。</td></tr><tr><td>Juga</td><td>N も N です</td><td>田中さんも 学生です。</td></tr></tbody></table></div><div class="grammar-point"><h3>Dialog contoh</h3><div class="mini-dialog"><b>A:</b> はじめまして。わたしは ディバです。<br><b>B:</b> はじめまして。わたしは アニです。学生ですか。<br><b>A:</b> はい、学生です。アニさんも 学生ですか。<br><b>B:</b> いいえ、学生じゃありません。会社員です。<br><br><small>Arti: Salam kenal. Saya Divha. — Salam kenal. Saya Ani. Apakah kamu mahasiswa? — Ya. Kamu juga mahasiswa? — Tidak, saya pegawai perusahaan.</small></div></div><div class="lesson-quiz"><b>Latihan cepat Pelajaran 1</b><p>Pilih kata yang tepat: わたしは 学生（　）。</p><button class="secondary" data-l1="wrong">か</button><button class="secondary" data-l1="correct">です</button><button class="secondary" data-l1="wrong">を</button><div class="quiz-feedback" id="l1Feedback"></div></div>`,
+    );
+    body.querySelectorAll("[data-l1]").forEach(
+      (b) =>
+        (b.onclick = () => {
+          document.getElementById("l1Feedback").textContent =
+            b.dataset.l1 === "correct"
+              ? "Benar! です menutup pernyataan nominal secara sopan."
+              : "Belum tepat. Jawabannya adalah です.";
+        }),
+    );
+  }
+}
+
 const materialsHeading = document.querySelector("#materials .head h1");
 if (materialsHeading)
   materialsHeading.textContent =
@@ -685,23 +673,25 @@ if (materialsHeading)
    section ini ditaruh di DALAM #materials supaya seluruh materi (Buku 1
    dan Buku 2) bisa diakses dari satu tempat: menu "Materi pelajaran".
    id="book2" tetap dipertahankan karena masih dipakai sebagai penanda
-   viewId oleh initMaterialLessonPicker/enrichLessons di bawah. */
+   viewId oleh initMaterialLessonPicker/enrichLessons di js/pages/materi.js. */
 const bookTwo = document.createElement("section");
 bookTwo.id = "book2";
-bookTwo.innerHTML = `<div class="head"><div><div class="eyebrow">Materi pembelajaran</div><h1>Menengah — Buku 2</h1><p>Bagian ini masih kosong dan akan diisi setelah materi Dasar — Buku 1 selesai.</p></div></div><article class="card" style="max-width:720px"><h2>Materi sedang disiapkan</h2><p style="color:var(--muted);line-height:1.65">Untuk saat ini, silakan selesaikan seluruh materi Dasar — Buku 1 terlebih dahulu.</p></article>`;
+bookTwo.innerHTML = `<div class="head"><div><div class="eyebrow">Materi pembelajaran menengah</div><h1>Menengah — Buku 2</h1><p>Pelajaran 26–50 disusun bertahap dari materi tata bahasa Buku 2.</p></div></div><div class="html-course"></div>`;
 document.getElementById("materials").appendChild(bookTwo);
 const book2 = document.getElementById("book2");
-if (book2) {
-  book2.innerHTML = `<div class="head"><div><div class="eyebrow">Materi pembelajaran menengah</div><h1>Menengah — Buku 2</h1><p>Pelajaran 26–50 disusun bertahap dari materi tata bahasa Buku 2.</p></div></div><div class="html-course"><details class="html-lesson" open><summary><span class="lesson-number">26</span>Pelajaran 26: Meminta bantuan dan menjelaskan alasan</summary><div class="html-content"><div class="grammar-point"><h3>1. Bentuk biasa + んです</h3><p>～んです dipakai untuk menjelaskan alasan, keadaan, atau latar belakang suatu informasi. Sebelum んです digunakan bentuk biasa. Untuk kata benda dan な形容詞, gunakan ～なんです.</p><span class="grammar-example">どうして 遅れたんですか。……電車が 遅れたんです。<span class="grammar-meaning">Mengapa terlambat? …Karena keretanya terlambat.</span></span></div><div class="grammar-point"><h3>2. Vていただけませんか</h3><p>Pola ini adalah cara sangat sopan untuk meminta seseorang melakukan sesuatu. Secara harfiah pembicara meminta lawan bicara berkenan melakukan bantuan untuknya.</p><span class="grammar-example">この 漢字を 読んで いただけませんか。<span class="grammar-meaning">Bisakah Anda berkenan membacakan kanji ini?</span></span></div><div class="grammar-point"><h3>3. Vたら いいですか</h3><p>Digunakan untuk meminta saran mengenai tindakan terbaik dalam suatu keadaan. Kata kerja memakai bentuk lampau た sebelum ら.</p><span class="grammar-example">ごみは どこに 捨てたら いいですか。<span class="grammar-meaning">Sampah sebaiknya dibuang di mana?</span></span></div><div class="grammar-point"><h3>4. N は bagaimana melakukan tindakan</h3><p>Topik dengan は dapat dipakai untuk menanyakan cara menangani benda tertentu, misalnya sampah, barang, atau dokumen. Jawaban menjelaskan tindakan dan tempat/cara yang tepat.</p><span class="grammar-example">この かさは どうしたら いいですか。<span class="grammar-meaning">Payung ini sebaiknya bagaimana?</span></span></div><div class="html-note"><div><b>Fokus Pelajaran 26</b>Menjelaskan penyebab, meminta bantuan dengan sopan, dan meminta saran dalam situasi sehari-hari.</div><div><b>Latihan mandiri</b>Buat tiga pertanyaan: satu memakai んです, satu permintaan Vていただけませんか, dan satu saran Vたらいいですか.</div></div></div></details></div>`;
-}
-const midLesson = (n, title, items) =>
-  `<details class="html-lesson"><summary><span class="lesson-number">${n}</span>Pelajaran ${n}: ${title}</summary><div class="html-content">${items.map((x, i) => `<div class="grammar-point"><h3>${i + 1}. ${x[0]}</h3><p>${x[1]}</p><span class="grammar-example">${x[2]}<span class="grammar-meaning">${x[3]}</span></span></div>`).join("")}<div class="html-note"><div><b>Fokus pelajaran</b>Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.</div><div><b>Latihan mandiri</b>Buat tiga kalimat memakai pola utama pada pelajaran ini.</div></div></div></details>`;
-if (book2) {
-  const existing = book2.querySelector(".html-course");
-  if (existing) {
-    existing.insertAdjacentHTML(
-      "beforeend",
-      midLesson(27, "Bentuk potensial dan kemampuan", [
+
+const MATERI_BOOK2_LESSONS = [
+  {
+    title: "Meminta bantuan dan menjelaskan alasan",
+    items: [["Bentuk biasa + んです", "～んです dipakai untuk menjelaskan alasan, keadaan, atau latar belakang suatu informasi. Sebelum んです digunakan bentuk biasa. Untuk kata benda dan な形容詞, gunakan ～なんです.", "どうして 遅れたんですか。……電車が 遅れたんです。", "Mengapa terlambat? …Karena keretanya terlambat."], ["Vていただけませんか", "Pola ini adalah cara sangat sopan untuk meminta seseorang melakukan sesuatu. Secara harfiah pembicara meminta lawan bicara berkenan melakukan bantuan untuknya.", "この 漢字を 読んで いただけませんか。", "Bisakah Anda berkenan membacakan kanji ini?"], ["Vたら いいですか", "Digunakan untuk meminta saran mengenai tindakan terbaik dalam suatu keadaan. Kata kerja memakai bentuk lampau た sebelum ら.", "ごみは どこに 捨てたら いいですか。", "Sampah sebaiknya dibuang di mana?"], ["N は bagaimana melakukan tindakan", "Topik dengan は dapat dipakai untuk menanyakan cara menangani benda tertentu, misalnya sampah, barang, atau dokumen. Jawaban menjelaskan tindakan dan tempat/cara yang tepat.", "この かさは どうしたら いいですか。", "Payung ini sebaiknya bagaimana?"]],
+    focusLabel: "Fokus Pelajaran 26",
+    focus: "Menjelaskan penyebab, meminta bantuan dengan sopan, dan meminta saran dalam situasi sehari-hari.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga pertanyaan: satu memakai んです, satu permintaan Vていただけませんか, dan satu saran Vたらいいですか.",
+  },
+  {
+    title: "Bentuk potensial dan kemampuan",
+    items: [
         [
           "Bentuk potensial",
           "Menyatakan bahwa seseorang mampu melakukan suatu tindakan.",
@@ -726,8 +716,15 @@ if (book2) {
           "駅の 前に 新しい ホテルが できました。",
           "Hotel baru telah dibangun di depan stasiun.",
         ],
-      ]) +
-        midLesson(28, "Melakukan dua kegiatan", [
+      ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Melakukan dua kegiatan",
+    items: [
           [
             "Vますながら",
             "Menyatakan melakukan dua kegiatan sekaligus; kegiatan utama berada di bagian akhir.",
@@ -752,8 +749,15 @@ if (book2) {
             "雨でした。それで、行きませんでした。",
             "Hujan. Karena itu, saya tidak pergi.",
           ],
-        ]) +
-        midLesson(29, "Keadaan dan persiapan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Keadaan dan persiapan",
+    items: [
           [
             "Vています",
             "Menyatakan keadaan hasil tindakan, bukan hanya aksi sedang berlangsung.",
@@ -778,8 +782,15 @@ if (book2) {
             "それは いい 考えです。",
             "Itu ide yang bagus.",
           ],
-        ]) +
-        midLesson(30, "Persiapan dan perubahan keadaan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Persiapan dan perubahan keadaan",
+    items: [
           [
             "Vてあります",
             "Menyatakan keadaan hasil tindakan yang dilakukan dengan tujuan tertentu.",
@@ -804,16 +815,15 @@ if (book2) {
             "コーヒーでも 飲みませんか。",
             "Mau minum kopi atau semacamnya?",
           ],
-        ]),
-    );
-  }
-}
-if (book2) {
-  const course = book2.querySelector(".html-course");
-  if (course) {
-    course.insertAdjacentHTML(
-      "beforeend",
-      midLesson(31, "Niat dan rencana", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Niat dan rencana",
+    items: [
         [
           "Bentuk maksud",
           "～つもりです menyatakan niat pribadi untuk melakukan atau tidak melakukan tindakan.",
@@ -832,8 +842,15 @@ if (book2) {
           "会議は 3時からの予定です。",
           "Rapat dijadwalkan mulai jam tiga.",
         ],
-      ]) +
-        midLesson(32, "Nasihat dan kebiasaan", [
+      ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Nasihat dan kebiasaan",
+    items: [
           [
             "Vたほうがいいです",
             "Memberi saran agar seseorang melakukan sesuatu.",
@@ -852,8 +869,15 @@ if (book2) {
             "荷物を 持ちましょうか。",
             "Bolehkah saya membawakan barangnya?",
           ],
-        ]) +
-        midLesson(33, "Perintah dan larangan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Perintah dan larangan",
+    items: [
           [
             "Bentuk perintah",
             "Dipakai pada keadaan darurat, olahraga, atau instruksi tegas; tidak cocok untuk percakapan biasa.",
@@ -872,8 +896,15 @@ if (book2) {
             "「立入禁止」は 入るなという意味です。",
             "“Dilarang masuk” berarti jangan masuk.",
           ],
-        ]) +
-        midLesson(34, "Urutan dan perubahan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Urutan dan perubahan",
+    items: [
           [
             "Vたあとで",
             "Menyatakan tindakan yang dilakukan setelah tindakan lain selesai.",
@@ -892,8 +923,15 @@ if (book2) {
             "説明書の とおりに してください。",
             "Tolong lakukan sesuai petunjuk.",
           ],
-        ]) +
-        midLesson(35, "Syarat dan pengandaian", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Syarat dan pengandaian",
+    items: [
           [
             "Bentuk ば",
             "Menyatakan syarat umum atau hasil yang terjadi bila kondisi terpenuhi.",
@@ -912,16 +950,15 @@ if (book2) {
             "雨が 降っても、行きます。",
             "Walaupun hujan, saya pergi.",
           ],
-        ]),
-    );
-  }
-}
-if (book2) {
-  const course = book2.querySelector(".html-course");
-  if (course) {
-    course.insertAdjacentHTML(
-      "beforeend",
-      midLesson(36, "Tujuan dan perubahan kemampuan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Tujuan dan perubahan kemampuan",
+    items: [
         [
           "V辞書形ように",
           "Menyatakan tujuan yang berkaitan dengan kemampuan atau keadaan.",
@@ -940,8 +977,15 @@ if (book2) {
           "遅れないようにします。",
           "Saya akan berusaha tidak terlambat.",
         ],
-      ]) +
-        midLesson(37, "Bentuk pasif", [
+      ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Bentuk pasif",
+    items: [
           [
             "Bentuk pasif",
             "Digunakan saat subjek menerima tindakan dari orang lain.",
@@ -960,8 +1004,15 @@ if (book2) {
             "友達に 写真を 撮られました。",
             "Saya difoto oleh teman.",
           ],
-        ]) +
-        midLesson(38, "Nominalisasi dan indera", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Nominalisasi dan indera",
+    items: [
           [
             "V辞書形のは",
             "Mengubah kegiatan menjadi topik kalimat.",
@@ -980,8 +1031,15 @@ if (book2) {
             "ここから 海が 見えます。",
             "Dari sini laut terlihat.",
           ],
-        ]) +
-        midLesson(39, "Bentuk kausatif", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Bentuk kausatif",
+    items: [
           [
             "Bentuk kausatif",
             "Menyatakan membuat atau membiarkan seseorang melakukan tindakan.",
@@ -1000,8 +1058,15 @@ if (book2) {
             "先生は 学生に 発表させました。",
             "Guru membuat siswa presentasi.",
           ],
-        ]) +
-        midLesson(40, "Bentuk kehormatan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Bentuk kehormatan",
+    items: [
           [
             "お／ご～になります",
             "Menyatakan tindakan orang yang dihormati dengan sopan.",
@@ -1020,16 +1085,15 @@ if (book2) {
             "社長は 会議室に いらっしゃいます。",
             "Presiden direktur ada di ruang rapat.",
           ],
-        ]),
-    );
-  }
-}
-if (book2) {
-  const course = book2.querySelector(".html-course");
-  if (course) {
-    course.insertAdjacentHTML(
-      "beforeend",
-      midLesson(41, "Bahasa merendahkan diri", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Bahasa merendahkan diri",
+    items: [
         [
           "お／ご～します",
           "Menyatakan tindakan pembicara dengan rendah hati kepada orang yang dihormati.",
@@ -1048,8 +1112,15 @@ if (book2) {
           "資料を 拝見します。",
           "Saya akan melihat dokumen.",
         ],
-      ]) +
-        midLesson(42, "Tujuan dan keadaan", [
+      ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Tujuan dan keadaan",
+    items: [
           [
             "V辞書形ために",
             "Menyatakan tujuan yang disengaja.",
@@ -1068,8 +1139,15 @@ if (book2) {
             "忘れないように メモします。",
             "Saya mencatat agar tidak lupa.",
           ],
-        ]) +
-        midLesson(43, "Perubahan dan keberlanjutan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Perubahan dan keberlanjutan",
+    items: [
           [
             "Vてきます",
             "Menunjukkan perubahan yang mendekat ke masa kini atau pergi lalu kembali.",
@@ -1088,8 +1166,15 @@ if (book2) {
             "雨が 降りそうです。",
             "Sepertinya akan hujan.",
           ],
-        ]) +
-        midLesson(44, "Menyampaikan informasi", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Menyampaikan informasi",
+    items: [
           [
             "普通形そうです",
             "Menyampaikan informasi yang didengar dari sumber lain.",
@@ -1108,8 +1193,15 @@ if (book2) {
             "あの 人は 学生らしいです。",
             "Orang itu tampaknya mahasiswa.",
           ],
-        ]) +
-        midLesson(45, "Pengandaian lanjutan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Pengandaian lanjutan",
+    items: [
           [
             "Vたら",
             "Syarat yang terjadi lebih dahulu sebelum hasil.",
@@ -1128,16 +1220,15 @@ if (book2) {
             "薬を 飲んだのに、治りません。",
             "Walau minum obat, tidak sembuh.",
           ],
-        ]),
-    );
-  }
-}
-if (book2) {
-  const course = book2.querySelector(".html-course");
-  if (course) {
-    course.insertAdjacentHTML(
-      "beforeend",
-      midLesson(46, "Tindakan yang terjadi bersamaan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Tindakan yang terjadi bersamaan",
+    items: [
         [
           "Vているあいだに",
           "Menyatakan suatu kejadian terjadi selama kegiatan lain berlangsung.",
@@ -1156,8 +1247,15 @@ if (book2) {
           "いま 電話しているところです。",
           "Saya sedang menelepon.",
         ],
-      ]) +
-        midLesson(47, "Pola pasif lanjutan", [
+      ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Pola pasif lanjutan",
+    items: [
           [
             "～と 言われます",
             "Menyampaikan perkataan orang kepada pembicara.",
@@ -1176,8 +1274,15 @@ if (book2) {
             "田中さんに 電話を くださいと 伝えていただけませんか。",
             "Bisakah Anda menyampaikan kepada Tanaka agar menelepon saya?",
           ],
-        ]) +
-        midLesson(48, "Hubungan sebab dan tujuan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Hubungan sebab dan tujuan",
+    items: [
           [
             "～のは ～からです",
             "Menjelaskan alasan suatu keadaan dengan bentuk nominal.",
@@ -1196,8 +1301,15 @@ if (book2) {
             "よく 見えるように、前に 座ります。",
             "Saya duduk di depan agar terlihat jelas.",
           ],
-        ]) +
-        midLesson(49, "Bahasa hormat lanjutan", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Bahasa hormat lanjutan",
+    items: [
           [
             "お／ご～になります",
             "Menyatakan tindakan orang yang dihormati.",
@@ -1216,8 +1328,15 @@ if (book2) {
             "荷物を お持ちします。",
             "Saya akan membawakan barang Anda.",
           ],
-        ]) +
-        midLesson(50, "Merangkum pengalaman belajar", [
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+  {
+    title: "Merangkum pengalaman belajar",
+    items: [
           [
             "～たら／～なら",
             "Menyatakan pengandaian dan saran sesuai situasi.",
@@ -1236,32 +1355,96 @@ if (book2) {
             "毎日 日本語を 読むようにしています。",
             "Saya membiasakan membaca bahasa Jepang setiap hari.",
           ],
-        ]),
-    );
+        ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+  },
+];
+if (book2) {
+  const course = book2.querySelector(".html-course");
+  if (course) {
+    course.innerHTML = MATERI_BOOK2_LESSONS.map((l, i) => buildLessonHtml(i + 26, l.title, l.items, l.focusLabel, l.focus, l.practiceLabel, l.practice)).join("");
+    course.querySelector(".html-lesson").open = true;
     course.insertAdjacentHTML(
       "beforeend",
       '<article class="card"><h2>Buku 2 selesai disusun</h2><p style="color:var(--muted);line-height:1.65">Pelajaran 26–50 kini tersedia sebagai materi menengah. Gunakan flashcard dan tes untuk mengulang pola yang telah dipelajari.</p></article>',
     );
   }
 }
-const lessonOneMore = document.querySelector("#materials .html-lesson");
-if (lessonOneMore) {
-  const body = lessonOneMore.querySelector(".html-content");
-  if (body) {
-    body.insertAdjacentHTML(
-      "beforeend",
-      `<div class="grammar-point"><h3>Ringkasan perubahan bentuk kalimat</h3><table class="pattern-table"><thead><tr><th>Fungsi</th><th>Pola</th><th>Contoh</th></tr></thead><tbody><tr><td>Pernyataan</td><td>N1 は N2 です</td><td>わたしは 学生です。</td></tr><tr><td>Negatif</td><td>N1 は N2 じゃありません</td><td>わたしは 先生じゃありません。</td></tr><tr><td>Pertanyaan</td><td>N1 は N2 ですか</td><td>あなたは 学生ですか。</td></tr><tr><td>Juga</td><td>N も N です</td><td>田中さんも 学生です。</td></tr></tbody></table></div><div class="grammar-point"><h3>Dialog contoh</h3><div class="mini-dialog"><b>A:</b> はじめまして。わたしは ディバです。<br><b>B:</b> はじめまして。わたしは アニです。学生ですか。<br><b>A:</b> はい、学生です。アニさんも 学生ですか。<br><b>B:</b> いいえ、学生じゃありません。会社員です。<br><br><small>Arti: Salam kenal. Saya Divha. — Salam kenal. Saya Ani. Apakah kamu mahasiswa? — Ya. Kamu juga mahasiswa? — Tidak, saya pegawai perusahaan.</small></div></div><div class="lesson-quiz"><b>Latihan cepat Pelajaran 1</b><p>Pilih kata yang tepat: わたしは 学生（　）。</p><button class="secondary" data-l1="wrong">か</button><button class="secondary" data-l1="correct">です</button><button class="secondary" data-l1="wrong">を</button><div class="quiz-feedback" id="l1Feedback"></div></div>`,
-    );
-    body.querySelectorAll("[data-l1]").forEach(
-      (b) =>
-        (b.onclick = () => {
-          document.getElementById("l1Feedback").textContent =
-            b.dataset.l1 === "correct"
-              ? "Benar! です menutup pernyataan nominal secara sopan."
-              : "Belum tepat. Jawabannya adalah です.";
-        }),
-    );
-  }
-}
 
+/* 2 pelajaran Buku 1 yang SAAT INI TIDAK TAMPIL ke siswa - bug lama
+   (bukan disebabkan reorganisasi ini). Dulu masing-masing punya index
+   manual yang salah: installLesson(15, "Izin, larangan, dan keadaan")
+   langsung ditimpa add(15, "Menghubungkan informasi") yang dipanggil
+   sesudahnya (index sama), dan add(25, "Pengandaian dan syarat") memakai
+   index di luar batas 25 elemen Buku 1 sehingga tidak pernah terpasang.
+   Isinya disimpan di sini APA ADANYA supaya tidak hilang - SENGAJA belum
+   dimasukkan ke MATERI_BOOK1_LESSONS karena menambahnya di akhir akan
+   membuat Buku 1 jadi 27 pelajaran dan tabrakan nomor dengan Pelajaran 27
+   Buku 2 (lihat MATERI_BOOK2_LESSONS). Keputusan mau ditaruh di mana/
+   diberi nomor berapa ditunggu dari pemilik aplikasi - JANGAN dirender. */
+const MATERI_BOOK1_UNPLACED_LESSONS = [
+  {
+    title: "Izin, larangan, dan keadaan",
+    items: [
+    [
+      "Vてもいいです",
+      "Meminta atau memberi izin melakukan sesuatu.",
+      "ここで 写真を 撮っても いいですか。",
+      "Bolehkah memotret di sini?",
+    ],
+    [
+      "Vてはいけません",
+      "Menyatakan larangan atau aturan.",
+      "ここで タバコを 吸っては いけません。",
+      "Tidak boleh merokok di sini.",
+    ],
+    [
+      "Vています sebagai keadaan",
+      "Selain aksi sedang berlangsung, pola ini dapat menunjukkan pekerjaan, kebiasaan, atau keadaan.",
+      "わたしは 銀行で 働いています。",
+      "Saya bekerja di bank.",
+    ],
+    [
+      "知っています",
+      "しっています berarti tahu/kenal; bentuk negatif umum adalah しりません.",
+      "田中さんの 電話番号を 知っていますか。",
+      "Apakah Anda tahu nomor telepon Tanaka?",
+    ],
+  ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Meminta izin, memahami larangan, dan membedakan fungsi Vています.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+  {
+    title: "Pengandaian dan syarat",
+    items: [
+    [
+      "Vたら",
+      "Menyatakan jika/ketika kondisi terjadi.",
+      "雨が 降ったら、行きません。",
+      "Jika hujan, saya tidak pergi.",
+    ],
+    [
+      "A／Nだったら",
+      "Menyatakan pengandaian untuk kata sifat atau kata benda.",
+      "ひまだったら、来てください。",
+      "Jika senggang, silakan datang.",
+    ],
+    [
+      "Vても",
+      "Hasil tidak berubah walaupun kondisi terjadi.",
+      "高くても、この かばんを 買います。",
+      "Walaupun mahal, saya membeli tas ini.",
+    ],
+  ],
+    focusLabel: "Fokus pelajaran",
+    focus: "Membuat pengandaian dan menyatakan kondisi.",
+    practiceLabel: "Latihan mandiri",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
+  },
+];
 }
