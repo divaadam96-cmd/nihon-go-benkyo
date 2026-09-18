@@ -151,6 +151,8 @@ const materialFuriganaReadings = {
   "次": "つぎ", "時": "とき", "上": "うえ", "早": "はや", "切": "き",
   "分": "ふん", "新": "あたら", "覧": "らん", "月": "つき", "日": "ひ",
   "薬": "くすり", "何": "なに", "一": "いち",
+  "方": "かた", "社員": "しゃいん", "鈴木": "すずき", "傘": "かさ",
+  "違": "ちが", "階": "かい", "国": "くに",
   "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
   "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
   "行": "い", "降": "ふ", "高": "たか", "座": "すわ", "使": "つか", "始": "はじ",
@@ -1063,9 +1065,19 @@ function initMaterialLessonPicker({
     readerBody.replaceChildren(activeContent);
     buildExampleStudy(activeContent);
     buildPracticeTest(activeContent);
+    /* directTextOnly (true) HANYA memindai text node ANAK LANGSUNG elemen
+       - cocok untuk struktur lama tempat teks Jepang langsung jadi anak
+       .grammar-example. Sejak .grammar-example dipecah jadi
+       <span class="grammar-jp"> + <span class="grammar-meaning"> (supaya
+       kolom Jepang/arti sejajar meniru buku), teks Jepang jadi CUCU, bukan
+       anak langsung, lagi - directTextOnly=true jadi tidak pernah
+       menemukan apa-apa dan furigana di Tahap 1 (Pahami Pola) diam-diam
+       berhenti muncul. Pakai penelusuran penuh (false, TreeWalker) supaya
+       tetap ketemu walau nested; .grammar-meaning ikut terlewati tapi
+       aman karena teks Indonesia tidak pernah cocok pola kanji. */
     activeContent
       .querySelectorAll(".grammar-japanese-example")
-      .forEach((example) => addMaterialFurigana(example, true));
+      .forEach((example) => addMaterialFurigana(example));
     activeContent
       .querySelectorAll(
         ".grammar-point > h3, .grammar-short-explanation, .grammar-subhead, .grammar-important-note",
