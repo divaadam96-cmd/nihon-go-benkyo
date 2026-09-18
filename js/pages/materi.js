@@ -538,6 +538,17 @@ function initMaterialLessonPicker({
     return null;
   }
 
+  /* Nama tokoh yang berulang di buku (dipakai soal cerita untuk mencari
+     pernyataan "konteks/tokoh sama, pola beda" - lihat buildStoryQuestions). */
+  const NAME_TOKENS = [
+    "ミラー", "サントス", "佐藤", "サトウ", "グプタ", "シュミット",
+    "鈴木", "スズキ", "ワット", "山田", "ヤマダ", "カリナ", "IMC",
+  ];
+
+  function namesIn(text) {
+    return NAME_TOKENS.filter((name) => text.includes(name));
+  }
+
   function buildPracticeTest(content) {
     const examples = getAllExamplesData(content);
     /* Contoh bertanda "×" sengaja menunjukkan penggunaan yang SALAH (lihat
@@ -702,10 +713,17 @@ function initMaterialLessonPicker({
        cerita/percakapan pendek yang levelnya otomatis sesuai bab (karena
        cuma memakai kosakata & pola yang memang sudah diajarkan bab itu) -
        lalu siswa memilih PERNYATAAN BAHASA JEPANG yang sesuai dengan
-       cerita tsb (bukan artinya - supaya tetap latihan membaca Jepang,
-       bukan menerjemahkan). Pernyataan benar = salah satu kalimat Jepang
-       dalam cerita; pernyataan salah = kalimat Jepang LAIN yang tidak ada
-       di cerita itu. */
+       cerita tsb.
+       Pernyataan yang benar SENGAJA BUKAN kalimat yang tertulis persis di
+       ceritanya (itu cuma soal "cari kalimat yang sama", bukan pemahaman
+       bacaan) - dicari dulu kalimat LAIN di bab yang sama yang menyebut
+       tokoh/konteks yang sama dengan cerita tapi memakai POLA YANG
+       BERBEDA dari pola-pola yang sudah dipakai di cerita itu
+       (crossPatternMatch, lewat NAME_TOKENS). Kalau bab ini tidak punya
+       tokoh bernama yang berulang (mis. cerita cuma pakai これ／それ／あの
+       yang generik), jatuh ke kalimat lain mana pun yang pola-nya beda
+       dari cerita (anyDifferentPattern) - tetap "pola diubah", walau
+       kecocokan konteksnya tidak bisa dipastikan lewat nama tokoh. */
     function buildStoryQuestions(count, startIndex) {
       const groupSize = 3;
       const groups = [];
@@ -715,9 +733,20 @@ function initMaterialLessonPicker({
       const stories = groups.length >= count ? groups : quizPool.map((example) => [example]);
       return pickRotating(stories, count, startIndex).map((group, i) => {
         const passage = group.map((example) => example.japaneseClean).join(" ");
-        const target = group[i % group.length];
+        const groupPatterns = new Set(group.map((example) => example.pattern));
+        const subjects = namesIn(passage);
+        const crossPatternMatch = quizPool.find(
+          (example) =>
+            !group.includes(example) &&
+            !groupPatterns.has(example.pattern) &&
+            subjects.some((name) => example.japaneseClean.includes(name)),
+        );
+        const anyDifferentPattern = quizPool.find(
+          (example) => !group.includes(example) && !groupPatterns.has(example.pattern),
+        );
+        const target = crossPatternMatch || anyDifferentPattern || group[i % group.length];
         const distractorPool = quizPool
-          .filter((example) => !group.includes(example))
+          .filter((example) => example !== target && !group.includes(example))
           .map((example) => example.japaneseClean);
         return {
           type: "story",
