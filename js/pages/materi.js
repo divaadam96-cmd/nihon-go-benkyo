@@ -122,7 +122,7 @@ const materialFuriganaReadings = {
   "郵便局": "ゆうびんきょく", "富士山": "ふじさん", "月曜日": "げつようび",
   "大阪": "おおさか", "昼休み": "ひるやすみ", "大変": "たいへん",
   "広島": "ひろしま", "甲子園": "こうしえん", "北海道": "ほっかいどう", "来週": "らいしゅう",
-  "一人": "ひとり",
+  "一人": "ひとり", "新幹線": "しんかんせん",
   "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
   "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
@@ -143,6 +143,7 @@ const materialFuriganaReadings = {
   "週間": "しゅうかん", "親切": "しんせつ", "手伝": "てつだ", "何時": "なんじ",
   "神戸": "こうべ", "何ですか": "なんですか", "何人": "なんにん", "何を": "なにを",
   "何の": "なんの", "何か": "なにか", "何が": "なにが", "何に": "なにに",
+  "何で": "なんで", "何と": "なんと", "何歳": "なんさい",
   "下さい": "ください", "拝見": "はいけん",
   "駅": "えき", "家": "いえ", "花": "はな", "海": "うみ", "靴": "くつ",
   "机": "つくえ", "酒": "さけ", "春": "はる", "人": "ひと", "先": "さき",
@@ -155,7 +156,7 @@ const materialFuriganaReadings = {
   "分": "ふん", "新": "あたら", "覧": "らん", "月": "つき", "日": "ひ",
   "薬": "くすり", "何": "なに", "一": "いち",
   "方": "かた", "社員": "しゃいん", "鈴木": "すずき", "傘": "かさ",
-  "違": "ちが", "階": "かい", "国": "くに", "半": "はん", "馬": "うま",
+  "違": "ちが", "階": "かい", "国": "くに", "半": "はん", "馬": "うま", "昼": "ひる",
   "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
   "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
   "行": "い", "降": "ふ", "高": "たか", "座": "すわ", "使": "つか", "始": "はじ",
@@ -475,6 +476,7 @@ function initMaterialLessonPicker({
           japaneseText,
           meaningText: htmlToFlatText(meaningHtml),
           japaneseClean: japaneseText.replace(CIRCLED_NUMBER_PREFIX, ""),
+          isNumberedSentence: CIRCLED_NUMBER_PREFIX.test(japaneseText),
         });
       });
     });
@@ -624,8 +626,14 @@ function initMaterialLessonPicker({
     const examples = getAllExamplesData(content);
     /* Contoh bertanda "×" sengaja menunjukkan penggunaan yang SALAH (lihat
        Pelajaran 2 pola 6) - jangan dipakai sebagai sumber soal, tapi tetap
-       tampil apa adanya di "Pelajari Contoh" di atas. */
-    const quizPool = examples.filter((example) => !example.japaneseClean.includes("×"));
+       tampil apa adanya di "Pelajari Contoh" di atas. Contoh tanpa nomor
+       lingkaran (mis. daftar penggunaan します di Pelajaran 6 pola 2:
+       "サッカーを します" / "bermain sepak bola") adalah demonstrasi kosakata
+       di dalam penjelasan, bukan kalimat cerita/narasi - dikecualikan juga
+       supaya tidak jadi "cerita" yang isinya cuma daftar kata tak nyambung. */
+    const quizPool = examples.filter(
+      (example) => !example.japaneseClean.includes("×") && example.isNumberedSentence,
+    );
     const types = ["particle", "translate", "arrange", "story"];
     const labels = {
       particle: "Partikel yang tepat",

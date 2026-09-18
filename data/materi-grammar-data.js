@@ -565,7 +565,130 @@ const MATERI_BOOK1_LESSONS = [
   },
   {
     title: "Aktivitas dan ajakan",
-    items: [["N を V (kata kerja transitif)", "Objek dari kata kerja transitif ditandai dengan partikel を. Partikel ini menunjukkan benda yang secara langsung dikenai kegiatan.", "ジュースを 飲みます。", "Minum jus."], ["N を します", "します dapat digunakan secara luas dengan kata benda sebagai objek untuk menyatakan melakukan suatu aktivitas. Pola ini dipakai untuk olahraga, permainan, acara, belajar, pekerjaan, dan kegiatan lain.", "サッカーを します。", "Bermain sepak bola."], ["何をしますか", "Pertanyaan ini digunakan untuk menanyakan kegiatan yang dilakukan. Jawabannya memakai objek dan kata kerja yang sesuai dengan waktu pertanyaan.", "月曜日 何をしますか。……京都へ 行きます。", "Hari Senin melakukan apa? …Pergi ke Kyoto."], ["なん dan なに", "なん dan なに sama-sama berarti apa. なん dipakai sebelum bunyi seperti た、だ、dan な, juga sebelum kata bantu bilangan. なに lebih umum pada bentuk lain. なんで juga dapat berarti mengapa atau dengan apa bergantung konteks.", "それは 何ですか。", "Itu apa?"], ["Tempat で V", "で setelah kata benda tempat menunjukkan lokasi berlangsungnya kegiatan. Ini berbeda dari に yang menandai waktu spesifik atau lokasi keberadaan.", "駅で 新聞を 買います。", "Membeli surat kabar di stasiun."], ["Vませんか", "Ekspresi ini menawarkan atau mengajak lawan bicara melakukan suatu kegiatan dengan cara yang lembut. Jawaban dapat berupa persetujuan atau penolakan yang sopan.", "いっしょに 京都へ 行きませんか。", "Bagaimana kita pergi ke Kyoto bersama-sama?"], ["Vましょう", "Vましょう adalah ajakan aktif untuk melakukan kegiatan bersama. Pola ini juga dipakai untuk menanggapi ajakan Vませんか secara positif.", "ちょっと 休みましょう。", "Mari istirahat sebentar."], ["～か", "か di akhir kalimat dapat menyatakan bahwa pembicara baru menerima dan memahami informasi dari lawan bicara. Fungsinya mirip そうですか, tetapi lebih singkat dan informal dalam percakapan.", "日曜日 京都へ 行きました。……京都ですか。いいですね。", "Hari Minggu pergi ke Kyoto. …Kyoto? Bagus ya."]],
+    items: [
+      {
+        title: "Kata Benda を Kata Kerja（Kata Kerja Transitif）",
+        blocks: [
+          {
+            text: "Objek dari Kata Kerja Transitif ditunjukkan oleh partikel を.",
+            examples: [["① ジュースを 飲みます。", "Minum jus."]],
+            note: "[Perhatian] を hanya dipakai untuk menulis partikel saja.",
+          },
+        ],
+      },
+      {
+        title: "Kata Benda を します",
+        blocks: [
+          {
+            text: "します disertai Kata Benda secara luas sebagai objek. します mempunyai arti bahwa melakukan hal yang ditunjukan oleh objek tersebut. Beberapa contoh diberikan di bawah ini:",
+          },
+          {
+            label: "1) Olahraga, permainan dan lain-lain",
+            examples: [
+              ["サッカーを します", "bermain sepak bola"],
+              ["トランプを します", "bermain kartu"],
+            ],
+          },
+          {
+            label: "2) Pertemuan, acara dan lain-lain",
+            examples: [
+              ["パーティーを します", "berpesta"],
+              ["会議を します", "mengadakan rapat"],
+            ],
+          },
+          {
+            label: "3) Dan lain-lain",
+            examples: [
+              ["宿題を します", "membuat PR"],
+              ["仕事を します", "bekerja"],
+              ["電話を します", "menelepon"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "何を しますか",
+        blocks: [
+          {
+            text: "Ini adalah pertanyaan untuk menanyakan hal yang dilakukan.",
+            examples: [
+              ["② 月曜日 何を しますか。<br>……京都へ 行きます。", "Hari Senin melakukan apa?<br>……Pergi ke Kyoto."],
+              ["③ きのう 何を しましたか。<br>……サッカーを しました。", "Kemarin melakukan apa?<br>……Bermain sepak bola."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "なん dan なに",
+        blocks: [
+          {
+            text: "なん dan なに mempunyai arti yang sama.<br>なん digunakan pada hal-hal berikut:",
+          },
+          {
+            label: "1) Jika kata yang mengikutinya diawali dengan baris た, だ, dan な.",
+            examples: [
+              ["④ それは 何ですか。", "Itu apa?"],
+              ["⑤ 何の 本ですか。", "Buku apa?"],
+              ["⑥ 寝る まえに、何と 言いますか。", "Sebelum tidur, mengucapkan apa? (Pel.21)"],
+              ["⑦ 何で 東京へ 行きますか。", "Dengan apa pergi ke Tokyo?"],
+            ],
+          },
+          {
+            label: "[Perhatian]",
+            text: "Selain bertanya tentang sarana, なんで digunakan untuk menanyakan alasan juga. Adakalanya dikatakan なにで jika ingin menunjukkan lebih jelas untuk menanyakan sarana.",
+            examples: [["⑧ 何で 東京へ 行きますか。<br>……新幹線で 行きます。", "Dengan apa pergi ke Tokyo?<br>……Dengan Shinkansen."]],
+          },
+          {
+            label: "2) Disertai Kata Bantu Bilangan",
+            examples: [["⑨ テレーザちゃんは 何歳ですか。", "Berapa usia Teresa?"]],
+          },
+          {
+            text: "Selain 1) dan 2) menggunakan なに.",
+            examples: [["⑩ 何を 買いますか。", "Mau membeli apa?"]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda（tempat）で Kata Kerja",
+        blocks: [
+          {
+            text: "Partikel yang dipelajari di sini disertai Kata Benda yang menunjukkan tempat kemudian menunjukkan tempat yang melakukan aksi.",
+            examples: [["⑪ 駅で 新聞を 買います。", "Membeli surat kabar di stasiun."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja ませんか",
+        blocks: [
+          {
+            text: "Ekspresi untuk mengajak lawan bicara.",
+            examples: [["⑫ いっしょに 京都へ 行きませんか。<br>……ええ、いいですね。", "Bagaimana kita pergi ke Kyoto bersama-sama?<br>……Ya, bagus ya."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja ましょう",
+        blocks: [
+          {
+            text: "Ekspresi untuk mengusulkan secara aktif dan mengajak. Dipakai untuk menanggapi usulan atau ajakan secara aktif juga.",
+            examples: [
+              ["⑬ ちょっと 休みましょう。", "Mari istirahat sebentar."],
+              ["⑭ いっしょに 昼ごはんを 食べませんか。<br>……ええ、食べましょう。", "Bagaimana kita makan siang bersama-sama?<br>……Ya, ayo kita makan."],
+            ],
+            note: "[Perhatian] Kata Kerja ませんか dan Kata Kerja ましょう kedua-duanya adalah ekspresi untuk mengajak lawan bicara, tetapi Kata Kerja ませんか lebih ditunjukkan perasaan yang menghormati keinginan lawan bicara.",
+          },
+        ],
+      },
+      {
+        title: "～か",
+        blocks: [
+          {
+            text: "か menyatakan hal untuk mendapatkan informasi baru yang belum diketahui oleh lawan bicara sebelumnya, kemudian memahaminya. Ini adalah cara penggunaan yang sama dengan か dari そうですか (Lihat Pel.2-8).",
+            examples: [["⑮ 日曜日 京都へ 行きました。<br>……京都ですか。いいですね。", "Hari Minggu yang lalu pergi ke Kyoto.<br>……Kyoto? Bagus ya."]],
+          },
+        ],
+      },
+    ],
     focusLabel: "Fokus Pelajaran 6",
     focus: "Menyatakan aktivitas, objek, tempat kegiatan, pertanyaan kegiatan, serta cara mengajak orang lain.",
     practiceLabel: "Latihan mandiri",
