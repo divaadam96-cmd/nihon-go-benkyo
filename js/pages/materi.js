@@ -121,7 +121,7 @@ const materialFuriganaReadings = {
   "図書館": "としょかん", "説明書": "せつめいしょ", "日本語": "にほんご",
   "郵便局": "ゆうびんきょく", "富士山": "ふじさん", "月曜日": "げつようび",
   "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
-  "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい",
+  "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
   "音楽": "おんがく", "家族": "かぞく", "荷物": "にもつ", "会議": "かいぎ",
   "会社": "かいしゃ", "学校": "がっこう", "学生": "がくせい", "漢字": "かんじ",
@@ -616,23 +616,67 @@ function initMaterialLessonPicker({
       return array;
     }
 
-    /* Potong kalimat jadi KATA PER KATA berdasarkan spasi yang sudah ada di
-       teks (kalimat contoh di data memang ditulis berspasi antar unit
-       frasa, mengikuti cara buku sumber menuliskannya) - TIDAK digabung
-       jadi beberapa kelompok kata (soal susun kalimat perlu potongan
-       sekecil mungkin, bukan per-klausa). Satu pengecualian: sisipkan
-       batas kata SETELAH tanda titik yang bukan di akhir kalimat (mis.
-       "...です。グプタさんも..." pada contoh yang menggabungkan 2 kalimat
-       tanpa spasi) supaya klausa berikutnya tetap jadi potongan sendiri -
-       titiknya tetap menempel di kata sebelumnya, TIDAK jadi "kata" sendiri
-       seperti bug versi lebih lama yang menyisipkan spasi SEBELUM tanda
-       baca (itu juga bisa memecah です/でした jadi potongan tak bermakna). */
+    /* Potong kalimat jadi UNIT ANTAR-SPASI dulu berdasarkan spasi yang sudah
+       ada di teks (kalimat contoh di data memang ditulis berspasi antar
+       unit frasa, mengikuti cara buku sumber menuliskannya). Satu
+       pengecualian: sisipkan batas kata SETELAH tanda titik yang bukan di
+       akhir kalimat (mis. "...です。グプタさんも..." pada contoh yang
+       menggabungkan 2 kalimat tanpa spasi) supaya klausa berikutnya tetap
+       jadi potongan sendiri - titiknya tetap menempel di kata sebelumnya,
+       TIDAK jadi "kata" sendiri seperti bug versi lebih lama yang
+       menyisipkan spasi SEBELUM tanda baca (itu juga bisa memecah です／
+       でした jadi potongan tak bermakna). Hasilnya masih berupa UNIT
+       (mis. "ミラーさんは"), belum kata+partikel terpisah - lihat
+       splitParticles/wordsOf di bawah untuk pemisahan lebih lanjut. */
     function tokensOf(sentence) {
       return sentence
         .replace(/。(?!$)/g, "。 ")
         .trim()
         .split(/\s+/)
         .filter(Boolean);
+    }
+
+    /* Pecah SATU unit (hasil tokensOf, mis. "ミラーさんは" atau "会社員です。")
+       jadi kata inti + partikel/kopula sebagai potongan TERSENDIRI, khusus
+       untuk soal "susun kalimat" - supaya partikel yang menempel tanpa
+       spasi ke kata sebelumnya (yang lazim di buku, bukan salah tulis)
+       tetap jadi nomor sendiri saat diacak. Urutan pengecekan: ですか lalu
+       でした／です dulu (kopula, sering menutup unit), baru satu partikel
+       tunggal dari PARTICLE_SET di sisa unitnya - kecuali の yang menempel
+       ke こ／そ／あ／ど (itu punya kata tunjuk この／その／あの／どの,
+       bukan partikel berdiri sendiri, sama seperti pengecualian di
+       blankParticle). Tanda titik penutup kalimat tetap menempel di
+       potongan PALING AKHIR, tidak pernah jadi potongan sendiri. */
+    function splitParticles(unit) {
+      const hasPeriod = unit.endsWith("。");
+      let stem = hasPeriod ? unit.slice(0, -1) : unit;
+      const pieces = [];
+      if (stem.endsWith("ですか")) {
+        pieces.unshift("か");
+        stem = stem.slice(0, -1);
+      }
+      if (stem.endsWith("でした")) {
+        pieces.unshift("でした");
+        stem = stem.slice(0, -3);
+      } else if (stem.endsWith("です")) {
+        pieces.unshift("です");
+        stem = stem.slice(0, -2);
+      }
+      if (stem.length > 1) {
+        const last = stem[stem.length - 1];
+        const isDemonstrativeNo = last === "の" && "こそあど".includes(stem[stem.length - 2]);
+        if (PARTICLE_SET.includes(last) && !isDemonstrativeNo) {
+          pieces.unshift(last);
+          stem = stem.slice(0, -1);
+        }
+      }
+      if (stem) pieces.unshift(stem);
+      if (hasPeriod && pieces.length) pieces[pieces.length - 1] += "。";
+      return pieces.length ? pieces : [unit];
+    }
+
+    function wordsOf(sentence) {
+      return tokensOf(sentence).flatMap(splitParticles);
     }
 
     function fourChoices(correct, distractors) {
@@ -708,34 +752,38 @@ function initMaterialLessonPicker({
       }));
     }
 
-    /* 2 soal: bagian SOAL memecah kalimat KATA PER KATA (bukan dikelompokkan
-       jadi beberapa klausa) lalu diacak & diberi nomor (mis. "1. です
-       2. わたしは　3. マイク・ミラー") supaya siswa melihat sendiri
-       tiap kata yang perlu disusun - tapi PILIHAN JAWABANNYA tetap kalimat
-       UTUH (bukan urutan angka seperti "3-1-2" yang bikin rancu karena
-       siswa harus membayangkan sendiri hasil susunannya). Distraktornya
-       kalimat yang sama tapi urutan katanya diacak berbeda; contoh yang
-       dipakai & urutan acaknya diundi ulang tiap panggilan. */
+    /* 2 soal: bagian SOAL memecah kalimat KATA PER KATA TERMASUK PARTIKEL
+       (wordsOf/splitParticles - partikel yang menempel ke kata sebelumnya
+       tanpa spasi, mis. "ミラーさんは", tetap jadi nomor sendiri: "ミラー
+       さん" + "は") lalu diacak & diberi nomor (mis. "1. です　2. は
+       3. わたし"). PILIHAN JAWABANNYA berupa 4 URUTAN NOMOR (mis.
+       "3 - 2 - 1"), bukan kalimat utuh - siswa mencocokkan nomor potongan
+       yang tampil di soal, bukan menerka dari kalimat jadi. Dipakai indeks
+       (bukan teks) untuk menentukan urutan benar supaya tetap akurat kalau
+       ada dua potongan dengan teks yang sama persis (mis. dua "です" dalam
+       satu kalimat). Contoh yang dipakai & urutan acaknya diundi ulang
+       tiap panggilan. */
     function buildArrangeQuestions(count) {
-      const pool = shuffleArray(quizPool.filter((example) => tokensOf(example.japaneseClean).length >= 3));
+      const pool = shuffleArray(quizPool.filter((example) => wordsOf(example.japaneseClean).length >= 3));
       return pool.slice(0, count).map((example) => {
-        const words = tokensOf(example.japaneseClean);
-        const correct = words.join(" ");
-        const shuffledWords = shuffleArray(words);
-        const variants = new Set();
-        for (let guard = 0; guard < 30 && variants.size < 5; guard++) {
-          const variant = shuffleArray(words).join(" ");
-          if (variant !== correct) variants.add(variant);
+        const words = wordsOf(example.japaneseClean);
+        const order = words.map((_, index) => index);
+        const shuffledOrder = shuffleArray(order);
+        const correct = order.map((originalIndex) => shuffledOrder.indexOf(originalIndex) + 1).join(" - ");
+        const variantSequences = new Set();
+        for (let guard = 0; guard < 30 && variantSequences.size < 5; guard++) {
+          const variant = shuffleArray(order.map((_, index) => index + 1)).join(" - ");
+          if (variant !== correct) variantSequences.add(variant);
         }
         return {
           type: "arrange",
           sourceSentence: example.japaneseClean,
-          instruction: "Susun potongan kata berikut, lalu pilih urutan yang benar.",
+          instruction: "Susun potongan kata berikut, lalu pilih urutan nomor yang benar.",
           context: `Arti: ${example.meaningText}`,
-          prompt: shuffledWords.map((word, index) => `${index + 1}. ${word}`).join("　｜　"),
+          prompt: shuffledOrder.map((originalIndex, displayIndex) => `${displayIndex + 1}. ${words[originalIndex]}`).join("　｜　"),
           correct,
-          choices: fourChoices(correct, Array.from(variants)),
-          explanation: `Susunan yang benar: ${correct} (${example.pattern}).`,
+          choices: fourChoices(correct, Array.from(variantSequences)),
+          explanation: `Urutan yang benar: ${correct} → ${words.join("")} (${example.pattern}).`,
         };
       });
     }
