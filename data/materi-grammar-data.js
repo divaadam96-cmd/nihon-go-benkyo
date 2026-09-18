@@ -16,7 +16,27 @@
    perubahan STRUKTUR kode, bukan konten. */
 
 function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel, practice) {
-  return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${title}</summary><div class="html-content">${items.map((x, i) => `<div class="grammar-point"><h3>${i + 1}. ${x[0]}</h3><p>${x[1]}</p><span class="grammar-example">${x[2]}<span class="grammar-meaning">${x[3]}</span></span></div>`).join("")}<div class="html-note"><div><b>${focusLabel}</b>${focus}</div><div><b>${practiceLabel}</b>${practice}</div></div></div></details>`;
+  /* Tiap item pola bisa dalam 2 bentuk:
+     - array lama [pola, penjelasan, contoh, arti, catatan?] - 1 contoh per pola.
+     - objek baru {title, blocks:[{label?, text, examples:[[contoh, arti], ...], note?}]}
+       - dipakai saat pola sumber (Keterangan Tata Bahasa asli) punya beberapa
+         sub-penjelasan dan/atau beberapa contoh kalimat per pola (mis. Pelajaran 1). */
+  const renderExample = ([contoh, arti]) =>
+    `<span class="grammar-example">${contoh}<span class="grammar-meaning">${arti}</span></span>`;
+  const renderPoint = (item, i) => {
+    if (Array.isArray(item)) {
+      const [pola, penjelasan, contoh, arti, note] = item;
+      return `<div class="grammar-point"><h3>${i + 1}. ${pola}</h3><p>${penjelasan}</p>${renderExample([contoh, arti])}${note ? `<div class="grammar-important-note">${note}</div>` : ""}</div>`;
+    }
+    const body = item.blocks
+      .map(
+        (b) =>
+          `<p>${b.label ? `<b>${b.label}</b> ` : ""}${b.text}</p>${(b.examples || []).map(renderExample).join("")}${b.note ? `<div class="grammar-important-note">${b.note}</div>` : ""}`,
+      )
+      .join("");
+    return `<div class="grammar-point"><h3>${i + 1}. ${item.title}</h3>${body}</div>`;
+  };
+  return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${title}</summary><div class="html-content">${items.map(renderPoint).join("")}<div class="html-note"><div><b>${focusLabel}</b>${focus}</div><div><b>${practiceLabel}</b>${practice}</div></div></div></details>`;
 }
 
 function installMateriGrammarContent() {
@@ -33,7 +53,90 @@ document.getElementById("materials").innerHTML =
 const MATERI_BOOK1_LESSONS = [
   {
     title: "Kalimat nominal dasar",
-    items: [["N1 は N2 です", "Pola ini dipakai untuk memperkenalkan atau menjelaskan identitas. Kata benda sebelum は menjadi topik pembicaraan; kata benda sesudahnya menjadi informasi atau predikat. です membuat pernyataan terdengar sopan.", "わたし は マイク・ミラー です。", "Saya Mike Miller."], ["N1 は N2 じゃありません", "Ini adalah bentuk negatif dari kalimat です. Dalam percakapan biasa digunakan じゃありません; bentuk ではありません lebih formal dan lebih sering dijumpai pada situasi resmi atau tulisan.", "サントスさん は 学生 じゃありません。", "Sdr. Santos bukan mahasiswa."], ["N1 は N2 ですか", "Tambahkan か di akhir kalimat untuk membuat pertanyaan. Untuk jawaban ya/tidak, gunakan はい atau いいえ. Jika bagian yang ditanyakan belum diketahui, gantilah bagian itu dengan kata tanya seperti だれ、なん、どなた、atau どのかた.", "ミラーさん は アメリカ人 ですか。", "Apakah Sdr. Miller orang Amerika?"], ["N も", "も berarti juga atau pun. Partikel ini dipakai ketika predikat pada kalimat kedua sama dengan predikat pada kalimat sebelumnya. も menggantikan は pada posisi topik.", "ミラーさん は 会社員 です。グプタさん も 会社員 です。", "Sdr. Miller pegawai perusahaan. Sdr. Gupta juga pegawai perusahaan."], ["N1 の N2", "の menghubungkan dua kata benda. Kata benda pertama menerangkan kata benda kedua, misalnya asal, kepemilikan, organisasi, atau jenis. Keseluruhan frasa N1 の N2 dianggap satu kelompok kata benda.", "ミラーさん は IMC の 会社員 です。", "Sdr. Miller pegawai perusahaan IMC."], ["～さん", "さん diletakkan setelah nama atau marga orang lain sebagai sapaan sopan. Jangan gunakan さん setelah nama diri sendiri. Untuk anak kecil atau orang yang sangat akrab, ～ちゃん dapat dipakai. あなた biasanya dihindari bila nama lawan bicara sudah diketahui; gunakan nama + さん agar lebih wajar.", "あの かた は ミラーさん です。", "Orang itu Sdr. Miller."]],
+    items: [
+      {
+        title: "Kata Benda<sub>1</sub> は Kata Benda<sub>2</sub> です",
+        blocks: [
+          {
+            label: "1) Partikel は",
+            text: "Partikel は menunjukkan bahwa kata sebelumnya adalah topik kalimat (Lihat: Kolom1: Topik dan Subjek). Si pembicara memakai は untuk hal yang mau dibicarakannya, kemudian selanjutnya membuat kalimat dengan menambahkan berbagai deskripsi.",
+            examples: [["① わたしは マイク・ミラーです。", "Saya Mike Miller."]],
+            note: "[Perhatian] Partikel は dibaca わ.",
+          },
+          {
+            label: "2) です",
+            text: "Kata Benda yang diikuti oleh です menjadi Predikat. です menyatakan maksud penilaian dan kepastian, juga menunjukkan sikap sopan terhadap lawan bicara. Jika です dalam kalimat negatif atau waktu lampau, bentuknya berubah.",
+            examples: [["② わたしは 会社員です。", "Saya pegawai perusahaan."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> は Kata Benda<sub>2</sub> じゃ（では）ありません",
+        blocks: [
+          {
+            text: "じゃ（では）ありません adalah bentuk negatif untuk です. Dalam percakapan sehari-hari sering digunakan じゃ ありません. Dalam pidato yang resmi atau bahasa tertulis digunakan では ありません.",
+            examples: [["③ サントスさんは　学生じゃ（では）ありません。", "Sdr. Santos bukan mahasiswa."]],
+            note: "[Perhatian] は dari では diucapkan わ.",
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> は Kata Benda<sub>2</sub> ですか (kalimat tanya)",
+        blocks: [
+          {
+            label: "1) Partikel か",
+            text: "Partikel か menyatakan perasaan ketidakpastian atau heran si pembicara. Dengan memakai か pada akhir kalimat maka dapat membuat kalimat tanya. Kalimat tanya biasanya menyertai intonasi naik pada akhir kalimat.",
+          },
+          {
+            label: "2) Kalimat tanya untuk menanyakan “Ya” atau “Tidak” tentang isi kalimat.",
+            text: "Tanpa mengubah susunan kata-kata, membuat kalimat dengan membubuhi か pada akhir kalimat. Kalimat tanya ini menanyakan apakah benar atau tidak isi kalimat, dan jika benar menjawab dengan memakai はい, jika salah menjawab dengan いいえ.",
+            examples: [
+              ["④ ミラーさんは アメリカ人ですか。<br>……はい、アメリカ人です。", "Apakah Sdr. Miller orang Amerika?<br>……Ya, orang Amerika."],
+              ["⑤ ミラーさんは 先生ですか。<br>……いいえ、先生じゃ ありません。", "Apakah Sdr. Miller guru?<br>……Bukan, dia bukan guru."],
+            ],
+          },
+          {
+            label: "3) Kalimat tanya dengan kata tanya",
+            text: "Bagian isi yang ingin ditanyakan diganti dengan kata tanya, dan dibubuhkan か pada akhir kalimat.",
+            examples: [
+              ["⑥ あの 方は どなたですか。<br>……[あの 方は] ミラーさんです。", "Siapakah orang itu?<br>……[Beliau] Sdr. Miller."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda も",
+        blocks: [
+          {
+            text: "も digunakan apabila menyatakan predikatnya dianggap sama dengan predikat sebelumnya.",
+            examples: [["⑦ ミラーさんは 会社員です。グプタさんも 会社員です。", "Sdr. Miller pegawai perusahaan. Sdr. Gupta juga pegawai perusahaan."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> の Kata Benda<sub>2</sub>",
+        blocks: [
+          {
+            text: "Jika Kata Benda<sub>1</sub> di depan menerangkan Kata Benda<sub>2</sub> di belakangnya, maka kedua Kata Benda disambung dengan の. Pada Pelajaran 1 Kata Benda<sub>1</sub> menunjukkan satu kesatuan Kata Benda<sub>2</sub>.",
+            examples: [["⑧ ミラーさんは IMCの 社員です。", "Sdr. Miller pegawai perusahaan IMC."]],
+          },
+        ],
+      },
+      {
+        title: "～さん",
+        blocks: [
+          {
+            text: "Dalam bahasa Jepang memakai さん di belakang marga atau nama lawan bicara atau orang pihak ketiga. Karena さん menunjukkan kesopanan, tidak dipakai untuk marga atau nama si pembicara sendiri. Sebagai gantinya さん, untuk anak kecil dengan rasa akrab dipakai ちゃん.",
+            examples: [["⑨ あの 方は ミラーさんです。", "Beliau Sdr. Miller."]],
+          },
+          {
+            text: "Ketika memanggil lawan bicara, jika telah mengenal namanya maka あなた tidak dipakai lagi, tetapi memanggil marga atau namanya yang dibubuhi dengan さん.",
+            examples: [["⑩ 鈴木： ミラーさんは 学生ですか。<br>ミラー： いいえ、会社員です。", "Suzuki: Apakah Sdr. Miller mahasiswa?<br>Miller: Bukan, saya pegawai perusahaan."]],
+            note: "[Perhatian] あなた digunakan terhadap orang yang berhubungan sangat dekat (suami istri, pacar dll.). Perlu hati-hati bahwa jika menggunakannya kepada lawan bicara yang hubungan tidak dekat maka akan memberi kesan yang kurang sopan.",
+          },
+        ],
+      },
+    ],
     focusLabel: "Fokus Pelajaran 1",
     focus: "Perkenalan diri, pekerjaan, asal negara, serta cara bertanya dan menjawab secara sopan.",
     practiceLabel: "Latihan mandiri",
