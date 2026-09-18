@@ -532,7 +532,15 @@ function initMaterialLessonPicker({
     let index = sentence.indexOf(particle);
     while (index !== -1) {
       const isCopulaFragment = particle === "で" && /^で(す|した)/.test(sentence.slice(index));
-      if (!isCopulaFragment) return sentence.slice(0, index) + "（　　）" + sentence.slice(index + 1);
+      /* の di belakang こ／そ／あ／ど bukan partikel berdiri sendiri, tapi
+         bagian dari kata tunjuk この／その／あの／どの (mis. "このかばん")
+         - kalau ikut dilubangi jadi "こ（　　）かばん" yang tak bermakna
+         (こ bukan kata utuh). Tambahkan pengecualian serupa di sini kalau
+         nanti bab lain mengungkap kasus tabrakan partikel/kata majemuk lain. */
+      const isDemonstrativeFragment = particle === "の" && index > 0 && "こそあど".includes(sentence[index - 1]);
+      if (!isCopulaFragment && !isDemonstrativeFragment) {
+        return sentence.slice(0, index) + "（　　）" + sentence.slice(index + 1);
+      }
       index = sentence.indexOf(particle, index + 1);
     }
     return null;
@@ -594,41 +602,42 @@ function initMaterialLessonPicker({
       return items.filter((item, index, array) => item && array.indexOf(item) === index);
     }
 
-    function rotate(items, amount) {
-      if (items.length < 2) return items.slice();
-      const offset = ((amount % items.length) + items.length) % items.length;
-      return items.slice(offset).concat(items.slice(0, offset));
+    /* Acak array (Fisher-Yates) - dasar dari SEMUA variasi soal di bawah ini.
+       Dipakai supaya tiap kali buildQuestionSet() dipanggil ulang (siswa
+       menekan "Ulangi tes", atau membuka lagi bab yang sama lain waktu),
+       kalimat yang dipilih, pilihan ganda, dan urutannya bisa berbeda dari
+       percobaan sebelumnya - bukan lagi 10 soal yang persis sama tiap kali. */
+    function shuffleArray(items) {
+      const array = items.slice();
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     }
 
-    function pickRotating(pool, count, startIndex) {
-      if (!pool.length) return [];
-      return Array.from({ length: Math.min(count, pool.length) }, (_, i) => pool[(startIndex + i) % pool.length]);
-    }
-
-    /* Potong kalimat HANYA berdasarkan spasi yang sudah ada di teks (kalimat
-       contoh di data memang ditulis berspasi antar unit frasa, mengikuti
-       cara buku sumber menuliskannya) - TIDAK menyisipkan pemisah baru di
-       sekitar partikel/tanda baca seperti versi lama, karena itu bisa
-       memecah です/でした jadi potongan tak bermakna ("す。") atau membuat
-       tanda titik berdiri sendiri sebagai satu "kata". Kalimat yang cuma
-       py 1-2 unit spasi (terlalu pendek untuk diacak) otomatis tersaring
-       lewat pengecekan panjang di pemanggilnya. */
+    /* Potong kalimat jadi KATA PER KATA berdasarkan spasi yang sudah ada di
+       teks (kalimat contoh di data memang ditulis berspasi antar unit
+       frasa, mengikuti cara buku sumber menuliskannya) - TIDAK digabung
+       jadi beberapa kelompok kata (soal susun kalimat perlu potongan
+       sekecil mungkin, bukan per-klausa). Satu pengecualian: sisipkan
+       batas kata SETELAH tanda titik yang bukan di akhir kalimat (mis.
+       "...です。グプタさんも..." pada contoh yang menggabungkan 2 kalimat
+       tanpa spasi) supaya klausa berikutnya tetap jadi potongan sendiri -
+       titiknya tetap menempel di kata sebelumnya, TIDAK jadi "kata" sendiri
+       seperti bug versi lebih lama yang menyisipkan spasi SEBELUM tanda
+       baca (itu juga bisa memecah です/でした jadi potongan tak bermakna). */
     function tokensOf(sentence) {
-      return sentence.trim().split(/\s+/).filter(Boolean);
+      return sentence
+        .replace(/。(?!$)/g, "。 ")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
     }
 
-    function chunksOf(sentence) {
-      const tokens = tokensOf(sentence);
-      if (tokens.length <= 4) return tokens;
-      return Array.from({ length: 4 }, (_, index) => {
-        const start = Math.round((index * tokens.length) / 4);
-        const end = Math.round(((index + 1) * tokens.length) / 4);
-        return tokens.slice(start, end).join(" ");
-      }).filter(Boolean);
-    }
-
-    function fourChoices(correct, distractors, offset) {
-      const choices = unique([correct, ...distractors]);
+    function fourChoices(correct, distractors) {
+      const shuffledDistractors = shuffleArray(distractors.filter((item) => item !== correct));
+      const choices = unique([correct, ...shuffledDistractors]);
       const fallback = ["です", "ます", "ません", "でした", "から", "ので"];
       let fallbackIndex = 0;
       while (choices.length < 4) {
@@ -636,12 +645,14 @@ function initMaterialLessonPicker({
         if (!choices.includes(item)) choices.push(item);
         fallbackIndex++;
       }
-      return rotate(choices.slice(0, 4), offset % 4);
+      return shuffleArray(choices.slice(0, 4));
     }
 
     /* 2 soal: pilih partikel yang tepat. Satu pola dipakai sekali saja per
        bab (usedPatterns) dan satu partikel juga sekali saja (usedParticles)
-       supaya 2 soalnya tidak mengetes hal yang sama. */
+       supaya 2 soalnya tidak mengetes hal yang sama. quizPool diacak dulu
+       tiap panggilan supaya pola/partikel yang kepilih bisa beda-beda tiap
+       kali soal dibuat ulang (lihat buildQuestionSet). */
     function buildParticleQuestions(count) {
       const questions = [];
       const usedParticles = new Set();
@@ -649,8 +660,8 @@ function initMaterialLessonPicker({
       const tryExample = (example, requireNewPattern) => {
         if (questions.length >= count) return;
         if (requireNewPattern && usedPatterns.has(example.pattern)) return;
-        const candidates = detectStandaloneParticles(example.pattern).filter(
-          (particle) => !usedParticles.has(particle),
+        const candidates = shuffleArray(
+          detectStandaloneParticles(example.pattern).filter((particle) => !usedParticles.has(particle)),
         );
         if (!candidates.length) return;
         const firstClause = example.japaneseClean.split("。")[0] + "。";
@@ -666,20 +677,23 @@ function initMaterialLessonPicker({
           context: `Pola: ${example.pattern}`,
           prompt,
           correct: particle,
-          choices: fourChoices(particle, PARTICLE_SET.filter((p) => p !== particle), questions.length + 1),
+          choices: fourChoices(particle, PARTICLE_SET.filter((p) => p !== particle)),
           explanation: `Kalimat lengkapnya: ${firstClause} - partikel「${particle}」dipakai sesuai pola ${example.pattern}.`,
         });
       };
-      quizPool.forEach((example) => tryExample(example, true));
-      if (questions.length < count) quizPool.forEach((example) => tryExample(example, false));
+      const shuffledPool = shuffleArray(quizPool);
+      shuffledPool.forEach((example) => tryExample(example, true));
+      if (questions.length < count) shuffledPool.forEach((example) => tryExample(example, false));
       return questions;
     }
 
     /* 3 soal: diberi arti Indonesia, pilih kalimat Jepang yang tepat -
-       distraktornya kalimat Jepang lain dari bab yang sama. */
-    function buildTranslateQuestions(count, startIndex) {
-      const pool = quizPool.filter((example) => example.japaneseClean && example.meaningText);
-      return pickRotating(pool, count, startIndex).map((example, i) => ({
+       distraktornya kalimat Jepang lain dari bab yang sama. Contoh yang
+       dipakai diacak tiap panggilan (bukan lagi rotasi tetap) supaya 3
+       kalimat yang dites bisa berbeda tiap kali soal dibuat ulang. */
+    function buildTranslateQuestions(count) {
+      const pool = shuffleArray(quizPool.filter((example) => example.japaneseClean && example.meaningText));
+      return pool.slice(0, count).map((example) => ({
         type: "translate",
         sourceSentence: example.japaneseClean,
         instruction: "Pilih kalimat bahasa Jepang yang sesuai dengan artinya.",
@@ -689,54 +703,49 @@ function initMaterialLessonPicker({
         choices: fourChoices(
           example.japaneseClean,
           pool.filter((other) => other !== example).map((other) => other.japaneseClean),
-          i + 1,
         ),
         explanation: `Kalimat yang tepat: ${example.japaneseClean} (${example.pattern}).`,
       }));
     }
 
-    /* 2 soal: bagian SOAL menampilkan potongan kalimat yang diacak & diberi
-       nomor (mis. "1. です　2. わたしは　3. マイク・ミラー") supaya siswa
-       melihat sendiri unsur-unsur yang perlu disusun - tapi PILIHAN
-       JAWABANNYA tetap kalimat UTUH (bukan urutan angka seperti "3-1-2"
-       yang bikin rancu karena siswa harus membayangkan sendiri hasil
-       susunannya). Distraktornya kalimat yang sama tapi urutan potongannya
-       diacak berbeda. */
-    function buildArrangeQuestions(count, startIndex) {
-      const pool = quizPool.filter((example) => chunksOf(example.japaneseClean).length >= 3);
-      return pickRotating(pool, count, startIndex).map((example, i) => {
-        const chunks = chunksOf(example.japaneseClean);
-        const correct = chunks.join(" ");
-        const shuffled = rotate(chunks, 1);
-        const variants = unique(
-          [
-            shuffled,
-            chunks.slice().reverse(),
-            chunks.length > 2
-              ? [chunks[0], chunks[2], chunks[1], ...chunks.slice(3)]
-              : rotate(chunks, -1),
-            rotate(chunks, 2),
-          ].map((order) => order.join(" ")),
-        ).filter((variant) => variant !== correct);
+    /* 2 soal: bagian SOAL memecah kalimat KATA PER KATA (bukan dikelompokkan
+       jadi beberapa klausa) lalu diacak & diberi nomor (mis. "1. です
+       2. わたしは　3. マイク・ミラー") supaya siswa melihat sendiri
+       tiap kata yang perlu disusun - tapi PILIHAN JAWABANNYA tetap kalimat
+       UTUH (bukan urutan angka seperti "3-1-2" yang bikin rancu karena
+       siswa harus membayangkan sendiri hasil susunannya). Distraktornya
+       kalimat yang sama tapi urutan katanya diacak berbeda; contoh yang
+       dipakai & urutan acaknya diundi ulang tiap panggilan. */
+    function buildArrangeQuestions(count) {
+      const pool = shuffleArray(quizPool.filter((example) => tokensOf(example.japaneseClean).length >= 3));
+      return pool.slice(0, count).map((example) => {
+        const words = tokensOf(example.japaneseClean);
+        const correct = words.join(" ");
+        const shuffledWords = shuffleArray(words);
+        const variants = new Set();
+        for (let guard = 0; guard < 30 && variants.size < 5; guard++) {
+          const variant = shuffleArray(words).join(" ");
+          if (variant !== correct) variants.add(variant);
+        }
         return {
           type: "arrange",
           sourceSentence: example.japaneseClean,
-          instruction: "Susun potongan kalimat berikut, lalu pilih urutan yang benar.",
+          instruction: "Susun potongan kata berikut, lalu pilih urutan yang benar.",
           context: `Arti: ${example.meaningText}`,
-          prompt: shuffled.map((chunk, index) => `${index + 1}. ${chunk}`).join("　｜　"),
+          prompt: shuffledWords.map((word, index) => `${index + 1}. ${word}`).join("　｜　"),
           correct,
-          choices: fourChoices(correct, variants, i + 1),
+          choices: fourChoices(correct, Array.from(variants)),
           explanation: `Susunan yang benar: ${correct} (${example.pattern}).`,
         };
       });
     }
 
     /* 3 soal cerita: gabungkan beberapa kalimat contoh BAB INI SENDIRI
-       (berurutan sesuai urutan pola, bukan diacak lintas bab) jadi satu
-       cerita/percakapan pendek yang levelnya otomatis sesuai bab (karena
-       cuma memakai kosakata & pola yang memang sudah diajarkan bab itu) -
-       lalu siswa memilih PERNYATAAN BAHASA JEPANG yang sesuai dengan
-       cerita tsb.
+       (berurutan sesuai urutan pola dalam grupnya, bukan diacak lintas bab)
+       jadi satu cerita/percakapan pendek yang levelnya otomatis sesuai bab
+       (karena cuma memakai kosakata & pola yang memang sudah diajarkan bab
+       itu) - lalu siswa memilih PERNYATAAN BAHASA JEPANG yang sesuai
+       dengan cerita tsb.
        Pernyataan yang benar adalah PARAFRASE dari salah satu kalimat DI
        DALAM cerita itu sendiri (lewat paraphraseWithinStory) - konteksnya
        TIDAK PERNAH keluar dari cerita yang ditampilkan, cuma pola
@@ -744,20 +753,23 @@ function initMaterialLessonPicker({
        Kalau tidak ada kalimat dalam grup yang bisa diparafrase dengan
        aman (mis. semuanya kalimat tanya berkata tanya), baru jatuh ke
        kalimat aslinya apa adanya. Distraktornya kalimat Jepang lain dari
-       bab yang sama yang TIDAK ada di cerita ini (jadi jelas salah). */
-    function buildStoryQuestions(count, startIndex) {
+       bab yang sama yang TIDAK ada di cerita ini (jadi jelas salah).
+       Grup cerita mana yang kepilih & kalimat mana dalam grup yang
+       diparafrase diundi ulang tiap panggilan. */
+    function buildStoryQuestions(count) {
       const groupSize = 3;
       const groups = [];
       for (let i = 0; i + groupSize <= quizPool.length; i += groupSize) {
         groups.push(quizPool.slice(i, i + groupSize));
       }
-      const stories = groups.length >= count ? groups : quizPool.map((example) => [example]);
-      return pickRotating(stories, count, startIndex).map((group, i) => {
+      const stories = shuffleArray(groups.length >= count ? groups : quizPool.map((example) => [example]));
+      return stories.slice(0, count).map((group) => {
         const passage = group.map((example) => example.japaneseClean).join(" ");
-        let correctExample = group[i % group.length];
+        let correctExample = group[0];
         let correct = null;
+        const startK = Math.floor(Math.random() * group.length);
         for (let k = 0; k < group.length; k++) {
-          const candidate = group[(i + k) % group.length];
+          const candidate = group[(startK + k) % group.length];
           const paraphrase = paraphraseWithinStory(candidate);
           if (paraphrase) {
             correct = paraphrase;
@@ -776,18 +788,27 @@ function initMaterialLessonPicker({
           context: unique(group.map((example) => example.pattern)).join(" · "),
           prompt: passage,
           correct,
-          choices: fourChoices(correct, distractorPool, passage.length + i),
+          choices: fourChoices(correct, distractorPool),
           explanation: `Pernyataan yang sesuai dengan cerita: ${correct} (${correctExample.meaningText})`,
         };
       });
     }
 
-    const questions = [
-      ...buildParticleQuestions(2),
-      ...buildTranslateQuestions(3, 1),
-      ...buildArrangeQuestions(2, 0),
-      ...buildStoryQuestions(3, 2),
-    ];
+    /* 10 soal, diacak ulang setiap kali dipanggil (lihat shuffleArray dan
+       tiap builder di atas) - supaya begitu siswa menekan "Ulangi tes",
+       soal & jawabannya tidak persis sama dengan percobaan sebelumnya.
+       questions sengaja `let` (bukan const) karena tombol "Ulangi tes"
+       memanggil ulang fungsi ini untuk mengganti isinya - lihat
+       material-retry-practice di bawah. */
+    function buildQuestionSet() {
+      return [
+        ...buildParticleQuestions(2),
+        ...buildTranslateQuestions(3),
+        ...buildArrangeQuestions(2),
+        ...buildStoryQuestions(3),
+      ];
+    }
+    let questions = buildQuestionSet();
     const mistakeStorageKey = `${progressKey}MistakesV1`;
     const lessonMistakeKey = String(startNumber + activeIndex);
     let activeQuestions = questions;
@@ -870,8 +891,15 @@ function initMaterialLessonPicker({
           .join("");
         practiceCard.innerHTML = `<div class="material-practice-result"><span>${reviewMode ? "ULANG KESALAHAN SELESAI" : "TES SELESAI"}</span><b>${percentage}</b><small>SKOR</small><h4>${percentage >= 80 ? "Pemahaman sangat baik" : percentage >= 60 ? "Teruskan latihan" : "Pelajari kembali contohnya"}</h4><p>Jawaban benar ${correctAnswers} dari ${activeQuestions.length} soal.</p><ul class="material-practice-breakdown">${breakdown}</ul><div class="material-result-actions"><button type="button" class="material-retry-practice">${reviewMode ? "Ulangi soal ini" : "Ulangi tes"}</button><button type="button" class="material-all-practice" ${reviewMode ? "" : "hidden"}>Kembali ke tes lengkap</button></div></div>`;
         practiceCard.querySelector(".material-retry-practice").onclick = () => {
-          const nextQuestions = reviewMode ? reviewQuestions() : questions;
-          resetSession(nextQuestions.length ? nextQuestions : questions, reviewMode && nextQuestions.length > 0);
+          if (reviewMode) {
+            const nextQuestions = reviewQuestions();
+            resetSession(nextQuestions.length ? nextQuestions : questions, nextQuestions.length > 0);
+            return;
+          }
+          /* "Ulangi tes" (bukan mode ulang-kesalahan) membuat SET SOAL BARU
+             (bukan mengulang 10 soal yang sama) - lihat buildQuestionSet. */
+          questions = buildQuestionSet();
+          resetSession(questions, false);
         };
         const allPracticeButton = practiceCard.querySelector(".material-all-practice");
         if (allPracticeButton)
