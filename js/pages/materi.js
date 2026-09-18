@@ -538,15 +538,35 @@ function initMaterialLessonPicker({
     return null;
   }
 
-  /* Nama tokoh yang berulang di buku (dipakai soal cerita untuk mencari
-     pernyataan "konteks/tokoh sama, pola beda" - lihat buildStoryQuestions). */
-  const NAME_TOKENS = [
-    "ミラー", "サントス", "佐藤", "サトウ", "グプタ", "シュミット",
-    "鈴木", "スズキ", "ワット", "山田", "ヤマダ", "カリナ", "IMC",
-  ];
+  /* Parafrase AMAN untuk soal cerita: ambil satu kalimat DARI CERITA ITU
+     SENDIRI (bukan fakta dari kalimat lain di bab - supaya konteksnya
+     tidak keluar dari soal) lalu ubah pola permukaannya tanpa mengubah
+     makna. Cuma dua transformasi yang dilakukan, keduanya selalu benar
+     secara makna:
+     - "...です." -> "...ですか。……はい、そうです." (pernyataan jadi
+       pertanyaan+konfirmasi - persis mekanisme pola "そうです" di buku).
+     - "...ですか." -> "...です." TAPI HANYA jika kalimatnya sendiri sudah
+       mengonfirmasi "はい" (supaya tidak menegaskan sesuatu yang menurut
+       ceritanya sendiri sebenarnya belum/tidak terjawab "ya").
+     Kalimat dengan kata tanya (だれ/どなた/なに/dst, tidak bisa dibalik jadi
+     pernyataan) atau pola pilihan "～か、～か" dilewati - biarkan pemanggil
+     coba kalimat lain dalam cerita yang sama. */
+  const WH_WORDS = ["だれ", "どなた", "なに", "なん", "どこ", "いつ", "どう", "どの", "どんな", "どちら", "いくつ", "いくら"];
 
-  function namesIn(text) {
-    return NAME_TOKENS.filter((name) => text.includes(name));
+  function containsWhWord(text) {
+    return WH_WORDS.some((word) => text.includes(word));
+  }
+
+  function paraphraseWithinStory(example) {
+    const fullText = example.japaneseClean;
+    const clause = fullText.split(/[。？]/)[0].trim();
+    if (!clause || containsWhWord(clause) || clause.includes("か、")) return null;
+    if (clause.endsWith("ですか")) {
+      if (!fullText.includes("はい")) return null;
+      return clause.slice(0, -1) + "。";
+    }
+    if (clause.endsWith("です")) return `${clause}か。……はい、そうです。`;
+    return null;
   }
 
   function buildPracticeTest(content) {
@@ -675,19 +695,22 @@ function initMaterialLessonPicker({
       }));
     }
 
-    /* 2 soal: pilihan jawabannya kalimat UTUH (bukan urutan angka - versi
-       lama menampilkan pilihan seperti "3 - 1 - 2" yang rancu karena siswa
-       harus membayangkan sendiri hasil susunannya). Distraktornya kalimat
-       yang sama tapi urutan potongannya diacak, jadi siswa cukup membaca 4
-       kalimat utuh dan memilih yang susunannya benar. */
+    /* 2 soal: bagian SOAL menampilkan potongan kalimat yang diacak & diberi
+       nomor (mis. "1. です　2. わたしは　3. マイク・ミラー") supaya siswa
+       melihat sendiri unsur-unsur yang perlu disusun - tapi PILIHAN
+       JAWABANNYA tetap kalimat UTUH (bukan urutan angka seperti "3-1-2"
+       yang bikin rancu karena siswa harus membayangkan sendiri hasil
+       susunannya). Distraktornya kalimat yang sama tapi urutan potongannya
+       diacak berbeda. */
     function buildArrangeQuestions(count, startIndex) {
       const pool = quizPool.filter((example) => chunksOf(example.japaneseClean).length >= 3);
       return pickRotating(pool, count, startIndex).map((example, i) => {
         const chunks = chunksOf(example.japaneseClean);
         const correct = chunks.join(" ");
+        const shuffled = rotate(chunks, 1);
         const variants = unique(
           [
-            rotate(chunks, 1),
+            shuffled,
             chunks.slice().reverse(),
             chunks.length > 2
               ? [chunks[0], chunks[2], chunks[1], ...chunks.slice(3)]
@@ -698,9 +721,9 @@ function initMaterialLessonPicker({
         return {
           type: "arrange",
           sourceSentence: example.japaneseClean,
-          instruction: "Pilih susunan kalimat bahasa Jepang yang benar.",
+          instruction: "Susun potongan kalimat berikut, lalu pilih urutan yang benar.",
           context: `Arti: ${example.meaningText}`,
-          prompt: "Manakah susunan kalimat yang tepat?",
+          prompt: shuffled.map((chunk, index) => `${index + 1}. ${chunk}`).join("　｜　"),
           correct,
           choices: fourChoices(correct, variants, i + 1),
           explanation: `Susunan yang benar: ${correct} (${example.pattern}).`,
@@ -714,16 +737,14 @@ function initMaterialLessonPicker({
        cuma memakai kosakata & pola yang memang sudah diajarkan bab itu) -
        lalu siswa memilih PERNYATAAN BAHASA JEPANG yang sesuai dengan
        cerita tsb.
-       Pernyataan yang benar SENGAJA BUKAN kalimat yang tertulis persis di
-       ceritanya (itu cuma soal "cari kalimat yang sama", bukan pemahaman
-       bacaan) - dicari dulu kalimat LAIN di bab yang sama yang menyebut
-       tokoh/konteks yang sama dengan cerita tapi memakai POLA YANG
-       BERBEDA dari pola-pola yang sudah dipakai di cerita itu
-       (crossPatternMatch, lewat NAME_TOKENS). Kalau bab ini tidak punya
-       tokoh bernama yang berulang (mis. cerita cuma pakai これ／それ／あの
-       yang generik), jatuh ke kalimat lain mana pun yang pola-nya beda
-       dari cerita (anyDifferentPattern) - tetap "pola diubah", walau
-       kecocokan konteksnya tidak bisa dipastikan lewat nama tokoh. */
+       Pernyataan yang benar adalah PARAFRASE dari salah satu kalimat DI
+       DALAM cerita itu sendiri (lewat paraphraseWithinStory) - konteksnya
+       TIDAK PERNAH keluar dari cerita yang ditampilkan, cuma pola
+       permukaannya yang beda dari cara kalimat itu ditulis di cerita.
+       Kalau tidak ada kalimat dalam grup yang bisa diparafrase dengan
+       aman (mis. semuanya kalimat tanya berkata tanya), baru jatuh ke
+       kalimat aslinya apa adanya. Distraktornya kalimat Jepang lain dari
+       bab yang sama yang TIDAK ada di cerita ini (jadi jelas salah). */
     function buildStoryQuestions(count, startIndex) {
       const groupSize = 3;
       const groups = [];
@@ -733,20 +754,20 @@ function initMaterialLessonPicker({
       const stories = groups.length >= count ? groups : quizPool.map((example) => [example]);
       return pickRotating(stories, count, startIndex).map((group, i) => {
         const passage = group.map((example) => example.japaneseClean).join(" ");
-        const groupPatterns = new Set(group.map((example) => example.pattern));
-        const subjects = namesIn(passage);
-        const crossPatternMatch = quizPool.find(
-          (example) =>
-            !group.includes(example) &&
-            !groupPatterns.has(example.pattern) &&
-            subjects.some((name) => example.japaneseClean.includes(name)),
-        );
-        const anyDifferentPattern = quizPool.find(
-          (example) => !group.includes(example) && !groupPatterns.has(example.pattern),
-        );
-        const target = crossPatternMatch || anyDifferentPattern || group[i % group.length];
+        let correctExample = group[i % group.length];
+        let correct = null;
+        for (let k = 0; k < group.length; k++) {
+          const candidate = group[(i + k) % group.length];
+          const paraphrase = paraphraseWithinStory(candidate);
+          if (paraphrase) {
+            correct = paraphrase;
+            correctExample = candidate;
+            break;
+          }
+        }
+        if (!correct) correct = correctExample.japaneseClean;
         const distractorPool = quizPool
-          .filter((example) => example !== target && !group.includes(example))
+          .filter((example) => !group.includes(example))
           .map((example) => example.japaneseClean);
         return {
           type: "story",
@@ -754,9 +775,9 @@ function initMaterialLessonPicker({
           instruction: "Baca cerita pendek berikut, lalu pilih pernyataan bahasa Jepang yang sesuai.",
           context: unique(group.map((example) => example.pattern)).join(" · "),
           prompt: passage,
-          correct: target.japaneseClean,
-          choices: fourChoices(target.japaneseClean, distractorPool, passage.length + i),
-          explanation: `Pernyataan yang sesuai dengan cerita: ${target.japaneseClean} (${target.meaningText})`,
+          correct,
+          choices: fourChoices(correct, distractorPool, passage.length + i),
+          explanation: `Pernyataan yang sesuai dengan cerita: ${correct} (${correctExample.meaningText})`,
         };
       });
     }
