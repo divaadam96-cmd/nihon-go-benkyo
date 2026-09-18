@@ -21,10 +21,13 @@ function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel,
      ADA SATU jalur render/gaya visual untuk seluruh Materi (bukan 2 template
      terpisah):
      - array lama [pola, penjelasan, contoh, arti, catatan?] - 1 blok, 1 contoh.
-     - objek baru {title, suffix?, blocks:[{label?, text, examples:[[contoh, arti], ...], note?}]}
+     - objek baru {title, suffix?, blocks:[{label?, text?, examples?:[[contoh, arti], ...], note?}]}
        - dipakai saat pola sumber (Keterangan Tata Bahasa asli) punya beberapa
          sub-penjelasan dan/atau beberapa contoh kalimat per pola (mis. Pelajaran 1).
-         suffix = keterangan di luar kotak pola, mis. "(kalimat tanya)". */
+         suffix = keterangan di luar kotak pola, mis. "(kalimat tanya)".
+         text opsional: sebagian sub-poin di buku (mis. Pelajaran 2 pola 5)
+         cuma satu baris "N) <kalimat>" tanpa paragraf penjelasan terpisah -
+         taruh kalimatnya di `label` saja dan biarkan `text` kosong. */
   const normalize = (item) =>
     Array.isArray(item)
       ? { pola: item[0], suffix: "", blocks: [{ text: item[1], examples: [[item[2], item[3]]], note: item[4] }] }
@@ -32,7 +35,7 @@ function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel,
   const renderExample = ([contoh, arti]) =>
     `<div class="grammar-example"><span class="grammar-jp">${contoh}</span><span class="grammar-meaning">${arti}</span></div>`;
   const renderBlock = (b) =>
-    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}<p>${b.text}</p>${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
+    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
   const renderPoint = (item, i) => {
     const { pola, suffix, blocks } = normalize(item);
     const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="grammar-pola-box">${pola}</span>${suffix ? `<span class="grammar-pola-suffix"> ${suffix}</span>` : ""}</h3>`;
@@ -147,7 +150,103 @@ const MATERI_BOOK1_LESSONS = [
   },
   {
     title: "Kata tunjuk dan persamaan",
-    items: [["これ／それ／あれ", "Ketiganya menunjuk benda dan dapat berdiri sendiri sebagai kata benda. これ untuk benda dekat pembicara, それ dekat lawan bicara, dan あれ jauh dari keduanya.", "これは じしょですか。", "Apakah ini kamus?"], ["この N／その N／あの N", "Gunakan bentuk ini ketika kata tunjuk menerangkan kata benda. この dekat pembicara, その dekat lawan bicara, dan あの jauh dari kedua pihak. Berbeda dengan これ, bentuk ini wajib diikuti kata benda.", "この 本は わたしのです。", "Buku ini kepunyaan saya."], ["そうです", "Dalam kalimat nominal, そうです menjawab bahwa informasi atau dugaan lawan bicara benar. Untuk menyangkal, gunakan ちがいます atau bentuk negatif yang sesuai, bukan そうではありません.", "それは じしょですか。はい、そうです。", "Apakah itu kamus? Ya, benar."], ["～か、～か", "Pola ini memberi pilihan dari dua atau lebih kemungkinan. Jawaban tidak memakai はい atau いいえ, tetapi langsung menyebut pilihan yang benar.", "これは 「9」ですか、「7」ですか。……「9」です。", "Ini “9” atau “7”? …“9”."], ["N1 の N2", "の menghubungkan dua kata benda. N1 dapat menerangkan jenis atau asal N2, misalnya buku komputer, dan juga dapat menyatakan kepemilikan, misalnya buku saya.", "これは コンピューターの 本です。", "Ini buku komputer."], ["の sebagai pengganti kata benda", "の dapat menggantikan kata benda yang sudah disebut bila konteksnya jelas. Penggunaan ini lazim untuk benda, tetapi tidak dipakai untuk menggantikan orang.", "これは だれの かばんですか。……佐藤さんのです。", "Tas ini milik siapa? …Milik Sato."], ["お～", "Awalan お dapat ditempatkan di depan beberapa kata benda untuk memberi nuansa sopan. Contoh umum adalah おみやげ dan おさけ.", "これは おみやげです。", "Ini oleh-oleh."], ["そうですか", "Ekspresi ini dipakai ketika menerima informasi baru dan menunjukkan bahwa pembicara memahami atau menyadari informasi tersebut. Intonasi biasanya menurun.", "これは シュミットさんの かさです。……そうですか。", "Ini payung milik Sdr. Schmidt. …Oh, begitu."]],
+    items: [
+      {
+        title: "これ／それ／あれ",
+        blocks: [
+          {
+            text: "これ, それ, あれ menunjukkan benda dan berfungsi sebagai Kata Benda. これ menunjukkan benda yang ada di dekat si pembicara. それ menunjukkan benda yang ada di dekat lawan bicara. あれ menunjukkan benda yang ada jauh dari pembicara dan lawan bicara.",
+            examples: [
+              ["① それは 辞書ですか。", "Apakah ini kamus?"],
+              ["② これは だれの 傘ですか。", "Ini payung siapa?"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "この Kata Benda／その Kata Benda／あの Kata Benda",
+        blocks: [
+          {
+            text: "Jika menerangkan Kata Benda, dipakai この, その dan あの.",
+            examples: [
+              ["③ この 本は わたしのです。", "Buku ini kepunyaan saya."],
+              ["④ あの 方は どなたですか。", "Siapakah beliau?"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "そうです",
+        blocks: [
+          {
+            text: "Dalam kalimat nominal yang menanyakan positif atau negatif, sering digunakan そう terhadap jawaban positif, dan dapat menjawab dengan kalimat はい、そうです。",
+            examples: [["⑤ それは 辞書ですか。<br>……はい、そうです。", "Apakah itu kamus?<br>……Ya, betul."]],
+          },
+          {
+            text: "Untuk bentuk negatif, tidak lazim menjawab dengan そう, tetapi sebagai gantinya digunakan ちがいます（bukan）, atau menyatakan jawaban yang sebenarnya.",
+            examples: [
+              ["⑥ それは ミラーさんのですか。<br>……いいえ、違います。", "Apakah itu punya Sdr. Miller?<br>……Bukan."],
+              ["⑦ それは シャープペンシルですか。<br>……いいえ、ボールペンです。", "Apakah itu pensil isi ulang?<br>……Bukan, bolpoin."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "～か、～か",
+        blocks: [
+          {
+            text: "Dengan kalimat tanya ini memberi pilihan yang lebih dari dua, kemudian lawan bicara memilih yang benar. Untuk jawaban, tidak dibubuhi はい、いいえ, tetapi menyatakan langsung kalimat yang dipilih.",
+            examples: [["⑧ これは「9」ですか、「7」ですか。<br>……「9」です。", "Apakah ini “9” atau “7”?<br>……“9”."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> の Kata Benda<sub>2</sub>",
+        blocks: [
+          {
+            text: "Pada Pelajaran 1 telah dipelajari bahwa jika Kata Benda<sub>1</sub> menerangkan Kata Benda<sub>2</sub>, maka digunakan の di antara Kata Benda<sub>1</sub> dan Kata Benda<sub>2</sub>. Pada pelajaran ini belajar cara penggunaan の sebagai berikut di bawah ini:",
+          },
+          {
+            label: "1) Kata Benda<sub>1</sub> menerangkan sesuatu dari Kata Benda<sub>2</sub>.",
+            examples: [["⑨ これは コンピューターの 本です。", "Ini buku komputer."]],
+          },
+          {
+            label: "2) Kata Benda<sub>1</sub> menyatakan pemilik Kata Benda<sub>2</sub>.",
+            examples: [["⑩ これは わたしの 本です。", "Ini buku saya."]],
+          },
+        ],
+      },
+      {
+        title: "の yang berfungsi sebagai pengganti Kata Benda",
+        blocks: [
+          {
+            text: "の ini digunakan untuk mengganti Kata Benda yang terdapat sebelumnya（かばん pada contoh⑪）. Seperti contoh⑪, jika diletakkan di belakang Kata Benda（さとうさん）, maka bentuk kalimat menjadi sama maknanya dengan dihilangkannya Kata Benda<sub>2</sub> dari kalimat Kata Benda<sub>1</sub> の Kata Benda<sub>2</sub>（さとうさんの かばん）. の digunakan sebagai pengganti kata benda, tetapi tidak digunakan sebagai pengganti orang.",
+            examples: [
+              ["⑪ あれは だれの かばんですか。<br>……佐藤さんのです。", "Itu tas siapa?<br>……Kepunyaan Sdr. Sato."],
+              ["⑫ この かばんは あなたのですか。<br>……いいえ、わたしのじゃ ありません。", "Apakah tas ini tas Anda?<br>……Bukan, bukan kepunyaan saya."],
+              ["⑬ ミラーさんは IMCの 社員ですか。<br>……はい、IMCの 社員です。<br>×　はい、IMCのです。", "Apakah Sdr. Miller pegawai perusahaan IMC?<br>……Ya, pegawai perusahaan IMC."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "お～",
+        blocks: [
+          {
+            text: "お dibubuhkan pada Kata Benda dan berfungsi untuk menyatakan kesopanan.（Contoh: ［お］みやげ, ［お］さけ）",
+          },
+        ],
+      },
+      {
+        title: "そうですか",
+        blocks: [
+          {
+            text: "Ketika mendapatkan informasi baru, ekspresi ini digunakan untuk menyatakan telah mengerti. Diucapkan dengan intonasi menurun.",
+            examples: [["⑭ この 傘は あなたのですか。<br>……いいえ、違います。シュミットさんのです。<br>そうですか。", "Apakah payung ini punya Anda?<br>……Bukan, salah. Punya Sdr. Schmidt.<br>O, begitu."]],
+          },
+        ],
+      },
+    ],
     focusLabel: "Fokus Pelajaran 2",
     focus: "Menunjuk benda, membedakan jarak, menanyakan kepemilikan, dan memberi jawaban atas informasi.",
     practiceLabel: "Latihan mandiri",
