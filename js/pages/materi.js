@@ -701,9 +701,11 @@ function initMaterialLessonPicker({
        (berurutan sesuai urutan pola, bukan diacak lintas bab) jadi satu
        cerita/percakapan pendek yang levelnya otomatis sesuai bab (karena
        cuma memakai kosakata & pola yang memang sudah diajarkan bab itu) -
-       lalu siswa memilih PERNYATAAN yang sesuai dengan cerita tsb.
-       Pernyataan benar = arti salah satu kalimat dalam cerita; pernyataan
-       salah = arti kalimat LAIN yang tidak ada di cerita itu. */
+       lalu siswa memilih PERNYATAAN BAHASA JEPANG yang sesuai dengan
+       cerita tsb (bukan artinya - supaya tetap latihan membaca Jepang,
+       bukan menerjemahkan). Pernyataan benar = salah satu kalimat Jepang
+       dalam cerita; pernyataan salah = kalimat Jepang LAIN yang tidak ada
+       di cerita itu. */
     function buildStoryQuestions(count, startIndex) {
       const groupSize = 3;
       const groups = [];
@@ -716,16 +718,16 @@ function initMaterialLessonPicker({
         const target = group[i % group.length];
         const distractorPool = quizPool
           .filter((example) => !group.includes(example))
-          .map((example) => example.meaningText);
+          .map((example) => example.japaneseClean);
         return {
           type: "story",
           sourceSentence: passage,
-          instruction: "Baca cerita pendek berikut, lalu pilih pernyataan yang sesuai.",
+          instruction: "Baca cerita pendek berikut, lalu pilih pernyataan bahasa Jepang yang sesuai.",
           context: unique(group.map((example) => example.pattern)).join(" · "),
           prompt: passage,
-          correct: target.meaningText,
-          choices: fourChoices(target.meaningText, distractorPool, passage.length + i),
-          explanation: `Pernyataan yang sesuai dengan cerita: ${target.meaningText}`,
+          correct: target.japaneseClean,
+          choices: fourChoices(target.japaneseClean, distractorPool, passage.length + i),
+          explanation: `Pernyataan yang sesuai dengan cerita: ${target.japaneseClean} (${target.meaningText})`,
         };
       });
     }
