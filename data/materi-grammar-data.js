@@ -696,7 +696,89 @@ const MATERI_BOOK1_LESSONS = [
   },
   {
     title: "Alat, bahasa, memberi dan menerima",
-    items: [["Alat/sarana で V", "で menunjukkan alat, cara, atau bahasa yang digunakan untuk melakukan kegiatan. Dalam pola ini, bagian sebelum で menjawab pertanyaan dengan apa atau memakai bahasa apa.", "はしで 食べます。", "Makan dengan sumpit."], ["「kata/kalimat」は ～語で 何ですか", "Pertanyaan ini dipakai untuk menanyakan bagaimana menyatakan sebuah kata atau kalimat dalam bahasa lain. Nama bahasa ditempatkan sebelum で.", "「Thank you」は 日本語で 何ですか。……「ありがとう」です。", "“Thank you” dalam bahasa Jepang apa? …“Arigatou”."], ["Orang に N を あげます dan sejenisnya", "あげます、かします、dan おしえます menyatakan memberi barang atau informasi kepada seseorang. Penerima ditandai dengan に.", "わたしは 木村さんに 花を あげました。", "Saya memberikan bunga kepada Sdr. Kimura."], ["Orang に N を もらいます dan sejenisnya", "もらいます、かります、dan ならいます menyatakan menerima barang, meminjam, atau belajar dari seseorang. Orang sumber ditandai dengan に; から juga dapat dipakai terutama untuk organisasi.", "わたしは 山田さんに 花を もらいました。", "Saya mendapatkan bunga dari Sdr. Yamada."], ["もう Vました", "もう berarti sudah. Pola ini dipakai dengan kata kerja bentuk lampau untuk menyatakan kegiatan telah selesai. Jawaban negatifnya menggunakan いいえ、まだです atau まだ Vていません.", "もう 荷物を 送りましたか。……はい、もう 送りました。", "Apakah barang sudah dikirim? …Ya, sudah dikirim."], ["Menghilangkan partikel", "Dalam percakapan santai, partikel tertentu dapat dihilangkan bila hubungan makna sudah jelas. Penghilangan ini tidak selalu cocok untuk bahasa formal atau tulisan.", "この スプーン、すてきですね。", "Sendok ini bagus, ya."]],
+    items: [
+      {
+        title: "Kata Benda（alat/sarana）で Kata Kerja",
+        blocks: [
+          {
+            text: "Di bagian ini mempelajari partikel で yang menunjukkan sarana dan cara.",
+            examples: [
+              ["① はしで 食べます。", "Makan dengan sumpit."],
+              ["② 日本語で レポートを 書きます。", "Menulis laporan dalam bahasa Jepang."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "“Kata/Kalimat” は ～語で 何ですか",
+        blocks: [
+          {
+            text: "Pertanyaan ini digunakan ketika menanyakan bagaimana cara mengatakan arti kata atau kalimat dalam bahasa lain.",
+            examples: [
+              ["③ 「ありがとう」は 英語で 何ですか。<br>……「Thank you」です。", "Apa bahasa Inggris dari “Arigato”?<br>……“Thank you”."],
+              ["④ 「Thank you」は 日本語で 何ですか。<br>……「ありがとう」です。", "Apa bahasa Jepang dari “Thank you”?<br>……“Arigato”."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub>（orang）に Kata Benda<sub>2</sub> を あげます dan lain-lain",
+        blocks: [
+          {
+            text: "Kata Kerja あげます, かします, おしえます dan lain-lainnya menunjukkan arti yang memberi barang atau informasi, dan memerlukan lawan yang diberikan barang atau informasi. Kata Benda<sub>1</sub> (orang) tersebut dibubuhkan dengan patrikel に.",
+            examples: [
+              ["⑤ ［わたしは］ 木村さんに 花を あげました。", "Saya memberikan Sdr. Kimura bunga."],
+              ["⑥ ［わたしは］ イーさんに 本を 貸しました。", "Saya meminjamkan buku kepada Sdr. Lee."],
+              ["⑦ ［わたしは］ 山田さんに 英語を 教えます。", "Saya mengajar bahasa Inggris kepada Sdr. Yamada."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub>（orang）に Kata Benda<sub>2</sub> を もらいます dan lain-lain",
+        blocks: [
+          {
+            text: "Kata Kerja もらいます, かります, ならいます dan lain-lainnya menunjukkan arti yang menerima barang atau informasi, dan memerlukan lawan yang diberikan barang atau informasi. Kata Benda<sub>1</sub> (orang) tersebut dibubuhkan dengan  patrikel に.",
+            examples: [
+              ["⑧ ［わたしは］ 山田さんに 花を もらいました。", "Saya mendapatkan bunga dari Sdr. Yamada."],
+              ["⑨ ［わたしは］ カリナさんに CDを 借りました。", "Saya meminjam CD dari Karina."],
+              ["⑩ ［わたしは］ ワンさんに 中国語を 習います。", "Saya belajar bahasa Tionghua dari Sdr. Wang."],
+            ],
+          },
+          {
+            label: "[Perhatian]",
+            text: "Untuk pola kalimat ini, partikel から juga dapat digunakan sebagai pengganti partikel に. Terutama jika lawannya bukan orang melainkan organisasi seperti perusahaan atau sekolah, dan sebagainya bukan に yang digunakan, melainkan から.",
+            examples: [
+              ["⑪ ［わたしは］ 山田さんから 花を もらいました。", "Saya mendapatkan bunga dari Sdr. Yamada."],
+              ["⑫ 銀行から お金を 借りました。", "Saya meminjam uang dari bank."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "もう Kata Kerja ました",
+        blocks: [
+          {
+            text: "もう mempunyai arti sudah dan digunakan dengan kombinasi Kata Kerja ました. Dalam hal ini, Kata Kerja ました bermaksud bahwa perbuatan telah diselesaikan saat ini.<br>Jawaban untuk pertanyaan mengenai apakah perbuatannya telah diselesaikan atau belum yaitu もう Kata Kerja ましたか adalah jika telah diselesaikan atau jawaban positif はい、もう Kata Kerja ました, sedangkan belum diselesaikan atau jawaban negatif いいえ、Kata Kerjaて いません (Lihat Pel.31), atau いいえ、まだです. いいえ、Kata Kerjaませんでした tidak dapat digunakan sebab mempunyai arti yang tidak dilakukan pada waktu lampau.",
+            examples: [
+              ["⑬ もう 荷物を 送りましたか。<br>……はい、［もう］ 送りました。<br>……いいえ、まだ 送って いません。<br>……いいえ、まだです。", "Apakah barang sudah dikirim?<br>……Ya, sudah dikirim.<br>……Belum, belum dikirim. (Pel.31)<br>……Belum."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Menghilangkan partikel",
+        blocks: [
+          {
+            text: "Dalam kalimat percakapan, jika sudah dapat memahami arti dari hubungan sebelum dan sesudahnya maka partikel sering dihilangkan.",
+            examples: [
+              ["⑭ この スプーン［は］、すてきですね。", "Sendok ini bagus ya."],
+              ["⑮ コーヒー［を］、もう 一杯 いかがですか。", "Bagaimana kopi secangkir lagi? (Pel.8)"],
+            ],
+          },
+        ],
+      },
+    ],
     focusLabel: "Fokus Pelajaran 7",
     focus: "Menjelaskan alat dan bahasa, memberi/menerima, serta menyatakan pekerjaan yang sudah selesai.",
     practiceLabel: "Latihan mandiri",

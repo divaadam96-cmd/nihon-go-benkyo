@@ -122,7 +122,7 @@ const materialFuriganaReadings = {
   "郵便局": "ゆうびんきょく", "富士山": "ふじさん", "月曜日": "げつようび",
   "大阪": "おおさか", "昼休み": "ひるやすみ", "大変": "たいへん",
   "広島": "ひろしま", "甲子園": "こうしえん", "北海道": "ほっかいどう", "来週": "らいしゅう",
-  "一人": "ひとり", "新幹線": "しんかんせん",
+  "一人": "ひとり", "新幹線": "しんかんせん", "英語": "えいご", "一杯": "いっぱい",
   "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
   "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
@@ -157,6 +157,7 @@ const materialFuriganaReadings = {
   "薬": "くすり", "何": "なに", "一": "いち",
   "方": "かた", "社員": "しゃいん", "鈴木": "すずき", "傘": "かさ",
   "違": "ちが", "階": "かい", "国": "くに", "半": "はん", "馬": "うま", "昼": "ひる",
+  "借": "か", "習": "なら", "金": "かね",
   "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
   "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
   "行": "い", "降": "ふ", "高": "たか", "座": "すわ", "使": "つか", "始": "はじ",
@@ -802,7 +803,13 @@ function initMaterialLessonPicker({
         correct: example.japaneseClean,
         choices: fourChoices(
           example.japaneseClean,
-          pool.filter((other) => other !== example).map((other) => other.japaneseClean),
+          // Kalimat lain dengan arti Indonesia yang PERSIS SAMA (mis. Pel.7
+          // pola 4 vs [Perhatian]-nya: "…に…" dan "…から…" sama-sama
+          // diterjemahkan "Saya mendapatkan bunga dari Sdr. Yamada.") tidak
+          // boleh jadi distraktor - itu jawaban yang SAMA benarnya, bukan salah.
+          pool
+            .filter((other) => other !== example && other.meaningText !== example.meaningText)
+            .map((other) => other.japaneseClean),
         ),
         explanation: `Kalimat yang tepat: ${example.japaneseClean} (${example.pattern}).`,
       }));
