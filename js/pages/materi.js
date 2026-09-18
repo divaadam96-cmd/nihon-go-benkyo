@@ -574,18 +574,16 @@ function initMaterialLessonPicker({
       return Array.from({ length: Math.min(count, pool.length) }, (_, i) => pool[(startIndex + i) % pool.length]);
     }
 
+    /* Potong kalimat HANYA berdasarkan spasi yang sudah ada di teks (kalimat
+       contoh di data memang ditulis berspasi antar unit frasa, mengikuti
+       cara buku sumber menuliskannya) - TIDAK menyisipkan pemisah baru di
+       sekitar partikel/tanda baca seperti versi lama, karena itu bisa
+       memecah です/でした jadi potongan tak bermakna ("す。") atau membuat
+       tanda titik berdiri sendiri sebagai satu "kata". Kalimat yang cuma
+       py 1-2 unit spasi (terlalu pendek untuk diacak) otomatis tersaring
+       lewat pengecekan panjang di pemanggilnya. */
     function tokensOf(sentence) {
-      const spaced = sentence
-        .replace(/([。！？])/g, " $1")
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean);
-      if (spaced.length >= 3) return spaced;
-      return sentence
-        .replace(/([はがをにでともへか、。！？])/g, " $1 ")
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean);
+      return sentence.trim().split(/\s+/).filter(Boolean);
     }
 
     function chunksOf(sentence) {
@@ -666,57 +664,70 @@ function initMaterialLessonPicker({
       }));
     }
 
-    /* 2 soal: potongan kalimat Jepang diacak, pilih urutan angka yang benar
-       supaya membentuk kalimat yang tepat. */
+    /* 2 soal: pilihan jawabannya kalimat UTUH (bukan urutan angka - versi
+       lama menampilkan pilihan seperti "3 - 1 - 2" yang rancu karena siswa
+       harus membayangkan sendiri hasil susunannya). Distraktornya kalimat
+       yang sama tapi urutan potongannya diacak, jadi siswa cukup membaca 4
+       kalimat utuh dan memilih yang susunannya benar. */
     function buildArrangeQuestions(count, startIndex) {
-      const pool = quizPool.filter((example) => chunksOf(example.japaneseClean).length >= 2);
-      return pickRotating(pool, count, startIndex).map((example) => {
+      const pool = quizPool.filter((example) => chunksOf(example.japaneseClean).length >= 3);
+      return pickRotating(pool, count, startIndex).map((example, i) => {
         const chunks = chunksOf(example.japaneseClean);
-        const shuffled = rotate(chunks, 1);
-        const correctOrder = chunks.map((chunk) => shuffled.indexOf(chunk) + 1);
-        const correct = correctOrder.join(" - ");
-        const variants = [
-          rotate(correctOrder, 1),
-          correctOrder.slice().reverse(),
-          correctOrder.length > 2
-            ? [correctOrder[0], correctOrder[2], correctOrder[1], ...correctOrder.slice(3)]
-            : rotate(correctOrder, -1),
-          rotate(correctOrder, 2),
-        ].map((order) => order.join(" - "));
+        const correct = chunks.join(" ");
+        const variants = unique(
+          [
+            rotate(chunks, 1),
+            chunks.slice().reverse(),
+            chunks.length > 2
+              ? [chunks[0], chunks[2], chunks[1], ...chunks.slice(3)]
+              : rotate(chunks, -1),
+            rotate(chunks, 2),
+          ].map((order) => order.join(" ")),
+        ).filter((variant) => variant !== correct);
         return {
           type: "arrange",
           sourceSentence: example.japaneseClean,
-          instruction: "Pilih urutan nomor yang membentuk kalimat dengan benar.",
+          instruction: "Pilih susunan kalimat bahasa Jepang yang benar.",
           context: `Arti: ${example.meaningText}`,
-          prompt: shuffled.map((chunk, i) => `${i + 1}. ${chunk}`).join("　｜　"),
+          prompt: "Manakah susunan kalimat yang tepat?",
           correct,
-          choices: fourChoices(correct, variants, correctOrder[0] || 0),
-          explanation: `Urutan yang benar membentuk kalimat: ${example.japaneseClean} (${example.pattern}).`,
+          choices: fourChoices(correct, variants, i + 1),
+          explanation: `Susunan yang benar: ${correct} (${example.pattern}).`,
         };
       });
     }
 
-    /* 3 soal cerita: kalimat/percakapan Jepang (diutamakan yang berbentuk
-       dialog dengan ……, terasa seperti cuplikan cerita) ditampilkan
-       sebagai bacaan, siswa memilih arti yang tepat - distraktornya arti
-       kalimat lain dari bab yang sama. */
+    /* 3 soal cerita: gabungkan beberapa kalimat contoh BAB INI SENDIRI
+       (berurutan sesuai urutan pola, bukan diacak lintas bab) jadi satu
+       cerita/percakapan pendek yang levelnya otomatis sesuai bab (karena
+       cuma memakai kosakata & pola yang memang sudah diajarkan bab itu) -
+       lalu siswa memilih PERNYATAAN yang sesuai dengan cerita tsb.
+       Pernyataan benar = arti salah satu kalimat dalam cerita; pernyataan
+       salah = arti kalimat LAIN yang tidak ada di cerita itu. */
     function buildStoryQuestions(count, startIndex) {
-      const dialogues = quizPool.filter((example) => example.japaneseHtml.includes("<br>"));
-      const pool = dialogues.length >= count ? dialogues : quizPool;
-      return pickRotating(pool, count, startIndex).map((example) => ({
-        type: "story",
-        sourceSentence: example.japaneseClean,
-        instruction: "Baca kalimat/percakapan berikut, lalu pilih arti yang tepat.",
-        context: example.pattern,
-        prompt: example.japaneseClean,
-        correct: example.meaningText,
-        choices: fourChoices(
-          example.meaningText,
-          quizPool.filter((other) => other !== example).map((other) => other.meaningText),
-          example.japaneseClean.length,
-        ),
-        explanation: `Arti yang tepat: ${example.meaningText}`,
-      }));
+      const groupSize = 3;
+      const groups = [];
+      for (let i = 0; i + groupSize <= quizPool.length; i += groupSize) {
+        groups.push(quizPool.slice(i, i + groupSize));
+      }
+      const stories = groups.length >= count ? groups : quizPool.map((example) => [example]);
+      return pickRotating(stories, count, startIndex).map((group, i) => {
+        const passage = group.map((example) => example.japaneseClean).join(" ");
+        const target = group[i % group.length];
+        const distractorPool = quizPool
+          .filter((example) => !group.includes(example))
+          .map((example) => example.meaningText);
+        return {
+          type: "story",
+          sourceSentence: passage,
+          instruction: "Baca cerita pendek berikut, lalu pilih pernyataan yang sesuai.",
+          context: unique(group.map((example) => example.pattern)).join(" · "),
+          prompt: passage,
+          correct: target.meaningText,
+          choices: fourChoices(target.meaningText, distractorPool, passage.length + i),
+          explanation: `Pernyataan yang sesuai dengan cerita: ${target.meaningText}`,
+        };
+      });
     }
 
     const questions = [
