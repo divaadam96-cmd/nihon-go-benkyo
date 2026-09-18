@@ -528,16 +528,32 @@ function initMaterialLessonPicker({
     return found;
   }
 
+  /* の tepat di posisi `index` dalam `text` BISA berarti dua hal berbeda:
+     (a) bagian dari kata tunjuk この／その／あの／どの (mis. "このかばん")
+         - の di sini BUKAN partikel berdiri sendiri, kalau dilubangi/
+         dipisah jadi "こ"+"かばん" yang tak bermakna (こ bukan kata utuh).
+     (b) partikel の yang genuinely menempel ke kata tempat ここ／そこ／
+         あそこ／どこ yang KEBETULAN berakhiran こ (mis. "どこの
+         コンピューター" - どこ berdiri sendiri sebagai kata "mana", の di
+         belakangnya partikel asli, sama seperti "IMCの"). Cek dua/tiga
+         huruf sebelum の dulu: kalau membentuk ここ/そこ/どこ (atau あそこ
+         untuk tiga huruf), itu kasus (b) - BUKAN kata tunjuk. Baru kalau
+         bukan, cek kasus (a). Dipakai baik oleh blankParticle (soal
+         partikel) maupun splitParticles (soal susun kalimat) supaya
+         perlakuannya konsisten. */
+  function isDemonstrativeNo(text, index) {
+    if (text[index] !== "の" || index <= 0) return false;
+    const beforeTwo = text.slice(Math.max(0, index - 2), index);
+    const beforeThree = text.slice(Math.max(0, index - 3), index);
+    const isLocationWord = ["ここ", "そこ", "どこ"].includes(beforeTwo) || beforeThree === "あそこ";
+    return !isLocationWord && "こそあど".includes(text[index - 1]);
+  }
+
   function blankParticle(sentence, particle) {
     let index = sentence.indexOf(particle);
     while (index !== -1) {
       const isCopulaFragment = particle === "で" && /^で(す|した)/.test(sentence.slice(index));
-      /* の di belakang こ／そ／あ／ど bukan partikel berdiri sendiri, tapi
-         bagian dari kata tunjuk この／その／あの／どの (mis. "このかばん")
-         - kalau ikut dilubangi jadi "こ（　　）かばん" yang tak bermakna
-         (こ bukan kata utuh). Tambahkan pengecualian serupa di sini kalau
-         nanti bab lain mengungkap kasus tabrakan partikel/kata majemuk lain. */
-      const isDemonstrativeFragment = particle === "の" && index > 0 && "こそあど".includes(sentence[index - 1]);
+      const isDemonstrativeFragment = particle === "の" && isDemonstrativeNo(sentence, index);
       if (!isCopulaFragment && !isDemonstrativeFragment) {
         return sentence.slice(0, index) + "（　　）" + sentence.slice(index + 1);
       }
@@ -664,8 +680,8 @@ function initMaterialLessonPicker({
       }
       if (stem.length > 1) {
         const last = stem[stem.length - 1];
-        const isDemonstrativeNo = last === "の" && "こそあど".includes(stem[stem.length - 2]);
-        if (PARTICLE_SET.includes(last) && !isDemonstrativeNo) {
+        const skipAsParticle = last === "の" && isDemonstrativeNo(stem, stem.length - 1);
+        if (PARTICLE_SET.includes(last) && !skipAsParticle) {
           pieces.unshift(last);
           stem = stem.slice(0, -1);
         }

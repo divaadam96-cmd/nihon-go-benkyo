@@ -1179,6 +1179,32 @@
   font-style: italic;
   line-height: 1.7;
 }
+/* Tabel referensi (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど") - sebagian
+   pola di buku sumber memang berbentuk tabel, bukan penjelasan+contoh. */
+.grammar-table {
+  width: 100%;
+  margin: 0 0 10px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.grammar-table th,
+.grammar-table td {
+  border: 1px solid #d0bf9e;
+  padding: 7px 10px;
+  text-align: left;
+  color: #43536a;
+}
+.grammar-table thead th {
+  background: #eee6d8;
+  color: #172740;
+  font-weight: 700;
+}
+.grammar-table tbody th {
+  background: #f7f1e6;
+  color: #172740;
+  font-weight: 700;
+  white-space: nowrap;
+}
 .grammar-audio-button {
   display: inline-flex;
   align-items: center;

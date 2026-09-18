@@ -21,21 +21,26 @@ function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel,
      ADA SATU jalur render/gaya visual untuk seluruh Materi (bukan 2 template
      terpisah):
      - array lama [pola, penjelasan, contoh, arti, catatan?] - 1 blok, 1 contoh.
-     - objek baru {title, suffix?, blocks:[{label?, text?, examples?:[[contoh, arti], ...], note?}]}
+     - objek baru {title, suffix?, blocks:[{label?, text?, examples?:[[contoh, arti], ...], note?, table?}]}
        - dipakai saat pola sumber (Keterangan Tata Bahasa asli) punya beberapa
          sub-penjelasan dan/atau beberapa contoh kalimat per pola (mis. Pelajaran 1).
          suffix = keterangan di luar kotak pola, mis. "(kalimat tanya)".
          text opsional: sebagian sub-poin di buku (mis. Pelajaran 2 pola 5)
          cuma satu baris "N) <kalimat>" tanpa paragraf penjelasan terpisah -
-         taruh kalimatnya di `label` saja dan biarkan `text` kosong. */
+         taruh kalimatnya di `label` saja dan biarkan `text` kosong.
+         table opsional {headers:[...], rows:[[...], ...]}: sebagian pola
+         di buku memang berupa tabel referensi, bukan penjelasan+contoh
+         (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど"). */
   const normalize = (item) =>
     Array.isArray(item)
       ? { pola: item[0], suffix: "", blocks: [{ text: item[1], examples: [[item[2], item[3]]], note: item[4] }] }
       : { pola: item.title, suffix: item.suffix || "", blocks: item.blocks };
   const renderExample = ([contoh, arti]) =>
     `<div class="grammar-example"><span class="grammar-jp">${contoh}</span><span class="grammar-meaning">${arti}</span></div>`;
+  const renderTable = (table) =>
+    `<table class="grammar-table"><thead><tr><th></th>${table.headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${table.rows.map((row) => `<tr>${row.map((cell, i) => `<${i === 0 ? "th" : "td"}>${cell}</${i === 0 ? "th" : "td"}>`).join("")}</tr>`).join("")}</tbody></table>`;
   const renderBlock = (b) =>
-    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
+    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${(b.examples || []).map(renderExample).join("")}${b.table ? renderTable(b.table) : ""}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
   const renderPoint = (item, i) => {
     const { pola, suffix, blocks } = normalize(item);
     const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="grammar-pola-box">${pola}</span>${suffix ? `<span class="grammar-pola-suffix"> ${suffix}</span>` : ""}</h3>`;
@@ -254,7 +259,88 @@ const MATERI_BOOK1_LESSONS = [
   },
   {
     title: "Tempat, arah, dan asal produk",
-    items: [["ここ／そこ／あそこ／こちら／そちら／あちら", "ここ・そこ・あそこ menunjuk tempat. ここ dekat pembicara, そこ dekat lawan bicara, dan あそこ jauh dari keduanya. こちら・そちら・あちら dapat menunjuk arah atau tempat dengan nuansa lebih sopan.", "おてあらいは あそこです。", "Kamar kecil di sana."], ["N は tempat です", "Pola ini menyatakan lokasi benda, fasilitas, atau orang. Tempat berada sesudah topik dan diikuti です.", "でんわは 2かいです。", "Telepon di lantai dua."], ["どこ／どちら", "どこ adalah kata tanya tempat. どちら terutama untuk arah dan dapat dipakai untuk tempat dengan cara yang lebih sopan. Saat bertanya nama negara, sekolah, atau perusahaan, pakailah どこ atau どちら, bukan なん.", "エレベーターは どちらですか。……あちらです。", "Lift di sebelah mana? …Di sebelah sana."], ["N1 の N2: asal atau pembuat", "Jika N1 adalah negara dan N2 adalah produk, N1 の menunjukkan produk buatan negara tersebut. Jika N1 adalah perusahaan dan N2 adalah produk, maknanya menunjukkan produk buatan perusahaan itu.", "これは にほんの コンピューターです。", "Ini komputer buatan Jepang."], ["Daftar kata penunjuk", "Kelompok こ, そ, dan あ berlaku konsisten: これ・それ・あれ untuk barang; このN・そのN・あのN untuk barang/orang; ここ・そこ・あそこ untuk tempat; serta こちら・そちら・あちら untuk arah atau tempat yang sopan. Bentuk tanya pasangannya adalah どれ、どのN、どこ、dan どちら.", "これは どこの コンピューターですか。", "Ini komputer buatan mana?"], ["お～", "Awalan お dapat dipakai pada kata yang berkaitan dengan lawan bicara atau pihak ketiga untuk menunjukkan rasa hormat. Salah satu contoh yang umum adalah おくに.", "おくには どちらですか。", "Berasal dari mana?"]],
+    items: [
+      {
+        title: "ここ／そこ／あそこ／こちら／そちら／あちら",
+        blocks: [
+          {
+            text: "ここ, そこ, あそこ menunjukkan tempat. ここ menunjukkan tempat di mana si pembicara berada, そこ menunjukkan tempat di mana lawan bicara berada, dan あそこ menunjukkan tempat yang jauh dari kedua-duanya.",
+          },
+          {
+            text: "こちら, そちら, あちら menunjukkan arah, tetapi juga dapat dipakai untuk menunjukkan tempat yang dapat dilihat oleh mata yang digantikan dengan ここ, そこ, あそこ. Dalam hal ini こちら, そちら, あちら menyatakan perasaan yang lebih sopan.",
+            note: "[Perhatian] Jika si pembicara menganggap bahwa lawan bicara berada di daerah yang sama, maka tempat di mana kedua-duanya berada dikatakan ここ, tempat yang sedikit jauh dikatakan そこ, dan tempat yang jauh dikatakan あそこ.",
+          },
+        ],
+      },
+      {
+        title: "Kata Benda は tempat です",
+        blocks: [
+          {
+            text: "Dengan menggunakan pola kalimat ini, dapat menyatakan tempat di mana benda, tempat, atau orang berada.",
+            examples: [
+              ["① お手洗いは あそこです。", "Kamar kecil di sana."],
+              ["② 電話は 2階です。", "Telepon di lantai dua."],
+              ["③ 山田さんは 事務所です。", "Sdr. Yamada di kantor."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "どこ／どちら",
+        blocks: [
+          {
+            text: "どこ adalah Kata Tanya untuk tempat, dan どちら adalah Kata Tanya untuk bertanya arah. Untuk bertanya tempat, adakalanya digunakan どちら. Dalam hal ini, ungkapan menjadi lebih sopan daripada menggunakan どこ.",
+            examples: [
+              ["④ お手洗いは どこですか。<br>……あそこです。", "Di mana kamar kecil?<br>……Di sana."],
+              ["⑤ エレベーターは どちらですか。<br>……あちらです。", "Lift di sebelah mana?<br>……Di sebelah sana."],
+            ],
+          },
+          {
+            text: "Jika menanyakan nama negara, perusahaan, sekolah dan lain-lain seperti tempat atau organisasi, tidak menggunakan Kata Tanya なん melainkan menggunakan どこ, どちら. Dalam hal ini, ungkapan どちら menjadi lebih sopan daripada menggunakan どこ.",
+            examples: [
+              ["⑥ 学校は どこですか。", "Sekolah di mana?"],
+              ["⑦ 会社は どちらですか。", "Perusahaan mana?"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> の Kata Benda<sub>2</sub>",
+        blocks: [
+          {
+            text: "Jika Kata Benda<sub>1</sub> adalah nama negara dan Kata Benda<sub>2</sub> adalah produknya, maka Kata Benda<sub>1</sub> の berarti buatan dari negara tersebut. Kalau Kata Benda<sub>1</sub> adalah nama perusahaan, dan Kata Benda<sub>2</sub> adalah produkunya, Kata Benda<sub>1</sub> の berarti buatan perusahaan tersebut. Untuk kedua pertanyaan digunakan Kata Tanya どこ.",
+            examples: [
+              ["⑧ これは どこの コンピューターですか。<br>……日本の コンピューターです。<br>……パワー電気の コンピューターです。", "Ini komputer buatan mana?<br>……Komputer buatan Jepang.<br>……Komputer Power Elektronik."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Daftar こ／そ／あ／ど（Kata Penunjuk）",
+        blocks: [
+          {
+            table: {
+              headers: ["kelompok こ", "kelompok そ", "kelompok あ", "kelompok ど"],
+              rows: [
+                ["Barang", "これ", "それ", "あれ", "どれ（Pel.16）"],
+                ["Barang/Orang", "この Kata Benda", "その Kata Benda", "あの Kata Benda", "どの Kata Benda（Pel.16）"],
+                ["Tempat", "ここ", "そこ", "あそこ", "どこ"],
+                ["Arah/<br>Tempat (halus)", "こちら", "そちら", "あちら", "どちら"],
+              ],
+            },
+          },
+        ],
+      },
+      {
+        title: "お～",
+        blocks: [
+          {
+            text: "Prefiks お dibubuhkan pada hal-hal yang bersangkut dengan lawan bicara atau orang pihak ketiga untuk menyatakan rasa hormat dari si pembicara.",
+            examples: [["⑨ ［お］国は どちらですか。", "Berasal dari mana?"]],
+          },
+        ],
+      },
+    ],
     focusLabel: "Fokus Pelajaran 3",
     focus: "Menanyakan dan menjelaskan lokasi, arah, asal produk, serta bentuk penunjuk yang sopan.",
     practiceLabel: "Latihan mandiri",
