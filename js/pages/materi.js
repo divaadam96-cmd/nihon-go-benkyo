@@ -424,74 +424,132 @@ function initMaterialLessonPicker({
     syncCurriculumDashboard();
   }
 
-  function getPointData(content) {
-    return Array.from(content.querySelectorAll(":scope > .grammar-point"))
-      .map((point) => {
-        const example = point.querySelector(".grammar-example");
-        const meaning = example?.querySelector(".grammar-meaning");
-        if (!example || !meaning) return null;
-        const japaneseClone = example.cloneNode(true);
-        japaneseClone.querySelector(".grammar-meaning")?.remove();
-        japaneseClone.querySelectorAll("rt").forEach((reading) => reading.remove());
-        const titleClone = point.querySelector("h3")?.cloneNode(true);
-        titleClone?.querySelectorAll("rt").forEach((reading) => reading.remove());
-        const noteClone = point
-          .querySelector(".grammar-important-note")
-          ?.cloneNode(true);
-        noteClone?.querySelectorAll("rt").forEach((reading) => reading.remove());
-        return {
-          title: titleClone?.textContent.trim() || "Pola",
-          japanese: japaneseClone.textContent.trim(),
-          meaning: meaning.textContent.trim(),
-          note: noteClone?.textContent.trim() || "",
-        };
-      })
-      .filter(Boolean);
+  /* Ambil SEMUA contoh kalimat (bukan cuma satu contoh representatif per
+     pola seperti sebelumnya) dari .html-content pelajaran yang SEDANG
+     AKTIF - dipakai baik oleh "Pelajari Contoh" (semua contoh ditampilkan
+     apa adanya) maupun "Kerjakan Latihan" (sumber kalimat & arti untuk
+     soal). Karena selalu dibangun dari activeContent bab yang dibuka,
+     kedua tahap ini otomatis memakai materi bab itu sendiri - bukan bab
+     lain atau kalimat karangan generik. */
+  function htmlToFlatText(html) {
+    return html
+      .replace(/<br\s*\/?>/gi, " ")
+      .replace(/<[^>]*>/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  const CIRCLED_NUMBER_PREFIX = /^[①-⑳]\s*/;
+
+  function getAllExamplesData(content) {
+    const results = [];
+    content.querySelectorAll(":scope > .grammar-point").forEach((point) => {
+      const titleClone = point.querySelector("h3")?.cloneNode(true);
+      titleClone?.querySelectorAll("rt").forEach((reading) => reading.remove());
+      const pattern = (titleClone?.textContent || "Pola").replace(/^\d+\.\s*/, "").trim();
+      point.querySelectorAll(".grammar-example").forEach((example) => {
+        const jpClone = example.querySelector(".grammar-jp")?.cloneNode(true);
+        const meaningClone = example.querySelector(".grammar-meaning")?.cloneNode(true);
+        jpClone?.querySelectorAll("rt").forEach((reading) => reading.remove());
+        meaningClone?.querySelectorAll("rt").forEach((reading) => reading.remove());
+        const japaneseHtml = jpClone?.innerHTML.trim() || "";
+        const meaningHtml = meaningClone?.innerHTML.trim() || "";
+        if (!japaneseHtml || !meaningHtml) return;
+        const japaneseText = htmlToFlatText(japaneseHtml);
+        results.push({
+          pattern,
+          japaneseHtml,
+          meaningHtml,
+          japaneseText,
+          meaningText: htmlToFlatText(meaningHtml),
+          japaneseClean: japaneseText.replace(CIRCLED_NUMBER_PREFIX, ""),
+        });
+      });
+    });
+    return results;
   }
 
   function buildExampleStudy(content) {
-    const points = getPointData(content);
+    const examples = getAllExamplesData(content);
     exampleStudy.innerHTML =
-      '<header class="material-study-section-head"><div class="eyebrow">TAHAP 2 · PELAJARI CONTOH</div><h3>Amati penggunaan setiap pola.</h3><p>Baca kalimat Jepang dengan suara keras, lalu periksa artinya.</p></header>';
+      '<header class="material-study-section-head"><div class="eyebrow">TAHAP 2 · PELAJARI CONTOH</div><h3>Amati penggunaan setiap pola.</h3><p>Seluruh contoh kalimat pelajaran ini ditampilkan di sini - baca kalimat Jepangnya dengan suara keras, lalu periksa artinya.</p></header>';
     const list = document.createElement("div");
     list.className = "material-example-list";
-    points.forEach((point, index) => {
+    examples.forEach((example, index) => {
       const card = document.createElement("article");
       card.className = "material-example-card";
       const number = document.createElement("span");
       number.className = "material-example-number";
       number.textContent = `CONTOH ${String(index + 1).padStart(2, "0")}`;
       const title = document.createElement("h4");
-      title.textContent = point.title;
+      title.textContent = example.pattern;
       addMaterialFurigana(title);
       const japanese = document.createElement("p");
       japanese.className = "material-example-japanese";
-      japanese.textContent = point.japanese;
+      japanese.innerHTML = example.japaneseHtml;
       addMaterialFurigana(japanese);
       const meaning = document.createElement("p");
       meaning.className = "material-example-meaning";
-      meaning.textContent = point.meaning;
+      meaning.innerHTML = example.meaningHtml;
       card.append(number, title, japanese, meaning);
-      if (point.note) {
-        const note = document.createElement("small");
-        note.className = "material-example-note";
-        note.textContent = `Catatan: ${point.note}`;
-        addMaterialFurigana(note);
-        card.appendChild(note);
-      }
       list.appendChild(card);
     });
     exampleStudy.appendChild(list);
   }
 
+  /* Partikel untuk soal "cari partikel yang benar". detectStandaloneParticles
+     dipakai pada JUDUL POLA (mis. "Kata Benda1 は Kata Benda2 です") untuk
+     tahu partikel apa yang diajarkan pola itu - hanya dihitung kalau
+     berdiri sendiri (dibatasi karakter BUKAN kana di kedua sisinya, karena
+     di judul partikelnya selalu diapit teks Latin "Kata Benda"/spasi),
+     supaya か di dalam ですか milik judul tidak dikira partikel berbeda dari
+     か yang berdiri sendiri. blankParticle dipakai pada KALIMAT CONTOH
+     sungguhan (di mana partikel wajar menempel ke kana sebelumnya, mis.
+     わたしは) - jadi cuma perlu hindari で yang sebenarnya bagian dari
+     です／でした. */
+  const PARTICLE_SET = ["は", "が", "を", "に", "で", "と", "も", "の", "へ", "か"];
+
+  function isKanaChar(ch) {
+    return /[぀-ヿ]/.test(ch || "");
+  }
+
+  function detectStandaloneParticles(text) {
+    const found = [];
+    PARTICLE_SET.forEach((particle) => {
+      let index = text.indexOf(particle);
+      while (index !== -1) {
+        if (!isKanaChar(text[index - 1]) && !isKanaChar(text[index + 1])) {
+          if (!found.includes(particle)) found.push(particle);
+          break;
+        }
+        index = text.indexOf(particle, index + 1);
+      }
+    });
+    return found;
+  }
+
+  function blankParticle(sentence, particle) {
+    let index = sentence.indexOf(particle);
+    while (index !== -1) {
+      const isCopulaFragment = particle === "で" && /^で(す|した)/.test(sentence.slice(index));
+      if (!isCopulaFragment) return sentence.slice(0, index) + "（　　）" + sentence.slice(index + 1);
+      index = sentence.indexOf(particle, index + 1);
+    }
+    return null;
+  }
+
   function buildPracticeTest(content) {
-    const points = getPointData(content);
-    const types = ["grammar", "sentence", "completion", "arrangement"];
+    const examples = getAllExamplesData(content);
+    /* Contoh bertanda "×" sengaja menunjukkan penggunaan yang SALAH (lihat
+       Pelajaran 2 pola 6) - jangan dipakai sebagai sumber soal, tapi tetap
+       tampil apa adanya di "Pelajari Contoh" di atas. */
+    const quizPool = examples.filter((example) => !example.japaneseClean.includes("×"));
+    const types = ["particle", "translate", "arrange", "story"];
     const labels = {
-      grammar: "Pemilihan grammar",
-      sentence: "Susunan kalimat",
-      completion: "Melengkapi kalimat",
-      arrangement: "Menyusun kalimat",
+      particle: "Partikel yang tepat",
+      translate: "Indonesia → Jepang",
+      arrange: "Susun kalimat",
+      story: "Soal cerita",
     };
     let questionIndex = 0;
     let correctAnswers = 0;
@@ -509,6 +567,11 @@ function initMaterialLessonPicker({
       if (items.length < 2) return items.slice();
       const offset = ((amount % items.length) + items.length) % items.length;
       return items.slice(offset).concat(items.slice(0, offset));
+    }
+
+    function pickRotating(pool, count, startIndex) {
+      if (!pool.length) return [];
+      return Array.from({ length: Math.min(count, pool.length) }, (_, i) => pool[(startIndex + i) % pool.length]);
     }
 
     function tokensOf(sentence) {
@@ -535,20 +598,6 @@ function initMaterialLessonPicker({
       }).filter(Boolean);
     }
 
-    function wrongSentences(sentence) {
-      const chunks = chunksOf(sentence);
-      if (chunks.length < 2) return [`${sentence} か`, `${sentence} ね`, `${sentence} よ`];
-      return unique([
-        rotate(chunks, 1).join(" "),
-        chunks.slice().reverse().join(" "),
-        (chunks.length > 2
-          ? [chunks[0], chunks[2], chunks[1], ...chunks.slice(3)]
-          : rotate(chunks, -1)
-        ).join(" "),
-        rotate(chunks, 2).join(" "),
-      ]).filter((item) => item !== sentence);
-    }
-
     function fourChoices(correct, distractors, offset) {
       const choices = unique([correct, ...distractors]);
       const fallback = ["です", "ます", "ません", "でした", "から", "ので"];
@@ -561,97 +610,121 @@ function initMaterialLessonPicker({
       return rotate(choices.slice(0, 4), offset % 4);
     }
 
-    function makeQuestion(point, type, index) {
-      const others = points.filter((candidate) => candidate !== point);
-      if (type === "grammar") {
-        return {
-          type,
-          pointTitle: point.title,
-          sourceSentence: point.japanese,
-          instruction: "Pilih kalimat yang menggunakan grammar sesuai pola berikut.",
-          context: point.title,
-          prompt: `Arti: ${point.meaning}`,
-          correct: point.japanese,
-          choices: fourChoices(
-            point.japanese,
-            [...others.map((item) => item.japanese), ...wrongSentences(point.japanese)],
-            index + 1,
-          ),
-        };
-      }
-
-      if (type === "sentence") {
-        return {
-          type,
-          pointTitle: point.title,
-          sourceSentence: point.japanese,
-          instruction: "Pilih susunan kalimat bahasa Jepang yang benar.",
-          context: `Arti: ${point.meaning}`,
-          prompt: "Kalimat manakah yang susunannya paling tepat?",
-          correct: point.japanese,
-          choices: fourChoices(point.japanese, wrongSentences(point.japanese), index + 2),
-        };
-      }
-
-      if (type === "completion") {
-        const tokens = tokensOf(point.japanese);
-        const candidates = tokens
-          .map((token, tokenIndex) => ({ token, tokenIndex }))
-          .filter(({ token }) => !/^[、。！？]$/.test(token));
-        const target = candidates[Math.floor(candidates.length / 2)] || {
-          token: tokens[0] || point.japanese,
-          tokenIndex: 0,
-        };
-        const prompt = tokens
-          .map((token, tokenIndex) => (tokenIndex === target.tokenIndex ? "（　　）" : token))
-          .join(" ");
-        const pool = unique([
-          ...others.flatMap((item) => tokensOf(item.japanese)),
-          "です",
-          "ます",
-          "ません",
-          "から",
-        ]).filter((token) => token !== target.token && !/^[、。！？]$/.test(token));
-        return {
-          type,
-          pointTitle: point.title,
-          sourceSentence: point.japanese,
-          instruction: "Pilih kata atau pola yang tepat untuk melengkapi kalimat.",
-          context: `Arti: ${point.meaning}`,
+    /* 2 soal: pilih partikel yang tepat. Satu pola dipakai sekali saja per
+       bab (usedPatterns) dan satu partikel juga sekali saja (usedParticles)
+       supaya 2 soalnya tidak mengetes hal yang sama. */
+    function buildParticleQuestions(count) {
+      const questions = [];
+      const usedParticles = new Set();
+      const usedPatterns = new Set();
+      const tryExample = (example, requireNewPattern) => {
+        if (questions.length >= count) return;
+        if (requireNewPattern && usedPatterns.has(example.pattern)) return;
+        const candidates = detectStandaloneParticles(example.pattern).filter(
+          (particle) => !usedParticles.has(particle),
+        );
+        if (!candidates.length) return;
+        const firstClause = example.japaneseClean.split("。")[0] + "。";
+        const particle = candidates.find((candidate) => blankParticle(firstClause, candidate));
+        if (!particle) return;
+        const prompt = blankParticle(firstClause, particle);
+        usedParticles.add(particle);
+        usedPatterns.add(example.pattern);
+        questions.push({
+          type: "particle",
+          sourceSentence: example.japaneseClean,
+          instruction: "Pilih partikel yang tepat untuk melengkapi kalimat.",
+          context: `Pola: ${example.pattern}`,
           prompt,
-          correct: target.token,
-          choices: fourChoices(target.token, pool, index + 3),
-        };
-      }
-
-      const chunks = chunksOf(point.japanese);
-      const shuffled = chunks.length > 1 ? rotate(chunks, 1) : chunks;
-      const correctOrder = chunks.map((chunk) => shuffled.indexOf(chunk) + 1);
-      const correct = correctOrder.join(" - ");
-      const variants = [
-        rotate(correctOrder, 1),
-        correctOrder.slice().reverse(),
-        correctOrder.length > 2
-          ? [correctOrder[0], correctOrder[2], correctOrder[1], ...correctOrder.slice(3)]
-          : rotate(correctOrder, -1),
-        rotate(correctOrder, 2),
-      ].map((order) => order.join(" - "));
-      return {
-        type,
-        pointTitle: point.title,
-        sourceSentence: point.japanese,
-        instruction: "Pilih urutan nomor yang membentuk kalimat dengan benar.",
-        context: `Arti: ${point.meaning}`,
-        prompt: shuffled.map((chunk, i) => `${i + 1}. ${chunk}`).join("　｜　"),
-        correct,
-        choices: fourChoices(correct, variants, index),
+          correct: particle,
+          choices: fourChoices(particle, PARTICLE_SET.filter((p) => p !== particle), questions.length + 1),
+          explanation: `Kalimat lengkapnya: ${firstClause} - partikel「${particle}」dipakai sesuai pola ${example.pattern}.`,
+        });
       };
+      quizPool.forEach((example) => tryExample(example, true));
+      if (questions.length < count) quizPool.forEach((example) => tryExample(example, false));
+      return questions;
     }
 
-    const questionCount = points.length ? Math.max(8, points.length) : 0;
-    const questions = Array.from({ length: questionCount }, (_, index) =>
-      makeQuestion(points[index % points.length], types[index % types.length], index),
-    );
+    /* 3 soal: diberi arti Indonesia, pilih kalimat Jepang yang tepat -
+       distraktornya kalimat Jepang lain dari bab yang sama. */
+    function buildTranslateQuestions(count, startIndex) {
+      const pool = quizPool.filter((example) => example.japaneseClean && example.meaningText);
+      return pickRotating(pool, count, startIndex).map((example, i) => ({
+        type: "translate",
+        sourceSentence: example.japaneseClean,
+        instruction: "Pilih kalimat bahasa Jepang yang sesuai dengan artinya.",
+        context: `Arti: ${example.meaningText}`,
+        prompt: "Manakah kalimat Jepang yang tepat?",
+        correct: example.japaneseClean,
+        choices: fourChoices(
+          example.japaneseClean,
+          pool.filter((other) => other !== example).map((other) => other.japaneseClean),
+          i + 1,
+        ),
+        explanation: `Kalimat yang tepat: ${example.japaneseClean} (${example.pattern}).`,
+      }));
+    }
+
+    /* 2 soal: potongan kalimat Jepang diacak, pilih urutan angka yang benar
+       supaya membentuk kalimat yang tepat. */
+    function buildArrangeQuestions(count, startIndex) {
+      const pool = quizPool.filter((example) => chunksOf(example.japaneseClean).length >= 2);
+      return pickRotating(pool, count, startIndex).map((example) => {
+        const chunks = chunksOf(example.japaneseClean);
+        const shuffled = rotate(chunks, 1);
+        const correctOrder = chunks.map((chunk) => shuffled.indexOf(chunk) + 1);
+        const correct = correctOrder.join(" - ");
+        const variants = [
+          rotate(correctOrder, 1),
+          correctOrder.slice().reverse(),
+          correctOrder.length > 2
+            ? [correctOrder[0], correctOrder[2], correctOrder[1], ...correctOrder.slice(3)]
+            : rotate(correctOrder, -1),
+          rotate(correctOrder, 2),
+        ].map((order) => order.join(" - "));
+        return {
+          type: "arrange",
+          sourceSentence: example.japaneseClean,
+          instruction: "Pilih urutan nomor yang membentuk kalimat dengan benar.",
+          context: `Arti: ${example.meaningText}`,
+          prompt: shuffled.map((chunk, i) => `${i + 1}. ${chunk}`).join("　｜　"),
+          correct,
+          choices: fourChoices(correct, variants, correctOrder[0] || 0),
+          explanation: `Urutan yang benar membentuk kalimat: ${example.japaneseClean} (${example.pattern}).`,
+        };
+      });
+    }
+
+    /* 3 soal cerita: kalimat/percakapan Jepang (diutamakan yang berbentuk
+       dialog dengan ……, terasa seperti cuplikan cerita) ditampilkan
+       sebagai bacaan, siswa memilih arti yang tepat - distraktornya arti
+       kalimat lain dari bab yang sama. */
+    function buildStoryQuestions(count, startIndex) {
+      const dialogues = quizPool.filter((example) => example.japaneseHtml.includes("<br>"));
+      const pool = dialogues.length >= count ? dialogues : quizPool;
+      return pickRotating(pool, count, startIndex).map((example) => ({
+        type: "story",
+        sourceSentence: example.japaneseClean,
+        instruction: "Baca kalimat/percakapan berikut, lalu pilih arti yang tepat.",
+        context: example.pattern,
+        prompt: example.japaneseClean,
+        correct: example.meaningText,
+        choices: fourChoices(
+          example.meaningText,
+          quizPool.filter((other) => other !== example).map((other) => other.meaningText),
+          example.japaneseClean.length,
+        ),
+        explanation: `Arti yang tepat: ${example.meaningText}`,
+      }));
+    }
+
+    const questions = [
+      ...buildParticleQuestions(2),
+      ...buildTranslateQuestions(3, 1),
+      ...buildArrangeQuestions(2, 0),
+      ...buildStoryQuestions(3, 2),
+    ];
     const mistakeStorageKey = `${progressKey}MistakesV1`;
     const lessonMistakeKey = String(startNumber + activeIndex);
     let activeQuestions = questions;
@@ -696,16 +769,6 @@ function initMaterialLessonPicker({
       return questions.filter((question) => ids.has(questionId(question)));
     }
 
-    function explanationFor(question) {
-      if (question.type === "grammar")
-        return `Kalimat tersebut memakai pola ${question.pointTitle} dan sesuai dengan arti yang diberikan.`;
-      if (question.type === "sentence")
-        return `Susunan yang benar adalah ${question.sourceSentence}. Perhatikan posisi unsur kalimat dan pola ${question.pointTitle}.`;
-      if (question.type === "completion")
-        return `Bagian yang tepat melengkapi pola ${question.pointTitle}. Kalimat lengkapnya: ${question.sourceSentence}`;
-      return `Urutan tersebut membentuk kalimat ${question.sourceSentence} sesuai pola ${question.pointTitle}.`;
-    }
-
     function resetSession(nextQuestions, isReview) {
       activeQuestions = nextQuestions;
       reviewMode = isReview;
@@ -716,7 +779,7 @@ function initMaterialLessonPicker({
     }
 
     practiceStudy.innerHTML =
-      '<header class="material-study-section-head"><div class="eyebrow">TAHAP 3 · KERJAKAN LATIHAN</div><h3>Simulasi mini JLPT / JFT.</h3><p>Kerjakan empat jenis soal. Setiap jawaban disertai pembahasan singkat.</p></header><div class="material-test-types"><span>Pemilihan grammar</span><span>Susunan kalimat</span><span>Melengkapi kalimat</span><span>Menyusun kalimat</span></div><div class="material-mistake-bar" hidden><div><b>Daftar kesalahan bab ini</b><span></span></div><button type="button">Ulangi soal yang salah</button></div><div class="material-practice-card"></div>';
+      '<header class="material-study-section-head"><div class="eyebrow">TAHAP 3 · KERJAKAN LATIHAN</div><h3>10 soal pilihan ganda dari bab ini.</h3><p>2 soal partikel, 3 soal Indonesia → Jepang, 2 soal susun kalimat, dan 3 soal cerita - semuanya dari kotoba dan pola kalimat bab ini. Setiap jawaban disertai pembahasan singkat.</p></header><div class="material-test-types"><span>Partikel yang tepat</span><span>Indonesia → Jepang</span><span>Susun kalimat</span><span>Soal cerita</span></div><div class="material-mistake-bar" hidden><div><b>Daftar kesalahan bab ini</b><span></span></div><button type="button">Ulangi soal yang salah</button></div><div class="material-practice-card"></div>';
     const practiceCard = practiceStudy.querySelector(".material-practice-card");
     const mistakeBar = practiceStudy.querySelector(".material-mistake-bar");
 
@@ -794,7 +857,7 @@ function initMaterialLessonPicker({
           const correctAnswer = document.createElement("p");
           correctAnswer.textContent = `Jawaban benar: ${question.correct}`;
           const explanation = document.createElement("small");
-          explanation.textContent = explanationFor(question);
+          explanation.textContent = question.explanation;
           addMaterialFurigana(correctAnswer);
           addMaterialFurigana(explanation);
           feedback.replaceChildren(feedbackTitle, correctAnswer, explanation);
