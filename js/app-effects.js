@@ -120,17 +120,21 @@ function createRatingControls(patternId, point, book) {
 }
 
 /* Susun setiap pola: penjelasan, contoh Jepang, arti, lalu catatan bila
-   perlu - dan sisipkan tombol audio + rating di PENJELASAN (bahasa
+   ada - dan sisipkan tombol audio + rating di PENJELASAN (bahasa
    Indonesia, bukan contoh kalimat Jepang-nya) supaya siswa bisa
    mendengarkan arti & kegunaan pola itu, dan menilai penguasaannya
    satu per satu (bukan lagi satu status untuk seluruh pelajaran).
-   Teks audio diambil SETELAH kalimat penting (kalau ada) dipisah ke
-   catatan tersendiri di bawah, supaya persis sama dengan yang tampil.
+   Catatan "[Perhatian]" TIDAK LAGI ditebak otomatis dari kata kunci di
+   penjelasan (pernah begitu, tapi heuristiknya bisa salah mencabut
+   kalimat yang justru bagian dari penjelasan asli buku sumber - mis.
+   "...tidak dipakai untuk marga atau nama si pembicara sendiri" di
+   Pelajaran 1 pola 6 ikut ke-splice padahal itu bukan catatan
+   [Perhatian] di buku). Sekarang catatan HANYA muncul kalau memang
+   ditulis eksplisit di data (field `note`, lihat materi-grammar-data.js)
+   - persis meniru buku sumber, bukan dugaan mesin.
    Diiterasi PER PELAJARAN (bukan flat semua .grammar-point) supaya tiap
    pola tahu book/lessonIndex/patternIndex-nya untuk id SRS. */
 function structureGrammarPoints() {
-  const importantPattern =
-    /\b(jangan|tidak boleh|tidak dipakai|tidak digunakan|berbeda|perhatikan|khusus|wajib|umumnya|hindari|harus)\b/i;
   [
     { selector: "#materials .html-course > .html-lesson", book: 1 },
     { selector: "#book2 .html-course > .html-lesson", book: 2 },
@@ -140,37 +144,25 @@ function structureGrammarPoints() {
         (point) => !point.classList.contains("lesson-quiz"),
       );
       points.forEach((point, patternIndex) => {
-        const explanation = point.querySelector(":scope > p");
-        const example = point.querySelector(":scope > .grammar-example");
-        const meaning = example?.querySelector(".grammar-meaning");
-        if (explanation) explanation.classList.add("grammar-short-explanation");
-        if (example) example.classList.add("grammar-japanese-example");
-        if (meaning) meaning.classList.add("grammar-indonesian-meaning");
+        /* Satu pola bisa punya beberapa .grammar-block (sub-penjelasan 1)/2)/3)
+           dari buku sumber, mis. Pelajaran 1) - proses SETIAP blok, bukan cuma
+           yang pertama, supaya tiap sub-penjelasan dapat tombol audionya
+           sendiri dan setiap contoh kalimat (bukan cuma yang pertama) dapat
+           furigana lewat class grammar-japanese-example. */
+        point.querySelectorAll(":scope > .grammar-block").forEach((block) => {
+          const explanation = block.querySelector(":scope > p:not(.grammar-subhead)");
+          const examples = Array.from(block.querySelectorAll(":scope > .grammar-example"));
+          explanation?.classList.add("grammar-short-explanation");
+          examples.forEach((example) => {
+            example.classList.add("grammar-japanese-example");
+            example.querySelector(".grammar-meaning")?.classList.add("grammar-indonesian-meaning");
+          });
 
-        if (explanation && !point.querySelector(".grammar-important-note")) {
-          const sentences = explanation.textContent
-            .trim()
-            .split(/(?<=[.!?。])\s+/)
-            .filter(Boolean);
-          const importantIndex =
-            sentences.length >= 2
-              ? sentences.findIndex((sentence) => importantPattern.test(sentence))
-              : -1;
-          if (importantIndex >= 0) {
-            const importantSentence = sentences.splice(importantIndex, 1)[0];
-            explanation.textContent = sentences.join(" ");
-            const note = document.createElement("aside");
-            note.className = "grammar-important-note";
-            note.textContent = importantSentence;
-            if (example) example.insertAdjacentElement("afterend", note);
-            else explanation.insertAdjacentElement("afterend", note);
+          if (explanation && !explanation.querySelector(".grammar-audio-button")) {
+            const explanationText = explanation.textContent.trim();
+            explanation.appendChild(createAudioButton(() => explanationText, "id-ID"));
           }
-        }
-
-        if (explanation && !explanation.querySelector(".grammar-audio-button")) {
-          const explanationText = explanation.textContent.trim();
-          explanation.appendChild(createAudioButton(() => explanationText, "id-ID"));
-        }
+        });
 
         const patternId = `materi:book${book}:${lessonIndex}:${patternIndex}`;
         if (!point.querySelector(".grammar-rating")) {

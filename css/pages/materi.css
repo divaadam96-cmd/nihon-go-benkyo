@@ -471,45 +471,6 @@
 .material-practice-options button > span {
   line-height: 2;
 }
-.material-reader-body .grammar-short-explanation::before,
-.material-reader-body .grammar-japanese-example::before,
-.material-reader-body .grammar-indonesian-meaning::before,
-.material-reader-body .grammar-important-note::before {
-  display: block;
-  margin-bottom: 6px;
-  color: #8c682d;
-  font: 800 9px "DM Sans", sans-serif;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-}
-.material-reader-body .grammar-short-explanation::before {
-  content: "Penjelasan singkat";
-}
-.material-reader-body .grammar-japanese-example::before {
-  content: "1 · Contoh bahasa Jepang";
-}
-.material-reader-body .grammar-indonesian-meaning::before {
-  content: "2 · Arti Indonesia";
-  margin-top: 9px;
-  color: #657288;
-}
-.material-reader-body .grammar-important-note {
-  margin-top: 12px;
-  padding: 12px 14px;
-  border: 1px solid #d3ae72;
-  border-left: 3px solid #a7772d;
-  border-radius: 6px;
-  color: #58472c;
-  background: #f3e7ce;
-  font-size: 12px;
-  line-height: 1.65;
-}
-.material-reader-body .grammar-important-note::before {
-  content: "3 · Catatan penting";
-}
-.material-reader-body .grammar-example {
-  border-radius: 6px;
-}
 .material-reader-body .lesson-quiz {
   display: none;
 }
@@ -1146,34 +1107,87 @@
 }
 .grammar-point {
   border-top: 1px solid #d0bf9e;
-  padding: 17px 0;
+  padding: 20px 0;
 }
 .grammar-point:first-child {
   border-top: 0;
   padding-top: 0;
 }
+/* Judul pola: nomor tebal + kotak bergaris di sekeliling pola kalimat,
+   meniru tata letak "Keterangan Tata Bahasa" di buku sumber (nomor di
+   luar kotak, pola kalimat di dalam kotak, keterangan tambahan seperti
+   "(kalimat tanya)" mengikuti di luar kotak dengan bobot huruf biasa). */
 .grammar-point h3 {
-  color: #172740;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 14px;
   font-size: 16px;
-  margin: 0 0 7px;
+}
+.grammar-pola-number {
+  color: #172740;
+  font-weight: 800;
+}
+.grammar-pola-box {
+  display: inline-block;
+  border: 1.5px solid #172740;
+  border-radius: 3px;
+  padding: 5px 14px;
+  color: #172740;
+  font-weight: 700;
+  font-family: "Zen Kaku Gothic New", inherit;
+}
+.grammar-pola-suffix {
+  color: #43536a;
+  font-weight: 400;
+  font-size: 14px;
+}
+/* Satu blok = satu sub-penjelasan pola (bisa lebih dari satu per pola,
+   mis. "1) Partikel は" lalu "2) です" pada pola yang sama di buku). */
+.grammar-block {
+  margin-bottom: 16px;
+}
+.grammar-block:last-child {
+  margin-bottom: 0;
+}
+.grammar-block > .grammar-subhead {
+  margin: 0 0 4px;
+  color: #43536a;
+  font-weight: 700;
 }
 .grammar-point p {
   line-height: 1.75;
   color: #43536a;
+  margin: 0 0 10px;
+}
+/* Contoh kalimat: Jepang & arti Indonesia sejajar dua kolom (bukan lagi
+   ditumpuk dengan arti kecil abu-abu), meniru tata letak buku sumber. */
+.grammar-example {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 24px;
   margin: 0 0 8px;
 }
-.grammar-example {
-  display: block;
-  background: #dfd2b9;
-  border-left: 3px solid #a47e3d;
-  padding: 8px 11px;
+.grammar-jp {
+  flex: 1 1 300px;
   color: #3b3023;
-  font: 600 13px "Zen Kaku Gothic New";
+  font: 600 14px "Zen Kaku Gothic New";
 }
 .grammar-meaning {
-  font: 400 12px "DM Sans";
-  color: #647188;
-  margin-left: 7px;
+  flex: 1 1 220px;
+  font: 400 14px "DM Sans";
+  color: #3a4557;
+}
+/* Catatan "[Perhatian]" sumber: teks polos sebaris dengan penjelasan,
+   tanpa kotak/label - persis seperti di buku, hanya dibedakan tipis
+   lewat kemiringan huruf. */
+.grammar-block > .grammar-important-note {
+  margin: 0 0 10px;
+  color: #6b5a3a;
+  font-style: italic;
+  line-height: 1.7;
 }
 .grammar-audio-button {
   display: inline-flex;

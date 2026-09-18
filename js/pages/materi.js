@@ -850,7 +850,7 @@ function initMaterialLessonPicker({
       .forEach((example) => addMaterialFurigana(example, true));
     activeContent
       .querySelectorAll(
-        ".grammar-point > h3, .grammar-short-explanation, .grammar-important-note",
+        ".grammar-point > h3, .grammar-short-explanation, .grammar-subhead, .grammar-important-note",
       )
       .forEach((section) => addMaterialFurigana(section));
     setMaterialStep("patterns");

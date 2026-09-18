@@ -16,25 +16,27 @@
    perubahan STRUKTUR kode, bukan konten. */
 
 function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel, practice) {
-  /* Tiap item pola bisa dalam 2 bentuk:
-     - array lama [pola, penjelasan, contoh, arti, catatan?] - 1 contoh per pola.
-     - objek baru {title, blocks:[{label?, text, examples:[[contoh, arti], ...], note?}]}
+  /* Tiap item pola bisa ditulis dalam 2 bentuk, keduanya dinormalisasi ke
+     bentuk {pola, suffix, blocks} yang sama sebelum dirender - supaya HANYA
+     ADA SATU jalur render/gaya visual untuk seluruh Materi (bukan 2 template
+     terpisah):
+     - array lama [pola, penjelasan, contoh, arti, catatan?] - 1 blok, 1 contoh.
+     - objek baru {title, suffix?, blocks:[{label?, text, examples:[[contoh, arti], ...], note?}]}
        - dipakai saat pola sumber (Keterangan Tata Bahasa asli) punya beberapa
-         sub-penjelasan dan/atau beberapa contoh kalimat per pola (mis. Pelajaran 1). */
+         sub-penjelasan dan/atau beberapa contoh kalimat per pola (mis. Pelajaran 1).
+         suffix = keterangan di luar kotak pola, mis. "(kalimat tanya)". */
+  const normalize = (item) =>
+    Array.isArray(item)
+      ? { pola: item[0], suffix: "", blocks: [{ text: item[1], examples: [[item[2], item[3]]], note: item[4] }] }
+      : { pola: item.title, suffix: item.suffix || "", blocks: item.blocks };
   const renderExample = ([contoh, arti]) =>
-    `<span class="grammar-example">${contoh}<span class="grammar-meaning">${arti}</span></span>`;
+    `<div class="grammar-example"><span class="grammar-jp">${contoh}</span><span class="grammar-meaning">${arti}</span></div>`;
+  const renderBlock = (b) =>
+    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}<p>${b.text}</p>${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
   const renderPoint = (item, i) => {
-    if (Array.isArray(item)) {
-      const [pola, penjelasan, contoh, arti, note] = item;
-      return `<div class="grammar-point"><h3>${i + 1}. ${pola}</h3><p>${penjelasan}</p>${renderExample([contoh, arti])}${note ? `<div class="grammar-important-note">${note}</div>` : ""}</div>`;
-    }
-    const body = item.blocks
-      .map(
-        (b) =>
-          `<p>${b.label ? `<b>${b.label}</b> ` : ""}${b.text}</p>${(b.examples || []).map(renderExample).join("")}${b.note ? `<div class="grammar-important-note">${b.note}</div>` : ""}`,
-      )
-      .join("");
-    return `<div class="grammar-point"><h3>${i + 1}. ${item.title}</h3>${body}</div>`;
+    const { pola, suffix, blocks } = normalize(item);
+    const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="grammar-pola-box">${pola}</span>${suffix ? `<span class="grammar-pola-suffix"> ${suffix}</span>` : ""}</h3>`;
+    return `<div class="grammar-point">${heading}${blocks.map(renderBlock).join("")}</div>`;
   };
   return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${title}</summary><div class="html-content">${items.map(renderPoint).join("")}<div class="html-note"><div><b>${focusLabel}</b>${focus}</div><div><b>${practiceLabel}</b>${practice}</div></div></div></details>`;
 }
@@ -81,7 +83,8 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
       {
-        title: "Kata Benda<sub>1</sub> は Kata Benda<sub>2</sub> ですか (kalimat tanya)",
+        title: "Kata Benda<sub>1</sub> は Kata Benda<sub>2</sub> ですか",
+        suffix: "(kalimat tanya)",
         blocks: [
           {
             label: "1) Partikel か",
