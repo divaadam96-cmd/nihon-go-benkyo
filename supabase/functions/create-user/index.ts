@@ -13,6 +13,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const ALLOWED_ORIGINS = [
   "https://divaadam96-cmd.github.io",
   "https://nihon-go-benkyo-web.vercel.app",
+  "https://nihongobenkyo.my.id",
+  "https://www.nihongobenkyo.my.id",
   "http://localhost:8000",
   "http://127.0.0.1:8000",
 ];
