@@ -348,7 +348,117 @@ const MATERI_BOOK1_LESSONS = [
   },
   {
     title: "Waktu dan kegiatan harian",
-    items: [["今 ～時 ～分です", "Untuk menyatakan jam, gunakan kata bantu bilangan 時 dan 分 setelah angka. Pengucapan beberapa angka berubah, misalnya 4時 dibaca よじ, 7時 dibaca しちじ, dan 9時 dibaca くじ. Kata tanya untuk waktu adalah なんじ.", "いま なんじですか。……7じ 10ぷんです。", "Sekarang pukul berapa? …Pukul tujuh lewat sepuluh menit."], ["Vます／Vません／Vました／Vませんでした", "ます adalah bentuk sopan kata kerja. Bentuk positif dan negatif dapat dipakai untuk kebiasaan, keadaan kini, atau rencana masa depan. ました dan ませんでした dipakai untuk menyatakan kegiatan yang telah selesai di masa lalu. Pertanyaan dibuat dengan menambahkan か tanpa mengubah susunan kalimat.", "まいあさ 6じに おきます。", "Setiap pagi saya bangun pukul enam."], ["Kata benda waktu に V", "Partikel に diletakkan setelah waktu yang spesifik, seperti jam, tanggal, atau hari tertentu, untuk menandai kapan kegiatan dilakukan. Kata waktu relatif seperti きょう、あした、きのう、まいにち umumnya tidak memakai に.", "6じはんに おきます。", "Saya bangun pukul setengah tujuh."], ["N1 から N2 まで", "から menunjukkan titik awal waktu atau tempat, sedangkan まで menunjukkan titik akhir. Keduanya dapat dipakai bersama atau sendiri. Untuk menyatakan jam mulai dan selesai, waktu dapat ditempatkan di depan atau sesudah frasa ini.", "9じから 5じまで べんきょうします。", "Belajar dari pukul sembilan sampai pukul lima."], ["N1 と N2", "と menghubungkan dua kata benda yang setara, misalnya dua hari, dua tempat, atau dua orang. Pola ini tidak dipakai untuk menghubungkan kata kerja atau kalimat.", "ぎんこうの やすみは 土曜日と 日曜日です。", "Hari libur bank adalah Sabtu dan Minggu."], ["～ね", "ね di akhir kalimat dipakai ketika pembicara mengharapkan persetujuan, ingin memastikan informasi, atau ingin memberi kesan simpati. Intonasi dapat naik untuk meminta konfirmasi atau turun untuk menyatakan perasaan bersama.", "まいにち 10じまで べんきょうします。……たいへんですね。", "Setiap hari belajar sampai jam sepuluh. …Wah, berat ya."]],
+    items: [
+      {
+        title: "今 －時－分です",
+        blocks: [
+          {
+            text: "Untuk menyatakan waktu, dibubuhkan Kata Bantu Bilangan 時, dan 分 di belakang angka. Jika angka 2,5,7, dan 9 di depan 分, dibacanya ふん, dan 1,3,4,6,8, dan 10 di depannya maka dibacanya ぷん. Jika angka 1,6,8 dan 10 di depan 分, masing-masing angka dibacanya いっ, ろっ, はっ, dan じゅっ（じっ）(Lihat Lampiran Buku Induk). Jika menanyakan waktu, なん dibubuhkan di depan じ atau ぷん.",
+            examples: [["① 今 何時ですか。<br>……7時10分です。", "Sekarang pukul berapa?<br>……Pukul tujuh lewat sepuluh menit."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja ます／Kata Kerja ません／Kata Kerja ました／Kata Kerja ませんでした",
+        blocks: [
+          {
+            label: "1) Kata Kerja ます berfungsi sebagai predikat pada kalimat.",
+            text: "ます menyatakan sikap halus terhadap lawan bicara.",
+            examples: [["② わたしは 毎日 勉強します。", "Saya belajar setiap hari."]],
+          },
+          {
+            label: "2) Kata Kerja ます digunakan untuk menjelaskan kebiasaan dan kebenaran saat ini, dan aksi serta peristiwa yang akan terjadi masa depan.",
+            text: "Kalimat negatif dan bentuk lampau berubah menjadi seperti berikut:",
+            table: {
+              headers: ["Waktu non lampau<br>(Sekarang dan masa depan)", "Waktu lampau"],
+              rows: [
+                ["Positif", "おきます", "おきました"],
+                ["Negatif", "おきません", "おきませんでした"],
+              ],
+            },
+            examples: [
+              ["③ 毎朝 6時に 起きます。", "Setiap pagi saya bangun pukul enam."],
+              ["④ あした 6時に 起きます。", "Besok saya bangun pukul enam."],
+              ["⑤ けさ 6時に 起きました。", "Tadi pagi saya bangun pukul enam."],
+            ],
+          },
+          {
+            label: "3) Kalimat Tanya tidak mengubah susunan kata, tetapi dibubuhkan か pada akhir kalimat. Kata Tanya diletakkan dibagian yang ingin tanyakan.",
+            text: "Untuk jawabannya, menjawab dengan mengulang Kata Kerja yang terdapat di dalam kalimat tanya. そうです, ちがいます（Lihat Pel.2）tidak dapat digunakan sebagai jawaban untuk kalimat tanya dari kalimat verbal.",
+            examples: [
+              ["⑥ きのう 勉強しましたか。<br>……はい、勉強しました。<br>……いいえ、勉強しませんでした。", "Kemarin belajar?<br>……Ya, belajar.<br>……Tidak, tidak belajar."],
+              ["⑦ 毎朝 何時に 起きますか。<br>……6時に 起きます。", "Setiap pagi bangun pukul berapa?<br>……Bangun pukul enam."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda（waktu）に Kata Kerja",
+        blocks: [
+          {
+            text: "Setelah Kata Benda yang menunjukkan waktu, dibubuhkan partikel に untuk menunjukkan waktu ketika melakukan sesuatu.",
+            examples: [
+              ["⑧ 6時半に 起きます。", "Bangun pukul setengah tujuh."],
+              ["⑨ 7月2日に 日本へ 来ました。", "Datang ke Jepang pada tanggal 2 Juli yang lalu. (Pel.5)"],
+            ],
+          },
+          {
+            label: "[Perhatian 1]",
+            text: "Kata Benda yang menunjukkan waktu seperti di bawah ini, tidak dibubuhkan に.<br>きょう、あした、あさって、きのう、おととい、けさ、こんばん、いま、まいあさ、まいばん、まいにち、せんしゅう（Pel.5）、こんしゅう（Pel.5）、らいしゅう（Pel.5）、いつ（Pel.5）、せんげつ（Pel.5）、こんげつ（Pel.5）、らいげつ（Pel.5）、ことし（Pel.5）、らいねん（Pel.5）、きょねん（Pel.5）、dan lain-lain.",
+            examples: [["⑩ きのう 勉強しました。", "Kemarin belajar."]],
+          },
+          {
+            label: "[Perhatian 2]",
+            text: "Untuk Kata Benda berikut, に boleh dibubuhkan dan juga boleh tidak dibubuhkan. ～ようび、あさ、ひる、ばん、よる",
+            examples: [["⑪ 日曜日［に］奈良へ 行きます。", "Pada hari Minggu, pergi ke Nara. (Pel.5)"]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> から Kata Benda<sub>2</sub> まで",
+        blocks: [
+          {
+            label: "1) から menunjukkan titik permulaan waktu atau tempat, sedangkan まで menunjukkan titik akhir waktu atau tempat.",
+            examples: [
+              ["⑫ 9時から 5時まで 勉強します。", "Belajar dari pukul sembilan sampai dengan pukul lima."],
+              ["⑬ 大阪から 東京まで 3時間 かかります。", "Menghabiskan waktu tiga jam dari Osaka sampai di Tokyo. (Pel.11)"],
+            ],
+          },
+          {
+            label: "2) から dan まで tidak selalu dipakai secara bersamaan, tetapi juga dipakai sendiri.",
+            examples: [["⑭ 9時から 働きます。", "Bekerja dari pukul sembilan."]],
+          },
+          {
+            label: "3) Untuk menyatakan waktu atau tanggal mulai dan selesainya Kata Benda yang diangkat pada topik, dapat digunakan dengan です di belakang ～から, ～まで, ～から～まで.",
+            examples: [
+              ["⑮ 銀行は 9時から 3時までです。", "Bank dibuka dari pukul sembilan sampai dengan pukul tiga."],
+              ["⑯ 昼休みは 12時からです。", "Waktu istirahat siang dari pukul dua belas."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> と Kata Benda<sub>2</sub>",
+        blocks: [
+          {
+            text: "Jika menyambung Kata Benda secara setaraf, Kata Benda dan Kata Benda disambung dengan と.",
+            examples: [["⑰ 銀行の 休みは 土曜日と 日曜日です。", "Hari libur bank adalah hari Sabut dan hari Minggu."]],
+          },
+        ],
+      },
+      {
+        title: "～ね",
+        blocks: [
+          {
+            text: "Kata Bantu ね dibubuhkan di akhir kalimat, dan digunakan ketika mengharapkan persetujuan dari lawan bicara, menegaskan, atau menekankan.",
+            examples: [
+              ["⑱ 毎日 10時まで 勉強します。<br>……大変ですね。", "Setiap hari belajar sampai pukul sepuluh.<br>……O, berat ya."],
+              ["⑲ 山田さんの 電話番号は 871の 6813です。<br>……871の 6813ですね。", "Nomor telepon Sdr. Yamada 871-6813.<br>……871-6813, ya."],
+            ],
+          },
+        ],
+      },
+    ],
     focusLabel: "Fokus Pelajaran 4",
     focus: "Menyatakan jam, kebiasaan, waktu kegiatan, rentang waktu, dan respons persetujuan dalam percakapan.",
     practiceLabel: "Latihan mandiri",

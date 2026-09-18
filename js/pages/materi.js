@@ -120,6 +120,7 @@ const materialFuriganaReadings = {
   "一週間": "いっしゅうかん", "会議室": "かいぎしつ", "会社員": "かいしゃいん",
   "図書館": "としょかん", "説明書": "せつめいしょ", "日本語": "にほんご",
   "郵便局": "ゆうびんきょく", "富士山": "ふじさん", "月曜日": "げつようび",
+  "大阪": "おおさか", "昼休み": "ひるやすみ", "大変": "たいへん",
   "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
   "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
@@ -152,7 +153,7 @@ const materialFuriganaReadings = {
   "分": "ふん", "新": "あたら", "覧": "らん", "月": "つき", "日": "ひ",
   "薬": "くすり", "何": "なに", "一": "いち",
   "方": "かた", "社員": "しゃいん", "鈴木": "すずき", "傘": "かさ",
-  "違": "ちが", "階": "かい", "国": "くに",
+  "違": "ちが", "階": "かい", "国": "くに", "半": "はん",
   "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
   "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
   "行": "い", "降": "ふ", "高": "たか", "座": "すわ", "使": "つか", "始": "はじ",
@@ -180,7 +181,14 @@ function createMaterialFuriganaFragment(text) {
       cursor++;
       continue;
     }
-    const [word, reading] = match;
+    const [word, defaultReading] = match;
+    // "時" setelah angka/placeholder（－）adalah kata bantu bilangan jam (dibaca じ,
+    // mis. 7時=しちじ), bukan kata benda "waktu" (dibaca とき) yang jadi bacaan
+    // default kamus untuk 時 berdiri sendiri.
+    const reading =
+      word === "時" && /[0-9０-９－]/.test(text[cursor - 1] || "")
+        ? "じ"
+        : defaultReading;
     const ruby = document.createElement("ruby");
     ruby.className = "material-furigana";
     ruby.append(document.createTextNode(word));
@@ -557,7 +565,13 @@ function initMaterialLessonPicker({
       const isCopulaFragment = particle === "で" && /^で(す|した)/.test(sentence.slice(index));
       const isDemonstrativeFragment = particle === "の" && isDemonstrativeNo(sentence, index);
       if (!isCopulaFragment && !isDemonstrativeFragment) {
-        return sentence.slice(0, index) + "（　　）" + sentence.slice(index + 1);
+        // Partikel opsional di sumber ditulis ［に］ - kurung sumber itu jadi
+        // rancu kalau dibiarkan bertumpuk dengan kurung kosong soal, jadi
+        // dilepas saat partikelnya diganti jadi soal isian.
+        const hasBrackets = sentence[index - 1] === "［" && sentence[index + particle.length] === "］";
+        const start = hasBrackets ? index - 1 : index;
+        const end = hasBrackets ? index + particle.length + 1 : index + 1;
+        return sentence.slice(0, start) + "（　　）" + sentence.slice(end);
       }
       index = sentence.indexOf(particle, index + 1);
     }
@@ -680,7 +694,12 @@ function initMaterialLessonPicker({
         pieces.unshift("です");
         stem = stem.slice(0, -2);
       }
-      if (stem.length > 1) {
+      if (stem.length > 2 && stem.endsWith("まで")) {
+        // まで partikel gabungan (Pel.4) - jangan sampai で di akhirnya
+        // kepotong sendiri lewat pengecekan satu-karakter di bawah.
+        pieces.unshift("まで");
+        stem = stem.slice(0, -2);
+      } else if (stem.length > 1) {
         const last = stem[stem.length - 1];
         const skipAsParticle = last === "の" && isDemonstrativeNo(stem, stem.length - 1);
         if (PARTICLE_SET.includes(last) && !skipAsParticle) {
