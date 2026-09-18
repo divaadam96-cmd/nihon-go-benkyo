@@ -466,7 +466,98 @@ const MATERI_BOOK1_LESSONS = [
   },
   {
     title: "Perjalanan dan perpindahan",
-    items: [["Tempat へ 行きます／来ます／帰ります", "Untuk menyatakan arah perpindahan, bubuhkan partikel へ setelah tempat tujuan. へ dibaca e saat digunakan sebagai partikel. 行きます berarti pergi, 来ます datang, dan 帰ります pulang.", "京都へ 行きます。", "Pergi ke Kyoto."], ["どこ［へ］も 行きません／行きませんでした", "Jika kata tanya ditanyakan secara total pada kalimat negatif, gunakan も sesudah kata tanya. Pola ini dapat menyatakan tidak ke mana-mana, tidak melakukan apa-apa, atau tidak ada siapa pun yang datang.", "どこへも 行きません。", "Tidak pergi ke mana-mana."], ["Kendaraan で 行きます／来ます／帰ります", "で menunjukkan sarana atau cara. Pada pola ini, kata benda sebelum で adalah kendaraan atau alat transportasi. Bila berjalan kaki, gunakan あるいて tanpa partikel で.", "電車で 行きます。", "Pergi dengan kereta rel listrik."], ["Orang/hewan と V", "と menunjukkan teman melakukan aktivitas bersama. Bila melakukan kegiatan sendiri, gunakan ひとりで; bentuk ini tidak memakai と.", "家族と 日本へ 来ました。", "Datang ke Jepang bersama keluarga."], ["いつ", "いつ dipakai untuk menanyakan waktu yang tidak spesifik, seperti kapan datang atau kapan pergi. Berbeda dengan waktu tertentu, いつ tidak diikuti partikel に.", "いつ 日本へ 来ましたか。……3月25日に 来ました。", "Kapan datang ke Jepang? …Datang tanggal 25 Maret."], ["～よ", "よ diletakkan di akhir kalimat untuk menyampaikan informasi yang diperkirakan belum diketahui lawan bicara, atau untuk memberi tanggapan dan pendapat dengan tegas namun tetap wajar.", "この 電車は 神戸へ 行きますか。……いいえ、行きません。次の「普通」ですよ。", "Apakah kereta ini ke Kobe? …Tidak. Yang kereta biasa berikutnya."], ["そうですね", "そうですね digunakan ketika pembicara setuju atau memiliki pendapat yang sama dengan lawan bicara. Ekspresi ini berbeda dari そうですか yang dipakai saat baru menerima informasi.", "あしたは 日曜日ですね。……ええ、そうですね。", "Besok hari Minggu, ya. …Ya, betul."]],
+    items: [
+      {
+        title: "Kata Benda（tempat）へ 行きます／来ます／帰ります",
+        blocks: [
+          {
+            text: "Jika menunjukkan pindah, arah pindahnya dinyatakan dengan membubuhkan partikel へ.",
+            examples: [
+              ["① 京都へ 行きます。", "Pergi ke Kyoto."],
+              ["② 日本へ 来ました。", "Datang ke Jepang."],
+              ["③ うちへ 帰ります。", "Pulang ke rumah."],
+            ],
+            note: "[Perhatian] Partikel へ diucapkan え.",
+          },
+        ],
+      },
+      {
+        title: "どこ［へ］も 行きません／行きませんでした",
+        blocks: [
+          {
+            text: "Apabila ingin menyangkal hal yang ditanyakan oleh Kata Tanya secara total, pembentukkan Kata Kerja negatif dengan membubuhkan partikel も pada Kata Tanya.",
+            examples: [
+              ["④ どこ［へ］も 行きません。", "Tidak pergi ke mana-mana."],
+              ["⑤ 何も 食べません。", "Tidak makan apa-apa."],
+              ["⑥ だれも 来ませんでした。", "Tidak datang siapa-siapa."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda（kendaraan）で 行きます／来ます／帰ります",
+        blocks: [
+          {
+            text: "Partikel で menunjukkan sarana dan cara. Yang dimaksud di bagian ini yang diikuti Kata Benda yang menunjukkan kendaraan adalah menunjukkan sarana transportasi.",
+            examples: [
+              ["⑦ 電車で 行きます。", "Pergi dengan kereta rel listrik."],
+              ["⑧ タクシーで 来ました。", "Datang dengan taksi."],
+            ],
+          },
+          {
+            text: "Jika pergi dengan jalan kaki digunakan あるいて, tetapi tidak dibubuhkan partikel で.",
+            examples: [["⑨ 駅から 歩いて 帰りました。", "Pulang dengan jalan kaki dari stasiun."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda（orang/hewan）と Kata Kerja",
+        blocks: [
+          {
+            text: "Jika melakukan sesuatu bersama orang (hewan) maka ditunjukkan dengan membubuhkan partikel と.",
+            examples: [["⑩ 家族と 日本へ 来ました。", "Datang ke Jepang bersama dengan keluarga."]],
+          },
+          {
+            text: "Jika melakukan suatu aksi sendiri digunakan ひとりで. Dalam hal ini tidak menggunakan partikel と.",
+            examples: [["⑪ 一人で 東京へ 行きます。", "Pergi ke Tokyo sendirian."]],
+          },
+        ],
+      },
+      {
+        title: "いつ",
+        blocks: [
+          {
+            text: "Untuk menanyakan waktu, selain digunakan Kata Tanya なん digunakan Kata Tanya いつ sebagaimana halnya seperti なんじ, なんようび, なんがつ, なんにち. Kata いつ tidak dapat dibubuhkan partikel に.",
+            examples: [
+              ["⑫ いつ 日本へ 来ましたか。<br>……3月25日に 来ました。", "Kapan datang ke Jepang?<br>……Datang pada tanggal 25 Maret."],
+              ["⑬ いつ 広島へ 行きますか。<br>……来週 行きます。", "Kapan pergi ke Hiroshima?<br>……Pergi minggu depan."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "～よ",
+        blocks: [
+          {
+            text: "Partikel よ dibubuhkan pada akhir kalimat dan digunakan untuk memberitahukan suatu hal yang belum diketahui oleh lawan bicara, atau menyampaikan tanggapan dan pendapat si pembicara kepada lawan bicaranya.",
+            examples: [
+              ["⑭ この 電車は 甲子園へ 行きますか。<br>……いいえ、行きません。次の「普通」ですよ。", "Apakah kereta rel listrik ini menuju Koshien?<br>……Tidak, tidak pergi. Yang “Biasa” berikutnya."],
+              ["⑮ 北海道に 馬が たくさん いますよ。", "Di Hokkaido ada banyak kuda. (Pel.18)"],
+              ["⑯ マリアさん、この アイスクリーム、おいしいですよ。", "Ibu Maria, es krim ini enak. (Pel.19)"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "そうですね",
+        blocks: [
+          {
+            text: "そうですね digunakan jika menyetujui atau sependapat dengan hal yang dikatakan oleh lawan bicara. Adapun ungkapan mirip (Lihat Pel.2-8) yaitu そうですか, tetapi そうですか adalah ekspresi ketika mendapat informasi baru yang belum diketahui si pembicara kemudian memahaminya sedangkan そうですね digunakan untuk menunjukkan bahwa si pembicara berpikir hal yang sama, menyetujui hal yang telah dikenal, atau sependapat.",
+            examples: [["⑰ あしたは 日曜日ですね。<br>……あ、そうですね。", "Besok hari Minggu, ya.<br>……O, ya betul."]],
+          },
+        ],
+      },
+    ],
     focusLabel: "Fokus Pelajaran 5",
     focus: "Menyatakan tujuan perjalanan, transportasi, teman perjalanan, waktu, serta cara menanggapi informasi.",
     practiceLabel: "Latihan mandiri",
