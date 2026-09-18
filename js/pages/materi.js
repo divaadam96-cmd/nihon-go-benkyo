@@ -601,11 +601,20 @@ function initMaterialLessonPicker({
     const fullText = example.japaneseClean;
     const clause = fullText.split(/[。？]/)[0].trim();
     if (!clause || containsWhWord(clause) || clause.includes("か、")) return null;
-    if (clause.endsWith("ですか")) {
+    const questionEndings = ["ですか", "ましたか", "ますか", "ませんでしたか", "ませんか"];
+    if (questionEndings.some((ending) => clause.endsWith(ending))) {
       if (!fullText.includes("はい")) return null;
       return clause.slice(0, -1) + "。";
     }
     if (clause.endsWith("です")) return `${clause}か。……はい、そうです。`;
+    // Kalimat verbal (bab yang polanya Vます／Vました, mis. Pelajaran 4) tidak
+    // bisa dijawab dengan そうです (lihat Pel.4 pola 2-3), jadi jawabannya
+    // mengulang kata kerja yang sama seperti contoh ⑥/⑦ di buku - bukan
+    // memakai kalimat aslinya apa adanya (supaya bukan sekadar salin cerita).
+    const verbEndings = ["ました", "ます", "ませんでした", "ません"];
+    if (verbEndings.some((ending) => clause.endsWith(ending))) {
+      return `${clause}か。……はい、${clause}。`;
+    }
     return null;
   }
 
