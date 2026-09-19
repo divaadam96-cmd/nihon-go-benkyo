@@ -1393,35 +1393,130 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Keinginan dan harapan",
+    title: "Kelompok kata kerja dan bentuk te",
     items: [
-    [
-      "N が ほしいです",
-      "Menyatakan keinginan memiliki benda.",
-      "新しい くるまが ほしいです。",
-      "Saya ingin mobil baru.",
+      {
+        title: "Kelompok Kata Kerja",
+        noBox: true,
+        blocks: [
+          {
+            text: "Kata Kerja bahasa Jepang mengalami perubahan bentuk, kemudian dapat dibuat berbagai maksud kalimat dengan dibubuhkan kata-kata yang mengikutinya pada bentuk konjugasi. Kata Kerja terbagi dalam tiga kelompok sesuai dengan cara konjugasi.",
+          },
+          {
+            label: "1) Kata Kerja Kelompok I",
+            text: "Kelompok ini, bunyi terakhir bentuk ます berakhir dengan bunyi pada kolom い.<br>Contoh: かきます　menulis, menggambar　のみます　minum",
+          },
+          {
+            label: "2) Kata Kerja Kelompok II",
+            text: "Hampir semua kata yang tergolong ke dalam kelompok ini, bunyi terakhir bentuk ます berakhir dengan bunyi pada kolom え, tetapi terdapat pula sebagiannya berakhir dengan bunyi pada kolom い.<br>Contoh: たべます　makan　みせます　memperlihatkan　みます　melihat, menonton",
+          },
+          {
+            label: "3) Kata Kerja Kelompok III",
+            text: "Kelompok ini します dan Kata Benda yang menunjukkan aksi＋します, serta きます.",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk て",
+        noBox: true,
+        blocks: [
+          {
+            text: "Bentuk konjugasi yang berakhir dengan て atau で disebut bentuk て. Cara membuat bentuk て dari bentuk ます tergantung pada kelompok Kata Kerja, dan hasilnya sebagai berikut: (Lihat bagian Latihan A1 pada Pel.14 Buku Induk)",
+          },
+          {
+            label: "1) Kata Kerja Kelompok I",
+          },
+          {
+            text: "(1) Jika bunyi terakhir bentuk ます yang い, ち, り, maka い, ち, dan り perlu diganti dengan って.<br>Contoh: かいます → かって　membeli　まちます → まって　menunggu　かえります → かえって　pulang",
+          },
+          {
+            text: "(2) Jika bunyi terakhir bentuk ます yang み, び, に, maka み, び, dan に perlu diganti dengan んで.<br>Contoh: のみます → のんで　minum　よびます → よんで　memanggil　しにます → しんで　meninggal",
+          },
+          {
+            text: "(3) Jika bunyi terakhir bentuk ます yang き dan ぎ, maka masing-masing perlu diganti dengan いて dan いで.<br>Contoh: かきます → かいて　menulis, menggambar　いそぎます → いそいで　buru-buru<br>Dengan catatan いきます adalah pengecualian, karena itu berubah menjadi いって.",
+          },
+          {
+            text: "(4) Jika bunyi terakhir bentuk ます yang し, dibubuhkan て pada bentuk ます.<br>Contoh: かします → かして　meminjamkan",
+          },
+          {
+            label: "2) Kata Kerja Kelompok II",
+            text: "Bubuhkan て pada bentuk ます.<br>Contoh: たべます → たべて　makan　みせます → みせて　memperlihatkan　みます → みて　melihat, menonton",
+          },
+          {
+            label: "3) Kata Kerja Kelompok III",
+            text: "Bubuhkan て pada bentuk ます.<br>Contoh: きます → きて　datang　します → して　melakukan　さんぽします → さんぽして　berjalan-jalan",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk て ください",
+        suffix: "Tolong......",
+        blocks: [
+          {
+            text: "Pola kalimat ini dipakai untuk memerintah, meminta, dan menawarkan sesuatu kepada lawan bicara. Dengan catatan bahwa, pada umumnya dipakai bersama dengan すみませんが seperti contoh ① di bawah ini, sebab maksud permintaan dianggap kurang halus.",
+            examples: [
+              ["① すみませんが、この 漢字の 読み方を 教えて ください。", "Permisi, tolong ajarkan cara membaca Kanji ini. (permintaan)"],
+              ["② ボールペンで 名前を 書いて ください。", "Tolong tuliskan nama dengan bolpoin. (perintah)"],
+              ["③ どうぞ たくさん 食べて ください。", "Silakan makan banyak. (ajakan)"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk て います",
+        blocks: [
+          {
+            text: "Pola kalimat ini menunjukkan suatu aksi yang sedang berlangsung.",
+            examples: [
+              ["④ ミラーさんは 今 電話を かけて います。", "Sdr. Miller sedang menelepon."],
+              ["⑤ 今 雨が 降って いますか。<br>……はい、降って います。<br>……いいえ、降って いません。", "Sekarang hujan turun?<br>……Ya, hujan turun.<br>……Tidak, tidak turun hujan."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja（Bentuk ます）ましょうか",
+        suffix: "Bagaimana kalau......?",
+        blocks: [
+          {
+            text: "Ini adalah ekspresi dari si pembicara menawarkan untuk melakukan sesuatu untuk lawan bicara.",
+            examples: [
+              ["⑥ あしたも 来ましょうか。<br>……ええ、10時に 来て ください。", "Bagaimana kalau saya besok juga datang?<br>……Ya, tolong datang pada pukul sepuluh."],
+              ["⑦ 傘を 貸しましょうか。<br>……すみません。お願いします。", "Bagaimana kalau saya pinjamkan payung?<br>……Terima kasih. Tolong pinjamkan."],
+              ["⑧ 荷物を 持ちましょうか。<br>……いいえ、けっこうです。", "Bagaimana kalau saya membawa barang?<br>……Tidak, terima kasih."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda が Kata Kerja",
+        blocks: [
+          {
+            text: "Jika menyatakan suatu kejadian alam yang dirasakan dengan panca indera (mata, telinga dan lain-lain), atau menyampaikan peristiwa secara objektivitas, partikel が dipakai untuk subjek.",
+            examples: [
+              ["⑨ 雨が 降って います。", "Hujan turun."],
+              ["⑩ ミラーさんが いませんね。", "Sdr. Miller tidak ada ya."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "すみませんが",
+        blocks: [
+          {
+            examples: [
+              ["⑪ すみませんが、塩を 取って ください。", "Maaf, tolong ambilkan garam."],
+              ["⑫ 失礼ですが、お名前は？", "Maaf, siapa namanya?"],
+            ],
+          },
+          {
+            text: "Jika が yang dipakai sebagai ekspresi awal pembicaraan seperti すみませんが atau しつれいですが, が tidak berarti paradoks melainkan dipakai sebagai pendahuluan.",
+          },
+        ],
+      },
     ],
-    [
-      "Vたいです",
-      "Bentuk ます tanpa ます ditambah たいです untuk keinginan melakukan kegiatan.",
-      "日本へ 行きたいです。",
-      "Saya ingin pergi ke Jepang.",
-    ],
-    [
-      "Tempatへ Vます-stem に行きます",
-      "Menyatakan pergi ke tempat tertentu untuk melakukan kegiatan.",
-      "デパートへ かいものに 行きます。",
-      "Saya pergi ke department store untuk berbelanja.",
-    ],
-    [
-      "どこか／なにか",
-      "Menyatakan tempat atau benda yang tidak spesifik.",
-      "なにか 飲みたいです。",
-      "Saya ingin minum sesuatu.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Menyampaikan keinginan, tujuan, dan rencana kegiatan.",
+    focusLabel: "Fokus Pelajaran 14",
+    focus: "Mengenal kelompok kata kerja, membentuk dan menggunakan bentuk て untuk meminta, menawarkan, dan menyatakan aksi yang sedang berlangsung.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
