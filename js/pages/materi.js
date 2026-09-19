@@ -126,7 +126,8 @@ const materialFuriganaReadings = {
   "公園": "こうえん", "大学": "だいがく", "上手": "じょうず", "下手": "へた",
   "料理": "りょうり", "少し": "すこし", "全然": "ぜんぜん", "誕生日": "たんじょうび",
   "地下": "ちか", "受付": "うけつけ", "千葉県": "ちばけん", "近く": "ちかく",
-  "手紙": "てがみ", "中略": "ちゅうりゃく",
+  "手紙": "てがみ", "中略": "ちゅうりゃく", "外国人": "がいこくじん", "毎晩": "まいばん",
+  "1人": "ひとり", "2人": "ふたり", "2日": "ふつか",
   "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
   "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
@@ -144,7 +145,7 @@ const materialFuriganaReadings = {
   "明日": "あした", "木村": "きむら", "問題": "もんだい", "野菜": "やさい",
   "友達": "ともだち", "有名": "ゆうめい", "予定": "よてい", "来年": "らいねん",
   "旅行": "りょこう", "練習": "れんしゅう", "連絡": "れんらく", "時間": "じかん",
-  "週間": "しゅうかん", "親切": "しんせつ", "手伝": "てつだ", "何時": "なんじ",
+  "週間": "しゅうかん", "親切": "しんせつ", "手伝": "てつだ", "何時間": "なんじかん", "何時": "なんじ",
   "神戸": "こうべ", "何ですか": "なんですか", "何人": "なんにん", "何を": "なにを",
   "何の": "なんの", "何か": "なにか", "何が": "なにが", "何に": "なにに",
   "何で": "なんで", "何と": "なんと", "何歳": "なんさい",
@@ -163,6 +164,7 @@ const materialFuriganaReadings = {
   "違": "ちが", "階": "かい", "国": "くに", "半": "はん", "馬": "うま", "昼": "ひる",
   "借": "か", "習": "なら", "金": "かね", "山": "やま", "嫌": "きら", "車": "くるま",
   "桜": "さくら", "男": "おとこ", "犬": "いぬ", "隣": "となり", "屋": "や", "会": "あ",
+  "台": "だい", "枚": "まい", "年": "ねん",
   "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
   "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
   "行": "い", "降": "ふ", "高": "たか", "座": "すわ", "使": "つか", "始": "はじ",
@@ -178,6 +180,33 @@ const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
   ([left], [right]) => right.length - left.length,
 );
 
+/* Beberapa kanji kata bantu bilangan punya bacaan berbeda dari bacaan
+   berdiri sendiri di kamus (materialFuriganaReadings) begitu ditempeli
+   angka/tanda placeholder（－）di depannya - kamus di atas cuma simpan SATU
+   bacaan per kanji, jadi kasus-kasus ini perlu override sesuai konteks:
+   - 時: berdiri sendiri "waktu" = とき, tapi jadi kata bantu jam = じ
+     (7時 = しちじ).
+   - 人: berdiri sendiri "orang" = ひと, tapi jadi kata bantu jumlah orang
+     = にん (5人 = ごにん). 1人／2人 tidak beraturan (ひとり／ふたり) jadi
+     punya entri gabungan sendiri di kamus, bukan lewat fungsi ini.
+   - 日: berdiri sendiri "hari/matahari" = ひ, tapi jadi kata bantu jumlah
+     hari = にち (－日 = にち, Lihat Pel.11).
+   - 月: berdiri sendiri "bulan (benda langit)" = つき, tapi jadi kata
+     bantu bulan-dalam-tanggal = がつ (3月 = さんがつ) atau kata bantu
+     jangka waktu = げつ kalau menempel ke か (２か月 = にかげつ). */
+function resolveCounterReading(word, text, cursor) {
+  const prev = text[cursor - 1] || "";
+  const isDigitOrDash = /[0-9０-９－]/.test(prev);
+  if (word === "時" && isDigitOrDash) return "じ";
+  if (word === "人" && isDigitOrDash) return "にん";
+  if (word === "日" && isDigitOrDash) return "にち";
+  if (word === "月") {
+    if (prev === "か") return "げつ";
+    if (isDigitOrDash) return "がつ";
+  }
+  return null;
+}
+
 function createMaterialFuriganaFragment(text) {
   const fragment = document.createDocumentFragment();
   let cursor = 0;
@@ -191,13 +220,7 @@ function createMaterialFuriganaFragment(text) {
       continue;
     }
     const [word, defaultReading] = match;
-    // "時" setelah angka/placeholder（－）adalah kata bantu bilangan jam (dibaca じ,
-    // mis. 7時=しちじ), bukan kata benda "waktu" (dibaca とき) yang jadi bacaan
-    // default kamus untuk 時 berdiri sendiri.
-    const reading =
-      word === "時" && /[0-9０-９－]/.test(text[cursor - 1] || "")
-        ? "じ"
-        : defaultReading;
+    const reading = resolveCounterReading(word, text, cursor) ?? defaultReading;
     const ruby = document.createElement("ruby");
     ruby.className = "material-furigana";
     ruby.append(document.createTextNode(word));
@@ -542,7 +565,13 @@ function initMaterialLessonPicker({
     PARTICLE_SET.forEach((particle) => {
       let index = text.indexOf(particle);
       while (index !== -1) {
-        if (!isKanaChar(text[index - 1]) && !isKanaChar(text[index + 1])) {
+        // "か" tepat sebelum "月" adalah bagian dari kata bantu bilangan
+        // ～か月 (mis. "2か月"), bukan partikel か yang berdiri sendiri -
+        // batas non-kana di kedua sisi (angka di depan, 月 kanji di
+        // belakang) bisa salah lolos pengecekan umum di bawah kalau tidak
+        // dikecualikan eksplisit di sini.
+        const isKagetsuFragment = particle === "か" && text[index + 1] === "月";
+        if (!isKagetsuFragment && !isKanaChar(text[index - 1]) && !isKanaChar(text[index + 1])) {
           if (!found.includes(particle)) found.push(particle);
           break;
         }

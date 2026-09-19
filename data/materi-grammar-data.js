@@ -1114,35 +1114,92 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Letak, lokasi, dan keberadaan",
+    title: "Bilangan dan cara menghitung",
     items: [
-    [
-      "Tempat あります／います",
-      "Gunakan pola keberadaan untuk menanyakan atau menjelaskan lokasi fasilitas dan orang.",
-      "山田さんは 事務所に います。",
-      "Sdr. Yamada ada di kantor.",
+      {
+        title: "Cara menghitung kuantitas",
+        noBox: true,
+        blocks: [
+          {
+            label: "1) Cara menghitung 1 sampai dengan 10 ひとつ, ふたつ, ……とお",
+            text: "Cara menghitung di atas ini adalah cara untuk menghitung benda. Untuk 11 ke atas digunakan angka itu sendiri.",
+          },
+          {
+            label: "2) Berbagai Kata Bantu Bilangan",
+            text: "Waktu menghitung orang, benda atau menunjukkan kwantitas digunakan Kata Bantu Bilangan yang berbeda-beda sesuai dengan benda yang dihitung. Kata Bantu Bilangan dibubuhkan di belakang angka.<br>－人　jumlah orang (dengan catatan untuk seorang dibaca dengan ひとり（1人）, dua orang dibaca dengan ふたり（2人）, 4人 dibacanya よにん)<br>－台　mesin, kendaraan<br>－枚　benda yang tipis dan datar (kertas, baju kaos, piring, CD dll.)<br>－回　kali<br>－分　menit<br>－時間　jam<br>－日　hari<br>（Sama dengan cara membaca tanggal, tetapi 1日 tidak dibaca ついたち melainkan いちにち.）<br>－週間　minggu<br>－か月　bulan<br>－年　tahun",
+          },
+        ],
+      },
+      {
+        title: "Cara penggunaan Kata Keterangan Bilangan",
+        noBox: true,
+        blocks: [
+          {
+            label: "1) Kata Keterangan Bilangan (angka yang dibubuhkan Kata Bantu Bilangan) pada dasarnya diletakkan langsung di belakang Kata Benda yang menentukan jenis Kata Keterangan Bilangan + partikel. Kecuali untuk Kata Keterangan Bilangan yang menunjukkan lama waktu tidak harus mengikuti aturan susunan kata ini.",
+            examples: [
+              ["① りんごを 4つ 買いました。", "Membeli empat buah apel."],
+              ["② 外国人の 学生が 2人 います。", "Ada dua orang mahasiswa asing."],
+              ["③ 国で 2か月 日本語を 勉強しました。", "Belajar bahasa Jepang di negara saya selama dua bulan."],
+            ],
+          },
+          {
+            label: "2) Cara menanyakan kuantitas",
+          },
+          {
+            label: "(1) いくつ",
+            text: "いくつ digunakan untuk menghitung kuantitas benda dengan menggunakan cara menghitung 1-1).",
+            examples: [["④ みかんを いくつ 買いましたか。<br>……8つ 買いました。", "Membeli berapa buah jeruk?<br>……Membeli delapan buah."]],
+          },
+          {
+            label: "(2) なん＋Kata Bantu Bilangan",
+            text: "なん＋Kata Bantu Bilangan digunakan untuk menghitung kuantitas benda yang dibubuhkan Kata Bantu Bilangan seperti 1-2).",
+            examples: [
+              ["⑤ この 会社に 外国人が 何人 いますか。<br>……5人 います。", "Di perusahaan ini ada berapa orang asing?<br>……Ada lima orang."],
+              ["⑥ 毎晩 何時間 日本語を 勉強しますか。<br>……2時間 勉強します。", "Setiap malam berapa jam belajar bahasa Jepang?<br>……Belajar dua jam."],
+            ],
+          },
+          {
+            label: "(3) どのくらい",
+            text: "どのくらい digunakan untuk menanyakan lama waktu.",
+            examples: [
+              ["⑦ どのくらい 日本語を 勉強しましたか。<br>……3年 勉強しました。", "Berapa lama belajar bahasa Jepang?<br>……Belajar selama tiga tahun."],
+              ["⑧ 大阪から 東京まで どのくらい かかりますか。<br>……新幹線で 2時間半 かかります。", "Memerlukan waktu berapa lama dari Osaka sampai dengan Tokyo?<br>……Memerlukan waktu dua setengah jam dengan Shinkansen."],
+            ],
+          },
+          {
+            label: "3) ～ぐらい",
+            text: "ぐらい mengikuti Kata Keterangan Bilangan dan menunjukkan perkiraan jumlah.",
+            examples: [
+              ["⑨ 学校に 先生が 30人ぐらい います。", "Di sekolah ada kira-kira tiga puluh orang guru."],
+              ["⑩ 15分ぐらい かかります。", "Memerlukan waktu kira-kira lima belas menit."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Keterangan Bilangan（jangka waktu）に －回 Kata Kerja",
+        blocks: [
+          {
+            text: "Ekspresi untuk menunjukkan frekuensi.",
+            examples: [["⑪ 1か月に 2回 映画を 見ます。", "Sebulan dua kali menonton film."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Keterangan Bilangan だけ／ Kata Bend だけ",
+        blocks: [
+          {
+            text: "だけ diletakkan di belakang Kata Keterangan Bilangan atau Kata Benda, yang mempunyai arti tidak ada yang lebih dari itu atau tidak ada selain itu.",
+            examples: [
+              ["⑫ パワー電気に 外国人の 社員が 1人だけ います。", "Di Power Elektronik hanya ada seorang pegawai orang asing."],
+              ["⑬ 休みは 日曜日だけです。", "Hari libur hanya hari Minggu saja."],
+            ],
+          },
+        ],
+      },
     ],
-    [
-      "Posisi relatif",
-      "うえ、した、まえ、うしろ、みぎ、ひだり、なか、そと menjelaskan hubungan letak.",
-      "かばんは いすの 下に あります。",
-      "Tas berada di bawah kursi.",
-    ],
-    [
-      "N1 や N2",
-      "や menghubungkan contoh benda dalam daftar yang tidak lengkap; artinya antara lain.",
-      "箱の 中に 本や ノートが あります。",
-      "Di dalam kotak ada buku dan buku catatan, antara lain.",
-    ],
-    [
-      "N1 の N2",
-      "Pola ini memperinci hubungan lokasi atau kepemilikan.",
-      "これは 会社の 電話です。",
-      "Ini telepon perusahaan.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Menggunakan kosakata posisi untuk menjelaskan denah dan lokasi.",
+    focusLabel: "Fokus Pelajaran 11",
+    focus: "Menghitung benda, orang, dan waktu dengan Kata Bantu Bilangan yang tepat, serta menanyakan dan menyatakan jumlah dan frekuensi.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
