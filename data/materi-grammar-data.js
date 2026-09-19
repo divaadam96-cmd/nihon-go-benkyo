@@ -68,7 +68,7 @@ document.getElementById("materials").innerHTML =
 
 const MATERI_BOOK1_LESSONS = [
   {
-    title: "Kalimat nominal dasar",
+    title: "第一課",
     items: [
       {
         title: "Kata Benda<sub>1</sub> は Kata Benda<sub>2</sub> です",
@@ -1204,35 +1204,98 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Bilangan dan durasi",
+    title: "Waktu lampau, perbandingan, dan superlatif",
     items: [
-    [
-      "Kata bantu bilangan",
-      "Bilangan berubah menurut jenis benda, orang, hewan, atau urutan.",
-      "クラスに 学生が 20人 います。",
-      "Ada 20 mahasiswa di kelas.",
+      {
+        title: "Waktu Positif/Negatif untuk Kalimat Nominal・Kalimat Adjektival な",
+        blocks: [
+          {
+            table: {
+              headers: ["Waktu non lampau<br>(Sekarang dan masa depan)", "Waktu lampau"],
+              rows: [
+                ["Positif", "Kata Benda　あめです<br>Kata Sifat な　しずかです", "Kata Benda　あめでした<br>Kata Sifat な　しずかでした"],
+                ["Negatif", "Kata Benda　あめじゃ（では）ありません<br>Kata Sifat な　しずかじゃ（では）ありません", "Kata Benda　あめじゃ（では）ありませんでした<br>Kata Sifat な　しずかじゃ（では）ありませんでした"],
+              ],
+            },
+            examples: [
+              ["① きのうは 雨でした。", "Kemarin hujan."],
+              ["② きのうの 試験は 簡単じゃ ありませんでした。", "Ujian kemarin tidak mudah."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Waktu Positif/Negatif untuk Kalimat Adjektival い",
+        blocks: [
+          {
+            table: {
+              headers: ["Waktu non lampau<br>(Sekarang dan masa depan)", "Waktu lampau"],
+              rows: [
+                ["Positif", "あついです", "あつかったです"],
+                ["Negatif", "あつくないです", "あつくなかったです"],
+              ],
+            },
+            examples: [
+              ["③ きのうは 暑かったです。", "Kemarin panas."],
+              ["④ きのうの パーティーは あまり 楽しくなかったです。", "Pesta kemarin tidak begitu menyenangkan."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> は Kata Benda<sub>2</sub> より Kata Sifat です",
+        blocks: [
+          {
+            text: "Menyatakan sifat atau kondisi Kata Benda<sub>1</sub> dengan Kata Benda<sub>2</sub> yang dianggap sebagai patokan.",
+            examples: [["⑤ この 車は あの 車より 大きいです。", "Mobil ini lebih besar daripada mobil itu."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> と Kata Benda<sub>2</sub> と どちらが Kata Sifat ですか<br>……Kata Benda<sub>1</sub>/Kata Benda<sub>2</sub> の ほうが Kata Sifat です",
+        blocks: [
+          {
+            text: "Jika membandingkan dua benda, digunakan Kata Tanya どちら untuk seluruh benda yang dibandingkan.",
+            examples: [
+              ["⑥ サッカーと 野球と どちらが おもしろいですか。<br>……サッカーの ほうが おもしろいです。", "Yang mana lebih menarik, sepak bola atau baseball?<br>……Sepak bola yang lebih menarik."],
+              ["⑦ ミラーさんと サントスさんと どちらが テニスが 上手ですか。", "Yang mana lebih pandai bermain tenis, Sdr. Miller atau Sdr. Santos?"],
+              ["⑧ 北海道と 大阪と どちらが 涼しいですか。", "Yang mana lebih sejuk, Hokkaido atau Osaka?"],
+              ["⑨ 春と 秋と どちらが 好きですか。", "Yang mana lebih suka, musim semi atau musim gugur?"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub>［の 中］で 何／どこ／だれ／いつ が いちばん Kata Sifat ですか<br>……Kata Benda<sub>2</sub> が いちばん Kata Sifat です",
+        blocks: [
+          {
+            text: "で menunjukkan ruang lingkup. Jika menanyakan benda, tempat, orang atau waktu yang menunjukan kondisi dan sifat yang tingkatnya maksimal dari ruang lingkup Kata Benda<sub>1</sub>, gunakan Kata Tanya sesuai dengan target.",
+            examples: [
+              ["⑩ 日本料理［の 中］で 何が いちばん おいしいですか。<br>……てんぷらが いちばん おいしいです。", "Apa yang paling enak [di antara] masakan Jepang?<br>……Tempura yang paling enak."],
+              ["⑪ ヨーロッパで どこが いちばん よかったですか。<br>……スイスが いちばん よかったです。", "Daerah mana yang paling bagus di Eropa?<br>……Swiss yang paling bagus."],
+              ["⑫ 家族で だれが いちばん 背が 高いですか。<br>……弟が いちばん 背が 高いです。", "Siapa yang paling tinggi di antara keluarga?<br>……Adik laki-laki yang paling tinggi. (Pel.16)"],
+              ["⑬ 1年で いつが いちばん 寒いですか。<br>……2月が いちばん 寒いです。", "Kapan yang paling dingin dalam satu tahun?<br>……Bulan Februari yang paling dingin."],
+            ],
+          },
+          {
+            label: "[Perhatian]",
+            text: "Kalimat Tanya yang menggunakan Kata Tanya yang menanyakan subjek dari kalimat adjektival, partikel が digunakan di belakang Kata Tanya (Lihat Pel.10).",
+          },
+        ],
+      },
+      {
+        title: "Kata Sifat の",
+        suffix: "（の yang berfungsi sebagai pengganti Kata Benda）",
+        blocks: [
+          {
+            text: "Pada Pelajaran 2 telah dipelajari の dengan bentuk Kata Benda<sub>1</sub> の yang digunakan sebagai pengganti Kata Benda. Kata yang diberikan pada pelajaran ini, yaitu あついの adalah bentuk Kata Sifat の dan の yang menggantikan Kata Benda seperti sama halnya dengan Kata Benda<sub>1</sub> の.",
+            examples: [["⑭ カリナさんの かばんは どれですか。<br>……あの 赤くて、大きいのです。", "Yang mana tas Sdr. Karina?<br>……Yang merah dan besar itu."]],
+          },
+        ],
+      },
     ],
-    [
-      "Durasi",
-      "～時間、～週間、～か月 menunjukkan lama waktu dan tidak memakai に.",
-      "日本語を 3か月 勉強しました。",
-      "Saya belajar Jepang selama tiga bulan.",
-    ],
-    [
-      "Frekuensi",
-      "～に～回 menunjukkan berapa kali dalam satu periode.",
-      "1しゅうかんに 2回 テニスを します。",
-      "Saya bermain tenis dua kali seminggu.",
-    ],
-    [
-      "Berapa lama",
-      "どのくらい menanyakan durasi atau jumlah waktu.",
-      "日本に どのくらい いましたか。",
-      "Berapa lama berada di Jepang?",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Menghitung orang/benda dan menyatakan durasi serta frekuensi.",
+    focusLabel: "Fokus Pelajaran 12",
+    focus: "Menyatakan kejadian waktu lampau, membandingkan dua hal, menentukan yang paling unggul dalam suatu kelompok, dan memakai Kata Sifat の sebagai pengganti Kata Benda.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },

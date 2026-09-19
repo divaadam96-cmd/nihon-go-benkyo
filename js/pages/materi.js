@@ -128,6 +128,7 @@ const materialFuriganaReadings = {
   "地下": "ちか", "受付": "うけつけ", "千葉県": "ちばけん", "近く": "ちかく",
   "手紙": "てがみ", "中略": "ちゅうりゃく", "外国人": "がいこくじん", "毎晩": "まいばん",
   "1人": "ひとり", "2人": "ふたり", "2日": "ふつか",
+  "試験": "しけん", "簡単": "かんたん", "野球": "やきゅう",
   "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
   "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
@@ -164,7 +165,8 @@ const materialFuriganaReadings = {
   "違": "ちが", "階": "かい", "国": "くに", "半": "はん", "馬": "うま", "昼": "ひる",
   "借": "か", "習": "なら", "金": "かね", "山": "やま", "嫌": "きら", "車": "くるま",
   "桜": "さくら", "男": "おとこ", "犬": "いぬ", "隣": "となり", "屋": "や", "会": "あ",
-  "台": "だい", "枚": "まい", "年": "ねん",
+  "台": "だい", "枚": "まい", "年": "ねん", "大": "おお", "涼": "すず",
+  "秋": "あき", "背": "せ", "弟": "おとうと", "赤": "あか",
   "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
   "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
   "行": "い", "降": "ふ", "高": "たか", "座": "すわ", "使": "つか", "始": "はじ",
@@ -642,22 +644,35 @@ function initMaterialLessonPicker({
 
   function paraphraseWithinStory(example) {
     const fullText = example.japaneseClean;
-    const clause = fullText.split(/[。？]/)[0].trim();
-    if (!clause || containsWhWord(clause) || clause.includes("か、")) return null;
-    const questionEndings = ["ですか", "ましたか", "ますか", "ませんでしたか", "ませんか"];
-    if (questionEndings.some((ending) => clause.endsWith(ending))) {
-      if (!fullText.includes("はい")) return null;
-      return clause.slice(0, -1) + "。";
-    }
-    if (clause.endsWith("です")) return `${clause}か。……はい、そうです。`;
-    // Kalimat verbal (bab yang polanya Vます／Vました, mis. Pelajaran 4) tidak
-    // bisa dijawab dengan そうです (lihat Pel.4 pola 2-3), jadi jawabannya
-    // mengulang kata kerja yang sama seperti contoh ⑥/⑦ di buku - bukan
-    // memakai kalimat aslinya apa adanya (supaya bukan sekadar salin cerita).
-    const verbEndings = ["ました", "ます", "ませんでした", "ません"];
-    if (verbEndings.some((ending) => clause.endsWith(ending))) {
-      return `${clause}か。……はい、${clause}。`;
-    }
+    const tryClause = (clause) => {
+      if (!clause || containsWhWord(clause) || clause.includes("か、")) return null;
+      const questionEndings = ["ですか", "ましたか", "ますか", "ませんでしたか", "ませんか"];
+      if (questionEndings.some((ending) => clause.endsWith(ending))) {
+        if (!fullText.includes("はい")) return null;
+        return clause.slice(0, -1) + "。";
+      }
+      if (clause.endsWith("です")) return `${clause}か。……はい、そうです。`;
+      // Kalimat verbal (bab yang polanya Vます／Vました, mis. Pelajaran 4) tidak
+      // bisa dijawab dengan そうです (lihat Pel.4 pola 2-3), jadi jawabannya
+      // mengulang kata kerja yang sama seperti contoh ⑥/⑦ di buku - bukan
+      // memakai kalimat aslinya apa adanya (supaya bukan sekadar salin cerita).
+      const verbEndings = ["ました", "ます", "ませんでした", "ません"];
+      if (verbEndings.some((ending) => clause.endsWith(ending))) {
+        return `${clause}か。……はい、${clause}。`;
+      }
+      return null;
+    };
+    const firstClause = fullText.split(/[。？]/)[0].trim();
+    const direct = tryClause(firstClause);
+    if (direct) return direct;
+    // Kalimat pertama kadang pola tanya-jawab dengan Kata Tanya (mis.
+    // Pel.12 pola 5 "～で 何/どこ/だれ/いつ が いちばん ～ですか") yang
+    // tidak bisa diparafrase langsung (bukan pertanyaan ya/tidak) - coba
+    // klausa JAWABAN setelah "……" yang sering berupa kalimat です/verbal
+    // biasa yang justru BISA diparafrase, daripada langsung jatuh ke
+    // salin kalimat aslinya apa adanya.
+    const answerPart = fullText.split("……")[1];
+    if (answerPart) return tryClause(answerPart.split(/[。？]/)[0].trim());
     return null;
   }
 
