@@ -129,6 +129,7 @@ const materialFuriganaReadings = {
   "手紙": "てがみ", "中略": "ちゅうりゃく", "外国人": "がいこくじん", "毎晩": "まいばん",
   "1人": "ひとり", "2人": "ふたり", "2日": "ふつか",
   "試験": "しけん", "簡単": "かんたん", "野球": "やきゅう",
+  "沖縄": "おきなわ", "美術": "びじゅつ", "注文": "ちゅうもん",
   "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
   "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
@@ -167,6 +168,7 @@ const materialFuriganaReadings = {
   "桜": "さくら", "男": "おとこ", "犬": "いぬ", "隣": "となり", "屋": "や", "会": "あ",
   "台": "だい", "枚": "まい", "年": "ねん", "大": "おお", "涼": "すず",
   "秋": "あき", "背": "せ", "弟": "おとうと", "赤": "あか",
+  "欲": "ほ", "痛": "いた", "祭": "まつ", "冬": "ふゆ",
   "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
   "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
   "行": "い", "降": "ふ", "高": "たか", "座": "すわ", "使": "つか", "始": "はじ",
@@ -826,7 +828,12 @@ function initMaterialLessonPicker({
           ),
         );
         if (!candidates.length) return;
-        const firstClause = example.japaneseClean.split("。")[0] + "。";
+        // Sebagian kalimat (mis. "ご注文は？" Pel.13) diakhiri ？ bukan 。-
+        // pakai tanda baca ASLI di akhir klausa pertama, jangan selalu
+        // menambahkan 。 (kalau tidak, hasilnya jadi tanda baca dobel
+        // "...は？。").
+        const firstClauseBody = example.japaneseClean.split(/[。？]/)[0];
+        const firstClause = firstClauseBody + (example.japaneseClean[firstClauseBody.length] || "。");
         const particle = candidates.find((candidate) => blankParticle(firstClause, candidate));
         if (!particle) return;
         const prompt = blankParticle(firstClause, particle);

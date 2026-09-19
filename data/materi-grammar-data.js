@@ -1300,35 +1300,95 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Bentuk lampau dan perbandingan",
+    title: "Keinginan dan tujuan kepergian",
     items: [
-    [
-      "N／な形容詞 bentuk lampau",
-      "です berubah menjadi でした; bentuk negatif lampau memakai じゃありませんでした.",
-      "きのうは 休みでした。",
-      "Kemarin libur.",
+      {
+        title: "Kata Benda が 欲しいです",
+        blocks: [
+          {
+            text: "欲しい adalah Kata Sifat い. Objek untuk 欲しい ditunjuk dengan が.",
+            examples: [
+              ["① わたしは 友達が 欲しいです。", "Saya ingin punya teman."],
+              ["② 今 何が いちばん 欲しいですか。<br>……車が 欲しいです。", "Sekarang apa yang paling diinginkan?<br>……Ingin punya mobil."],
+              ["③ 子どもが 欲しいですか。<br>……いいえ、欲しくないです。", "Apakah ingin punya anak?<br>……Tidak, tidak ingin punya."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja（Bentuk ます）たいです",
+        blocks: [
+          {
+            label: "1) Kata Kerja Bentuk ます",
+            text: "Bentuk yang disambung pada ます（Contoh: かい dari かいます）disebut bentuk ます.",
+          },
+          {
+            label: "2) Kata Kerja（Bentuk ます）たいです",
+            text: "Kata Kerja（Bentuk ます）たいです digunakan untuk menunjukkan keinginan untuk berbuat sesuatu. Objek dari ～たい dapat ditunjuk dengan partikel を dan が juga. Perubahan bentuk ～たい sama dengan Kata Sifat い.",
+            examples: [
+              ["④ わたしは 沖縄へ 行きたいです。", "Saya ingin pergi ke Okinawa."],
+              ["⑤ わたしは てんぷらを（が）食べたいです。", "Saya ingin makan Tempura."],
+              ["⑥ 神戸で 何を（が）買いたいですか。<br>……靴を（が）買いたいです。", "Di Kobe ingin membeli apa?<br>……Ingin membeli sepatu."],
+              ["⑦ おなかが 痛いですから、何も 食べたくないです。", "Karena perut sakit, tidak mau makan apa-apa. (Pel.17)"],
+            ],
+          },
+          {
+            label: "[Perhatian 1]",
+            text: "Dengan ほしいです, たいです tidak dapat menyatakan keinginan dari pihak ketiga selain si pembicara dan lawan bicara.",
+          },
+          {
+            label: "[Perhatian 2]",
+            text: "ほしいですか, Kata Kerja（Bentuk ます）たいです tidak dapat digunakan pada situasi untuk menawarkan sesuatu kepada lawan bicara. Misalnya pada situasi untuk menawarkan kopi, tidak tepat jika mengatakan コーヒーが ほしいですか, コーヒーが のみたいですか. Untuk situasi tersebut digunakan ekspresi コーヒーは いかがですか, コーヒーを のみませんか dan sebagainya.",
+          },
+        ],
+      },
+      {
+        title: "Kata Benda（tempat）へ｛Kata Kerja（Bentuk ます）／Kata Benda｝に 行きます／来ます／帰ります",
+        blocks: [
+          {
+            text: "Objek untuk aksi dari いきます, きます, かえります ditunjuk dengan に.",
+            examples: [["⑧ 神戸へ インド料理を 食べに 行きます。", "Pergi makan masakan India ke Kobe."]],
+          },
+          {
+            text: "Jika Kata Kerja di depan に adalah Kata Kerja します（かいものします, べんきょうします）serta Kata Benda を します（おはなみを します, つりを します）, bentuk Kata Benda に いきます／きます／かえります yang digunakan.",
+            examples: [
+              ["⑨ 神戸へ 買い物に 行きます。", "Pergi ke Kobe untuk belanja."],
+              ["⑩ 日本へ 美術の 勉強に 来ました。", "Datang ke Jepang untuk belajar seni."],
+            ],
+          },
+          {
+            label: "[Perhatian]",
+            text: "Jika Kata Benda yang menunjukkan acara seperti perayaan, konser dan sebagainya, biasanya objek aksi dianggap untuk menonton perayaan atau mendengar konser.",
+            examples: [["⑪ あした 京都の お祭りに 行きます。", "Besok pergi ke perayaan di Kyoto."]],
+          },
+        ],
+      },
+      {
+        title: "どこか／何か",
+        blocks: [
+          {
+            text: "どこか berarti suatu tempat, dan なにか berarti sesuatu. Partikel へ atau を di belakang どこか atau なにか dapat dihilangkan.",
+            examples: [["⑫ 冬休みは どこか［へ］ 行きましたか。<br>……はい。北海道へ スキーに 行きました。", "Pada waktu liburan musim dingin pergi ke mana?<br>……Ya, pergi ke Hokkaido untuk bermain ski."]],
+          },
+          {
+            label: "[Perhatian]",
+            text: "Untuk kata-kata yang menunjukkan waktu dapat diangkat sebagai topik dengan dibubuhkan は.",
+            examples: [["⑬ のどが かわきましたから、何か［を］ 飲みたいです。", "Karena haus, ingin minum sesuatu."]],
+          },
+        ],
+      },
+      {
+        title: "ご～",
+        blocks: [
+          {
+            text: "ご menunjukkan penghormatan.",
+            examples: [["⑭ ご注文は？", "Mau pesan apa?"]],
+          },
+        ],
+      },
     ],
-    [
-      "い形容詞 bentuk lampau",
-      "い berubah menjadi かったです; negatif lampau menjadi くなかったです.",
-      "きのうは 寒かったです。",
-      "Kemarin dingin.",
-    ],
-    [
-      "N1 は N2 より Aです",
-      "Membandingkan dua benda/orang dengan より.",
-      "日本は インドネシアより 寒いです。",
-      "Jepang lebih dingin daripada Indonesia.",
-    ],
-    [
-      "N の中で N が いちばん Aです",
-      "Menyatakan yang paling dalam suatu kelompok.",
-      "日本で 富士山が いちばん 高いです。",
-      "Di Jepang Gunung Fuji yang paling tinggi.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Menceritakan keadaan lampau dan membuat perbandingan.",
+    focusLabel: "Fokus Pelajaran 13",
+    focus: "Menyatakan keinginan memiliki benda atau melakukan sesuatu, serta menjelaskan tujuan bepergian ke suatu tempat.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
