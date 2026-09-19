@@ -30,7 +30,10 @@ function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel,
          taruh kalimatnya di `label` saja dan biarkan `text` kosong.
          table opsional {headers:[...], rows:[[...], ...]}: sebagian pola
          di buku memang berupa tabel referensi, bukan penjelasan+contoh
-         (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど").
+         (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど"). Urutan render SATU
+         blok tetap: label, text, table, examples, note - table SELALU
+         sebelum examples (mis. Pelajaran 4 pola 2 sub 2: tabel konjugasi
+         dulu baru contoh ③④⑤) karena begitu urutannya di buku sumber.
          noBox opsional: sebagian nomor di buku (mis. Pelajaran 8 nomor 1
          "Kata Sifat") bukan kotak pola kalimat, cuma judul sub-bagian biasa
          tanpa kotak - beda dari nomor lain di pelajaran yang sama. */
@@ -43,7 +46,7 @@ function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel,
   const renderTable = (table) =>
     `<table class="grammar-table"><thead><tr><th></th>${table.headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${table.rows.map((row) => `<tr>${row.map((cell, i) => `<${i === 0 ? "th" : "td"}>${cell}</${i === 0 ? "th" : "td"}>`).join("")}</tr>`).join("")}</tbody></table>`;
   const renderBlock = (b) =>
-    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${(b.examples || []).map(renderExample).join("")}${b.table ? renderTable(b.table) : ""}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
+    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${b.table ? renderTable(b.table) : ""}${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
   const renderPoint = (item, i) => {
     const { pola, suffix, noBox, blocks } = normalize(item);
     const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="${noBox ? "grammar-pola-plain" : "grammar-pola-box"}">${pola}</span>${suffix ? `<span class="grammar-pola-suffix"> ${suffix}</span>` : ""}</h3>`;
@@ -910,38 +913,86 @@ const MATERI_BOOK1_LESSONS = [
   {
     title: "Kesukaan, kemampuan, dan jumlah",
     items: [
-    [
-      "N が わかります／すきです",
-      "Pola ini menyatakan hal yang dipahami, disukai, dibenci, dikuasai, atau kurang dikuasai (わかります・すきです・きらいです・じょうずです・へたです). Objek perasaan/kemampuan memakai が.",
-      "わたしは 日本語が わかります。",
-      "Saya mengerti bahasa Jepang.",
+      {
+        title: "Kata Benda が あります／わかります<br>Kata Benda が 好きです／嫌いです／上手です／下手です",
+        blocks: [
+          {
+            text: "Sebagian Kata Kerja atau Kata Sifat menunjukkan objek dengan partikel が.",
+            examples: [
+              ["① わたしは イタリア料理が 好きです。", "Saya suka masakan Italia."],
+              ["② わたしは 日本語が わかります。", "Saya mengerti bahasa Jepang."],
+              ["③ わたしは 車が あります。", "Saya mempunyai mobil."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "どんな Kata Benda",
+        blocks: [
+          {
+            text: "Cara menjawab untuk kalimat tanya dengan menggunakan どんな, selain cara menjawab yang telah dipelajari pada Pelajaran 8, dapat dijawab juga dengan memberikan nama secara kongkret.",
+            examples: [["④ どんな スポーツが 好きですか。<br>……サッカーが 好きです。", "Suka olahraga apa?<br>……Suka sepak bola."]],
+          },
+        ],
+      },
+      {
+        title: "よく／だいたい／たくさん／少し／あまり／全然",
+        blocks: [
+          {
+            text: "Kata Keterangan tersebut di atas diletakkan di depan Kata Kerja yang diterangkannya.",
+            table: {
+              headers: ["Kata Keterangan tingkat", "Kata Keterangan kuantitas"],
+              rows: [
+                ["digunakan dengan<br>kalimat positif", "よく　わかります<br>だいたい　わかります<br>すこし　わかります", "たくさん　あります<br>すこし　あります"],
+                ["digunakan dengan<br>kalimat negatif", "あまり　わかりません<br>ぜんぜん　わかりません", "あまり　ありません<br>ぜんぜん　ありません"],
+              ],
+            },
+            examples: [
+              ["⑤ 英語が よく わかります。", "Mengerti bahasa Inggris dengan baik."],
+              ["⑥ 英語が 少し わかります。", "Mengerti bahasa Inggris sedikit."],
+              ["⑦ 英語が あまり わかりません。", "Tidak begitu mengerti bahasa Inggris."],
+              ["⑧ お金が たくさん あります。", "Uang ada banyak."],
+              ["⑨ お金が 全然 ありません。", "Uang tidak ada sama sekali."],
+            ],
+          },
+          {
+            label: "[Perhatian]",
+            text: "すこし, ぜんぜん dan あまり juga dapat menerangkan Kata Sifat.",
+            examples: [
+              ["⑩ ここは 少し 寒いです。", "Di sini sedikit dingin."],
+              ["⑪ あの 映画は 全然 おもしろくないです。", "Film itu tidak menarik sama sekali."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "～から、～",
+        blocks: [
+          {
+            text: "Hal yang dinyatakan di depan から merupakan alasan dari kalimat yang dinyatakan di belakangnya.",
+            examples: [["⑫ 時間が ありませんから、新聞を 読みません。", "Karena tidak ada waktu, tidak membaca surat kabar."]],
+          },
+          {
+            text: "Digunakan juga untuk menyatakan suatu hal dan alasan dengan memasukkan ～から.",
+            examples: [["⑬ 毎朝 新聞を 読みますか。<br>……いいえ、読みません。時間が ありませんから。", "Apakah membaca surat kabar setiap pagi?<br>……Tidak, tidak membaca. Karena tidak ada waktu."]],
+          },
+        ],
+      },
+      {
+        title: "どうして",
+        blocks: [
+          {
+            text: "どうして adalah Kata Tanya untuk menanyakan alasan. Pada akhir kalimat dibubuhkan から untuk menyatakan alasannya.",
+            examples: [["⑭ どうして 朝 新聞を 読みませんか。<br>……時間が ありませんから。", "Mengapa pada pagi hari tidak membaca surat kabar?<br>……Sebab tidak ada waktu."]],
+          },
+          {
+            text: "Jika menanyakan alasan yang dikatakan oleh lawan bicara, dapat mengatakan どうしてですか untuk tidak menanyakan kata-kata yang dikatakan oleh lawan bicara.",
+            examples: [["⑮ きょうは 早く 帰ります。<br>……どうしてですか。<br>子どもの 誕生日ですから。", "Hari ini cepat pulang.<br>……Mengapa?<br>Sebab hari ulang tahun anak."]],
+          },
+        ],
+      },
     ],
-    [
-      "どんな N",
-      "Selain jawaban ya/tidak, pertanyaan どんな dapat dijawab dengan menyebutkan nama secara konkret.",
-      "どんな スポーツが 好きですか。……サッカーが 好きです。",
-      "Suka olahraga apa? ……Suka sepak bola.",
-    ],
-    [
-      "よく／だいたい／たくさん／少し／あまり／全然",
-      "Kata keterangan tingkat (よく・だいたい・あまり・ぜんぜん) dan kuantitas (たくさん・すこし) diletakkan sebelum kata kerja; あまり dan ぜんぜん dipakai dengan bentuk negatif. Ketiganya (すこし・あまり・ぜんぜん) juga bisa menerangkan kata sifat.",
-      "英語が 少し わかります。",
-      "Mengerti bahasa Inggris sedikit.",
-    ],
-    [
-      "～から、～",
-      "から menandai alasan; alasan diletakkan sebelum akibatnya, atau dijawab tersendiri dengan ～からです.",
-      "時間が ありませんから、新聞を 読みません。",
-      "Karena tidak ada waktu, saya tidak membaca surat kabar.",
-    ],
-    [
-      "どうして",
-      "Kata tanya untuk menanyakan alasan, dijawab dengan ～から. どうしてですか dipakai untuk menanyakan alasan yang baru disebut lawan bicara tanpa mengulang kata-katanya.",
-      "どうして 朝 新聞を 読みませんか。……時間が ありませんから。",
-      "Mengapa pada pagi hari tidak membaca surat kabar? ……Sebab tidak ada waktu.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
+    focusLabel: "Fokus Pelajaran 9",
     focus: "Menyatakan kesukaan, kemampuan, keterangan tingkat, dan alasan.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",

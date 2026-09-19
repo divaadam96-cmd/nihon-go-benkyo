@@ -123,7 +123,8 @@ const materialFuriganaReadings = {
   "大阪": "おおさか", "昼休み": "ひるやすみ", "大変": "たいへん",
   "広島": "ひろしま", "甲子園": "こうしえん", "北海道": "ほっかいどう", "来週": "らいしゅう",
   "一人": "ひとり", "新幹線": "しんかんせん", "英語": "えいご", "一杯": "いっぱい",
-  "公園": "こうえん", "大学": "だいがく",
+  "公園": "こうえん", "大学": "だいがく", "上手": "じょうず", "下手": "へた",
+  "料理": "りょうり", "少し": "すこし", "全然": "ぜんぜん", "誕生日": "たんじょうび",
   "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
   "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
@@ -158,7 +159,7 @@ const materialFuriganaReadings = {
   "薬": "くすり", "何": "なに", "一": "いち",
   "方": "かた", "社員": "しゃいん", "鈴木": "すずき", "傘": "かさ",
   "違": "ちが", "階": "かい", "国": "くに", "半": "はん", "馬": "うま", "昼": "ひる",
-  "借": "か", "習": "なら", "金": "かね", "山": "やま",
+  "借": "か", "習": "なら", "金": "かね", "山": "やま", "嫌": "きら", "車": "くるま",
   "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
   "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
   "行": "い", "降": "ふ", "高": "たか", "座": "すわ", "使": "つか", "始": "はじ",
@@ -762,8 +763,16 @@ function initMaterialLessonPicker({
       const tryExample = (example, requireNewPattern) => {
         if (questions.length >= count) return;
         if (requireNewPattern && usedPatterns.has(example.pattern)) return;
+        // Deteksi dari judul pola SAJA kadang mentok di 1 partikel kalau
+        // sebagian besar pola bab ini memang berpusat ke partikel yang sama
+        // (mis. Pelajaran 9 - hampir semua pola judulnya が, padahal kalimat
+        // contohnya sendiri juga memakai partikel lain seperti は) - ikut
+        // deteksi dari kalimat contohnya supaya tetap bisa dapat 2 partikel
+        // BERBEDA, bukan cuma mentok di satu-satunya partikel di judul pola.
         const candidates = shuffleArray(
-          detectStandaloneParticles(example.pattern).filter((particle) => !usedParticles.has(particle)),
+          detectStandaloneParticles(`${example.pattern} ${example.japaneseClean}`).filter(
+            (particle) => !usedParticles.has(particle),
+          ),
         );
         if (!candidates.length) return;
         const firstClause = example.japaneseClean.split("。")[0] + "。";
