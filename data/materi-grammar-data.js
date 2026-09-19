@@ -1000,44 +1000,115 @@ const MATERI_BOOK1_LESSONS = [
   {
     title: "Keberadaan benda dan makhluk",
     items: [
-    [
-      "N が あります／います",
-      "あります dipakai untuk benda/tumbuhan; います untuk manusia/hewan.",
-      "机の 上に 本が あります。",
-      "Ada buku di atas meja.",
+      {
+        title: "Kata Benda が あります／います",
+        blocks: [
+          {
+            text: "あります dan います menyatakan keberadaan benda atau orang. Kalimat ini adalah kalimat yang menggambarkan secara langsung untuk menyampaikan keberadaan benda atau orang, maka digunakan untuk menyatakan Kata Benda dengan membubuhkan partikel が.",
+          },
+          {
+            label: "1) あります digunakan untuk menyatakan keberadaan benda atau tumbuhan dan lain-lainnya yang tidak bergerak dengan sendirinya.",
+            examples: [
+              ["① コンピューターが あります。", "Ada komputer."],
+              ["② 桜が あります。", "Ada Sakura."],
+              ["③ 公園が あります。", "Ada taman."],
+            ],
+          },
+          {
+            label: "2) います digunakan untuk benda atau orang yang bergerak dengan sendirinya.",
+            examples: [
+              ["④ 男の 人が います。", "Ada orang laki-laki."],
+              ["⑤ 犬が います。", "Ada anjing."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Tempat に Kata Benda が あります／います",
+        blocks: [
+          {
+            text: "Dengan menggunakan pola kalimat ini menyatakan keberadaan benda atau orang di suatu tempat.",
+          },
+          {
+            label: "1) Tempat untuk keberadaan benda atau orang dinyatakan dengan partikel に.",
+            examples: [
+              ["⑥ わたしの 部屋に 机が あります。", "Di kamar saya ada meja."],
+              ["⑦ 事務所に ミラーさんが います。", "Di kantor ada Sdr. Miller."],
+            ],
+          },
+          {
+            label: "2) Kata Tanya なに digunakan untuk menanyakan benda atau orang yang berada, dan Kata Tanya だれ digunakan untuk menanyakan keberadaan orang.",
+            examples: [
+              ["⑧ 地下に 何が ありますか。<br>……レストランが あります。", "Di lantai basement ada apa?<br>……Ada restoran."],
+              ["⑨ 受付に だれが いますか。<br>……木村さんが います。", "Di resepsionis ada siapa?<br>……Ada Sdr. Kimura."],
+            ],
+            note: "[Perhatian] Tidak terbatas contoh di atas ini, perlu hati-hati bahwa partikel di belakang Kata Tanya adalah が.（×なには　×だれは）.",
+          },
+        ],
+      },
+      {
+        title: "Kata Benda は tempat に あります／います",
+        blocks: [
+          {
+            text: "Ini adalah kalimat yang menyatakan keberadaan suatu benda dari 2.tempat に Kata Benda が あります／います yang dijadikan topik. Di belakang Kata Benda digunakan は yang diletakkan di paling depan dalam kalimat. Kata Benda adalah hal yang telah diakui oleh kedua belah pihak yaitu si pembicara dan lawan bicara.",
+            examples: [
+              ["⑩ 東京ディズニーランドは 千葉県に あります。", "Tokyo Disneyland terletak di prefektur Chiba."],
+              ["⑪ ミラーさんは 事務所に います。", "Sdr. Miller ada di kantor."],
+              ["⑫ 東京ディズニーランドは どこに ありますか。<br>……千葉県に あります。", "Tokyo Disneyland terletak di mana?<br>……Terletak di prefektur Chiba."],
+              ["⑬ ミラーさんは どこに いますか。<br>……事務所に います。", "Sdr. Miller ada di mana?<br>……Ada di kantor."],
+            ],
+          },
+          {
+            label: "[Perhatian]",
+            text: "Pola kalimat ini dapat diganti dengan Kata Benda は tempat です (Pel.3). Untuk ini, perlu hati-hati bahwa di belakang Kata Tanya yang menunjukkan tempat（どこ）dan Kata Benda（ちばけん）tidak dibubuhkan に.",
+            examples: [["⑭ 東京ディズニーランドは どこですか。<br>……千葉県です。", "Di mana Tokyo Disneyland?<br>……Di prefektur Chiba."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub>（benda/orang/tempat）の Kata Benda<sub>2</sub>（posisi）",
+        blocks: [
+          {
+            text: "うえ, した, まえ, うしろ, みぎ, ひだり, なか, そと, となり, ちかく, あいだ dan lain-lainnya menunjukkan hubungan posisi antara Kata Benda<sub>1</sub> dan Kata Benda<sub>2</sub>.",
+            examples: [
+              ["⑮ 机の 上に 写真が あります。", "Di atas meja ada foto."],
+              ["⑯ 郵便局は 銀行の 隣に あります。", "Kantor pos ada di sebelah bank."],
+              ["⑰ 本屋は 花屋と スーパーの 間に あります。", "Toko buku ada di antara toko bunga dan pasar swalayan."],
+            ],
+          },
+          {
+            label: "[Perhatian]",
+            text: "Yang disebut di atas, sama halnya seperti Kata Benda yang menunjukkan tempat, dapat menunjukkan tempat aksi dengan dibubuhkan partikel で.",
+            examples: [["⑱ 駅の 近くで 友達に 会いました。", "Di dekat stasiun, bertemu dengan teman."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> や Kata Benda<sub>2</sub>",
+        blocks: [
+          {
+            text: "Partikel と yang telah dipelajari di Pelajaran 4 digunakan untuk menyebutkan semua Kata Benda secara setara, sedangkan partikel や mengambil beberapa hal saja yang mewakili (lebih dari dua) untuk menyebutkannya secara setara. Adakalanya untuk menyatakan bahwa masih ada Kata Benda yang tidak disebutkan secara jelas, dengan membubuhkan など di belakang Kata Benda yang disebut terakhir.",
+            examples: [
+              ["⑲ 箱の 中に 手紙や 写真が あります。", "Di dalam kotak ada surat dan foto."],
+              ["⑳ 箱の 中に 手紙や 写真などが あります。", "Di dalam kotak ada surat, foto dan lain-lainnya."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "アジアストアですか",
+        blocks: [
+          {
+            text: "Pada bagian awal percakapan di pelajaran ini terdapat percakapan sebagai berikut:",
+            examples: [["㉑ すみません。アジアストアは どこですか。<br>……アジアストアですか。（中略）あの ビルの 中です。", "Maaf. Di mana Asia Store?<br>……Asia Store? (disingkat) Di dalam gedung itu."]],
+          },
+          {
+            text: "Dalam percakapan praktek sering kali lawan bicara tidak langsung menjawab terhadap pertanyaan, tetapi menjawab setelah menegaskan inti pertanyaan si pembicara.",
+          },
+        ],
+      },
     ],
-    [
-      "Tempat に N が あります／います",
-      "Menekankan benda atau makhluk yang ada di suatu tempat. Tanya benda pakai なにが, tanya orang pakai だれが (bukan なには／だれは).",
-      "部屋に 猫が います。",
-      "Ada kucing di kamar.",
-    ],
-    [
-      "N は tempat に あります／います",
-      "Menekankan lokasi dari benda atau makhluk yang telah diketahui. Pola ini juga bisa diganti Nは tempatです (どこ tidak dibubuhi に).",
-      "銀行は 駅の 前に あります。",
-      "Bank berada di depan stasiun.",
-    ],
-    [
-      "Posisi N1 の N2",
-      "Kata posisi seperti atas, bawah, depan, belakang, dalam, dan luar dihubungkan dengan の. Kata posisi ini juga bisa memakai で untuk menunjukkan tempat aksi.",
-      "郵便局は 銀行の となりです。",
-      "Kantor pos di sebelah bank.",
-    ],
-    [
-      "N1 や N2",
-      "や menyebutkan beberapa contoh benda secara mewakili (tidak lengkap), berbeda dari と yang menyebutkan semua; など bisa ditambahkan di belakang benda terakhir untuk arti dan lain-lain.",
-      "箱の 中に 手紙や 写真が あります。",
-      "Di dalam kotak ada surat dan foto, antara lain.",
-    ],
-    [
-      "Konfirmasi pertanyaan",
-      "Dalam percakapan, lawan bicara sering mengulang/menegaskan inti pertanyaan dulu sebelum menjawabnya.",
-      "アジアストアは どこですか。……アジアストアですか。あの ビルの 中です。",
-      "Di mana Asia Store? ……Asia Store? Di dalam gedung itu.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
+    focusLabel: "Fokus Pelajaran 10",
     focus: "Menjelaskan keberadaan dan posisi benda, orang, serta hewan.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
