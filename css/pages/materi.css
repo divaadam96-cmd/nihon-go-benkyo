@@ -1128,6 +1128,11 @@
   font-weight: 700;
   font-family: "Zen Kaku Gothic New", inherit;
 }
+.grammar-pola-plain {
+  color: #172740;
+  font-weight: 700;
+  font-family: "Zen Kaku Gothic New", inherit;
+}
 .grammar-pola-suffix {
   color: #43536a;
   font-weight: 400;

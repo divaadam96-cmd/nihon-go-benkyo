@@ -30,11 +30,14 @@ function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel,
          taruh kalimatnya di `label` saja dan biarkan `text` kosong.
          table opsional {headers:[...], rows:[[...], ...]}: sebagian pola
          di buku memang berupa tabel referensi, bukan penjelasan+contoh
-         (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど"). */
+         (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど").
+         noBox opsional: sebagian nomor di buku (mis. Pelajaran 8 nomor 1
+         "Kata Sifat") bukan kotak pola kalimat, cuma judul sub-bagian biasa
+         tanpa kotak - beda dari nomor lain di pelajaran yang sama. */
   const normalize = (item) =>
     Array.isArray(item)
-      ? { pola: item[0], suffix: "", blocks: [{ text: item[1], examples: [[item[2], item[3]]], note: item[4] }] }
-      : { pola: item.title, suffix: item.suffix || "", blocks: item.blocks };
+      ? { pola: item[0], suffix: "", noBox: false, blocks: [{ text: item[1], examples: [[item[2], item[3]]], note: item[4] }] }
+      : { pola: item.title, suffix: item.suffix || "", noBox: !!item.noBox, blocks: item.blocks };
   const renderExample = ([contoh, arti]) =>
     `<div class="grammar-example"><span class="grammar-jp">${contoh}</span><span class="grammar-meaning">${arti}</span></div>`;
   const renderTable = (table) =>
@@ -42,8 +45,8 @@ function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel,
   const renderBlock = (b) =>
     `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${(b.examples || []).map(renderExample).join("")}${b.table ? renderTable(b.table) : ""}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
   const renderPoint = (item, i) => {
-    const { pola, suffix, blocks } = normalize(item);
-    const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="grammar-pola-box">${pola}</span>${suffix ? `<span class="grammar-pola-suffix"> ${suffix}</span>` : ""}</h3>`;
+    const { pola, suffix, noBox, blocks } = normalize(item);
+    const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="${noBox ? "grammar-pola-plain" : "grammar-pola-box"}">${pola}</span>${suffix ? `<span class="grammar-pola-suffix"> ${suffix}</span>` : ""}</h3>`;
     return `<div class="grammar-point">${heading}${blocks.map(renderBlock).join("")}</div>`;
   };
   return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${title}</summary><div class="html-content">${items.map(renderPoint).join("")}<div class="html-note"><div><b>${focusLabel}</b>${focus}</div><div><b>${practiceLabel}</b>${practice}</div></div></div></details>`;
@@ -786,7 +789,119 @@ const MATERI_BOOK1_LESSONS = [
   },
   {
     title: "Kata sifat dan kesan",
-    items: [["Kata sifat", "Kata sifat menjelaskan kondisi atau sifat kata benda. Ada dua jenis utama: い形容詞 dan な形容詞. Keduanya memiliki perubahan bentuk yang berbeda.", "富士山は 高いです。", "Gunung Fuji tinggi."], ["N は な形容詞です／い形容詞です", "Kata sifat positif waktu nonlampau diakhiri です. Untuk bentuk negatif, な形容詞 memakai じゃありません, sedangkan い形容詞 mengubah い menjadi くないです. Pertanyaan dijawab dengan kata sifat, bukan そうです.", "あそこは 静かじゃありません。", "Di sana tidak tenang."], ["な形容詞なN／い形容詞N", "Saat menerangkan kata benda, な形容詞 diikuti な sedangkan い形容詞 langsung ditempatkan di depan kata benda. Pola ini membentuk frasa kata benda yang lebih rinci.", "ワット先生は 親切な 先生です。", "Bapak Watt adalah guru yang baik hati."], ["～が、～", "が menyambungkan dua kalimat yang memiliki hubungan berlawanan atau paradoks. Informasi yang dianggap positif biasanya diletakkan lebih dahulu, kemudian kontrasnya menyusul.", "日本の 食べ物は おいしいですが、高いです。", "Makanan Jepang enak, tetapi mahal."], ["とても／あまり", "とても berarti sangat dan digunakan pada kalimat positif. あまり berarti tidak begitu dan umumnya dipakai bersama bentuk negatif.", "これは とても 有名な 映画です。", "Ini film yang sangat terkenal."], ["N は どうですか", "Pola ini menanyakan pendapat, kesan, atau keadaan mengenai benda, tempat, dan pengalaman lawan bicara.", "日本の 生活は どうですか。……楽しいです。", "Bagaimana kehidupan di Jepang? …Menyenangkan."], ["N1 は どんな N2 ですか", "どんな menanyakan keadaan atau sifat seseorang/benda, lalu harus diikuti kata benda yang dijelaskan.", "奈良は どんな 町ですか。……古い 町です。", "Nara kota bagaimana? …Kota yang lama."], ["そうですね", "Selain menyetujui lawan bicara, そうですね dapat memberi waktu bagi pembicara untuk berpikir sebelum menjawab pertanyaan tentang kesan atau pendapat.", "お仕事は どうですか。……そうですね。忙しいですが、おもしろいです。", "Bagaimana pekerjaan? …Hmm. Sibuk, tetapi menarik."]],
+    items: [
+      {
+        title: "Kata Sifat",
+        noBox: true,
+        blocks: [
+          {
+            text: "Kata Sifat berfungsi sebagai predikat dan menunjukkan kondisi Kata Benda dalam kalimat Kata Benda は Kata Sifat です atau digunakan sebagai kata yang menerangkan Kata Benda. Dalam bahasa Jepang terdapat dua jenis Kata Sifat yaitu Kata Sifat い dan Kata Sifat な, lalu perubahan bentuknya berbeda.",
+          },
+        ],
+      },
+      {
+        title: "Kata Benda は Kata Sifat な［な］です<br>Kata Benda は Kata Sifat い（～い）です",
+        blocks: [
+          {
+            text: "Kalimat adjektival positif waktu non lampau diakhiri です. です menunjukkan sikap yang hormat terhadap pendengar. Kata Sifat な disambung dengan です tanpa な, sedangkan Kata Sifat い disambung dengan です dalam bentuk yang sama.",
+            examples: [
+              ["① ワット先生は 親切です。", "Bapak Watt baik hati."],
+              ["② 富士山は 高いです。", "Gunung Fuji tinggi."],
+            ],
+          },
+          {
+            label: "1) Kata Sifat な［な］じゃ（では）ありません",
+            text: "Negatif waktu non lampau dari Kata Sifat な dibuat dengan dibubuhkan じゃ（では）ありません pada bentuk tanpa な dari Kata Sifat な.",
+            examples: [["③ あそこは 静かじゃ（では）ありません。", "Di sana tidak sunyi."]],
+          },
+          {
+            label: "2) Kata Sifat い（～い）です → ～くないです",
+            text: "Negatif waktu non lampau dari Kata Sifat い dibuat dengan dibubuhkan くないです pada bentuk yang dihilangkan い di bagian akhir dari Kata Sifat い.",
+            examples: [["④ この 本は おもしろくないです。", "Buku ini tidak menarik."]],
+            note: "[Perhatian] Negatif untuk いいです adalah よくないです.",
+          },
+          {
+            label: "3) Rangkuman Perubahan Bentuk",
+            table: {
+              headers: ["Kata Sifat な", "Kata Sifat い"],
+              rows: [
+                ["Positif waktu non lampau", "しんせつです", "たかいです"],
+                ["Negaif waktu non lampau", "しんせつじゃ（では）ありません", "たかくないです"],
+              ],
+            },
+          },
+          {
+            label: "4) Cara membuat kalimat tanya dari kalimat adjektival sama seperti kalimat nominal (Lihat Pel.1) dan kalimat verbal (Lihat Pel.4). Untuk jawabannya digunakan Kata Sifat, dan tidak dapat menjawab dengan menggunakan そうです atau ちがいます.",
+            examples: [
+              ["⑤ ペキンは 寒いですか。<br>……はい、寒いです。", "Apakah Beijing dingin?<br>……Ya, dingin."],
+              ["⑥ 奈良公園は にぎやかですか。<br>……いいえ、にぎやかじゃ ありません。", "Apakah Taman Nara ramai?<br>……Tidak, tidak ramai."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Sifat な［な］ Kata Benda<br>Kata Sifat い（～い） Kata Benda",
+        blocks: [
+          {
+            text: "Jika Kata Sifat menerangkan Kata Benda, Kata Sifat diletakan di depan Kata Benda. Kata Sifat な menerangkan Kata Benda dengan bentuk diikuti な.",
+            examples: [
+              ["⑦ ワット先生は 親切な 先生です。", "Bapak Watt adalah guru yang baik hati."],
+              ["⑧ 富士山は 高い 山です。", "Gunung Fuji adalah gunung yang tinggi."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "～が、～",
+        blocks: [
+          {
+            text: "が menyambungkan kalimat yang menyatakan sebelum dan sesudah secara paradoksal. Dalam kalimat adjektival yang subjeknya sama, hal yang bernilai positif oleh si pembicara diletakkan di bagian depan, maka hal yang negatif di bagian belakangnya. Sebaliknya, jika hal yang bernilai negatif oleh si pembicara diletakkan di bagian depan, maka hal yang positif di bagian belakangnya.",
+            examples: [["⑨ 日本の 食べ物は おいしいですが、高いです。", "Makanan Jepang enak, tetapi mahal."]],
+          },
+        ],
+      },
+      {
+        title: "とても／あまり",
+        blocks: [
+          {
+            text: "とても dan あまり adalah Kata keterangan yang menyatakan tingkat, dan jika menerangkan Kata Sifat kata tersebut diletakkan di depan Kata Sifat. とても mempunyai arti sangat dan digunakan pada kalimat positif. あまり digunakan bersamaan dengan kalimat negatif yang mempunyai arti tidak begitu.",
+            examples: [
+              ["⑩ ペキンは とても 寒いです。", "Beijing sangat dingin."],
+              ["⑪ これは とても 有名な 映画です。", "Ini film yang sangat terkenal."],
+              ["⑫ シャンハイは あまり 寒くないです。", "Shanghai tidak begitu dingin."],
+              ["⑬ さくら大学は あまり 有名な 大学じゃ ありません。", "Universitas Sakura adalah universitas yang tidak begitu terkenal."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda は どうですか",
+        blocks: [
+          {
+            text: "Kata Benda は どうですか menanyakan citra, pendapat, dan kesan mengenai hal yang dialami tentang tempat yang telah dikunjungi atau orang yang pernah dijumpai dan lain-lainnya oleh lawan bicara.",
+            examples: [["⑭ 日本の 生活は どうですか。<br>……楽しいです。", "Bagaimana kehidupan di Jepang?<br>……Senang."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> は どんな Kata Benda<sub>2</sub> ですか",
+        blocks: [
+          {
+            text: "どんな adalah Kata Tanya untuk menanyakan keadaan atau sifat orang dan benda, kemudian digunakan untuk menerangkan Kata Benda.",
+            examples: [["⑮ 奈良は どんな 町ですか。<br>……古い 町です。", "Nara kota bagaimana?<br>……Kota yang lama."]],
+          },
+        ],
+      },
+      {
+        title: "そうですね",
+        blocks: [
+          {
+            text: "Pada Pelajaran 5 telah dipelajari そうですね yang menyatakan persetujuan atau perasaan yang sama. Pada pelajaran ini terdapat そうですね menunjukkan sikap dari lawan bicaranya yang sedang berpikir seperti pada percakapan ⑯.",
+            examples: [["⑯ お仕事は どうですか。<br>……そうですね。忙しいですが、おもしろいです。", "Bagaimana pekerjaannya?<br>……Ya... Sibuk, tetapi menyenangkan."]],
+          },
+        ],
+      },
+    ],
     focusLabel: "Fokus Pelajaran 8",
     focus: "Mendeskripsikan sifat, bertanya kesan, membuat frasa kata sifat, dan menyatakan kontras.",
     practiceLabel: "Latihan mandiri",
