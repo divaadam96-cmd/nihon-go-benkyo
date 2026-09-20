@@ -1175,6 +1175,15 @@
   font: 400 14px "DM Sans";
   color: #3a4557;
 }
+/* Label editorial di bawah sebagian kalimat contoh (mis. "(frase Kata
+   Benda)" Pelajaran 18 pola 2) yang di buku sumber dicetak polos, lebih
+   kecil - beda dari kalimat Jepang tebal di atasnya. Dibuang dari teks
+   soal Tahap 3 (lihat getAllExamplesData, materi.js). */
+.grammar-annotation {
+  display: block;
+  font: 400 12px "DM Sans";
+  color: #6b5a3a;
+}
 /* Catatan "[Perhatian]" sumber: teks polos sebaris dengan penjelasan,
    tanpa kotak/label - persis seperti di buku, hanya dibedakan tipis
    lewat kemiringan huruf. */

@@ -134,7 +134,7 @@ const materialFuriganaReadings = {
   "天気": "てんき", "留学生": "りゅうがくせい", "主婦": "しゅふ", "梅田": "うめだ", "富士": "ふじ",
   "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
   "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
-  "心配": "しんぱい", "食堂": "しょくどう",
+  "心配": "しんぱい", "食堂": "しょくどう", "趣味": "しゅみ", "食事": "しょくじ",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
   "音楽": "おんがく", "家族": "かぞく", "荷物": "にもつ", "会議": "かいぎ",
   "会社": "かいしゃ", "学校": "がっこう", "学生": "がくせい", "漢字": "かんじ",
@@ -164,7 +164,7 @@ const materialFuriganaReadings = {
   "寒": "さむ", "漢": "かん", "語": "ご", "好": "す", "今": "いま", "子": "こ",
   "次": "つぎ", "時": "とき", "上": "うえ", "早": "はや", "切": "き",
   "分": "ふん", "新": "あたら", "覧": "らん", "月": "つき", "日": "ひ",
-  "薬": "くすり", "何": "なに", "一": "いち",
+  "薬": "くすり", "何": "なに", "一": "いち", "雪": "ゆき",
   "方": "かた", "社員": "しゃいん", "鈴木": "すずき", "傘": "かさ",
   "違": "ちが", "階": "かい", "国": "くに", "半": "はん", "馬": "うま", "昼": "ひる",
   "借": "か", "習": "なら", "金": "かね", "山": "やま", "嫌": "きら", "車": "くるま",
@@ -173,7 +173,7 @@ const materialFuriganaReadings = {
   "秋": "あき", "背": "せ", "弟": "おとうと", "赤": "あか",
   "欲": "ほ", "痛": "いた", "祭": "まつ", "冬": "ふゆ", "願": "ねが", "塩": "しお", "取": "と",
   "撮": "と", "住": "す", "作": "つく", "売": "う", "妹": "いもうと", "番": "ばん", "乗": "の",
-  "浴": "あ", "茶": "ちゃ", "若": "わか", "狭": "せま", "終": "お", "髪": "かみ",
+  "浴": "あ", "茶": "ちゃ", "若": "わか", "狭": "せま", "終": "お", "髪": "かみ", "遊": "あそ",
   "長": "なが", "青": "あお", "黒": "くろ",
   "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
   "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
@@ -181,7 +181,7 @@ const materialFuriganaReadings = {
   "思": "おも", "止": "と", "試": "ため", "持": "も", "治": "なお", "捨": "す",
   "出": "で", "暑": "あつ", "書": "か", "消": "け", "食": "た", "寝": "ね",
   "静": "しず", "洗": "あら", "送": "おく", "続": "つづ", "貸": "か", "脱": "ぬ",
-  "知": "し", "置": "お", "遅": "おく", "伝": "つた", "登": "のぼ", "働": "はたら", "返": "かえ",
+  "知": "し", "置": "お", "遅": "おく", "伝": "つた", "登": "のぼ", "働": "はたら", "返": "かえ", "払": "はら",
   "読": "よ", "入": "はい", "買": "か", "聞": "き", "閉": "し", "歩": "ある",
   "忘": "わす", "忙": "いそが", "話": "はな", "来": "き", "楽": "たの",
 };
@@ -205,8 +205,10 @@ const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
      bantu bulan-dalam-tanggal = がつ (3月 = さんがつ) atau kata bantu
      jangka waktu = げつ kalau menempel ke か (２か月 = にかげつ).
    - 来: Kata Kerja Kelompok III tidak beraturan - bentuk ます/て memakai
-     bacaan き (来ます, 来て), tapi bentuk ない memakai bacaan こ
-     (来ない = こない, Lihat Pel.17), jadi perlu dicek huruf SESUDAHnya. */
+     bacaan き (来ます, 来て), bentuk ない memakai bacaan こ
+     (来ない = こない, Lihat Pel.17), sedangkan bentuk kamus memakai
+     bacaan く (来る = くる, Lihat Pel.18), jadi perlu dicek huruf
+     SESUDAHnya. */
 function resolveCounterReading(word, text, cursor) {
   const prev = text[cursor - 1] || "";
   const isDigitOrDash = /[0-9０-９－]/.test(prev);
@@ -217,7 +219,11 @@ function resolveCounterReading(word, text, cursor) {
     if (prev === "か") return "げつ";
     if (isDigitOrDash) return "がつ";
   }
-  if (word === "来" && text[cursor + word.length] === "な") return "こ";
+  if (word === "来") {
+    const next = text[cursor + word.length];
+    if (next === "な") return "こ";
+    if (next === "る") return "く";
+  }
   return null;
 }
 
@@ -512,6 +518,13 @@ function initMaterialLessonPicker({
         const meaningClone = example.querySelector(".grammar-meaning")?.cloneNode(true);
         jpClone?.querySelectorAll("rt").forEach((reading) => reading.remove());
         meaningClone?.querySelectorAll("rt").forEach((reading) => reading.remove());
+        /* .grammar-annotation: label editorial di bawah kalimat (mis.
+           "(frase Kata Benda)" di Pelajaran 18 pola 2) yang di buku sumber
+           menunjuk ke bagian kalimat tertentu, bukan bagian dari kalimat
+           itu sendiri - kalau ikut masuk ke japaneseText/japaneseClean,
+           soal susun-kalimat/partikel/cerita ikut memecah token dari teks
+           label ini juga. Dibuang sebelum flatten, sama seperti rt. */
+        jpClone?.querySelectorAll(".grammar-annotation").forEach((el) => el.remove());
         const japaneseHtml = jpClone?.innerHTML.trim() || "";
         const meaningHtml = meaningClone?.innerHTML.trim() || "";
         if (!japaneseHtml || !meaningHtml) return;

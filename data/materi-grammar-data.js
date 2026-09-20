@@ -1831,27 +1831,114 @@ const MATERI_BOOK1_LESSONS = [
   {
     title: "Bentuk kamus dan kemampuan",
     items: [
-    [
-      "V辞書形ことができます",
-      "Menyatakan kemampuan atau kemungkinan.",
-      "日本語を 話すことが できます。",
-      "Saya bisa berbicara Jepang.",
+      {
+        title: "Kata Kerja Bentuk Kamus",
+        noBox: true,
+        blocks: [
+          {
+            text: "Ini adalah bentuk dasar Kata Kerja yang disajikan di kamus. Sesuai dengan kelompok Kata Kerja, cara membuat bentuk kamus dari bentuk ます sebagai berikut: (Lihat Buku Induk Pel.18 Latihan A1.)",
+          },
+          {
+            label: "1) Kata Kerja Kelompok I",
+            text: "Bunyi terakhir bentuk ます adalah bunyi kolom い, maka ini diganti dengan bunyi kolom う.<br>か<u>き</u>－ます　→　か<u>く</u>　　　いそ<u>ぎ</u>－ます　→　いそ<u>ぐ</u><br>よ<u>み</u>－ます　→　よ<u>む</u>　　　あそ<u>び</u>－ます　→　あそ<u>ぶ</u><br>と<u>り</u>－ます　→　と<u>る</u>　　　ま<u>ち</u>－ます　→　ま<u>つ</u><br>す<u>い</u>－ます　→　す<u>う</u>　　　はな<u>し</u>－ます　→　はな<u>す</u>",
+          },
+          {
+            label: "2) Kata Kerja Kelompok II",
+            text: "Membubuhkan る pada bentuk ます.<br>たべ－ます　→　たべ－る<br>み－ます　→　み－る",
+          },
+          {
+            label: "3) Kata Kerja Kelompok III",
+            text: "Bentuk kamus します adalah する, sedangkan bentuk kamus きます adalah くる.",
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<br>Kata Kerja Bentuk Kamus こと｝　が できます",
+        suffix: "Dapat......",
+        blocks: [
+          {
+            text: "できます adalah Kata Kerja yang menunjukkan hal yang dapat dilakukan atas kemampuan yang dimiliki orang itu, atau aksi yang memungkinkan dengan kondisi itu. Objek untuk できます ditunjuk dengan が, dan isi kemampuan atau kemungkinan ditunjuk dengan Kata Benda atau Kata Kerja Bentuk Kamus こと.",
+          },
+          {
+            label: "1) Untuk Kata Benda",
+            text: "Dipakai Kata Benda yang bersifat aksi（うんてん、かいもの、スキー、ダンス）。Kemudian digunakan juga Kata Benda seperti にほんご、atau ピアノ yang menunjukkan ketrampilan.",
+            examples: [
+              ["① ミラーさんは 日本語が できます。", "Sdr. Miller bisa berbahasa Jepang."],
+              ["② 雪が たくさん 降りましたから、ことしは スキーが できます。", "Karena salju turun banyak, tahun ini dapat bermain ski."],
+            ],
+          },
+          {
+            label: "2) Untuk Kata Kerja",
+            text: "Jika mengatakan dapat melakukan suatu perbuatan, maka bentuk frase Kata Benda dengan membubuhkan こと pada Kata Kerja Bentuk Kamus, kemudian dilanjutkan dengan が できます di belakangnya.",
+            examples: [
+              ["③ ミラーさんは <u>漢字を　読む</u>　ことが できます。<br><span class=\"grammar-annotation\">　　　　　（frase Kata Benda）</span>", "Sdr. Miller bisa membaca <i>Kanji</i>."],
+              ["④ <u>カードで　払う</u>　ことが できます。<br><span class=\"grammar-annotation\">（frase Kata Benda）</span>", "Dapat membayar dengan kartu."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "わたしの　趣味は｛Kata Benda<br>Kata Kerja Bentuk Kamus　こと｝です",
+        suffix: "Hobi saya adalah......",
+        blocks: [
+          {
+            examples: [["⑤ わたしの 趣味は 音楽です。", "Hobi saya adalah musik."]],
+          },
+          {
+            text: "Jika memakai Kata Kerja Bentuk Kamus こと maka dapat menunjukkan isi hobi lebih konkret.",
+            examples: [["⑥ わたしの 趣味は 音楽を 聞く ことです。", "Hobi saya adalah mendengarkan musik."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja<sub>1</sub> Bentuk Kamus<br>Kata Benda の<br>Kata Keterangan Bilangan（jangka waktu）｝　まえに、Kata Kerja<sub>2</sub>",
+        suffix: "Sebelum......,<br>melakukan......",
+        blocks: [
+          {
+            label: "1) Untuk Kata Kerja",
+            text: "Menyatakan bahwa sebelum Kata Kerja<sub>1</sub>, terjadi Kata Kerja<sub>2</sub>. Perlu hati-hati bahwa jika waktu kalimat (waktu Kata Kerja<sub>2</sub>) menunjukkan waktu lampau atau juga menunjukkan waktu non lampau, maka Kata Kerja<sub>1</sub> selalu berbentuk Bentuk Kamus.",
+            examples: [
+              ["⑦ 日本へ 来る まえに、日本語を 勉強しました。", "Sebelum datang di Jepang, belajar bahasa Jepang."],
+              ["⑧ 寝る まえに、本を 読みます。", "Sebelum tidur, membaca buku."],
+            ],
+          },
+          {
+            label: "2) Untuk Kata Benda",
+            text: "Di belakang Kata Benda membubuhkan の. Menggunakan Kata Benda yang bersifat aksi.",
+            examples: [["⑨ 食事の まえに、手を 洗います。", "Sebelum makan mencuci tangan."]],
+          },
+          {
+            label: "3) Untuk Kata Keterangan Bilangan (jangka waktu)",
+            text: "Perlu hati-hati bahwa di belakang Kata Keterangan Bilangan (jangka waktu) tidak membubuhkan の.",
+            examples: [["⑩ 田中さんは 1時間まえに、出かけました。", "Sdr. Tanaka telah keluar sejam yang lalu."]],
+          },
+        ],
+      },
+      {
+        title: "なかなか",
+        blocks: [
+          {
+            text: "なかなか menyertai ekspresi negatif di belakangnya, dan menunjukkan arti yang tidak mudah untuk melakukan atau tidak dapat melakukan sebagaimana apa yang diharapkan.",
+            examples: [["⑪ 日本では なかなか 馬を 見る ことが できません。", "Di Jepang tidak mudah untuk melihat kuda."]],
+            note: "[Perhatian] Contoh kalimat ⑪ (Lihat Buku Induk Pel.18 Percakapan) adalah kalimat yang kata にほんで dijadikan sebagai topik. Dengan demikian, Kata Benda yang dibubuhkan で dijadikan sebagai topik, maka Kata Benda berbentuk Kata Benda では (Lihat Kolom 1 mengenai contoh yang berpartikel selain が dan を yang dijadikan sebagai topik).",
+          },
+        ],
+      },
+      {
+        title: "ぜひ",
+        blocks: [
+          {
+            text: "Dipakai bersama dengan ekspresi yang menunjukkan harapan si pembicara, dan berfungsi untuk menekankannya.",
+            examples: [
+              ["⑫ ぜひ 北海道へ 行きたいです。", "Ingin sekali pergi ke Hokkaido."],
+              ["⑬ ぜひ 遊びに 来て ください。", "Sungguh diharapkan untuk datang bermain."],
+            ],
+          },
+        ],
+      },
     ],
-    [
-      "しゅみは V辞書形ことです",
-      "Menyatakan hobi berupa aktivitas.",
-      "しゅみは 本を 読むことです。",
-      "Hobi saya membaca buku.",
-    ],
-    [
-      "V辞書形まえに",
-      "Menyatakan tindakan sebelum kegiatan lain.",
-      "寝る まえに 本を 読みます。",
-      "Saya membaca buku sebelum tidur.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Memakai bentuk kamus untuk kemampuan dan hobi.",
+    focusLabel: "Fokus Pelajaran 18",
+    focus: "Membentuk kata kerja bentuk kamus untuk menyatakan kemampuan, hobi, dan urutan waktu, serta menekankan harapan dan kesulitan melakukan sesuatu.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
