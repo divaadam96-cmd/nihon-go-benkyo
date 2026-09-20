@@ -1621,53 +1621,111 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Menghubungkan informasi",
+    title: "Menyambung kalimat dan menunjuk pilihan",
     items: [
-    [
-      "Vて",
-      "Menyambungkan dua tindakan yang berkaitan.",
-      "朝ごはんを 食べて、出かけます。",
-      "Saya sarapan lalu pergi.",
+      {
+        title: "Cara menyambung kalimat yang lebih dari dua",
+        noBox: true,
+        blocks: [
+          {
+            text: "Dengan memakai ～て（～で）dapat menyambung kalimat yang lebih dari dua menjadi satu kalimat.",
+          },
+          {
+            label: "1) Kata Kerja Bentuk て<sub>1</sub>、［Kata Kerja Bentuk て<sub>2</sub>、］Kata Kerja<sub>3</sub>",
+            text: "Apabila menyatakan lebih dari dua aksi yang berturut-turut, menyebutkan aksi tersebut sesuai dengan urutannya dengan menggunakan bentuk て. Waktu ditentukan dengan Kata Kerja yang terakhir.",
+            examples: [
+              ["① 朝 ジョギングを して、シャワーを 浴びて、会社へ 行きます。", "Pagi hari joging, mandi, kemudian pergi ke perusahaan."],
+              ["② 神戸へ 行って、映画を 見て、お茶を 飲みました。", "Pergi ke Kobe, menonton film, kemudian minum teh."],
+            ],
+          },
+          {
+            label: "2) Kata Sifat い（～い）→ ～くて",
+            text: "おおきーい → おおきーくて　besar<br>ちいさーい → ちいさーくて　kecil<br>いーい → 　よーくて（pengecualian）　baik, bagus",
+            examples: [
+              ["③ ミラーさんは 若くて、元気です。", "Sdr. Miller muda dan sehat."],
+              ["④ きのうは 天気が よくて、暑かったです。", "Kemarin cuaca baik dan panas."],
+            ],
+          },
+          {
+            label: "3) Kata Sifat な［な］→ ～で",
+            examples: [
+              ["⑤ ミラーさんは ハンサムで、親切です。", "Sdr. Miller ganteng dan baik hati."],
+              ["⑥ 奈良は 静かで、きれいな 町です。", "Nara adalah kota yang tenang dan indah."],
+            ],
+            note: "[Perhatian] Jika memakai ～て（～で）untuk menyambung Kata sifat yang bersubjek yang sama, tidak dapat menyambungkan kalimat yang nilai pembicaranya berbeda. Dalam hal itu, menggunakan が (Lihat Pel.8-4).<br>×この 部屋は 狭くて、きれいです。<br>○この 部屋は 狭いですが、きれいです。　Kamar ini sempit, tetapi bersih.",
+          },
+          {
+            label: "4) Kata Benda で",
+            examples: [
+              ["⑦ カリナさんは インドネシア人で、富士大学の 留学生です。", "Sdr. Karina adalah orang Indonesia dan pelajar asing dari Universitas Fuji."],
+              ["⑧ カリナさんは 学生で、マリアさんは 主婦です。", "Sdr. Karina adalah mahasiswa, sedangkan Sdr. Maria adalah ibu rumah tangga."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja<sub>1</sub> Bentuk てから、Kata Kerja<sub>2</sub>",
+        blocks: [
+          {
+            text: "Pola kalimat ini menunjukkan bahwa Kata Kerja<sub>2</sub> dilakukan setelah Kata Kerja<sub>1</sub>. Oleh karena itu, pada umumnya dengan Kata Kerja<sub>1</sub> dikatakan prasyarat sebagai persiapan untuk melakukan Kata Kerja<sub>2</sub>. Waktu ditentukan oleh waktu Kata Kerja terakhir.",
+            examples: [["⑨ お金を 入れてから、ボタンを 押して ください。", "Tekanlah tombol setelah memasukkan uang."]],
+          },
+          {
+            text: "Dengan catatan bahwa subjek untuk Kata Kerja Bentuk てから ditunjukkan dengan partikel が.",
+            examples: [["⑩ もう 昼ごはんを 食べましたか。<br>……この 仕事が 終わってから、食べます。", "Sudah makan siang?<br>……Setelah selesai pekerjaan ini, baru mau makan."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> は Kata Benda<sub>2</sub> が Kata Sifat",
+        blocks: [
+          {
+            text: "Pola kalimat ini menunjukkan bahwa topik (Kata Benda<sub>1</sub>) mempunyai sifat 'Kata Benda<sub>2</sub> が Kata Sifat'.",
+            examples: [
+              ["⑪ 大阪は 食べ物が おいしいです。", "Osaka makanannya enak."],
+              ["⑫ ドイツの フランケンは ワインが 有名です。", "Franken di Jerman anggurnya terkenal."],
+              ["⑬ マリアさんは 髪が 長いです。", "Sdr. Maria rambutnya panjang."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda を Kata Kerja",
+        blocks: [
+          {
+            text: "Kata Kerja でます, おります dan lain-lainnya digunakan bersama dengan partikel を. を ini menunjukkan titik awal atau titik keberangkatan.",
+            examples: [
+              ["⑭ 7時に うちを 出ます。", "Pada pukul tujuh keluar dari rumah."],
+              ["⑮ 梅田で 電車を 降りました。", "Turun kereta rel listrik di Umeda."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "どうやって",
+        blocks: [
+          {
+            text: "どうやって dipakai untuk menanyakan cara pergi ke suatu tempat atau cara untuk melakukan sesuatu.",
+            examples: [["⑯ 大学まで どうやって 行きますか。<br>……京都駅から 16番の バスに 乗って、大学前で 降ります。", "Bagaimana caranya pergi ke universitas?<br>……Dari stasiun Kyoto, naik bus nomor 16, dan turun di Daigakumae."]],
+          },
+        ],
+      },
+      {
+        title: "どれ／どの Kata Benda",
+        blocks: [
+          {
+            text: "どれ adalah Kata Tanya untuk meminta untuk menuntukan satu dari lebih dari tiga macam pilihan yang ditunjukkan secara konkret.",
+            examples: [["⑰ ミラーさんの 傘は どれですか。<br>……あの 青い 傘です。", "Yang mana payung Sdr. Miller?<br>……Payung yang biru itu."]],
+          },
+          {
+            text: "どれ tidak dapat digunakan dengan Kata Benda secara langsung. Ketika menerangkan Kata Benda digunakan どの.",
+            examples: [["⑱ サントスさんは どの 人ですか。<br>……あの 背が 高くて、髪が 黒い 人です。", "Sdr. Santos orangnya yang mana?<br>……Orang yang badannya tinggi, dan rambutnya hitam."]],
+          },
+        ],
+      },
     ],
-    [
-      "Aくて／Aで",
-      "Menyambungkan kata sifat atau kata benda.",
-      "この かばんは 安くて 便利です。",
-      "Tas ini murah dan praktis.",
-    ],
-    [
-      "Vてから、V",
-      "Kata kerja kedua dilakukan setelah kata kerja pertama selesai.",
-      "お金を 入れてから、ボタンを 押します。",
-      "Setelah memasukkan uang, tekan tombolnya.",
-    ],
-    [
-      "Nは Nが A",
-      "Menjelaskan bahwa topik (N1) memiliki sifat N2.",
-      "マリアさんは 髪が 長いです。",
-      "Rambut Sdr. Maria panjang.",
-    ],
-    [
-      "Nを + でます／おります",
-      "を menandai titik awal atau tempat keberangkatan, bukan objek.",
-      "梅田で 電車を 降ります。",
-      "Turun dari kereta di Umeda.",
-    ],
-    [
-      "どうやって",
-      "Menanyakan cara atau sarana.",
-      "どうやって 駅へ 行きますか。",
-      "Bagaimana pergi ke stasiun?",
-    ],
-    [
-      "どれ／どの N",
-      "Menanyakan pilihan dari lebih dari tiga benda; どれ berdiri sendiri, どの diikuti kata benda.",
-      "ミラーさんの 傘は どれですか。",
-      "Yang mana payung Sdr. Miller?",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Menghubungkan kegiatan, sifat, urutan waktu, dan cara/pilihan.",
+    focusLabel: "Fokus Pelajaran 16",
+    focus: "Menyambung beberapa kalimat menjadi satu, menjelaskan sifat topik, serta menanyakan cara dan menunjuk pilihan dari beberapa benda.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
