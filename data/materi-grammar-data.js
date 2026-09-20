@@ -2211,29 +2211,77 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Pendapat dan kutipan",
+    title: "Anak kalimat dan janji",
     items: [
-    [
-      "普通形と思います",
-      "Menyatakan pikiran atau dugaan.",
-      "日本は きれいだと 思います。",
-      "Saya pikir Jepang indah.",
+      {
+        title: "Anak Kalimat",
+        noBox: true,
+        blocks: [
+          {
+            text: "Pada Pelajaran 2 dan Pelajaran 8 telah dipelajari cara untuk menerangkan Kata Benda.<br>ミラーさんの うち　　rumah Sdr. Miller (Pel.2)<br>新しい うち　　rumah yang baru (Pel.8)<br>きれいな うち　　rumah yang indah (Pel.8)<br>Kata atau frase yang menerangkan diletakkan di depan Kata Benda. Pada pelajaran ini, mempelajari frase yang menerangkan Kata Benda.",
+          },
+          {
+            label: "1)",
+            text: "Kata Kerja, Kata Sifat dan Kata Benda yang terdapat di dalam anak kalimat adalah Bentuk Biasa. Untuk Kata Sifat Bentuk な menjadi～な, sedangkan untuk Kata Benda menjadi～の.",
+            examples: [
+              ["① 京都へ　行く　人", "orang yang pergi ke Kyoto"],
+              ["　　　　行かない　人", "orang yang tidak pergi ke Kyoto"],
+              ["　　　　行った　人", "orang yang telah pergi ke Kyoto"],
+              ["　　　　行かなかった　人", "orang yang tidak pergi ke Kyoto (lampau)"],
+              ["背が 高くて、髪が 黒い 人", "orang yang badannya tinggi, dan rambutnya hitam"],
+              ["親切で、きれいな 人", "orang yang baik hati dan cantik"],
+              ["65歳の 人", "orang yang berumur enam puluh lima tahun"],
+            ],
+          },
+          {
+            label: "2)",
+            text: "Anak kalimat dipakai dalam berbagai pola kalimat seperti di bawah ini.",
+            examples: [
+              ["② これは ミラーさんが 住んで いた うちです。", "Ini adalah rumah yang dihuni Sdr. Miller."],
+              ["③ ミラーさんが 住んで いた うちは 古いです。", "Rumah yang dihuni Sdr. Miller sudah tua."],
+              ["④ ミラーさんが 住んで いた うちを 買いました。", "Membeli rumah yang dihuni Sdr. Miller."],
+              ["⑤ わたしは ミラーさんが 住んで いた うちが 好きです。", "Saya suka rumah yang dihuni Sdr. Miller."],
+              ["⑥ ミラーさんが 住んで いた うちに 猫が いました。", "Di rumah yang dihuni Sdr. Miller ada kucing."],
+              ["⑦ ミラーさんが 住んで いた うちへ 行った ことが あります。", "Pernah pergi ke rumah yang dihuni Sdr. Miller."],
+            ],
+          },
+          {
+            label: "3)",
+            text: "Subjek di dalam anak kalimat ditunjukan dengan partikel が.",
+            examples: [
+              ["⑧ これは ミラーさんが 作った ケーキです。", "Ini adalah kue yang dibuat oleh Sdr. Miller."],
+              ["⑨ わたしは カリナさんが かいた 絵が 好きです。", "Saya suka lukisan yang dilukis oleh Sdr. Karina."],
+              ["⑩ ［あなたは］彼が 生まれた 所を 知って いますか。", "Apakah [Anda] tahu tempat dia lahir?"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus 時間／約束／用事",
+        blocks: [
+          {
+            text: "Jika menunjukkan waktu ketika melakukan sesuatu, ada janji dan ada urusan, aksi tersebut dijadikan Bentuk Kamus kemudian diletakkan di depan Kata Benda じかん、やくそく、ようじ dan lain-lainnya.",
+            examples: [
+              ["⑪ わたしは 朝ごはんを 食べる 時間が ありません。", "Saya tidak ada waktu untuk makan pagi."],
+              ["⑫ わたしは 友達と 映画を 見る 約束が あります。", "Saya ada janji dengan teman untuk menonton film."],
+              ["⑬ きょうは 市役所へ 行く 用事が あります。", "Hari ini ada urusan pergi ke kantor wali kota."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja（Bentuk ます）ましょうか",
+        suffix: "Bagaimana kalau......?",
+        blocks: [
+          {
+            text: "Pada Pelajaran 14, pola kalimat ini telah dipelajari sebagai ekspresi dari si pembicara menawarkan diri untuk melakukan sesuatu kepada lawan bicara. Pada percakapan dalam pelajaran ini, ekspresi ini disajikan sebagai ekspresi si pembicara yang menawarkan diri kepada lawan bicara untuk bersama-sama melakukan sesuatu.",
+            examples: [["⑭ この 部屋、きょう 見る ことが できますか。<br>……ええ。今から 行きましょうか。", "Apakah kamar ini dapat saya lihat hari ini?<br>……Ya. Bagaimana kalau pergi sekarang?"]],
+          },
+        ],
+      },
     ],
-    [
-      "普通形といいます",
-      "Menyampaikan ucapan atau informasi orang lain.",
-      "田中さんは 来ると いいます。",
-      "Tanaka berkata akan datang.",
-    ],
-    [
-      "でしょう",
-      "Menyatakan perkiraan atau konfirmasi ringan.",
-      "あしたは いい天気でしょう。",
-      "Besok mungkin cuacanya bagus.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Menyampaikan pendapat dan informasi dari orang lain.",
+    focusLabel: "Fokus Pelajaran 22",
+    focus: "Menerangkan Kata Benda dengan anak kalimat, serta menyatakan waktu, janji, urusan, dan ajakan bersama.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
