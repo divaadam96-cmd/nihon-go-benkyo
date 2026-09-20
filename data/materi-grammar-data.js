@@ -1730,29 +1730,101 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Bentuk ない dan aturan",
+    title: "Bentuk ない dan cara memerintah",
     items: [
-    [
-      "Vないでください",
-      "Meminta agar seseorang tidak melakukan sesuatu.",
-      "ここで あそばないでください。",
-      "Tolong jangan bermain di sini.",
+      {
+        title: "Kata Kerja Bentuk ない",
+        noBox: true,
+        blocks: [
+          {
+            text: "Bentuk yang disambung pada ない（Contoh: かか dari かかない）disebut bentuk ない. Sesuai dengan kelompok Kata Kerja, cara membuat bentuk ない dari bentuk ます adalah sebagai berikut: (Lihat Buku Induk Pel.17 Latihan A1.)",
+          },
+          {
+            label: "1) Kata Kerja Kelompok I",
+            text: "Bunyi terakhir bentuk ます adalah bunyi kolom い, maka い diganti dengan bunyi kolom あ. Dengan catatan bahwa untuk Kata Kerja bentuk ます yang bunyi terakhirnya bunyi い sebagai vokal（かいます、あいます dan lain-lain）tidak diganti dengan あ melainkan わ.<br>か<u>き</u>－ます　→　か<u>か</u>－ない　　　いそ<u>ぎ</u>－ます　→　いそ<u>が</u>－ない<br>よ<u>み</u>－ます　→　よ<u>ま</u>－ない　　　あそ<u>び</u>－ます　→　あそ<u>ば</u>－ない<br>と<u>り</u>－ます　→　と<u>ら</u>－ない　　　ま<u>ち</u>－ます　→　ま<u>た</u>－ない<br>す<u>い</u>－ます　→　す<u>わ</u>－ない　　　はな<u>し</u>－ます　→　はな<u>さ</u>－ない",
+          },
+          {
+            label: "2) Kata Kerja Kelompok II",
+            text: "Bentuknya sama dengan bentuk ます.<br>たべ－ます　→　たべ－ない<br>み－ます　→　み－ない",
+          },
+          {
+            label: "3) Kata Kerja kelompok III",
+            text: "べんきょうし－ます　→　べんきょうし－ない<br>し－ます　→　し－ない<br>き－ます　→　こ－ない",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja（Bentuk ない）ないで ください",
+        suffix: "Jangan......!",
+        blocks: [
+          {
+            text: "Pola kalimat ini dipakai jika meminta atau memerintah kepada lawan bicara supaya tidak melakukan sesuatu hal.",
+            examples: [["① ここで 写真を 撮らないで ください。", "Jangan mengambil foto di sini!"]],
+          },
+          {
+            text: "Dapat menyatakan perhatian kepada lawan bicara untuk tidak perlu berbuat sesuatu hal.",
+            examples: [["② わたしは 元気ですから、心配しないで ください。", "Karena saya sehat, jangan khawatir."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja（Bentuk ない）なければ なりません",
+        suffix: "Harus......",
+        blocks: [
+          {
+            text: "Pola kalimat ini menunjukkan keharusan. Perlu hati-hati bahwa ini bukan kalimat negatif.",
+            examples: [["③ 薬を 飲まなければ なりません。", "Harus minum obat."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja（Bentuk ない）なくても いいです",
+        suffix: "Tidak perlu......",
+        blocks: [
+          {
+            text: "Pola kalimat ini menunjukkan bahwa tidak perlu melakukan sesuatu hal.",
+            examples: [["④ あした 来なくても いいです。", "Besok tidak perlu datang."]],
+          },
+        ],
+      },
+      {
+        title: "Pentopikan objek",
+        noBox: true,
+        blocks: [
+          {
+            text: "Jika menyatakan dengan objek langsung sebagai topik, maka partikel を dihilangkan kemudian membubuhkan partikel は, lalu diletakkan paling di depan dalam kalimat.",
+            examples: [
+              ["ここに　荷物を　置かないで　ください。", "Jangan letakkan barang di sini."],
+              ["荷物<span style=\"font-size:.65em\">を</span>は　ここに　置かないで　ください。", ""],
+              ["⑤　荷物<u>は</u>　　ここに　置かないで　ください。", "Barangnya jangan diletakkan di sini."],
+              ["会社の　食堂で　昼ごはんを　食べます。", "Makan siang di kantin perusahaan."],
+              ["昼ごはん<span style=\"font-size:.65em\">を</span>は　会社の　食堂で　食べます。", ""],
+              ["⑥　昼ごはん<u>は</u>　　会社の　食堂で　食べます。", "Makan siangnya makan di kantin perusahaan."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda（waktu）までに Kata Kerja",
+        blocks: [
+          {
+            text: "Menunjukkan batas waktu aksi atau peristiwa.",
+            examples: [
+              ["⑦ 会議は 5時までに 終わります。", "Rapat selesai sebelum pukul lima."],
+              ["⑧ 土曜日までに 本を 返さなければ なりません。", "Mengembalikan buku sampai dengan hari Sabtu."],
+            ],
+          },
+          {
+            note: "[Perhatian] Partikel まで yang telah dipelajari pada Pelajaran 4 menunjukkan titik akhir aksi yang sedang berlangsung. Perlu hati-hati sebab bentuknya mirip.",
+          },
+          {
+            examples: [["⑨ 5時まで 働きます。", "Bekerja sampai pukul lima."]],
+          },
+        ],
+      },
     ],
-    [
-      "Vなければなりません",
-      "Menyatakan kewajiban.",
-      "くすりを 飲まなければなりません。",
-      "Harus minum obat.",
-    ],
-    [
-      "Vなくてもいいです",
-      "Menyatakan sesuatu tidak wajib.",
-      "あしたは 来なくても いいです。",
-      "Besok tidak perlu datang.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Memakai bentuk negatif untuk aturan dan kewajiban.",
+    focusLabel: "Fokus Pelajaran 17",
+    focus: "Membentuk kata kerja bentuk ない untuk melarang, mewajibkan, dan membebaskan dari kewajiban, serta menopikkan objek dan menyatakan batas waktu.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },

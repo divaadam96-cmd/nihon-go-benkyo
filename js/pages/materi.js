@@ -134,6 +134,7 @@ const materialFuriganaReadings = {
   "天気": "てんき", "留学生": "りゅうがくせい", "主婦": "しゅふ", "梅田": "うめだ", "富士": "ふじ",
   "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
   "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
+  "心配": "しんぱい", "食堂": "しょくどう",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
   "音楽": "おんがく", "家族": "かぞく", "荷物": "にもつ", "会議": "かいぎ",
   "会社": "かいしゃ", "学校": "がっこう", "学生": "がくせい", "漢字": "かんじ",
@@ -180,7 +181,7 @@ const materialFuriganaReadings = {
   "思": "おも", "止": "と", "試": "ため", "持": "も", "治": "なお", "捨": "す",
   "出": "で", "暑": "あつ", "書": "か", "消": "け", "食": "た", "寝": "ね",
   "静": "しず", "洗": "あら", "送": "おく", "続": "つづ", "貸": "か", "脱": "ぬ",
-  "知": "し", "置": "お", "遅": "おく", "伝": "つた", "登": "のぼ", "働": "はたら",
+  "知": "し", "置": "お", "遅": "おく", "伝": "つた", "登": "のぼ", "働": "はたら", "返": "かえ",
   "読": "よ", "入": "はい", "買": "か", "聞": "き", "閉": "し", "歩": "ある",
   "忘": "わす", "忙": "いそが", "話": "はな", "来": "き", "楽": "たの",
 };
@@ -202,7 +203,10 @@ const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
      hari = にち (－日 = にち, Lihat Pel.11).
    - 月: berdiri sendiri "bulan (benda langit)" = つき, tapi jadi kata
      bantu bulan-dalam-tanggal = がつ (3月 = さんがつ) atau kata bantu
-     jangka waktu = げつ kalau menempel ke か (２か月 = にかげつ). */
+     jangka waktu = げつ kalau menempel ke か (２か月 = にかげつ).
+   - 来: Kata Kerja Kelompok III tidak beraturan - bentuk ます/て memakai
+     bacaan き (来ます, 来て), tapi bentuk ない memakai bacaan こ
+     (来ない = こない, Lihat Pel.17), jadi perlu dicek huruf SESUDAHnya. */
 function resolveCounterReading(word, text, cursor) {
   const prev = text[cursor - 1] || "";
   const isDigitOrDash = /[0-9０-９－]/.test(prev);
@@ -213,6 +217,7 @@ function resolveCounterReading(word, text, cursor) {
     if (prev === "か") return "げつ";
     if (isDigitOrDash) return "がつ";
   }
+  if (word === "来" && text[cursor + word.length] === "な") return "こ";
   return null;
 }
 
