@@ -1521,35 +1521,102 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Bentuk て dan permintaan",
+    title: "Izin, larangan, dan keadaan berlanjut",
     items: [
-    [
-      "Vてください",
-      "Meminta seseorang melakukan tindakan dengan sopan.",
-      "ここに 名前を 書いてください。",
-      "Tolong tulis nama di sini.",
+      {
+        title: "Kata Kerja Bentuk ても いいですか",
+        suffix: "Boleh......?",
+        blocks: [
+          {
+            text: "Ini adalah ungkapan untuk meminta izin.",
+            examples: [["① 写真を 撮っても いいですか。", "Boleh mengambil foto?"]],
+          },
+          {
+            text: "Cara menjawab untuk permohonan izin dengan ekspresi di atas adalah contoh ② atau contoh ③ yang terdapat di bawah ini.<br>Secara khusus ada caranya untuk jika tidak memberi izin, dengan cara menjawab secara tidak langsung (②) dan memakai ekspresi larangan (③ serta melihat 2 di bawahnya). Adakalanya memberikan alasan juga untuk kedua-duanya.",
+            examples: [
+              ["② ここで たばこを 吸っても いいですか。<br>……ええ、［吸っても］ いいですよ。<br>……すみません、ちょっと……。のどが 痛いですから。", "Boleh merokok di sini?<br>……Ya, boleh [merokok].<br>……Maaf, tidak boleh. Sebab kerongkongan sakit. (Pel.17)"],
+              ["③ ここで たばこを 吸っても いいですか。<br>……ええ、［吸っても］ いいですよ。<br>……いいえ、［吸っては］ いけません。禁煙ですから。", "Boleh merokok di sini?<br>……Ya, boleh [merokok].<br>……Tidak, tidak boleh [merokok]. Sebab dilarang merokok di sini."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk ては いけません",
+        suffix: "Tidak boleh......",
+        blocks: [
+          {
+            text: "Ekspresi ini menunjukkan arti larangan.",
+            examples: [["④ ここで たばこを 吸っては いけません。禁煙ですから。", "Tidak boleh merokok di sini. Sebab dilarang merokok."]],
+          },
+          {
+            text: "Ekspresi ini tidak dapat dipakai oleh bawahan terhadap atasan.",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk て います",
+        blocks: [
+          {
+            text: "Dalam pola kalimat ini, selain cara penggunaan yang menunjukkan aksi yang sedang berlangsung yang telah dipelajari pada Pelajaran 14 terdapat cara penggunaan seperti di bawah ini.",
+          },
+          {
+            label: "1) Menunjukkan keadaan（terutama dipakai Kata Kerja ～て います）",
+            examples: [
+              ["⑤ わたしは 結婚して います。", "Saya telah menikah."],
+              ["⑥ わたしは 田中さんを 知って います。", "Saya kenal Sdr. Tanaka."],
+              ["⑦ わたしは カメラを 持って います。", "Saya mempunyai kamera."],
+              ["⑧ わたしは 大阪に 住んで います。", "Saya tinggal di Osaka."],
+            ],
+          },
+          {
+            label: "[Perhatian 1]",
+            text: "Bentuk negatif dari しって います adalah しりません. Perlu hati-hati bahwa tidak dikatakan しって いません.",
+            examples: [["⑨ 市役所の 電話番号を 知って いますか。<br>……はい、知って います。<br>……いいえ、知りません。", "Apakah tahu nomor telepon kantor wali kota?<br>……Ya, tahu.<br>……Tidak, tidak tahu."]],
+          },
+          {
+            label: "[Perhatian 2]",
+            text: "もって います mempunyai dua arti yaitu, sekarang memegang di tangan dan memiliki.",
+          },
+          {
+            label: "2) Menunjukkan perbuatan dari kebiasan (aksi yang sama sedang berlangsung secara berulang-ulang dalam jangka waktu yang lama), atau pekerjaan dan status.",
+            examples: [
+              ["⑩ IMCは コンピューターソフトを 作って います。", "IMC memproduksi perangkat lunak komputer."],
+              ["⑪ スーパーで ナンプラーを 売って います。", "Di pasar swalayan dijual kecap ikan."],
+              ["⑫ ミラーさんは IMCで 働いて います。", "Sdr. Miller bekerja di IMC."],
+              ["⑬ 妹は 大学で 勉強して います。", "Adik perempuan saya kuliah di universitas."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda に Kata Kerja",
+        blocks: [
+          {
+            text: "Partikel に digunakan bersama dengan Kata Kerja seperti はいります, すわります, のります (naik Pel.16), のぼります (naik Pel.19), つきます (tiba Pel.25), kemudian menunjukkan hasil melakukan aksi dan tempat subjek berada.",
+            examples: [
+              ["⑭ ここに 入っては いけません。", "Tidak boleh masuk ke sini."],
+              ["⑮ ここに 座っても いいですか。", "Boleh duduk di sini?"],
+              ["⑯ 京都駅から 16番の バスに 乗って ください。", "Silakan naik bus nomor 16 dari stasiun Kyoto. (Pel.16)"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> に Kata Benda<sub>2</sub> を Kata Kerja",
+        blocks: [
+          {
+            text: "Partikel に menunjukkan tempat Kata Benda<sub>2</sub> berada (Kata Benda<sub>1</sub>) akibat dari melakukan aksi.",
+            examples: [["⑰ ここに 車を 止めて ください。", "Hentikan mobil di sini."]],
+          },
+          {
+            text: "に dari ⑱ juga memiliki fungsi yang sama.",
+            examples: [["⑱ ここに 住所を 書いて ください。", "Tuliskan alamat di sini."]],
+          },
+        ],
+      },
     ],
-    [
-      "Vています",
-      "Menyatakan kegiatan yang sedang berlangsung atau keadaan berlanjut.",
-      "いま 雨が 降っています。",
-      "Sekarang sedang hujan.",
-    ],
-    [
-      "Kelompok kata kerja",
-      "Bentuk て berubah menurut kelompok kata kerja; hafalkan perubahan bunyinya.",
-      "読んで、書いて、食べてください。",
-      "Tolong baca, tulis, dan makan.",
-    ],
-    [
-      "Urutan tindakan",
-      "Bentuk て dapat dipakai untuk menghubungkan tindakan berurutan.",
-      "朝 ごはんを 食べて、学校へ 行きます。",
-      "Saya sarapan lalu pergi ke sekolah.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Membentuk て dan memakainya untuk permintaan serta keadaan.",
+    focusLabel: "Fokus Pelajaran 15",
+    focus: "Meminta dan memberi izin, menyatakan larangan, serta menjelaskan keadaan dan kebiasaan dengan bentuk て います.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
