@@ -2097,27 +2097,116 @@ const MATERI_BOOK1_LESSONS = [
   {
     title: "Gaya biasa dalam percakapan",
     items: [
-    [
-      "Bentuk biasa tanya",
-      "Pertanyaan informal memakai intonasi atau の/か sesuai konteks.",
-      "あした ひま？",
-      "Besok senggang?",
+      {
+        title: "Bentuk Biasa と 思います",
+        suffix: "Saya kira......",
+        blocks: [
+          {
+            text: "Isi pikiran dan keputusan ditunjukan dengan memakai partikel と. Untuk pola kalimat ini terdapat penggunaan sebagai berikut di bawah ini:",
+          },
+          {
+            label: "1) Menyatakan dugaan.",
+            examples: [
+              ["① あした 雨が 降ると 思います。", "Saya kira besok hujan turun."],
+              ["② テレーザちゃんは もう 寝たと 思います。", "Saya kira Teresa sudah tidur."],
+            ],
+          },
+          {
+            text: "Jika isi dugaan bersifat negatif, bentuk negatif diletakkan di depan と.",
+            examples: [["③ ミラーさんは この ニュースを 知って いますか。<br>……いいえ、知らないと 思います。", "Apakah Sdr. Miller tahu berita ini?<br>……Tidak, saya kira dia tidak tahu."]],
+          },
+          {
+            label: "2) Menyatakan pendapat.",
+            examples: [["④ 日本は 物価が 高いと 思います。", "Saya pikir Jepang harga barangnya mahal."]],
+          },
+          {
+            text: "Jika menanyakan pendapat tentang sesuatu, memakai ekspresi ～に ついて どう おもいますか, dan tidak membubuhkan と di belakang どう.",
+            examples: [["⑤ 新しい 空港に ついて どう 思いますか。<br>……きれいですが、ちょっと 交通が 不便だと 思います。", "Mengenai bandara baru, menurut Anda bagaimana?<br>……Bersih, tetapi lalu lintasnya kurang praktis."]],
+          },
+          {
+            text: "Untuk menyatakan setuju atau tidak setuju terhadap pendapat orang lain sebagai berikut:",
+            examples: [["⑥ ケータイは 便利ですね。<br>……わたしも そう 思います。", "HP itu praktis ya.<br>……Saya rasa begitu juga."]],
+          },
+        ],
+      },
+      {
+        title: "“Kalimat”<br>Bentuk Biasa｝と 言います",
+        suffix: "Mengatakan bahwa......",
+        blocks: [
+          {
+            text: "Isi ucapan ditunjukkan dengan と. Caranya ada dua.",
+          },
+          {
+            label: "1)",
+            text: "Jika mengutip langsung, mengatakan kata yang dikutip seperti yang diucapkan tanpa diubah. Untuk menulis, kata tersebut dimasukkan ke dalam kurung「 」tanpa diubah.",
+            examples: [
+              ["⑦ 寝る まえに、「お休みなさい」と 言います。", "Sebelum tidur mengucapkan “Selamat tidur”."],
+              ["⑧ ミラーさんは 「来週 東京へ 出張します」と 言いました。", "Sdr. Miller berkata “Minggu depan dinas ke Tokyo”."],
+            ],
+          },
+          {
+            label: "2)",
+            text: "Jika mengungkapkan isi rangkuman yang disingkat oleh pengutip, sebelum と dipakai bentuk biasa.",
+            examples: [["⑨ ミラーさんは 東京へ 出張すると 言いました。", "Sdr. Miller mengatakan bahwa dinas ke Tokyo."]],
+          },
+          {
+            text: "Bagian ketipan tidak dipengaruhi waktu kalimat.<br>Lawan bicara yang mendengarkan ungkapan pembicara ditunjukan dengan partikel に.",
+            examples: [["⑩ 父に 留学したいと 言いました。", "Saya berkata kepada ayah bahwa ingin belajar di luar negeri."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa～だ｝でしょう？",
+        suffix: "......, bukan?",
+        blocks: [
+          {
+            text: "Ini digunakan pada waktu bertanya dengan tujuan mendapatkan persetujuan dari lawan bicara atau menegaskan. でしょう diungkapkan dengan nada yang naik.<br>Di depan でしょう dipakai bentuk biasa, tetapi untuk Kata Sifat な dan Kata Benda dilanjutkan dengan bentuk ない dari～だ.",
+            examples: [
+              ["⑪ あした パーティーに 行くでしょう？<br>……ええ、行きます。", "Besok pergi ke pesta, bukan?<br>……Ya, pergi."],
+              ["⑫ 北海道は 寒かったでしょう？<br>……いいえ、そんなに 寒くなかったです。", "Hokkaido dingin, bukan?<br>……Tidak, tidak begitu dingin."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub>（tempat）で Kata Benda<sub>2</sub> が あります",
+        blocks: [
+          {
+            text: "Jika Kata Benda<sub>2</sub> menyatakan acara atau peristiwa seperti pesta, konser, perayaan, kejadian, bencana dan sebagainya, maka あります digunakan dalam maksud diadakan atau terjadi.",
+            examples: [["⑬ 東京で 日本と ブラジルの サッカーの 試合が あります。", "Di Tokyo diadakan pertandingan sepak bola antara Jepang dan Brasil."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda（adegan）で",
+        blocks: [
+          {
+            text: "Sesuatu adegan yang dilakukan ditunjukkan dengan partikel で.",
+            examples: [["⑭ 会議で 何か 意見を 言いましたか。", "Di dalam rapat, apakah mengutarakan suatu pendapat?"]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda でも Kata Kerja",
+        blocks: [
+          {
+            text: "Jika menawarkan atau mengusulkan sesuatu, atau menyatakan keinginan dipakai partikel でも untuk menyebutkan satu dari beberapa contoh yang ada.",
+            examples: [["⑮ ちょっと ビールでも 飲みませんか。", "Bagaimana kalau minum bir, atau...?"]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja（Bentuk ない）ないと……",
+        blocks: [
+          {
+            text: "Ini adalah bentuk yang disingkat dari Kata Kerja（Bentukない）ないと いけません (Pel.17). Kata Kerja（Bentukない）ないと いけません mempunyai arti yang hampir sama dengan Kata Kerja（Bentukない）なければ なりません yang telah dipelajari pada Pelajaran 17.",
+            examples: [["⑯ もう 帰らないと……。", "Harus pulang..."]],
+          },
+        ],
+      },
     ],
-    [
-      "けれども／が",
-      "Menyambungkan informasi yang berlawanan dengan gaya yang sesuai.",
-      "安いけれども、便利です。",
-      "Murah, tetapi praktis.",
-    ],
-    [
-      "普通形と思います",
-      "Menyampaikan pendapat dengan sopan.",
-      "あしたは 雨が 降ると 思います。",
-      "Saya pikir besok akan hujan.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Menggunakan gaya biasa secara sesuai dalam dialog.",
+    focusLabel: "Fokus Pelajaran 21",
+    focus: "Menyampaikan dugaan dan pendapat, mengutip perkataan, meminta persetujuan, serta menyatakan peristiwa dan tawaran.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
