@@ -2012,27 +2012,85 @@ const MATERI_BOOK1_LESSONS = [
   {
     title: "Bentuk biasa",
     items: [
-    [
-      "普通形",
-      "Bentuk biasa dipakai dalam percakapan informal dan pola lanjutan.",
-      "きょうは 行かない。",
-      "Hari ini tidak pergi.",
+      {
+        title: "Bentuk Sopan dan Bentuk Biasa",
+        noBox: true,
+        blocks: [
+          {
+            text: "Dalam bentuk kalimat bahasa Jepang terdapat dua jenis bentuk kalimat, yaitu bentuk halus dan bentuk biasa.",
+            table: {
+              headers: ["Bentuk Sopan", "Bentuk Biasa"],
+              rows: [
+                ["", "あした 東京へ 行きます。<br>Besok pergi ke Tokyo.", "あした 東京へ 行く。<br>Besok pergi ke Tokyo."],
+                ["", "毎日 忙しいです。<br>Setiap hari sibuk.", "毎日 忙しい。<br>Setiap hari sibuk."],
+                ["", "相撲が 好きです。<br>Suka sumo.", "相撲が 好きだ。<br>Suka sumo."],
+                ["", "富士山に 登りたいです。<br>Ingin mendaki gunung Fuji.", "富士山に 登りたい。<br>Ingin mendaki gunung Fuji."],
+                ["", "ドイツへ 行った ことが ありません。<br>Belum pernah pergi ke Jerman.", "ドイツへ 行った ことが ない。<br>Belum pernah pergi ke Jerman."],
+              ],
+            },
+          },
+          {
+            text: "Bentuk yang diikuti です, ます disebut bentuk sopan, dan bentuk yang dipakai pada kalimat biasa disebut bentuk biasa (Lihat Buku Induk Pel.20 Latihan A1).",
+          },
+        ],
+      },
+      {
+        title: "Pembagian cara pemakaian Bentuk Sopan dan Bentuk Biasa",
+        noBox: true,
+        blocks: [
+          {
+            label: "1) Percakapan",
+            text: "Bentuk sopan dipakai untuk orang yang baru saja dikenal, atasan, atau orang yang tidak begitu akrab walaupun orang itu gerenasi yang sama. Sedangkan bentuk biasa dipakai untuk teman akrab, rekan, atau percakapan antara keluarga.<br>Jika memakai bentuk biasa kepada lawan bicara yang tidak tepat maka dianggap tidak sopan, karena itu perlu hati-hati kepada lawan bicara yang boleh atau tidak untuk memakai bentuk biasa.",
+          },
+          {
+            label: "2) Ketika menulis",
+            text: "Pada umumnya, surat tertulis dalam bentuk sopan. Untuk makalah, laporan, catatan harian dan lain-lainnya dipakai bentuk biasa.",
+          },
+        ],
+      },
+      {
+        title: "Percakapan dalam Bentuk Biasa",
+        noBox: true,
+        blocks: [
+          {
+            label: "1)",
+            text: "Dalam kalimat tanya dengan bentuk biasa, pada umumnya partikel か tidak dibubuhkan pada akhir kalimat, tetapi diungkapkan dengan nada yang naik seperti のむ（⤴）atau のんだ（⤴）.",
+            examples: [["① コーヒーを 飲む？（⤴）<br>……うん、飲む。（⤵）", "Mau minum kopi?<br>……Ya, mau minum."]],
+          },
+          {
+            label: "2)",
+            text: "Dalam kalimat tanya dari Kata Benda atau Kata Sifat Bentuk な, bentuk biasa だ dari です dihilangkan. Untuk jawaban positif, kalau dijawab dengan bentuk だ memberi kesan yang kasar dan keras maka だ dihilangkan atau membubuhkan partikel penutup demi menghaluskan nada ungkapan.",
+            examples: [["② 今晩 暇？<br>……うん、暇／暇だ／暇だよ。<br>……うん、暇／暇よ／暇だよ。<br>……ううん、暇じゃ ない。", "Nanti malam luang?<br>……Ya, luang. (digunakan oleh pria)<br>……Ya, luang. (digunakan oleh wanita)<br>……Tidak, tidak luang."]],
+          },
+          {
+            label: "3)",
+            text: "Dalam kalimat bentuk biasa, jika sudah dapat mengerti hubungan dari konteks kalimat sebelum dan sesudahnya, maka adakalanya partikel dihilangkan.",
+            examples: [
+              ["③ ごはん［を］ 食べる？", "Mau makan?"],
+              ["④ あした 京都［へ］ 行かない？", "Bagaimana kalau besok ke Kyoto?"],
+              ["⑤ この りんご［は］ おいしいね。", "Apel ini enak ya."],
+              ["⑥ そこに はさみ［が］ ある？", "Di situ ada gunting?"],
+            ],
+            note: "Akan tetapi, partikel で、に、から、まで、と、dan sebagainya tidak dihilangkan sebab konteksnya menjadi tidak jelas.",
+          },
+          {
+            label: "4)",
+            text: "Dalam kalimat bentuk biasa, い dari Kata Kerja Bentuk て いる juga sering dihilangkan.",
+            examples: [["⑦ 辞書、持って［い］る？<br>……うん、持って［い］る。<br>……ううん、持って［い］ない。", "Punya kamus?<br>……Ya, punya.<br>……Tidak, tidak punya."]],
+          },
+          {
+            label: "5) けど",
+            text: "けど mempunyai fungsi yang sama dengan が, dan sering digunakan dalam percakapan.",
+            examples: [
+              ["⑧ その カレー［は］ おいしい？<br>……うん、辛いけど、おいしい。", "Kare itu enak?<br>……Ya, pedas, tetapi enak."],
+              ["⑨ 相撲の チケット［が］ あるけど、いっしょに 行かない？<br>……いいね。", "Punya tiket <i>sumo</i>, bagaimana kalau kita pergi sama-sama?<br>……Bagus ya."],
+            ],
+          },
+        ],
+      },
     ],
-    [
-      "Vたことがあります",
-      "Menyatakan pengalaman masa lalu.",
-      "富士山に 登ったことが あります。",
-      "Saya pernah mendaki Gunung Fuji.",
-    ],
-    [
-      "Nに なります",
-      "Menjelaskan perubahan keadaan.",
-      "4月に 春に なります。",
-      "Pada April menjadi musim semi.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Mengenali bentuk informal dan pengalaman.",
+    focusLabel: "Fokus Pelajaran 20",
+    focus: "Membedakan bentuk sopan dan bentuk biasa, serta memakai bentuk biasa dalam percakapan sehari-hari.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
