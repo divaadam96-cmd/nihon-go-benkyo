@@ -1945,27 +1945,67 @@ const MATERI_BOOK1_LESSONS = [
   {
     title: "Pengalaman dan perubahan",
     items: [
-    [
-      "Vたことがあります",
-      "Menyatakan pernah mengalami sesuatu.",
-      "日本へ 行ったことが あります。",
-      "Saya pernah pergi ke Jepang.",
+      {
+        title: "Kata Kerja Bentuk た",
+        noBox: true,
+        blocks: [
+          {
+            text: "Bentuk konjugasi Kata Kerja yang berakhir dengan た atau だ disebut bentuk た. Cara membuat bentuk た adalah て atau で dari bentuk て diubah menjadi た atau だ (Lihat Buku Induk Pel.19 Latihan A1).<br>Bentuk て　→　Bentuk た<br>かいて　→　かいた<br>のんで　→　のんだ<br>たべて　→　たべた<br>きて　→　きた<br>して　→　した",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk た ことが あります",
+        suffix: "Pernah......",
+        blocks: [
+          {
+            examples: [["① 馬に 乗った ことが あります。", "Pernah berkuda."]],
+          },
+          {
+            text: "Perlu hati-hati bahwa jika hanya menyatakan kenyataan pada waktu lampau sebagaimana pernah dilakukan suatu aksi pada suatu titik waktu lampau, memakai bentuk waktu lampau.",
+            examples: [["② 去年 北海道で 馬に 乗りました。", "Tahun lalu berkuda di Hokkaido."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja<sub>1</sub> Bentuk たり、Kata Kerja<sub>2</sub> Bentuk たり します",
+        suffix: "Melakukan......,<br>melakukan......",
+        blocks: [
+          {
+            text: "Jika mengangkat beberapa Kata Benda (lebih dari dua) yang mewakilinya secara paralel pada umumnya memakai partikel や, tetapi menyatakan dengan mengangkat beberapa aksi yang mewakilinya maka digunakan pola kalimat ini. Waktu ditunjukkan pada akhir kalimat.",
+            examples: [
+              ["③ 日曜日は テニスを したり、映画を 見たり します。", "Pada hari Minggu bermain tenis, dan menonton film."],
+              ["④ 日曜日は テニスを したり、映画を 見たり しました。", "Pada hari Minggu yang lalu bermain tenis, dan menonton film."],
+            ],
+          },
+          {
+            note: "[Perhatian] Perlu hati-hati bahwa cara penggunaannya berbeda dengan Kata Kerja<sub>1</sub> Bentuk て、［Kata Kerja<sub>2</sub> Bentuk て、］Kata Kerja<sub>3</sub> yang telah dipelajari di Pelajaran 16. Kata Kerja<sub>1</sub> Bentuk て、［Kata Kerja<sub>2</sub> Bentuk て、］Kata Kerja<sub>3</sub> menyatakan aksi yang lebih dari dua yang terjadi secara berturut-turut sesuai dengan urutannya.",
+          },
+          {
+            examples: [["⑤ 日曜日は テニスを して、映画を 見ました。", "Pada hari Minggu yang lalu, bermain tenis, kemudian menonton film."]],
+          },
+          {
+            note: "Akan tetapi, tidak ada hubungan tentang waktu di antara aksi yang diangkat dengan Kata Kerja<sub>1</sub> Bentuk たり、Kata Kerja<sub>2</sub> Bentuk たり します. Dengan pola kalimat ini mengangkat aksi yang mewakilinya, maka tidak wajar untuk mengatakan hal-hal yang dilakukan setiap hari (bangun pagi, makan, tidur malam, dan lain-lain).",
+          },
+        ],
+      },
+      {
+        title: "Kata Sifat い（～い）→　～く<br>Kata Sifat な［な］→　～に<br>Kata Benda に｝なります",
+        suffix: "Menjadi......",
+        blocks: [
+          {
+            text: "なります menunjuk perubahan kondisi.",
+            examples: [
+              ["⑥ 寒い　→　寒く なります", "menjadi dingin"],
+              ["⑦ 元気［な］　→　元気に なります", "menjadi sehat"],
+              ["⑧ 25歳　→　25歳に なります", "menjadi (umur) dua puluh lima tahun"],
+            ],
+          },
+        ],
+      },
     ],
-    [
-      "Nに なります",
-      "Menyatakan perubahan menjadi keadaan/benda.",
-      "来年 先生に なります。",
-      "Tahun depan menjadi guru.",
-    ],
-    [
-      "Aく／Aに なります",
-      "Menyatakan perubahan sifat atau kondisi.",
-      "だんだん 暑く なりました。",
-      "Lambat-laun menjadi panas.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Menceritakan pengalaman dan perubahan.",
+    focusLabel: "Fokus Pelajaran 19",
+    focus: "Menceritakan pengalaman dengan bentuk た, menyebutkan beberapa aksi yang mewakili, dan menyatakan perubahan kondisi.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
