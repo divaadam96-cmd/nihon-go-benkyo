@@ -2286,29 +2286,82 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Klausa penjelas",
+    title: "Waktu, syarat, dan gerakan berpindah",
     items: [
-    [
-      "普通形 + N",
-      "Klausa sebelum kata benda menerangkan kata benda tersebut.",
-      "これは わたしが 買った 本です。",
-      "Ini buku yang saya beli.",
+      {
+        title: "Kata Kerja Bentuk Kamus<br>Kata Kerja（Bentuk ない）ない<br>Kata Sifat Bentuk い（～い）<br>Kata Sifat Bentuk な［な］<br>Kata Benda の｝とき、～（kalimat pokok）",
+        suffix: "Ketika......",
+        blocks: [
+          {
+            text: "とき menunjukkan waktu ketika terjadinya keadaan dan aksi atau fenomena yang dinyatakan dalam kalimat pokok yang menyusul. Bentuk yang diletakkan di depan とき sama dengan bentuk yang menerangkan Kata Benda.",
+            examples: [
+              ["① 図書館で 本を 借りる とき、カードが 要ります。", "Ketika meminjam buku di perpustakaan, diperlukan kartu."],
+              ["② 使い方が わからない とき、わたしに 聞いて ください。", "Jika tidak tahu cara pemakaiannya, silakan tanya kepada saya."],
+              ["③ 体の 調子が 悪い とき、「元気茶」を 飲みます。", "Ketika badan tidak enak, minum “Genki-cha”."],
+              ["④ 暇な とき、うちへ 遊びに 来ませんか。", "Pada waktu luang, bagaimana kalau datang bermain ke rumah saya?"],
+              ["⑤ 妻が 病気の とき、会社を 休みます。", "Jika istri sakit, saya tidak masuk kerja."],
+              ["⑥ 若い とき、あまり 勉強しませんでした。", "Waktu muda, tidak begitu belajar."],
+              ["⑦ 子どもの とき、よく 川で 泳ぎました。", "Waktu masih kecil, sering berenang di sungai."],
+            ],
+            note: "Kalimat dengan menggunakan とき tidak berpengaruh pada induk kalimat.",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus<br>Kata Kerja Bentuk た｝とき、～（kalimat pokok）",
+        suffix: "Waktu......",
+        blocks: [
+          {
+            text: "Jika Kata Kerja di depan とき adalah Bentuk Kamus, maka kalimat pokok menunjukkan hal yang terjadi sebelum kalimat～とき.<br>Jika Kata Kerja di depan とき adalah Bentuk た, maka kalimat pokok menunjukkan hal yang terjadi setelah kalimat～とき.",
+            examples: [
+              ["⑧ パリへ 行く とき、かばんを 買いました。", "Waktu mau pergi ke Paris, saya membeli tas."],
+              ["⑨ パリへ 行った とき、かばんを 買いました。", "Waktu pergi ke Paris, saya membeli tas."],
+            ],
+          },
+          {
+            text: "⑧ menyatakan bahwa membeli tas sebelum tiba di Paris, yaitu suatu tempat dalam perjalanan ke Paris, sedangkan ⑨ menyatakan bahwa membeli tas setelah tiba di Paris, yaitu membelinya di Paris.",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus と、～（kalimat pokok）",
+        suffix: "Kalau......",
+        blocks: [
+          {
+            text: "と menyatakan jika suatu aksi atau kejadian di depan と yang terjadi, menyatakan secara pasti akibat terjadinya suatu keadaan, aksi, fenomena, dan kejadian yang diikuti oleh kalimat pokok yang menyusul di belakangnya.",
+            examples: [
+              ["⑩ この ボタンを 押すと、お釣りが 出ます。", "Kalau tekan tombol ini, uang kembaliannya keluar."],
+              ["⑪ これを 回すと、音が 大きく なります。", "Kalau memutar ini, suaranya akan membesar."],
+              ["⑫ 右へ 曲がると、郵便局が あります。", "Kalau belok ke kanan, ada kantor pos."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda が Kata Sifat",
+        blocks: [
+          {
+            text: "Pada Pelajaran 14, telah dipelajari hal yang menyatakan suatu fenomena yang dirasakan dengan panca indera (mata, telinga dan lain-lain) secara langsung sesuai dengan perasaan, atau menyampaikan peristiwa secara objektivitas dengan menggunakan partikel が. Hal ini tidak sebatas kalimat verbal, tetapi adakalanya juga dipakai untuk kalimat adjektival.",
+            examples: [["⑬ 音が 小さいです。", "Suaranya kecil."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda を Kata Kerja yang menunjukkan gerakan berpindah",
+        blocks: [
+          {
+            text: "を yang digunakan bersama dengan Kata Kerja yang menunjukkan gerakan berpindah seperti さんぽします、わたります、あるきます dan lain-lainnya menunjukkan tempat yang dilewati orang atau benda.",
+            examples: [
+              ["⑭ 公園を 散歩します。", "Berjalan-jalan di taman. (Pel.13)"],
+              ["⑮ 道を 渡ります。", "Menyeberangi jalan."],
+              ["⑯ 交差点を 右へ 曲がります。", "Di perempatan belok ke kanan."],
+            ],
+          },
+        ],
+      },
     ],
-    [
-      "Subjek dalam klausa",
-      "Subjek klausa lazim memakai が.",
-      "あそこに いる 人は 先生です。",
-      "Orang yang ada di sana adalah guru.",
-    ],
-    [
-      "Menerangkan tempat/waktu",
-      "Klausa dapat menerangkan berbagai kata benda.",
-      "日本で 撮った 写真です。",
-      "Ini foto yang diambil di Jepang.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Membaca dan membuat anak kalimat penerang.",
+    focusLabel: "Fokus Pelajaran 23",
+    focus: "Menyatakan waktu terjadinya sesuatu dengan とき, syarat pasti dengan と, serta kesan panca indera dan gerakan berpindah dengan を.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },

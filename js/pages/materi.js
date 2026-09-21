@@ -137,7 +137,8 @@ const materialFuriganaReadings = {
   "心配": "しんぱい", "食堂": "しょくどう", "趣味": "しゅみ", "食事": "しょくじ", "去年": "きょねん",
   "今晩": "こんばん", "相撲": "すもう", "物価": "ぶっか", "空港": "くうこう", "交通": "こうつう",
   "不便": "ふべん", "出張": "しゅっちょう", "留学": "りゅうがく", "試合": "しあい", "意見": "いけん",
-  "約束": "やくそく", "用事": "ようじ", "生まれ": "うまれ",
+  "約束": "やくそく", "用事": "ようじ", "生まれ": "うまれ", "調子": "ちょうし", "病気": "びょうき",
+  "散歩": "さんぽ", "交差点": "こうさてん", "体": "からだ",
   "案内": "あんない", "意味": "いみ", "一度": "いちど", "映画": "えいが",
   "音楽": "おんがく", "家族": "かぞく", "荷物": "にもつ", "会議": "かいぎ",
   "会社": "かいしゃ", "学校": "がっこう", "学生": "がくせい", "漢字": "かんじ",
@@ -168,7 +169,8 @@ const materialFuriganaReadings = {
   "次": "つぎ", "時": "とき", "上": "うえ", "早": "はや", "切": "き",
   "分": "ふん", "新": "あたら", "覧": "らん", "月": "つき", "日": "ひ",
   "薬": "くすり", "何": "なに", "一": "いち", "雪": "ゆき", "歳": "さい", "暇": "ひま", "辛": "から", "父": "ちち",
-  "絵": "え", "彼": "かれ", "所": "ところ",
+  "絵": "え", "彼": "かれ", "所": "ところ", "要": "い", "悪": "わる", "妻": "つま", "川": "かわ",
+  "泳": "およ", "釣": "つ", "音": "おと", "右": "みぎ", "小": "ちい", "道": "みち", "渡": "わた", "曲": "ま",
   "方": "かた", "社員": "しゃいん", "鈴木": "すずき", "傘": "かさ",
   "違": "ちが", "階": "かい", "国": "くに", "半": "はん", "馬": "うま", "昼": "ひる",
   "借": "か", "習": "なら", "金": "かね", "山": "やま", "嫌": "きら", "車": "くるま",
@@ -212,7 +214,10 @@ const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
      bacaan き (来ます, 来て), bentuk ない memakai bacaan こ
      (来ない = こない, Lihat Pel.17), sedangkan bentuk kamus memakai
      bacaan く (来る = くる, Lihat Pel.18), jadi perlu dicek huruf
-     SESUDAHnya. */
+     SESUDAHnya.
+   - 回: berdiri sendiri/sebagai kata bantu bilangan (何回, 二回) = かい,
+     tapi jadi Kata Kerja 回す "memutar" = まわ (Lihat Pel.23) kalau
+     langsung diikuti す - dicek huruf SESUDAHnya juga. */
 function resolveCounterReading(word, text, cursor) {
   const prev = text[cursor - 1] || "";
   const isDigitOrDash = /[0-9０-９－]/.test(prev);
@@ -228,6 +233,7 @@ function resolveCounterReading(word, text, cursor) {
     if (next === "な") return "こ";
     if (next === "る") return "く";
   }
+  if (word === "回" && text[cursor + word.length] === "す") return "まわ";
   return null;
 }
 
