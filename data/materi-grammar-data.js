@@ -2366,29 +2366,72 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Waktu dan kondisi",
+    title: "Memberi dan menerima kebaikan",
     items: [
-    [
-      "Vとき",
-      "Menunjukkan waktu saat suatu keadaan/tindakan terjadi.",
-      "日本へ 行くとき、パスポートが いります。",
-      "Saat pergi ke Jepang, perlu paspor.",
+      {
+        title: "くれます",
+        noBox: true,
+        blocks: [
+          {
+            text: "あげます yang telah dipelajari pada Pelajaran 7 tidak dapat dipakai jika orang lain yang memberikan sesuatu kepada pembicara (diri sendiri) atau keluarga si pembicara. Dalam hal ini dipakai くれます.",
+            examples: [
+              ["① わたしは 佐藤さんに 花を あげました。", "Saya memberikan Sdr. Sato bunga."],
+              ["×佐藤さんは わたしに クリスマスカードを あげました。", ""],
+              ["② 佐藤さんは わたしに クリスマスカードを くれました。", "Sdr. Sato memberikan saya kartu Natal."],
+              ["③ 佐藤さんは 妹に お菓子を くれました。", "Sdr. Sato memberikan adik kue."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk て｛あげます<br>　　　もらいます<br>　　　くれます",
+        blocks: [
+          {
+            text: "あげます, もらいます dan くれます digunakan untuk pemberian atau penerimaan benda, sedangkan～て あげます,～て もらいます dan～て くれます digunakan untuk menunjukkan bahwa perbuatan tersebut saling memberi kebaikan atau keuntungan.",
+          },
+          {
+            label: "Kata Kerja Bentuk て あげます",
+            text: "Subjek dari Kata Kerja Bentuk て あげます adalah pelaku dijadikan sebagai subjek, dan dipakai ketika menunjukkan bahwa perbuatan tersebut memberikan kebaikan atau keuntungan.",
+            examples: [["④ わたしは 木村さんに 本を 貸して あげました。", "Saya meminjamkan Sdr. Kimura buku."]],
+          },
+          {
+            text: "Oleh sebab itu, perlu hati-hati jika perbuatan yang memberikan kebaikan atau keuntungan kepada atasan dengan menggunakan～て あげます memberi kesan yang memaksa orang untuk menerima kebaikan. Untuk menawarkan perbuatan yang memberi kebaikan atau keuntungan kepada atasan, digunakan Kata Kerja（Bentuk ます）ましょうか. (Lihat Pel.14-5).",
+            examples: [
+              ["⑤ タクシーを 呼びましょうか。", "Bagaimana kalau saya panggilkan taksi? (Pel.14)"],
+              ["⑥ 手伝いましょうか。", "Bagaimana kalau saya bantu? (Pel.14)"],
+            ],
+          },
+          {
+            label: "Kata Kerja Bentuk て もらいます",
+            examples: [["⑦ わたしは 山田さんに 図書館の 電話番号を 教えて もらいました。", "Saya diberikan nomor telepon perpustakaan oleh Sdr. Yamada."]],
+          },
+          {
+            text: "Ini menunjukkan bahwa si penerima bantuan dijadikan subjek dan dengan perbuatan itu si pembicara dianggap sebagai subjek yang menerima kebaikan atau keuntungan. Jika subjeknya わたし, biasanya subjek itu dihilangkan.",
+          },
+          {
+            label: "Kata Kerja Bentuk て くれます",
+            examples: [["⑧ 母は ［わたしに］ セーターを 送って くれました。", "Ibu saya mengirimkan saya sweater."]],
+          },
+          {
+            text: "Ini menunjukan bahwa pelaku dijadikan subjek dan dengan perbuatan itu si pembicara diaggap sebagai penerima kebaikan atau keuntungan. Jika penerima perbuatan (ditunjuk dengan partikel に) adalah わたし, biasanya わたし itu dihilangkan.",
+            note: "[Perhatian] Partikel yang menunjuk penerima kebaikan dalam kalimat～て あげます atau～て くれます menjadi sama dengan kalimat yang tidak digunakan～て あげます atau～て くれます.<br>わたし<u>に</u> 旅行の 写真を 見せます。<br>↓<br>わたし<u>に</u> 旅行の 写真を 見せて くれます。<br>Memperlihatkan saya foto waktu berwisata.<br><br>わたし<u>を</u> 大阪城へ 連れて 行きます。<br>↓<br>わたし<u>を</u> 大阪城へ 連れて 行って くれます。<br>Mengantarkan saya ke Benteng Osaka.<br><br>わたし<u>の</u> 引っ越しを 手伝います。<br>↓<br>わたし<u>の</u> 引っ越しを 手伝って くれます。<br>Membantu saya pindah rumah.",
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> は Kata Benda<sub>2</sub> が Kata Kerja",
+        blocks: [
+          {
+            examples: [["⑨ おいしい ワインですね。<br>……ええ、［この ワインは］ 佐藤さんが くれました。", "Anggur yang enak ya.<br>……Ya, [anggur ini] Sdr. Sato yang berikan."]],
+          },
+          {
+            text: "Kalimat jawaban adalah objek dari kalimat yang さとうさんが この ワインを くれました yaitu この ワイン dijadikan topik (Lihat Pel.17-5). この ワインは dapat dihilangkan sebab hal yang telah saling dipahami oleh si pembicara dan lawan bicara. Dengan catatan bahwa dalam kalimat ini さとうさん menjadi subjek maka dipakai が.",
+          },
+        ],
+      },
     ],
-    [
-      "Vと",
-      "Menunjukkan hasil yang terjadi secara alami atau selalu.",
-      "この ボタンを 押すと、ドアが 開きます。",
-      "Jika menekan tombol ini, pintu terbuka.",
-    ],
-    [
-      "Bentuk sebelum とき",
-      "Bentuk kata berubah sesuai urutan waktu dan jenis kata.",
-      "寝るとき、電気を 消します。",
-      "Saat tidur, saya mematikan lampu.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Menyatakan waktu dan hubungan sebab-akibat alami.",
+    focusLabel: "Fokus Pelajaran 24",
+    focus: "Menyatakan pemberian dan penerimaan kebaikan dengan あげます, もらいます, dan くれます.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
