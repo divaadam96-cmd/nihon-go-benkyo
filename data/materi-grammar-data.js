@@ -2436,29 +2436,79 @@ const MATERI_BOOK1_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Memberi dan menerima bantuan",
+    title: "Pengandaian dan konsesi",
     items: [
-    [
-      "Vてあげます",
-      "Melakukan tindakan untuk orang lain.",
-      "友達に 日本語を 教えてあげます。",
-      "Saya mengajari teman bahasa Jepang.",
+      {
+        title: "Bentuk Biasa Lampau ら、～（kalimat pokok）",
+        suffix: "Kalau...",
+        blocks: [
+          {
+            text: "Menyatakan persyaratan asumsi dengan membubuhkan ら pada Bentuk Biasa Lampau Kata Kerja, Kata Sifat dan Kata Benda yang menunjukkan isi suatu hal yang terjadi di bawah persyaratan asumsi yang disusul dengan kalimat pokok di belakangnya. Untuk kalimat pokok dapat digunakan ekspresi untuk menunjukkan keinginan, harapan, ajakan, permohonan dan lain-lain dari lawan bicara.",
+            examples: [
+              ["① お金が あったら、旅行します。", "Kalau punya uang, berwisata."],
+              ["② 時間が なかったら、テレビを 見ません。", "Kalau tidak ada waktu, tidak menonton TV."],
+              ["③ 安かったら、パソコンを 買いたいです。", "Kalau murah, ingin membeli komputer."],
+              ["④ 暇だったら、手伝って ください。", "Kalau sedang luang, tolong bantu saya."],
+              ["⑤ いい 天気だったら、散歩しませんか。", "Kalau cuaca baik, bagaimana kita jalan-jalan?"],
+            ],
+            note: "[Perhatian] Di belakang kalimat bentuk～と（kalimat pokok）, ekspresi untuk keinginan, harapan, ajakan, permohonan dan lain-lainnya tidak dapat dipakai.<br>×時間が あると、｛<br>　　コンサートに 行きます。　（keinginan）<br>　　コンサートに 行きたいです。　（harapan）<br>　　コンサートに 行きませんか。　（ajakan）<br>　　ちょっと 手伝って ください。　（permohonan）",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk たら、～（kalimat pokok）",
+        suffix: "Kalau sudah..., ～",
+        blocks: [
+          {
+            text: "Jika sebelumnya telah mengetahui bahwa maksud dari Kata Kerja Bentuk たら pasti terjadi, setelah terjadi hal itu menyatakan terjadinya hal-hal seperti aksi atau kejadian yang disusul kalimat pokok.",
+            examples: [
+              ["⑥ 10時に なったら、出かけましょう。", "Kalau sudah sampai pukul sepuluh, kita berangkat."],
+              ["⑦ うちへ 帰ったら、すぐ シャワーを 浴びます。", "Kalau pulang ke rumah, saya langsung mandi."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk て<br>Kata Kerja（Bentuk ない）なくて<br>Kata Sifat い（～い）→～くて<br>Kata Sifat な［な］→～で<br>Kata Benda で｝も、～（kalimat pokok）",
+        suffix: "Walaupun...",
+        blocks: [
+          {
+            text: "Ini menunjukkan persyaratan asumsi paradoks. Dengan kalimat yang disusul bentuk ても（kalimat pokok）, ditunjukkan terjadi hal yang terbaik yang biasanya dapat diduga di bawah persyaratan asumsi, atau tidak terjadinya hal yang biasanya dapat diduga.",
+            examples: [
+              ["⑧ 雨が 降っても、洗濯します。", "Walaupun hujan, mencuci pakaian."],
+              ["⑨ 安くても、わたしは グループ旅行が 嫌いです。", "Walaupun murah, saya tidak suka tur rombongan."],
+              ["⑩ 便利でも、パソコンを 使いません。", "Walaupun praktis, tidak memakai komputer."],
+              ["⑪ 日曜日でも、働きます。", "Walaupun hari Minggu, bekerja."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "もし",
+        blocks: [
+          {
+            text: "もし dipakai bersama dengan～たら, dan berfungsi untuk memberitahukan sebelumnya bahwa kalimat tersebut adalah kalimat persyaratan. もし menekankan perasaan asumsi si pembicara.",
+            examples: [["⑫ もし 1億円 あったら、いろいろな 国を 旅行したいです。", "Kalau punya seratus juta yen, ingin berwisata di berbagai negara."]],
+          },
+        ],
+      },
+      {
+        title: "Subjek dalam anak kalimat",
+        noBox: true,
+        blocks: [
+          {
+            text: "Pada Pelajaran 16 bagian 2, telah dijelaskan bahwa subjek dalam kalimat～てから ditunjuk dengan が. Sama halnya dengan～てから,～とき atau～まえに, untuk～たら dan～ても subjek dalam anak kalimat ditunjuk dengan が.",
+            examples: [
+              ["⑬ 友達が 来る まえに、部屋を 掃除します。", "Sebelum teman datang, membersihkan kamar. (Pel.18)"],
+              ["⑭ 妻が 病気の とき、会社を 休みます。", "Waktu istri sakit, saya tidak masuk kerja. (Pel.23)"],
+              ["⑮ 友達が 約束の 時間に 来なかったら、どう しますか。", "Kalau teman tidak datang pada waktu janji, bagaimana? (Pel.25)"],
+            ],
+          },
+        ],
+      },
     ],
-    [
-      "Vてもらいます",
-      "Menerima bantuan dari orang lain.",
-      "友達に 手伝ってもらいました。",
-      "Saya dibantu teman.",
-    ],
-    [
-      "Vてくれます",
-      "Orang lain melakukan bantuan untuk pembicara/pihaknya.",
-      "先生が 本を 貸してくれました。",
-      "Guru meminjamkan buku kepada saya.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Memahami arah bantuan dari sudut pandang pembicara.",
+    focusLabel: "Fokus Pelajaran 25",
+    focus: "Menyatakan pengandaian dengan ら／たら dan konsesi dengan ても, serta subjek dalam anak kalimat.",
     practiceLabel: "Latihan mandiri",
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
