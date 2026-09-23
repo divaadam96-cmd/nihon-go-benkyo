@@ -90,12 +90,12 @@ const curatedBabPackages={
       {category:"Penulisan Kanji",instruction:"＿＿＿の ことばは かんじで どう かきますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"<u>にちようび</u>は やすみです。",options:["日曜日","土曜日","月曜日","金曜日"],answer:0,explanation:"にちようび ditulis 日曜日, berarti hari Minggu.",material:"Bab 1–5 · Mondai 2 No.18",srsId:"kanji:日曜日"},
       {category:"Penulisan Kanji",instruction:"＿＿＿の ことばは かんじで どう かきますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"わたしは <u>でんしゃ</u>で がっこうへ いきます。",options:["電車","自転車","飛行機","地下鉄"],answer:0,explanation:"でんしゃ ditulis 電車, berarti kereta listrik.",material:"Bab 1–5 · Mondai 2 No.19",srsId:"kanji:電車"},
       {category:"Penulisan Kanji",instruction:"＿＿＿の ことばは かんじで どう かきますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"<u>おてあらい</u>は どこですか。",options:["お手洗い","事務所","教室","食堂"],answer:0,explanation:"おてあらい ditulis お手洗い, berarti kamar kecil/WC.",material:"Bab 1–5 · Mondai 2 No.20",srsId:"kanji:お手洗い"},
-      {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"わたしは がくせい（　）。",options:["です","じゃありません","か","の"],answer:0,explanation:"Pola N1は N2です dipakai untuk pernyataan positif: “Saya adalah pelajar.”",material:"Bab 1–5 · Mondai 3 No.21",srsId:"materi:book1:0:0"},
-      {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"あのかたは せんせい（　）。がくせいです。",options:["じゃありません","です","ですか","の"],answer:0,explanation:"じゃありません adalah bentuk negatif dari です: “Bukan guru, [tapi] pelajar.”",material:"Bab 1–5 · Mondai 3 No.22",srsId:"materi:book1:0:0"},
-      {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"これは わたし（　）ほんです。",options:["の","も","は","か"],answer:0,explanation:"の menghubungkan dua kata benda untuk kepemilikan: “buku saya.”",material:"Bab 1–5 · Mondai 3 No.23",srsId:"materi:book1:1:0"},
-      {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"わたしは がくせいです。あなた（　）ですか。",options:["も","の","を","で"],answer:0,explanation:"も berarti “juga”, menggantikan は pada topik kedua.",material:"Bab 1–5 · Mondai 3 No.24",srsId:"materi:book1:1:0"},
+      {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"わたしは がくせい（　）。",options:["です","でした","でしょう","じゃありません"],answer:0,explanation:"です menyatakan pernyataan positif SEKARANG: “Saya adalah pelajar.” でした berarti dulu, でしょう berarti dugaan, dan じゃありません berarti bukan - keempatnya bentuk akhir kalimat yang mirip tapi maknanya beda.",material:"Bab 1–5 · Mondai 3 No.21",srsId:"materi:book1:0:0"},
+      {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"あのかたは せんせい（　）。がくせいです。",options:["じゃありません","です","ですか","でした"],answer:0,explanation:"Kalimat lanjutan “がくせいです” menegaskan bukan guru SEKARANG, jadi じゃありません (bukan, kini) yang tepat. です berarti “adalah” (positif), ですか membuatnya jadi pertanyaan, dan でした berarti dulu - ketiganya salah konteks.",material:"Bab 1–5 · Mondai 3 No.22",srsId:"materi:book1:0:0"},
+      {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"これは わたし（　）ほんです。",options:["の","も","を","が"],answer:0,explanation:"の menghubungkan dua kata benda untuk kepemilikan: “buku saya.” も berarti “juga” (beda makna), sedangkan を dan が tidak bisa menyambung dua kata benda seperti ini.",material:"Bab 1–5 · Mondai 3 No.23",srsId:"materi:book1:1:0"},
+      {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"わたしは がくせいです。あなた（　）ですか。",options:["も","の","が","に"],answer:0,explanation:"も berarti “juga”, menggantikan は pada topik kedua yang predikatnya sama. の di sini membuat kalimat lain (“punya Anda?”) yang tidak nyambung dengan konteks, sedangkan が dan に tidak menyatakan kesamaan seperti も.",material:"Bab 1–5 · Mondai 3 No.24",srsId:"materi:book1:1:0"},
       {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"かいぎしつは（　）ですか。",options:["どこ","だれ","いつ","なに"],answer:0,explanation:"どこ dipakai untuk menanyakan tempat.",material:"Bab 1–5 · Mondai 3 No.25",srsId:"materi:book1:2:0"},
-      {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"「これは あなたの かさですか。」「いいえ、（　）。」",options:["ちがいます","そうです","どうも","どうぞ"],answer:0,explanation:"ちがいます dipakai untuk menyangkal informasi yang salah.",material:"Bab 1–5 · Mondai 3 No.26",srsId:"materi:book1:2:0"},
+      {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"「これは あなたの かさですか。」「いいえ、（　）。」",options:["ちがいます","そうです","そうですか","どうも"],answer:0,explanation:"ちがいます dipakai untuk menyangkal informasi yang salah. そうです dan そうですか dipakai untuk jawaban POSITIF/mengerti, bukan menyangkal, dan どうも adalah ungkapan terima kasih - ketiganya salah konteks di sini.",material:"Bab 1–5 · Mondai 3 No.26",srsId:"materi:book1:2:0"},
       {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"わたしは まいあさ 6じ（　）おきます。",options:["に","で","と","へ"],answer:0,explanation:"に menandai waktu yang spesifik seperti jam.",material:"Bab 1–5 · Mondai 3 No.27",srsId:"materi:book1:3:0"},
       {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"げつようび（　）きんようびまで はたらきます。",options:["から","まで","と","に"],answer:0,explanation:"から menunjukkan titik mulai, dipasangkan dengan まで.",material:"Bab 1–5 · Mondai 3 No.28",srsId:"materi:book1:3:0"},
       {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"わたしは でんしゃ（　）がっこうへ いきます。",options:["で","へ","と","に"],answer:0,explanation:"で menandai alat transportasi yang dipakai.",material:"Bab 1–5 · Mondai 3 No.29",srsId:"materi:book1:4:0"},
@@ -104,7 +104,12 @@ const curatedBabPackages={
       {category:"Parafrasa",instruction:"＿＿＿の ぶんと だいたい おなじ いみの ぶんが あります。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"これは わたしの ほんです。",options:["この ほんは わたしのです。","その ほんは あなたのです。","あの ほんは せんせいのです。","これは あなたの ほんです。"],answer:0,explanation:"これは Nです dapat diubah menjadi この Nは……のです, karena これ menggantikan “ini+benda” sedangkan この menerangkan benda yang disebut.",material:"Bab 1–5 · Mondai 4 No.32",srsId:"materi:book1:1:0"},
       {category:"Parafrasa",instruction:"＿＿＿の ぶんと だいたい おなじ いみの ぶんが あります。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"かいぎしつは どこですか。",options:["かいぎしつは どちらですか。","かいぎしつは なんですか。","かいぎしつは だれですか。","かいぎしつは いつですか。"],answer:0,explanation:"どこ dan どちら sama-sama menanyakan tempat; どちら lebih sopan.",material:"Bab 1–5 · Mondai 4 No.33",srsId:"materi:book1:2:0"},
       {category:"Parafrasa",instruction:"＿＿＿の ぶんと だいたい おなじ いみの ぶんが あります。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"きょうは やすみです。",options:["きょうは はたらきます。","きょうは はたらきません。","きょうは べんきょうします。","きょうは おわります。"],answer:1,explanation:"やすみ (hari libur) berarti tidak bekerja, jadi はたらきません paling sesuai.",material:"Bab 1–5 · Mondai 4 No.34",srsId:"materi:book1:3:0"},
-      {category:"Parafrasa",instruction:"＿＿＿の ぶんと だいたい おなじ いみの ぶんが あります。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"わたしは ひとりで がっこうへ いきます。",options:["わたしは ともだちと がっこうへ いきます。","わたしは かぞくと がっこうへ いきます。","わたしは だれとも がっこうへ いきません。","わたしは ともだちと かえります。"],answer:2,explanation:"ひとりで (sendirian) berarti tidak pergi bersama siapa pun, sepadan dengan だれとも～ません.",material:"Bab 1–5 · Mondai 4 No.35",srsId:"materi:book1:4:0"}
+      {category:"Parafrasa",instruction:"＿＿＿の ぶんと だいたい おなじ いみの ぶんが あります。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"わたしは ひとりで がっこうへ いきます。",options:["わたしは ともだちと がっこうへ いきます。","わたしは かぞくと がっこうへ いきます。","わたしは だれとも がっこうへ いきません。","わたしは ともだちと かえります。"],answer:2,explanation:"ひとりで (sendirian) berarti tidak pergi bersama siapa pun, sepadan dengan だれとも～ません.",material:"Bab 1–5 · Mondai 4 No.35",srsId:"materi:book1:4:0"},
+      {category:"Soal Cerita",instruction:"Baca cerita pendek berikut, lalu jawab pertanyaannya.",html:"ミラーさんは　IMCの　会社員です。学生じゃ　ありません。これは　ミラーさんの　傘ですか。……いいえ、違います。それは　山田さんのです。<br><small>この　傘は　だれのですか。</small>",options:["ミラーさんの","山田さんの","IMCの","学生の"],answer:1,explanation:"Cerita menjawab langsung: “Apakah ini payung Miller?……Bukan, itu payung Yamada.” の menggantikan Kata Benda yang sudah disebut (Pel.1–2), jadi 山田さんの berarti “punya Sdr. Yamada”.",material:"Bab 1–5 · Soal Cerita No.36",srsId:"materi:book1:1:0"},
+      {category:"Soal Cerita",instruction:"Baca cerita pendek berikut, lalu jawab pertanyaannya.",html:"この　本は　わたしのです。あの　コンピューターは　どこの　コンピューターですか。……日本の　コンピューターです。会社の　事務所は　2階です。<br><small>事務所は　どこですか。</small>",options:["1階","2階","3階","4階"],answer:1,explanation:"Kalimat terakhir cerita menyebutkan “Kantor perusahaan di lantai 2”, memakai pola Kata Benda は tempat です (Pel.3) untuk menyatakan lokasi.",material:"Bab 1–5 · Soal Cerita No.37",srsId:"materi:book1:2:0"},
+      {category:"Soal Cerita",instruction:"Baca cerita pendek berikut, lalu jawab pertanyaannya.",html:"お手洗いは　あそこです。銀行は　9時から　3時までです。わたしは　まいあさ　6時に　おきます。<br><small>銀行は　何時からですか。</small>",options:["7時","8時","9時","10時"],answer:2,explanation:"Cerita menyatakan “Bank dari pukul 9 sampai pukul 3”, memakai pola～から～まで (Pel.4) untuk titik mulai dan titik akhir waktu.",material:"Bab 1–5 · Soal Cerita No.38",srsId:"materi:book1:3:0"},
+      {category:"Soal Cerita",instruction:"Baca cerita pendek berikut, lalu jawab pertanyaannya.",html:"きのう　勉強しませんでした。あした　京都へ　行きます。電車で　行きます。<br><small>何で　京都へ　行きますか。</small>",options:["バス","タクシー","電車","歩いて"],answer:2,explanation:"Kalimat terakhir cerita menyebutkan “Pergi dengan kereta rel listrik”, memakai pola Kata Benda（kendaraan）で行きます (Pel.5) untuk sarana transportasi.",material:"Bab 1–5 · Soal Cerita No.39",srsId:"materi:book1:4:0"},
+      {category:"Soal Cerita",instruction:"Baca cerita pendek berikut, lalu jawab pertanyaannya.",html:"先週　どこ［へ］も　行きませんでした。今週の　日曜日、家族と　京都へ　行きます。……いいですね。<br><small>だれと　京都へ　行きますか。</small>",options:["一人で","友達と","家族と","先生と"],answer:2,explanation:"Cerita menyebutkan “Bersama keluarga pergi ke Kyoto”, memakai pola Kata Benda（orang）と Kata Kerja (Pel.5) untuk menyatakan teman melakukan sesuatu.",material:"Bab 1–5 · Soal Cerita No.40",srsId:"materi:book1:4:0"}
     ]
   },
   6:{
@@ -407,13 +412,37 @@ function contextualQuestions(kind){const source=collectRangeData(babKanjiData),r
   if(kind==="reading"){const options=optionSet(meaning,allMeanings);return{category:"Bacaan",instruction:"Baca kalimat pendek, lalu pilih maknanya.",html:`これは <ruby>${word}<rt>${reading}</rt></ruby> です。`,options,answer:options.indexOf(meaning),explanation:`Kata ${word} (${reading}) pada teks berarti “${meaning}”.`,material:`Bab ${bab} · Bacaan pendek`,srsId:`kanji:${word}`}}
   if(kind==="audio"){const options=optionSet(word,allWords);return{category:"Audio",instruction:"Dengarkan audio, lalu pilih kata yang diucapkan.",html:"音声を聞いてください。",audio:reading,options,answer:options.indexOf(word),explanation:`Audio mengucapkan ${reading}, yaitu ${word} yang berarti “${meaning}”.`,material:`Bab ${bab} · Pemahaman audio`,srsId:`kanji:${word}`}}
   const correct=`${word}を ください。`,options=optionSet(correct,[`${word}へ ください。`,`${word}が ください。`,`${word}で ください。`]);return{category:"Situasional",instruction:"Pilih ungkapan yang paling sesuai dengan situasi.",html:`Kamu ingin meminta “${meaning}” dengan sopan.`,options,answer:options.indexOf(correct),explanation:`Pola benda + をください digunakan untuk meminta sesuatu dengan sopan: ${correct}`,material:`Bab ${bab} · Komunikasi praktis`,srsId:`kanji:${word}`}})}
+/* Bug lama: hampir semua soal di curatedBabPackages (dan tailoredQuizData
+   yang dipakai grammarQuestions) jawaban benarnya SELALU disimpan di index 0
+   ("A") karena ditulis manual tanpa diacak - options di data sumber
+   dianggap urutan TETAP, bukan urutan tampil. Di sini options diacak ULANG
+   dan `answer` dihitung ulang dari posisi teks jawaban benar yang baru,
+   supaya posisi jawaban benar bervariasi setiap kali - berlaku untuk semua
+   sumber soal (curated, generator, maupun paket siap pakai) dalam satu
+   titik, bukan menambal tiap soal satu-satu. */
+function randomizeOptions(question){
+  const correctText=question.options[question.answer];
+  const options=shuffled(question.options);
+  return {...question,options,answer:options.indexOf(correctText)};
+}
+/* reorder=true JUGA mengacak URUTAN soalnya (bukan cuma posisi jawabannya)
+   supaya soal "beradaptasi" - begitu latihan diulang, bentuk/susunan soal
+   berubah otomatis walau tetap dari bank soal rentang bab yang sama.
+   Paket siap pakai (mockPackage) sengaja TIDAK diacak urutannya supaya
+   format ujian resmi (Mondai 1→2→3→4 berurutan) tetap utuh. */
+function finalizeQuestions(list,{reorder}){
+  const withOptions=list.map(randomizeOptions);
+  return reorder?shuffled(withOptions):withOptions;
+}
 function buildSelectedQuestions(){
-  if(mockPackage){const pack=mockTestPackages[mockPackage];questions=[...pack.questions];$("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=pack.label;return}
+  if(mockPackage){const pack=mockTestPackages[mockPackage];questions=finalizeQuestions(pack.questions,{reorder:false});$("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=pack.label;return}
   const curated=curatedBabPackages[rangeStart];
-  if(curated){questions=[...curated.questions];$("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`;return}
+  if(curated){questions=finalizeQuestions(curated.questions,{reorder:true});$("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`;return}
   const vocabulary=vocabularyQuestions(),kanji=kanjiQuestions(),grammar=grammarQuestions(),sentence=contextualQuestions("sentence"),reading=contextualQuestions("reading"),audio=contextualQuestions("audio"),situational=contextualQuestions("situational");
-  questions=[...vocabulary.slice(0,2),...kanji.slice(0,2),...grammar.slice(0,2),sentence[0],reading[0],audio[0],situational[0]];
-  questions=questions.filter(Boolean);if(!questions.length)questions=[...defaultQuestions];$("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`;
+  let list=[...vocabulary.slice(0,2),...kanji.slice(0,2),...grammar.slice(0,2),sentence[0],reading[0],audio[0],situational[0]];
+  list=list.filter(Boolean);if(!list.length)list=[...defaultQuestions];
+  questions=finalizeQuestions(list,{reorder:true});
+  $("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`;
 }
 /* Batas waktu wajib (tidak bisa dimatikan siswa): latihan per 5 bab
    maksimal 45 menit, simulasi paket maksimal 60 menit. */
@@ -574,6 +603,75 @@ $("accessList").addEventListener("click",(event)=>{
 window.refreshTestAccess=function(){
   if(restrictedMode&&$("testScreen").hidden)loadAccessAssignments();
 };
+/* Mode operator: review + edit soal satu rentang bab sekaligus (tanpa
+   perlu mengerjakan satu-satu), termasuk tambah/hapus soal. Perubahan di
+   sini cuma di memori tab ini (operatorDraft) - "Salin kode" menyalin
+   representasi curatedBabPackages[rangeStart] yang sudah diedit supaya
+   operator/developer bisa menempelkannya balik ke berkas sumber, karena
+   seluruh konten latihan di app ini memang disimpan sebagai berkas
+   statis (sama seperti materi-grammar-data.js/bab-data.js), bukan di
+   database - konsisten dengan cara kerja bagian lain aplikasi ini. */
+let operatorDraft=[];
+function blankOperatorQuestion(){
+  return {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"",options:["","","",""],answer:0,explanation:"",material:`Bab ${rangeStart}–${rangeStart+4} · Soal baru`};
+}
+function loadOperatorDraft(){
+  const curated=curatedBabPackages[rangeStart];
+  operatorDraft=curated?curated.questions.map(q=>({...q,options:[...q.options]})):[];
+  paintOperatorEditor();
+}
+function paintOperatorEditor(){
+  $("operatorRangeLabel").textContent=`Bab ${rangeStart}–${rangeStart+4}`;
+  $("operatorQuestionList").innerHTML=operatorDraft.length?operatorDraft.map((q,i)=>`
+    <article class="operator-card" data-index="${i}">
+      <header><b>Soal ${i+1} · ${escapeHtmlTes(q.category)}</b><button type="button" class="operator-remove">🗑 Hapus</button></header>
+      <label>Kategori<input class="op-field" data-field="category" value="${escapeHtmlTes(q.category)}"></label>
+      <label>Instruksi<input class="op-field" data-field="instruction" value="${escapeHtmlTes(q.instruction)}"></label>
+      <label>Teks soal (HTML diperbolehkan, mis. &lt;ruby&gt;)<textarea class="op-field" data-field="html" rows="2">${escapeHtmlTes(q.html)}</textarea></label>
+      <label>Pilihan jawaban (bulatan = jawaban benar)</label>
+      <div class="operator-options">${q.options.map((opt,oi)=>`<label class="operator-option"><input type="radio" name="op-answer-${i}" class="op-answer-radio" data-oi="${oi}" ${q.answer===oi?"checked":""}><input class="op-option-field" data-oi="${oi}" value="${escapeHtmlTes(opt)}"></label>`).join("")}</div>
+      <label>Pembahasan<textarea class="op-field" data-field="explanation" rows="2">${escapeHtmlTes(q.explanation)}</textarea></label>
+      <label>Label materi<input class="op-field" data-field="material" value="${escapeHtmlTes(q.material)}"></label>
+    </article>
+  `).join(""):'<p class="operator-empty">Rentang ini belum punya paket soal manual. Klik "+ Tambah soal baru" untuk mulai membuatnya.</p>';
+  $("operatorExportOutput").hidden=true;
+}
+function operatorCardIndex(el){const card=el.closest(".operator-card");return card?Number(card.dataset.index):NaN}
+function operatorExportCode(){
+  const lines=operatorDraft.map(q=>{
+    const parts=[`category:${JSON.stringify(q.category)}`,`instruction:${JSON.stringify(q.instruction)}`,`html:${JSON.stringify(q.html)}`,`options:${JSON.stringify(q.options)}`,`answer:${q.answer}`,`explanation:${JSON.stringify(q.explanation)}`,`material:${JSON.stringify(q.material)}`];
+    if(q.srsId)parts.push(`srsId:${JSON.stringify(q.srsId)}`);
+    return `      {${parts.join(",")}},`;
+  });
+  return `  ${rangeStart}:{\n    questions:[\n${lines.join("\n")}\n    ]\n  },`;
+}
+$("openOperatorEditor").onclick=()=>{loadOperatorDraft();$("startScreen").hidden=true;$("operatorEditorScreen").hidden=false;window.scrollTo({top:0,behavior:"smooth"})};
+$("closeOperatorEditor").onclick=()=>{$("operatorEditorScreen").hidden=true;$("startScreen").hidden=false};
+$("addOperatorQuestion").onclick=()=>{operatorDraft.push(blankOperatorQuestion());paintOperatorEditor()};
+$("copyOperatorCode").onclick=async()=>{
+  const code=operatorExportCode();
+  const output=$("operatorExportOutput");
+  output.value=code;output.hidden=false;output.select();
+  try{await navigator.clipboard.writeText(code)}catch(e){/* clipboard mungkin tidak diizinkan - teks tetap tampil & terpilih di textarea untuk disalin manual */}
+};
+$("operatorQuestionList").addEventListener("input",(event)=>{
+  const i=operatorCardIndex(event.target);
+  if(Number.isNaN(i))return;
+  if(event.target.classList.contains("op-field")){operatorDraft[i][event.target.dataset.field]=event.target.value}
+  else if(event.target.classList.contains("op-option-field")){operatorDraft[i].options[Number(event.target.dataset.oi)]=event.target.value}
+});
+$("operatorQuestionList").addEventListener("change",(event)=>{
+  const i=operatorCardIndex(event.target);
+  if(Number.isNaN(i))return;
+  if(event.target.classList.contains("op-answer-radio"))operatorDraft[i].answer=Number(event.target.dataset.oi);
+});
+$("operatorQuestionList").addEventListener("click",(event)=>{
+  if(!event.target.classList.contains("operator-remove"))return;
+  const i=operatorCardIndex(event.target);
+  if(Number.isNaN(i))return;
+  operatorDraft.splice(i,1);
+  paintOperatorEditor();
+});
 async function initAccessControl(){
   const role=await resolveRole();
   restrictedMode=role==="siswa";

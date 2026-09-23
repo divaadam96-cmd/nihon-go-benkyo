@@ -40,7 +40,16 @@
       <div class="coverage"><span>PAKET TERPILIH</span><div class="package-preview"><b id="selectedTestName">Ujian per 5 Bab · Bab 1–5</b><small id="selectedRangeText">Materi gabungan diambil dari Bab 1, 2, 3, 4, dan 5.</small></div></div>
       <div class="question-waiting"><b>Bank soal siap digunakan</b><span>Soal latihan dibuat dari data kosakata, kanji, tata bahasa, bacaan, dan audio lokal.</span></div>
       <button class="start-button" id="startTest">Mulai simulasi <span>→</span></button>
+      <button class="operator-button" id="openOperatorEditor" data-role-only="operator" hidden>🛠 Kelola soal rentang ini (Operator)</button>
     </div>
+  </section>
+
+  <section class="operator-editor" id="operatorEditorScreen" hidden>
+    <header><div><span class="eyebrow">MODE OPERATOR</span><h2>Kelola soal — <span id="operatorRangeLabel">Bab 1–5</span></h2></div><button class="ghost" id="closeOperatorEditor">← Kembali</button></header>
+    <p class="operator-hint">Ubah teks soal, pilihan jawaban (klik bulatan untuk menandai jawaban benar), atau tambah/hapus soal di bawah. Perubahan di sini HANYA tersimpan di layar ini - klik "Salin kode" lalu tempelkan hasilnya ke <code>curatedBabPackages</code> di berkas sumber (js/pages/latihan.js) supaya perubahan permanen untuk semua siswa.</p>
+    <div class="operator-list" id="operatorQuestionList"></div>
+    <div class="operator-actions"><button class="ghost" id="addOperatorQuestion">+ Tambah soal baru</button><button class="primary" id="copyOperatorCode">Salin kode</button></div>
+    <textarea class="operator-export" id="operatorExportOutput" readonly hidden></textarea>
   </section>
 
   <section class="test-shell" id="testScreen" hidden>

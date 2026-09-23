@@ -11,3 +11,27 @@ button,input{font:inherit}.hero{display:flex;align-items:flex-end;justify-conten
 .prototype-badge.question-waiting{display:flex;align-items:center;gap:12px;margin:-7px 0 17px;padding:12px 14px;border-left:3px solid var(--gold);border-radius:4px;background:#f2e8d6}.question-waiting b{color:var(--navy);font-size:9px}.question-waiting span{color:#6f7c89;font-size:8px}.start-button:disabled{opacity:.55;cursor:not-allowed}.config-block.disabled{opacity:.45;pointer-events:none}.exam-choice button:disabled{opacity:.48;cursor:not-allowed}@media(max-width:600px){.question-waiting{align-items:flex-start;flex-direction:column}}
 .access-empty{padding:22px 20px;border:1px dashed #cbb98f;border-radius:10px;background:#f2e8d6;text-align:center}.access-empty b{display:block;margin-bottom:6px;color:var(--navy);font-size:13px}.access-empty span{display:block;max-width:460px;margin:0 auto;color:#7d6a45;font-size:10px;line-height:1.6}.access-list{display:grid;gap:10px;margin-top:22px}.access-card{display:grid;grid-template-columns:55px 1fr auto;align-items:center;gap:14px;width:100%;padding:14px 16px;border:1px solid #d6cab7;border-radius:10px;color:#455467;background:#fffdf8;text-align:left;cursor:pointer}.access-card:hover{border-color:var(--gold)}.access-card .access-mark{display:grid;width:48px;height:48px;place-items:center;border-radius:9px;color:#91692e;background:#eee3cd;font-size:11px;font-weight:900}.access-card b{display:block;color:var(--navy);font-size:13px}.access-card small{display:block;margin-top:4px;color:#7e8995;font-size:9px}.access-card .access-go{color:#9a7a47;font:800 10px "Noto Serif JP"}
 .finish-hint{display:block;margin-top:6px;color:#8a7c5e;font-size:7px;line-height:1.5;text-align:center}.finish-button:disabled{opacity:.5;cursor:not-allowed}
+.operator-button{width:100%;margin-top:10px;padding:11px 14px;border:1px dashed #b9924c;border-radius:8px;color:#8a6225;background:#fbf1dd;font-size:9px;font-weight:800;cursor:pointer}
+.operator-editor{margin-top:25px;padding:22px 25px;border:1px solid var(--line);border-radius:13px;background:#fbf7eef4;box-shadow:var(--shadow)}
+.operator-editor>header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.operator-editor h2{margin:5px 0 0;color:var(--navy)}
+.operator-hint{max-width:820px;margin:12px 0 0;padding:11px 14px;border-left:3px solid var(--gold);color:#6d5a34;background:#f2e8d6;font-size:9px;line-height:1.6;border-radius:4px}
+.operator-hint code{padding:1px 4px;border-radius:4px;background:#00000012}
+.operator-list{display:grid;gap:14px;margin-top:18px}
+.operator-card{padding:16px 18px;border:1px solid #d9cdb2;border-radius:10px;background:#fffdf8}
+.operator-card>header{display:flex;align-items:center;justify-content:space-between}
+.operator-card>header>b{color:var(--navy);font-size:11px}
+.operator-remove{padding:6px 9px;border:1px solid #d6b4a4;border-radius:6px;color:#a34a2f;background:#fdece5;font-size:8px;font-weight:800;cursor:pointer}
+.operator-card label{display:block;margin-top:10px;color:#7a684a;font-size:8px;font-weight:800;letter-spacing:.5px}
+.operator-card input.op-field,.operator-card textarea.op-field{width:100%;margin-top:4px;padding:8px 10px;border:1px solid #d6cab7;border-radius:7px;color:var(--navy);background:#fff;font:600 12px "Noto Serif JP"}
+.operator-card textarea.op-field{resize:vertical}
+.operator-options{display:grid;gap:6px;margin-top:10px}
+.operator-option{display:flex!important;align-items:center;gap:8px;margin:0!important;font-weight:400!important}
+.operator-option input[type=radio]{flex:none}
+.operator-option input.op-option-field{flex:1;margin:0;padding:7px 9px;border:1px solid #d6cab7;border-radius:6px;color:var(--navy);background:#fff;font:600 12px "Noto Serif JP"}
+.operator-actions{display:flex;gap:8px;margin-top:18px}
+.operator-actions button{padding:10px 14px;border-radius:8px;font-size:8px;font-weight:800;cursor:pointer}
+.operator-actions .ghost{border:1px solid #d1c4ae;color:#715e42;background:#fffaf2}
+.operator-actions .primary{border:0;color:#f8ead0;background:var(--navy)}
+.operator-export{width:100%;min-height:220px;margin-top:14px;padding:12px;border:1px solid #d6cab7;border-radius:8px;color:#2c3846;background:#0f1f33;font:11px/1.6 monospace;white-space:pre}
+.operator-empty{margin-top:14px;color:#7d6a45;font-size:10px}
