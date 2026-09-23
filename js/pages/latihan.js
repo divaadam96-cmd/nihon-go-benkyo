@@ -434,10 +434,31 @@ function finalizeQuestions(list,{reorder}){
   const withOptions=list.map(randomizeOptions);
   return reorder?shuffled(withOptions):withOptions;
 }
-function buildSelectedQuestions(){
+/* Bab soal per rentang bisa datang dari Supabase (quiz_questions, status
+   'published' - hasil klik "Terbitkan" Operator) ATAU dari bank statis
+   curatedBabPackages di berkas ini. Supabase diutamakan; kalau baris
+   published belum ada (rentang belum dimigrasi) atau query gagal
+   (offline dsb.), diam-diam jatuh ke bank statis supaya siswa tetap bisa
+   mengerjakan tes. */
+function questionRowToObject(row){
+  const q={category:row.category,instruction:row.instruction,html:row.html,options:row.options,answer:row.answer,explanation:row.explanation,material:row.material};
+  if(row.srs_id)q.srsId=row.srs_id;
+  return q;
+}
+async function fetchQuizQuestions(babRange,status){
+  if(!window.supabaseClient)return null;
+  try{
+    const{data,error}=await window.supabaseClient.from("quiz_questions").select("*").eq("bab_range",babRange).eq("status",status).order("position",{ascending:true});
+    if(error||!data||!data.length)return null;
+    return data.map(questionRowToObject);
+  }catch(e){return null}
+}
+async function buildSelectedQuestions(){
   if(mockPackage){const pack=mockTestPackages[mockPackage];questions=finalizeQuestions(pack.questions,{reorder:false});$("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=pack.label;return}
+  const remote=await fetchQuizQuestions(rangeStart,"published");
   const curated=curatedBabPackages[rangeStart];
-  if(curated){questions=finalizeQuestions(curated.questions,{reorder:true});$("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`;return}
+  const bank=remote||(curated?curated.questions:null);
+  if(bank){questions=finalizeQuestions(bank,{reorder:true});$("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`;return}
   const vocabulary=vocabularyQuestions(),kanji=kanjiQuestions(),grammar=grammarQuestions(),sentence=contextualQuestions("sentence"),reading=contextualQuestions("reading"),audio=contextualQuestions("audio"),situational=contextualQuestions("situational");
   let list=[...vocabulary.slice(0,2),...kanji.slice(0,2),...grammar.slice(0,2),sentence[0],reading[0],audio[0],situational[0]];
   list=list.filter(Boolean);if(!list.length)list=[...defaultQuestions];
@@ -535,7 +556,13 @@ function finishTest(){
    latihan per 5 bab 45 menit, simulasi paket 60 menit. Saat waktu habis,
    tes otomatis selesai lewat finishTest() meski belum semua soal terjawab. */
 function startTimer(){clearInterval(timerId);seconds=timeLimitSeconds();const render=()=>{const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`};render();timerId=setInterval(()=>{seconds--;render();if(seconds<=0)finishTest()},1000)}
-function startTest(){if(!questionBankReady)return;buildSelectedQuestions();current=0;answers=Array(questions.length).fill(null);checked=Array(questions.length).fill(false);flags=Array(questions.length).fill(false);reviewOnly=false;$("startScreen").hidden=true;$("resultScreen").hidden=true;$("testScreen").hidden=false;startTimer();renderQuestion();window.scrollTo({top:0,behavior:"smooth"})}
+async function startTest(){
+  if(!questionBankReady)return;
+  const button=$("startTest");button.disabled=true;const originalLabel=button.innerHTML;button.innerHTML="Memuat soal…";
+  await buildSelectedQuestions();
+  button.disabled=false;button.innerHTML=originalLabel;
+  current=0;answers=Array(questions.length).fill(null);checked=Array(questions.length).fill(false);flags=Array(questions.length).fill(false);reviewOnly=false;$("startScreen").hidden=true;$("resultScreen").hidden=true;$("testScreen").hidden=false;startTimer();renderQuestion();window.scrollTo({top:0,behavior:"smooth"})
+}
 document.querySelectorAll("#sourceChoice button").forEach(button=>button.onclick=()=>{
   mockPackage=button.dataset.package||"";
   document.querySelectorAll("#sourceChoice button").forEach(item=>item.classList.toggle("active",item===button));
@@ -612,12 +639,24 @@ window.refreshTestAccess=function(){
    statis (sama seperti materi-grammar-data.js/bab-data.js), bukan di
    database - konsisten dengan cara kerja bagian lain aplikasi ini. */
 let operatorDraft=[];
+let operatorSourceIsRemote=false;
 function blankOperatorQuestion(){
   return {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"",options:["","","",""],answer:0,explanation:"",material:`Bab ${rangeStart}–${rangeStart+4} · Soal baru`};
 }
-function loadOperatorDraft(){
+/* Draft Operator diambil dari Supabase (quiz_questions, status 'draft')
+   dulu - itu yang dipakai kalau Operator sebelumnya sudah pernah klik
+   "Simpan draft". Kalau belum ada baris draft sama sekali (rentang ini
+   belum pernah dikelola lewat database), mulai dari bank statis
+   curatedBabPackages sebagai draft awal - belum tersimpan ke database
+   sampai Operator klik "Simpan draft"/"Terbitkan". */
+async function loadOperatorDraft(){
+  $("operatorQuestionList").innerHTML='<p class="operator-empty">Memuat…</p>';
+  setOperatorStatus("");
+  const draftRows=await fetchQuizQuestions(rangeStart,"draft");
+  operatorSourceIsRemote=!!draftRows;
   const curated=curatedBabPackages[rangeStart];
-  operatorDraft=curated?curated.questions.map(q=>({...q,options:[...q.options]})):[];
+  operatorDraft=draftRows||(curated?curated.questions.map(q=>({...q,options:[...q.options]})):[]);
+  if(!operatorSourceIsRemote&&operatorDraft.length)setOperatorStatus('Menampilkan bank soal statis - belum ada draft tersimpan di database untuk rentang ini. Klik "Simpan draft" untuk mulai menyimpannya ke database.');
   paintOperatorEditor();
 }
 function paintOperatorEditor(){
@@ -645,9 +684,59 @@ function operatorExportCode(){
   });
   return `  ${rangeStart}:{\n    questions:[\n${lines.join("\n")}\n    ]\n  },`;
 }
-$("openOperatorEditor").onclick=()=>{loadOperatorDraft();$("startScreen").hidden=true;$("operatorEditorScreen").hidden=false;window.scrollTo({top:0,behavior:"smooth"})};
+function setOperatorStatus(text,kind){
+  const el=$("operatorStatus");el.textContent=text;el.classList.toggle("is-success",kind==="success");el.classList.toggle("is-error",kind==="error");
+}
+/* Simpan seluruh operatorDraft sebagai baris status='draft' di Supabase:
+   hapus draft lama rentang ini lalu tulis ulang dari awal (bukan diff
+   satu-satu) - paling sederhana dan aman karena RLS hanya mengizinkan
+   Operator menulis baris draft (lihat supabase/add-quiz-questions.sql). */
+async function saveOperatorDraft(){
+  if(!window.supabaseClient){setOperatorStatus("Supabase tidak tersedia - tidak bisa menyimpan ke database.","error");return false}
+  const button=$("saveOperatorDraft");button.disabled=true;const original=button.textContent;button.textContent="Menyimpan…";
+  setOperatorStatus("");
+  try{
+    const del=await window.supabaseClient.from("quiz_questions").delete().eq("bab_range",rangeStart).eq("status","draft");
+    if(del.error)throw del.error;
+    if(operatorDraft.length){
+      const rows=operatorDraft.map((q,i)=>({bab_range:rangeStart,status:"draft",position:i,category:q.category,instruction:q.instruction,html:q.html,options:q.options,answer:q.answer,explanation:q.explanation,material:q.material,srs_id:q.srsId||null}));
+      const ins=await window.supabaseClient.from("quiz_questions").insert(rows);
+      if(ins.error)throw ins.error;
+    }
+    operatorSourceIsRemote=true;
+    setOperatorStatus("Draft tersimpan ke database.","success");
+    return true;
+  }catch(e){
+    setOperatorStatus("Gagal menyimpan draft: "+(e&&e.message?e.message:e),"error");
+    return false;
+  }finally{
+    button.disabled=false;button.textContent=original;
+  }
+}
+/* Terbitkan = simpan draft dulu (supaya yang diterbitkan pasti versi
+   terbaru di layar ini) lalu panggil publish_quiz_range() - fungsi
+   SECURITY DEFINER di database yang memindahkan draft -> published
+   dalam satu transaksi, jadi siswa tidak pernah melihat soal setengah-edit. */
+async function publishOperatorDraft(){
+  const saved=await saveOperatorDraft();
+  if(!saved)return;
+  if(!window.supabaseClient)return;
+  const button=$("publishOperatorDraft");button.disabled=true;const original=button.textContent;button.textContent="Menerbitkan…";
+  try{
+    const{error}=await window.supabaseClient.rpc("publish_quiz_range",{p_bab_range:rangeStart});
+    if(error)throw error;
+    setOperatorStatus(`Berhasil diterbitkan - siswa sekarang melihat versi terbaru Bab ${rangeStart}–${rangeStart+4}.`,"success");
+  }catch(e){
+    setOperatorStatus("Gagal menerbitkan: "+(e&&e.message?e.message:e),"error");
+  }finally{
+    button.disabled=false;button.textContent=original;
+  }
+}
+$("openOperatorEditor").onclick=async()=>{$("startScreen").hidden=true;$("operatorEditorScreen").hidden=false;window.scrollTo({top:0,behavior:"smooth"});await loadOperatorDraft()};
 $("closeOperatorEditor").onclick=()=>{$("operatorEditorScreen").hidden=true;$("startScreen").hidden=false};
 $("addOperatorQuestion").onclick=()=>{operatorDraft.push(blankOperatorQuestion());paintOperatorEditor()};
+$("saveOperatorDraft").onclick=saveOperatorDraft;
+$("publishOperatorDraft").onclick=publishOperatorDraft;
 $("copyOperatorCode").onclick=async()=>{
   const code=operatorExportCode();
   const output=$("operatorExportOutput");

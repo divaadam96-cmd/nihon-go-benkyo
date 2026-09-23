@@ -17,6 +17,10 @@ button,input{font:inherit}.hero{display:flex;align-items:flex-end;justify-conten
 .operator-editor h2{margin:5px 0 0;color:var(--navy)}
 .operator-hint{max-width:820px;margin:12px 0 0;padding:11px 14px;border-left:3px solid var(--gold);color:#6d5a34;background:#f2e8d6;font-size:9px;line-height:1.6;border-radius:4px}
 .operator-hint code{padding:1px 4px;border-radius:4px;background:#00000012}
+.operator-status{min-height:11px;margin:10px 0 0;color:#7a684a;font-size:9px;font-weight:700}
+.operator-status:empty{margin:0}
+.operator-status.is-success{color:#3f6b3f}
+.operator-status.is-error{color:#a34a2f}
 .operator-list{display:grid;gap:14px;margin-top:18px}
 .operator-card{padding:16px 18px;border:1px solid #d9cdb2;border-radius:10px;background:#fffdf8}
 .operator-card>header{display:flex;align-items:center;justify-content:space-between}

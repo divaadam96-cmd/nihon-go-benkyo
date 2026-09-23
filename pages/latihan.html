@@ -46,9 +46,10 @@
 
   <section class="operator-editor" id="operatorEditorScreen" hidden>
     <header><div><span class="eyebrow">MODE OPERATOR</span><h2>Kelola soal — <span id="operatorRangeLabel">Bab 1–5</span></h2></div><button class="ghost" id="closeOperatorEditor">← Kembali</button></header>
-    <p class="operator-hint">Ubah teks soal, pilihan jawaban (klik bulatan untuk menandai jawaban benar), atau tambah/hapus soal di bawah. Perubahan di sini HANYA tersimpan di layar ini - klik "Salin kode" lalu tempelkan hasilnya ke <code>curatedBabPackages</code> di berkas sumber (js/pages/latihan.js) supaya perubahan permanen untuk semua siswa.</p>
+    <p class="operator-hint">Ubah teks soal, pilihan jawaban (klik bulatan untuk menandai jawaban benar), atau tambah/hapus soal di bawah. <b>Simpan draft</b> menyimpan perubahan ke database (belum tampil ke siswa). <b>Terbitkan</b> menyimpan lalu langsung menayangkan draft ini ke semua siswa. "Salin kode" tetap tersedia sebagai cadangan manual untuk rentang yang belum memakai database.</p>
+    <p class="operator-status" id="operatorStatus"></p>
     <div class="operator-list" id="operatorQuestionList"></div>
-    <div class="operator-actions"><button class="ghost" id="addOperatorQuestion">+ Tambah soal baru</button><button class="primary" id="copyOperatorCode">Salin kode</button></div>
+    <div class="operator-actions"><button class="ghost" id="addOperatorQuestion">+ Tambah soal baru</button><button class="ghost" id="saveOperatorDraft">💾 Simpan draft</button><button class="primary" id="publishOperatorDraft">🚀 Simpan &amp; Terbitkan</button><button class="ghost" id="copyOperatorCode">Salin kode</button></div>
     <textarea class="operator-export" id="operatorExportOutput" readonly hidden></textarea>
   </section>
 
