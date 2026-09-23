@@ -496,6 +496,11 @@
   color: var(--muted);
   font-size: 11px;
 }
+.material-practice-furigana-note {
+  margin-top: 8px !important;
+  color: #956e30 !important;
+  font-weight: 700;
+}
 .material-example-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

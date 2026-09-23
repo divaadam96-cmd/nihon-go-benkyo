@@ -595,6 +595,25 @@ function initMaterialLessonPicker({
      です／でした. */
   const PARTICLE_SET = ["は", "が", "を", "に", "で", "と", "も", "の", "へ", "か"];
 
+  /* Pasangan partikel yang sering tertukar oleh pembelajar (mis. は/が,
+     に/で/へ) - dipakai sebagai distraktor PRIORITAS pada soal "pilih
+     partikel yang tepat" (buildParticleQuestions) supaya pilihannya
+     benar-benar menjebak, bukan partikel acak yang gampang disingkirkan
+     dari konteks kalimat. Fallback ke PARTICLE_SET penuh tetap dipakai
+     kalau confusable-nya belum cukup 3 (lihat fourChoices). */
+  const PARTICLE_CONFUSABLES = {
+    は: ["が", "も", "に"],
+    が: ["は", "を", "の"],
+    を: ["が", "に", "の"],
+    に: ["で", "へ", "と", "は"],
+    で: ["に", "と", "へ"],
+    と: ["に", "で", "も"],
+    も: ["は", "が", "と"],
+    の: ["が", "を", "に"],
+    へ: ["に", "で", "を"],
+    か: ["の", "と", "も"],
+  };
+
   function isKanaChar(ch) {
     return /[぀-ヿ]/.test(ch || "");
   }
@@ -658,6 +677,50 @@ function initMaterialLessonPicker({
       index = sentence.indexOf(particle, index + 1);
     }
     return null;
+  }
+
+  /* Pasangan akhiran yang sering tertukar (polaritas/waktu) - dipakai
+     nearMissVariants untuk bikin distraktor "hampir benar" pada soal
+     terjemahan & cerita, bukan cuma kalimat lain yang topiknya beda jauh
+     (gampang disingkirkan cuma dari kosakatanya). */
+  const SUFFIX_CONFUSABLES = [
+    ["ませんでした", "ました"],
+    ["ました", "ませんでした"],
+    ["ません", "ます"],
+    ["ます", "ません"],
+    ["じゃありません", "です"],
+    ["ではありません", "です"],
+    ["じゃないです", "です"],
+    ["くなかったです", "かったです"],
+    ["かったです", "くなかったです"],
+    ["ないでください", "てください"],
+    ["てください", "ないでください"],
+    ["なければ なりません", "なくても いいです"],
+    ["なくても いいです", "なければ なりません"],
+  ];
+
+  /* Bikin distraktor "hampir benar" dari SATU kalimat yang sama: tukar satu
+     partikel berdiri sendiri dengan pasangan yang sering tertukar
+     (PARTICLE_CONFUSABLES), atau tukar akhiran polaritas/waktu
+     (SUFFIX_CONFUSABLES). Dipakai sebagai distraktor PRIORITAS di soal
+     terjemahan & cerita supaya siswa harus benar-benar mengerti tata
+     bahasanya, bukan cuma mencocokkan kosakata yang muncul di arti
+     Indonesia. Kalau tidak ada partikel/akhiran yang bisa ditukar (jarang),
+     hasilnya array kosong dan pemanggil jatuh ke distraktor cadangan biasa. */
+  function nearMissVariants(sentence) {
+    const variants = new Set();
+    detectStandaloneParticles(sentence).forEach((particle) => {
+      const blanked = blankParticle(sentence, particle);
+      if (!blanked) return;
+      (PARTICLE_CONFUSABLES[particle] || []).forEach((swap) => {
+        variants.add(blanked.replace("（　　）", swap));
+      });
+    });
+    SUFFIX_CONFUSABLES.forEach(([from, to]) => {
+      if (sentence.includes(from)) variants.add(sentence.split(from).join(to));
+    });
+    variants.delete(sentence);
+    return Array.from(variants);
   }
 
   /* Parafrase AMAN untuk soal cerita: ambil satu kalimat DARI CERITA ITU
@@ -826,17 +889,29 @@ function initMaterialLessonPicker({
       return tokensOf(sentence).flatMap(splitParticles);
     }
 
-    function fourChoices(correct, distractors) {
-      const shuffledDistractors = shuffleArray(distractors.filter((item) => item !== correct));
-      const choices = unique([correct, ...shuffledDistractors]);
-      const fallback = ["です", "ます", "ません", "でした", "から", "ので"];
-      let fallbackIndex = 0;
-      while (choices.length < 4) {
-        const item = fallback[fallbackIndex % fallback.length];
-        if (!choices.includes(item)) choices.push(item);
-        fallbackIndex++;
+    /* priorityDistractors diambil DULUAN (diacak di antara sesamanya, tapi
+       selalu lebih diutamakan dari fallbackDistractors) supaya soal jadi
+       lebih sulit - misalnya partikel yang sering tertukar
+       (PARTICLE_CONFUSABLES) atau kalimat "hampir benar" hasil
+       nearMissVariants, bukan pilihan acak yang gampang disingkirkan cuma
+       dari konteksnya. fallbackDistractors dipakai kalau priority belum
+       cukup 3, dan kata generik di bawah ini jadi jaring pengaman TERAKHIR
+       kalau keduanya masih kurang (mis. bab dengan sangat sedikit contoh). */
+    function fourChoices(correct, priorityDistractors, fallbackDistractors = []) {
+      const seen = new Set([correct]);
+      const picks = [];
+      const consider = (item) => {
+        if (picks.length >= 3 || seen.has(item)) return;
+        seen.add(item);
+        picks.push(item);
+      };
+      shuffleArray(priorityDistractors).forEach(consider);
+      shuffleArray(fallbackDistractors).forEach(consider);
+      const genericFallback = ["です", "ます", "ません", "でした", "から", "ので"];
+      for (let guard = 0; picks.length < 3 && guard < 60; guard++) {
+        consider(genericFallback[guard % genericFallback.length]);
       }
-      return shuffleArray(choices.slice(0, 4));
+      return shuffleArray([correct, ...picks]);
     }
 
     /* 2 soal: pilih partikel yang tepat. Satu pola dipakai sekali saja per
@@ -881,7 +956,11 @@ function initMaterialLessonPicker({
           context: `Pola: ${example.pattern}`,
           prompt,
           correct: particle,
-          choices: fourChoices(particle, PARTICLE_SET.filter((p) => p !== particle)),
+          choices: fourChoices(
+            particle,
+            PARTICLE_CONFUSABLES[particle] || [],
+            PARTICLE_SET.filter((p) => p !== particle),
+          ),
           explanation: `Kalimat lengkapnya: ${firstClause} - partikel「${particle}」dipakai sesuai pola ${example.pattern}.`,
         });
       };
@@ -891,10 +970,14 @@ function initMaterialLessonPicker({
       return questions;
     }
 
-    /* 3 soal: diberi arti Indonesia, pilih kalimat Jepang yang tepat -
-       distraktornya kalimat Jepang lain dari bab yang sama. Contoh yang
-       dipakai diacak tiap panggilan (bukan lagi rotasi tetap) supaya 3
-       kalimat yang dites bisa berbeda tiap kali soal dibuat ulang. */
+    /* 3 soal: diberi arti Indonesia, pilih kalimat Jepang yang tepat.
+       Distraktor PRIORITAS adalah nearMissVariants dari kalimat yang sama
+       (satu partikel/akhiran ditukar ke yang sering keliru) supaya tidak
+       bisa dijawab cuma dengan mencocokkan kosakata yang muncul di arti
+       Indonesia - siswa harus benar-benar cek tata bahasanya. Distraktor
+       cadangan (fallback) tetap kalimat lain dari bab yang sama kalau
+       nearMiss belum cukup 3. Contoh yang dipakai diacak tiap panggilan
+       supaya 3 kalimat yang dites bisa berbeda tiap kali soal dibuat ulang. */
     function buildTranslateQuestions(count) {
       const pool = shuffleArray(quizPool.filter((example) => example.japaneseClean && example.meaningText));
       return pool.slice(0, count).map((example) => ({
@@ -906,6 +989,7 @@ function initMaterialLessonPicker({
         correct: example.japaneseClean,
         choices: fourChoices(
           example.japaneseClean,
+          nearMissVariants(example.japaneseClean),
           // Kalimat lain dengan arti Indonesia yang PERSIS SAMA (mis. Pel.7
           // pola 4 vs [Perhatian]-nya: "…に…" dan "…から…" sama-sama
           // diterjemahkan "Saya mendapatkan bunga dari Sdr. Yamada.") tidak
@@ -936,10 +1020,24 @@ function initMaterialLessonPicker({
         const order = words.map((_, index) => index);
         const shuffledOrder = shuffleArray(order);
         const correct = order.map((originalIndex) => shuffledOrder.indexOf(originalIndex) + 1).join(" - ");
-        const variantSequences = new Set();
-        for (let guard = 0; guard < 30 && variantSequences.size < 5; guard++) {
+        const correctParts = correct.split(" - ").map(Number);
+        // Distraktor PRIORITAS: tukar SATU pasang posisi bersebelahan dari
+        // urutan benar (mis. cuma posisi ke-3 & ke-4 tertukar) - jauh lebih
+        // sulit dibedakan daripada urutan acak total, karena siswa harus
+        // benar-benar cek tiap posisi, bukan cuma lihat "kelihatannya beda".
+        const adjacentSwaps = new Set();
+        for (let i = 0; i < correctParts.length - 1; i++) {
+          const copy = correctParts.slice();
+          [copy[i], copy[i + 1]] = [copy[i + 1], copy[i]];
+          const variant = copy.join(" - ");
+          if (variant !== correct) adjacentSwaps.add(variant);
+        }
+        // Distraktor cadangan: acak total, dipakai kalau tukar-bersebelahan
+        // belum cukup 3 (kalimat pendek, cuma 3-4 potongan).
+        const randomSwaps = new Set();
+        for (let guard = 0; guard < 30 && randomSwaps.size < 5; guard++) {
           const variant = shuffleArray(order.map((_, index) => index + 1)).join(" - ");
-          if (variant !== correct) variantSequences.add(variant);
+          if (variant !== correct) randomSwaps.add(variant);
         }
         return {
           type: "arrange",
@@ -948,28 +1046,59 @@ function initMaterialLessonPicker({
           context: `Arti: ${example.meaningText}`,
           prompt: shuffledOrder.map((originalIndex, displayIndex) => `${displayIndex + 1}. ${words[originalIndex]}`).join("　｜　"),
           correct,
-          choices: fourChoices(correct, Array.from(variantSequences)),
+          choices: fourChoices(correct, Array.from(adjacentSwaps), Array.from(randomSwaps)),
           explanation: `Urutan yang benar: ${correct} → ${words.join("")} (${example.pattern}).`,
         };
       });
     }
 
+    /* Kata sambung dipakai buat merangkai kalimat contoh yang digabung jadi
+       "cerita" (lihat joinStoryPassage) supaya terbaca sebagai satu
+       narasi yang mengalir, bukan cuma daftar kalimat lepas yang
+       ditempel-tempel begitu saja. Diacak urutan pemakaiannya per grup
+       supaya tidak selalu そして-それから-また di posisi yang sama. */
+    const STORY_CONNECTORS = ["そして、", "それから、", "また、"];
+
+    /* Gabungkan satu grup kalimat contoh jadi satu paragraf yang mengalir:
+       kalimat kedua & seterusnya diberi kata sambung di depannya (kecuali
+       yang berupa dialog tanya-jawab "……", karena kata sambung naratif
+       janggal kalau ditaruh di depan balasan dialog). Ini yang membuat
+       "cerita" beneran terbaca sebagai cerita terstruktur (poin keluhan
+       sebelumnya: kalimat acak yang cuma ditempel spasi), bukan mengubah
+       kalimat contoh itu sendiri. */
+    function joinStoryPassage(group) {
+      const connectors = shuffleArray(STORY_CONNECTORS);
+      let connectorIndex = 0;
+      return group
+        .map((example, index) => {
+          const text = example.japaneseClean;
+          if (index === 0 || text.includes("……")) return text;
+          const connector = connectors[connectorIndex % connectors.length];
+          connectorIndex++;
+          return connector + text;
+        })
+        .join(" ");
+    }
+
     /* 3 soal cerita: gabungkan beberapa kalimat contoh BAB INI SENDIRI
        (berurutan sesuai urutan pola dalam grupnya, bukan diacak lintas bab)
-       jadi satu cerita/percakapan pendek yang levelnya otomatis sesuai bab
-       (karena cuma memakai kosakata & pola yang memang sudah diajarkan bab
-       itu) - lalu siswa memilih PERNYATAAN BAHASA JEPANG yang sesuai
-       dengan cerita tsb.
+       jadi satu cerita pendek yang levelnya otomatis sesuai bab (karena
+       cuma memakai kosakata & pola yang memang sudah diajarkan bab itu),
+       disambung dengan kata sambung (joinStoryPassage) supaya terbaca
+       sebagai narasi terstruktur - lalu siswa memilih PERNYATAAN BAHASA
+       JEPANG yang sesuai dengan cerita tsb.
        Pernyataan yang benar adalah PARAFRASE dari salah satu kalimat DI
        DALAM cerita itu sendiri (lewat paraphraseWithinStory) - konteksnya
        TIDAK PERNAH keluar dari cerita yang ditampilkan, cuma pola
        permukaannya yang beda dari cara kalimat itu ditulis di cerita.
        Kalau tidak ada kalimat dalam grup yang bisa diparafrase dengan
        aman (mis. semuanya kalimat tanya berkata tanya), baru jatuh ke
-       kalimat aslinya apa adanya. Distraktornya kalimat Jepang lain dari
-       bab yang sama yang TIDAK ada di cerita ini (jadi jelas salah).
-       Grup cerita mana yang kepilih & kalimat mana dalam grup yang
-       diparafrase diundi ulang tiap panggilan. */
+       kalimat aslinya apa adanya. Distraktor PRIORITAS adalah
+       nearMissVariants dari pernyataan yang benar (satu partikel/akhiran
+       ditukar) supaya tidak bisa disingkirkan cuma dari kosakatanya;
+       distraktor cadangan tetap kalimat lain dari bab yang sama yang TIDAK
+       ada di cerita ini. Grup cerita mana yang kepilih & kalimat mana
+       dalam grup yang diparafrase diundi ulang tiap panggilan. */
     function buildStoryQuestions(count) {
       const groupSize = 3;
       const groups = [];
@@ -978,7 +1107,7 @@ function initMaterialLessonPicker({
       }
       const stories = shuffleArray(groups.length >= count ? groups : quizPool.map((example) => [example]));
       return stories.slice(0, count).map((group) => {
-        const passage = group.map((example) => example.japaneseClean).join(" ");
+        const passage = joinStoryPassage(group);
         let correctExample = group[0];
         let correct = null;
         const startK = Math.floor(Math.random() * group.length);
@@ -992,7 +1121,7 @@ function initMaterialLessonPicker({
           }
         }
         if (!correct) correct = correctExample.japaneseClean;
-        const distractorPool = quizPool
+        const fallbackDistractors = quizPool
           .filter((example) => !group.includes(example))
           .map((example) => example.japaneseClean);
         return {
@@ -1002,7 +1131,7 @@ function initMaterialLessonPicker({
           context: unique(group.map((example) => example.pattern)).join(" · "),
           prompt: passage,
           correct,
-          choices: fourChoices(correct, distractorPool),
+          choices: fourChoices(correct, nearMissVariants(correct), fallbackDistractors),
           explanation: `Pernyataan yang sesuai dengan cerita: ${correct} (${correctExample.meaningText})`,
         };
       });
@@ -1077,7 +1206,7 @@ function initMaterialLessonPicker({
     }
 
     practiceStudy.innerHTML =
-      '<header class="material-study-section-head"><div class="eyebrow">TAHAP 3 · KERJAKAN LATIHAN</div><h3>10 soal pilihan ganda dari bab ini.</h3><p>2 soal partikel, 3 soal Indonesia → Jepang, 2 soal susun kalimat, dan 3 soal cerita - semuanya dari kotoba dan pola kalimat bab ini. Setiap jawaban disertai pembahasan singkat.</p></header><div class="material-test-types"><span>Partikel yang tepat</span><span>Indonesia → Jepang</span><span>Susun kalimat</span><span>Soal cerita</span></div><div class="material-mistake-bar" hidden><div><b>Daftar kesalahan bab ini</b><span></span></div><button type="button">Ulangi soal yang salah</button></div><div class="material-practice-card"></div>';
+      '<header class="material-study-section-head"><div class="eyebrow">TAHAP 3 · KERJAKAN LATIHAN</div><h3>10 soal pilihan ganda dari bab ini.</h3><p>2 soal partikel, 3 soal Indonesia → Jepang, 2 soal susun kalimat, dan 3 soal cerita - semuanya dari kotoba dan pola kalimat bab ini. Setiap jawaban disertai pembahasan singkat.</p><p class="material-practice-furigana-note">振 Furigana dimatikan pada tahap ini - baca kanji dengan kemampuan Anda sendiri.</p></header><div class="material-test-types"><span>Partikel yang tepat</span><span>Indonesia → Jepang</span><span>Susun kalimat</span><span>Soal cerita</span></div><div class="material-mistake-bar" hidden><div><b>Daftar kesalahan bab ini</b><span></span></div><button type="button">Ulangi soal yang salah</button></div><div class="material-practice-card"></div>';
     const practiceCard = practiceStudy.querySelector(".material-practice-card");
     const mistakeBar = practiceStudy.querySelector(".material-mistake-bar");
 
@@ -1126,9 +1255,11 @@ function initMaterialLessonPicker({
       practiceCard.querySelector(".material-practice-instruction").textContent = question.instruction;
       practiceCard.querySelector(".material-practice-context").textContent = question.context;
       practiceCard.querySelector(".material-practice-japanese").textContent = question.prompt;
-      addMaterialFurigana(practiceCard.querySelector(".material-practice-test-head b"));
-      addMaterialFurigana(practiceCard.querySelector(".material-practice-context"));
-      addMaterialFurigana(practiceCard.querySelector(".material-practice-japanese"));
+      /* SENGAJA tidak addMaterialFurigana di sini (soal, pilihan jawaban,
+         maupun pembahasan di bawah) - Tahap 3 (Kerjakan Latihan) memang
+         tidak boleh menampilkan furigana sama sekali, siswa harus membaca
+         kanji dengan kemampuan sendiri. Beda dari Tahap 1/2 yang tetap
+         pakai furigana (dan tombol togglenya tetap berlaku di sana). */
       const options = practiceCard.querySelector(".material-practice-options");
       question.choices.forEach((choice, choiceIndex) => {
         const button = document.createElement("button");
@@ -1138,7 +1269,6 @@ function initMaterialLessonPicker({
         number.textContent = String(choiceIndex + 1);
         const label = document.createElement("span");
         label.textContent = choice;
-        addMaterialFurigana(label);
         button.append(number, label);
         button.onclick = () => {
           const isCorrect = choice === question.correct;
@@ -1163,8 +1293,6 @@ function initMaterialLessonPicker({
           correctAnswer.textContent = `Jawaban benar: ${question.correct}`;
           const explanation = document.createElement("small");
           explanation.textContent = question.explanation;
-          addMaterialFurigana(correctAnswer);
-          addMaterialFurigana(explanation);
           feedback.replaceChildren(feedbackTitle, correctAnswer, explanation);
           refreshMistakeBar();
           practiceCard.querySelector(".material-practice-next").hidden = false;
