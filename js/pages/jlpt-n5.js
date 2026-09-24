@@ -22,6 +22,27 @@ function initPage() {
   let secondsLeft = TIME_LIMIT_SECONDS;
   let timerId = null;
   let gradedResult = null;
+  let currentAudioSegment = null;
+
+  /* N5Sample.mp3 (5:16) berisi rekaman ke-8 soal mendengarkan secara
+     berurutan tanpa jeda antar soal yang bisa dipilih sendiri - audio_start/
+     audio_end (dari data/jlpt-n5-tp1-data.js, diukur lewat deteksi jeda
+     hening ffmpeg + dicocokkan dengan panjang skrip tiap soal) menandai
+     potongan yang relevan untuk soal yang sedang aktif. Pemutar dihentikan
+     otomatis begitu lewat audio_end supaya tidak "bocor" ke rekaman soal
+     berikutnya kalau siswa lupa menjeda sendiri.
+     */
+  const listeningAudioEl = document.getElementById("listeningAudio");
+  if (listeningAudioEl) {
+    listeningAudioEl.addEventListener("loadedmetadata", () => {
+      if (currentAudioSegment) listeningAudioEl.currentTime = currentAudioSegment.start;
+    });
+    listeningAudioEl.addEventListener("timeupdate", () => {
+      if (currentAudioSegment && currentAudioSegment.end && listeningAudioEl.currentTime >= currentAudioSegment.end) {
+        listeningAudioEl.pause();
+      }
+    });
+  }
 
   function saveSession() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ answers, current, secondsLeft })); } catch (e) {}
@@ -92,6 +113,14 @@ function initPage() {
     if (q.image_url) { img.hidden = false; img.src = "../" + q.image_url; } else { img.hidden = true; img.removeAttribute("src"); }
 
     $("audioBox").hidden = !q.audio_url;
+    if (q.audio_url) {
+      const audioEl = $("listeningAudio");
+      audioEl.pause();
+      currentAudioSegment = (typeof q.audio_start === "number") ? { start: q.audio_start, end: q.audio_end } : null;
+      if (currentAudioSegment) audioEl.currentTime = currentAudioSegment.start;
+    } else {
+      currentAudioSegment = null;
+    }
 
     const answersEl = $("answers");
     answersEl.innerHTML = "";
