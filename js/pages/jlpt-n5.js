@@ -23,6 +23,7 @@ function initPage() {
   let timerId = null;
   let gradedResult = null;
   let currentAudioSegment = null;
+  let audioSeekPending = false;
 
   /* N5Sample.mp3 (5:16) berisi rekaman ke-8 soal mendengarkan secara
      berurutan tanpa jeda antar soal yang bisa dipilih sendiri - audio_start/
@@ -31,13 +32,23 @@ function initPage() {
      potongan yang relevan untuk soal yang sedang aktif. Pemutar dihentikan
      otomatis begitu lewat audio_end supaya tidak "bocor" ke rekaman soal
      berikutnya kalau siswa lupa menjeda sendiri.
-     */
+     audioSeekPending menutup celah race condition: begitu berpindah soal,
+     currentAudioSegment langsung berubah ke batas soal BARU padahal audio
+     belum selesai berpindah (seek) ke posisi barunya - kalau ada event
+     "timeupdate" nyasar di celah itu yang masih membawa currentTime LAMA
+     (mis. dari soal setelahnya kalau siswa mundur), currentTime lama itu
+     bisa saja sudah lewat audio_end yang BARU dan memicu pause() secara
+     keliru, padahal soal barunya belum sempat terdengar sama sekali.
+     Selama audioSeekPending true, pemeriksaan audio_end diabaikan sampai
+     event "seeked" asli memastikan perpindahannya benar-benar selesai. */
   const listeningAudioEl = document.getElementById("listeningAudio");
   if (listeningAudioEl) {
     listeningAudioEl.addEventListener("loadedmetadata", () => {
       if (currentAudioSegment) listeningAudioEl.currentTime = currentAudioSegment.start;
     });
+    listeningAudioEl.addEventListener("seeked", () => { audioSeekPending = false; });
     listeningAudioEl.addEventListener("timeupdate", () => {
+      if (audioSeekPending) return;
       if (currentAudioSegment && currentAudioSegment.end && listeningAudioEl.currentTime >= currentAudioSegment.end) {
         listeningAudioEl.pause();
       }
@@ -115,9 +126,15 @@ function initPage() {
     $("audioBox").hidden = !q.audio_url;
     if (q.audio_url) {
       const audioEl = $("listeningAudio");
+      audioSeekPending = true;
       audioEl.pause();
       currentAudioSegment = (typeof q.audio_start === "number") ? { start: q.audio_start, end: q.audio_end } : null;
       if (currentAudioSegment) audioEl.currentTime = currentAudioSegment.start;
+      // Jaga-jaga: kalau currentTime yang di-set sama persis dengan posisi
+      // sekarang, sebagian browser tidak memicu event "seeked" sama sekali -
+      // tanpa ini audioSeekPending bisa tersangkut true selamanya dan mematikan
+      // pemeriksaan audio_end untuk soal ini seterusnya.
+      setTimeout(() => { audioSeekPending = false; }, 400);
     } else {
       currentAudioSegment = null;
     }
