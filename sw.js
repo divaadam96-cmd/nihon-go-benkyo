@@ -1,7 +1,7 @@
 // Satu-satunya angka yang perlu dinaikkan setiap kali ada file di ASSETS
 // yang isinya berubah (JS/CSS/data/gambar). Tanpa ini, service worker
 // akan terus menyajikan versi lama dari cache ke user yang sudah install.
-const CACHE_NAME = 'nihon-go-benkyo-v168';
+const CACHE_NAME = 'nihon-go-benkyo-v169';
 const ASSETS = [
   'index.html',
   'css/base.css', 'css/shell.css', 'css/auth.css',
@@ -17,7 +17,7 @@ const ASSETS = [
   'pages/pantau.html', 'css/pages/pantau.css', 'js/pages/pantau.js',
   'pages/admin.html', 'css/pages/admin.css', 'js/pages/admin.js',
   'pages/jlpt-n5.html', 'css/pages/jlpt-n5.css', 'js/pages/jlpt-n5.js',
-  'assets/images/jlpt-n5/vocab-q6.png', 'assets/images/jlpt-n5/listen-p1-q1.png', 'assets/images/jlpt-n5/listen-p1-q2.png', 'assets/images/jlpt-n5/listen-p2-q1.png', 'assets/images/jlpt-n5/listen-p2-q2.png',
+  'assets/images/jlpt-n5/vocab-q6.png', 'assets/images/jlpt-n5/listen-p1-q1.png', 'assets/images/jlpt-n5/listen-p1-q2.png', 'assets/images/jlpt-n5/listen-p2-q1.png', 'assets/images/jlpt-n5/listen-p2-q2.png', 'assets/images/jlpt-n5/listen-p3-q1.png', 'assets/images/jlpt-n5/listen-p3-q2.png',
   'data/materi-data.js', 'data/kanji-data.js', 'data/kanji-stroke-data.js', 'data/kana-data.js', 'data/bab-data.js',
   'assets/images/japan-paper-background.webp', 'assets/images/logo.webp',
   // Catatan: assets/audio/n5-tp1-listening.mp3 (~7,5MB) SENGAJA tidak
