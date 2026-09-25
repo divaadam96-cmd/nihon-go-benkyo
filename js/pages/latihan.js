@@ -758,10 +758,14 @@ function renderExamOnePage(forceRebuild){
   let html=`<p class="operator-hint">Kerjakan seluruh soal di halaman ini, lalu klik "Selesaikan tes" di panel navigasi sebelah kanan.</p>`;
   catOrder.forEach(cat=>{
     html+=`<h2 class="exam-category-title">${cat.toUpperCase()}</h2>`;
+    /* Satu audio dipakai bersama untuk SELURUH kategori ini (semua soal
+       Mendengarkan berasal dari satu file rekaman yang sama) - jadi
+       pemutar audio cukup ditampilkan sekali di sini, bukan diulang di
+       setiap もんだい seperti sebelumnya. */
+    const catAudioSrc=questions[categories[cat][0]].audioSrc;
+    if(catAudioSrc)html+=`<div class="listening-audio-top"><audio controls src="../${catAudioSrc}"></audio><small>Putar rekaman ini dari awal, lalu jawab semua soal mendengarkan di bawah sambil mendengarkan.</small></div>`;
     mondaiGroupsFor(categories[cat]).forEach(({key,indices:idxs})=>{
-      const audioSrc=questions[idxs[0]].audioSrc;
       html+=`<div class="listening-mondai"><h3>${key}</h3><p class="listening-instruction">${questions[idxs[0]].instruction}</p>`;
-      if(audioSrc)html+=`<div class="listening-audio-top"><audio controls src="../${audioSrc}"></audio><small>Putar rekaman ini dari awal, lalu jawab semua soal mendengarkan di bawah sambil mendengarkan.</small></div>`;
       idxs.forEach((qi,subI)=>{
         const q=questions[qi],listening=isListeningQuestion(q);
         html+=`<div class="listening-item" id="examQ${qi}"><b>${listening?`${subI+1}ばん`:`Soal ${qi+1}`}</b>`;
