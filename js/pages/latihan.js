@@ -136,7 +136,7 @@ const mockTestPackages={
   },
   "jlpt-n5-tp2":{
     label:"JLPT N5 · Paket B (Latihan)",
-    source:"Paket latihan orisinal (bukan dari dokumen resmi JLPT) - struktur & jumlah soal per もんだい dibuat identik dengan paket JLPT N5 · Contoh Resmi, kosakata & konteksnya semua berbeda. Audio dibuat dengan suara sintesis (text-to-speech) karena tidak ada rekaman asli untuk kosakata baru ini; gambar soal mendengarkan bergambar berupa ilustrasi flat-color sederhana (dibuat khusus, bukan aset resmi JLPT).",
+    source:"Paket latihan orisinal (bukan dari dokumen resmi JLPT) - struktur & jumlah soal per もんだい dibuat identik dengan paket JLPT N5 · Contoh Resmi, kosakata & konteksnya semua berbeda. Audio dibuat dengan suara sintesis (text-to-speech) karena tidak ada rekaman asli untuk kosakata baru ini; gambar soal mendengarkan bergambar memakai ilustrasi gratis dari irasutoya.com (bukan aset resmi JLPT).",
     questions:[
       {category:"Kosakata JLPT",instruction:"＿＿＿の ことばは ひらがなで どう かきますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"きょうは とても <u>忙しい</u>です。",options:["いぞがしい","いそかしい","いそがしい","いぞかしい"],answer:2,explanation:"忙しい dibaca いそがしい, berarti sibuk.",material:"JLPT N5 - Paket B (Latihan) · kanji_reading"},
       {category:"Kosakata JLPT",instruction:"＿＿＿の ことばは ひらがなで どう かきますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"<u>財布</u>を わすれました。",options:["ざいぶ","さいふ","ざいふ","さいぶ"],answer:1,explanation:"財布 dibaca さいふ, berarti dompet.",material:"JLPT N5 - Paket B (Latihan) · kanji_reading"},
