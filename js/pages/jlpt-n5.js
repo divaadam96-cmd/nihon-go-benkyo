@@ -22,38 +22,7 @@ function initPage() {
   let secondsLeft = TIME_LIMIT_SECONDS;
   let timerId = null;
   let gradedResult = null;
-  let currentAudioSegment = null;
-  let audioSeekPending = false;
-
-  /* N5Sample.mp3 (5:16) berisi rekaman ke-8 soal mendengarkan secara
-     berurutan tanpa jeda antar soal yang bisa dipilih sendiri - audio_start/
-     audio_end (dari data/jlpt-n5-tp1-data.js, diukur lewat deteksi jeda
-     hening ffmpeg + dicocokkan dengan panjang skrip tiap soal) menandai
-     potongan yang relevan untuk soal yang sedang aktif. Pemutar dihentikan
-     otomatis begitu lewat audio_end supaya tidak "bocor" ke rekaman soal
-     berikutnya kalau siswa lupa menjeda sendiri.
-     audioSeekPending menutup celah race condition: begitu berpindah soal,
-     currentAudioSegment langsung berubah ke batas soal BARU padahal audio
-     belum selesai berpindah (seek) ke posisi barunya - kalau ada event
-     "timeupdate" nyasar di celah itu yang masih membawa currentTime LAMA
-     (mis. dari soal setelahnya kalau siswa mundur), currentTime lama itu
-     bisa saja sudah lewat audio_end yang BARU dan memicu pause() secara
-     keliru, padahal soal barunya belum sempat terdengar sama sekali.
-     Selama audioSeekPending true, pemeriksaan audio_end diabaikan sampai
-     event "seeked" asli memastikan perpindahannya benar-benar selesai. */
-  const listeningAudioEl = document.getElementById("listeningAudio");
-  if (listeningAudioEl) {
-    listeningAudioEl.addEventListener("loadedmetadata", () => {
-      if (currentAudioSegment) listeningAudioEl.currentTime = currentAudioSegment.start;
-    });
-    listeningAudioEl.addEventListener("seeked", () => { audioSeekPending = false; });
-    listeningAudioEl.addEventListener("timeupdate", () => {
-      if (audioSeekPending) return;
-      if (currentAudioSegment && currentAudioSegment.end && listeningAudioEl.currentTime >= currentAudioSegment.end) {
-        listeningAudioEl.pause();
-      }
-    });
-  }
+  const SUBCAT_LABEL = { task_comprehension: "もんだい1", point_comprehension: "もんだい2", verbal_expression: "もんだい3", quick_response: "もんだい4" };
 
   function saveSession() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ answers, current, secondsLeft })); } catch (e) {}
@@ -112,8 +81,18 @@ function initPage() {
     showScreen("examScreen");
   };
 
+  function firstListeningIndex() {
+    return questions.findIndex(q => q.section === "listening");
+  }
+
   function renderQuestion() {
     const q = questions[current];
+    if (q.section === "listening") { renderListeningSection(); return; }
+
+    $("listeningSection").hidden = true;
+    $("questionText").hidden = false;
+    $("answers").hidden = false;
+
     $("sectionBadge").textContent = (SECTION_LABEL[q.section] || q.section).toUpperCase();
     $("questionCounter").textContent = `Soal ${current + 1} dari ${questions.length}`;
     $("examProgress").style.width = ((current + 1) / questions.length * 100) + "%";
@@ -122,22 +101,6 @@ function initPage() {
 
     const img = $("questionImage");
     if (q.image_url) { img.hidden = false; img.src = "../" + q.image_url; } else { img.hidden = true; img.removeAttribute("src"); }
-
-    $("audioBox").hidden = !q.audio_url;
-    if (q.audio_url) {
-      const audioEl = $("listeningAudio");
-      audioSeekPending = true;
-      audioEl.pause();
-      currentAudioSegment = (typeof q.audio_start === "number") ? { start: q.audio_start, end: q.audio_end } : null;
-      if (currentAudioSegment) audioEl.currentTime = currentAudioSegment.start;
-      // Jaga-jaga: kalau currentTime yang di-set sama persis dengan posisi
-      // sekarang, sebagian browser tidak memicu event "seeked" sama sekali -
-      // tanpa ini audioSeekPending bisa tersangkut true selamanya dan mematikan
-      // pemeriksaan audio_end untuk soal ini seterusnya.
-      setTimeout(() => { audioSeekPending = false; }, 400);
-    } else {
-      currentAudioSegment = null;
-    }
 
     const answersEl = $("answers");
     answersEl.innerHTML = "";
@@ -150,8 +113,75 @@ function initPage() {
     });
 
     $("prevQuestion").disabled = current === 0;
-    $("nextQuestion").hidden = current === questions.length - 1;
-    $("submitExam").hidden = current !== questions.length - 1;
+    $("nextQuestion").hidden = false;
+    $("submitExam").hidden = true;
+    updateNumberGrid();
+    updateAnsweredCount();
+  }
+
+  /* Bagian Mendengarkan (soal 21-28) SENGAJA ditampilkan sebagai satu layar
+     utuh, bukan satu-per-satu seperti bagian lain - meniru format buku soal
+     JLPT asli: satu rekaman audio diputar dari awal sambil siswa membaca
+     dan menjawab semua soal もんだい1-4 yang tercetak di bawahnya, tanpa
+     berpindah "halaman" tiap soal. Jawaban tetap berupa angka polos
+     (1/2/3/4) yang cocok dengan nomor pada gambar atau pilihan yang
+     diucapkan di audio - bukan deskripsi teks - sama seperti lembar
+     jawaban ujian aslinya. */
+  function renderListeningSection() {
+    const listeningQs = questions.filter(q => q.section === "listening");
+    const audioUrl = listeningQs.find(q => q.audio_url) && listeningQs.find(q => q.audio_url).audio_url;
+    const firstIdx = firstListeningIndex();
+
+    $("questionText").hidden = true;
+    $("answers").hidden = true;
+    $("questionImage").hidden = true;
+    $("instruction").innerHTML = "";
+
+    $("sectionBadge").textContent = "MENDENGARKAN";
+    $("questionCounter").textContent = `Soal ${firstIdx + 1}–${questions.length} dari ${questions.length}`;
+    $("examProgress").style.width = "100%";
+
+    const groups = {};
+    const order = [];
+    listeningQs.forEach(q => {
+      if (!groups[q.subcategory]) { groups[q.subcategory] = []; order.push(q.subcategory); }
+      groups[q.subcategory].push(q);
+    });
+
+    let html = "";
+    if (audioUrl) {
+      html += `<div class="listening-audio-top"><audio controls src="../${audioUrl}"></audio><small>Putar rekaman ini dari awal, lalu jawab semua soal mendengarkan di bawah sambil mendengarkan.</small></div>`;
+    }
+    order.forEach(subcat => {
+      const items = groups[subcat];
+      html += `<div class="listening-mondai"><h3>${SUBCAT_LABEL[subcat] || subcat}</h3><p class="listening-instruction">${items[0].instruction}</p>`;
+      items.forEach((q, i) => {
+        html += `<div class="listening-item"><b>${i + 1}ばん</b><div class="listening-item-text">${q.question_html}</div>`;
+        if (q.image_url) html += `<img class="listening-item-image" src="../${q.image_url}" alt="Ilustrasi soal">`;
+        html += `<div class="listening-item-answers">${q.options.map((opt, oi) =>
+          `<button data-qid="${q.id}" data-idx="${oi}" class="${answers[q.id] === oi ? "selected" : ""}">${opt}</button>`
+        ).join("")}</div></div>`;
+      });
+      html += `</div>`;
+    });
+
+    const container = $("listeningSection");
+    container.innerHTML = html;
+    container.hidden = false;
+    container.querySelectorAll("button[data-qid]").forEach(btn => {
+      btn.onclick = () => {
+        const qid = Number(btn.dataset.qid);
+        answers[qid] = Number(btn.dataset.idx);
+        saveSession();
+        renderListeningSection();
+        updateNumberGrid();
+        updateAnsweredCount();
+      };
+    });
+
+    $("prevQuestion").disabled = false;
+    $("nextQuestion").hidden = true;
+    $("submitExam").hidden = false;
     updateNumberGrid();
     updateAnsweredCount();
   }
@@ -177,7 +207,15 @@ function initPage() {
     $("answeredCount").textContent = `${Object.keys(answers).length} / ${questions.length}`;
   }
 
-  $("prevQuestion").onclick = () => { if (current > 0) { current--; renderQuestion(); } };
+  $("prevQuestion").onclick = () => {
+    if (current <= 0) return;
+    // Dari bagian Mendengarkan, "Sebelumnya" loncat balik ke soal terakhir
+    // SEBELUM bagian itu (bukan cuma current-1, yang kalau masih di dalam
+    // rentang mendengarkan cuma menampilkan layar gabungan yang sama lagi).
+    const firstIdx = firstListeningIndex();
+    current = (firstIdx !== -1 && current >= firstIdx) ? firstIdx - 1 : current - 1;
+    renderQuestion();
+  };
   $("nextQuestion").onclick = () => { if (current < questions.length - 1) { current++; renderQuestion(); } };
 
   function openSubmitConfirm() {
@@ -240,10 +278,13 @@ function initPage() {
     gradedResult.forEach((r, i) => {
       const div = document.createElement("div");
       div.className = "review-item";
+      // Bagian Mendengarkan pakai opsi angka polos (1/2/3/4) sesuai gambar/
+      // audio, bukan pilihan A/B/C/D bergaya teks - tidak perlu label huruf.
+      const isListening = r.section === "listening";
       const submittedText = (r.submitted_answer === null || r.submitted_answer === undefined)
         ? "(tidak dijawab)"
-        : `${LABELS[r.submitted_answer]}. ${r.options[r.submitted_answer]}`;
-      const correctText = `${LABELS[r.correct_answer]}. ${r.options[r.correct_answer]}`;
+        : (isListening ? r.options[r.submitted_answer] : `${LABELS[r.submitted_answer]}. ${r.options[r.submitted_answer]}`);
+      const correctText = isListening ? r.options[r.correct_answer] : `${LABELS[r.correct_answer]}. ${r.options[r.correct_answer]}`;
       const explanationHtml = r.explanation
         ? `<div class="review-answer-line">${r.explanation}</div>`
         : `<span class="pending-badge">Pembahasan belum tersedia</span>`;
