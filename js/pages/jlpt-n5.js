@@ -155,8 +155,14 @@ function initPage() {
     order.forEach(subcat => {
       const items = groups[subcat];
       html += `<div class="listening-mondai"><h3>${SUBCAT_LABEL[subcat] || subcat}</h3><p class="listening-instruction">${items[0].instruction}</p>`;
+      // Sengaja TIDAK menampilkan q.question_html (naskah dialog/situasi) di
+      // sini - di N5-mondai.pdf asli, soal mendengarkan cuma menampilkan
+      // label "1ばん"/"2ばん" + gambar (kalau ada), TANPA teks apa pun;
+      // naskahnya cuma ada di N5-script.pdf terpisah dan baru terdengar
+      // lewat audio. Naskah lengkap tetap ditampilkan di layar Tinjauan
+      // Jawaban setelah ujian selesai (lihat renderReview) untuk belajar.
       items.forEach((q, i) => {
-        html += `<div class="listening-item"><b>${i + 1}ばん</b><div class="listening-item-text">${q.question_html}</div>`;
+        html += `<div class="listening-item"><b>${i + 1}ばん</b>`;
         if (q.image_url) html += `<img class="listening-item-image" src="../${q.image_url}" alt="Ilustrasi soal">`;
         html += `<div class="listening-item-answers">${q.options.map((opt, oi) =>
           `<button data-qid="${q.id}" data-idx="${oi}" class="${answers[q.id] === oi ? "selected" : ""}">${opt}</button>`
