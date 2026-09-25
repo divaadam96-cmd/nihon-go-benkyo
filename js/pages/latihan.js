@@ -60,6 +60,40 @@ const mockTestPackages={
       {category:"Parafrasa",instruction:"＿＿＿の ぶんと だいたい おなじ いみの ぶんが あります。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"がっこうに ちこくしました。",options:["がっこうを やすみました。","がっこうから はやく かえりました。","がっこうに はやく いきました。","がっこうに おそく いきました。"],answer:3,explanation:"ちこくしました (terlambat) berarti pergi ke sekolah おそく (terlambat/telat).",material:"Paket D03 — Mondai 4 No.34"},
       {category:"Parafrasa",instruction:"＿＿＿の ぶんと だいたい おなじ いみの ぶんが あります。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"タンさんは シンさんに くにの しゃしんを みせました。",options:["タンさんは シンさんの くにで しゃしんを とりました。","タンさんは シンさんの くにの しゃしんを みました。","シンさんは タンさんの くにの しゃしんを みました。","シンさんは タンさんの くにで しゃしんを とりました。"],answer:2,explanation:"タンさんが みせた (memperlihatkan) berarti シンさんが みた (melihat) foto negara Tan.",material:"Paket D03 — Mondai 4 No.35"}
     ]
+  },
+  "jlpt-n5-tp1":{
+    label:"JLPT N5 · Contoh Resmi",
+    source:"Dokumen contoh resmi Japan Foundation/JEES (問題例), ditranskripsi apa adanya",
+    questions:[
+      {category:"Kosakata JLPT",instruction:"＿＿＿の ことばは ひらがなで どう かきますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"<u>新しい</u> くるまですね。",options:["あたらしい","あだらしい","あらたしい","あらだしい"],answer:0,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · kanji_reading"},
+      {category:"Kosakata JLPT",instruction:"＿＿＿の ことばは ひらがなで どう かきますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"<u>電気</u>を つけて ください。",options:["てんぎ","てんき","でんぎ","でんき"],answer:3,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · kanji_reading"},
+      {category:"Kosakata JLPT",instruction:"＿＿＿の ことばは かんじで どう かきますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"あの <u>ほてる</u>は ゆうめいです。",options:["ホラル","ホテル","ホラハ","ホテハ"],answer:1,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · vocab_writing"},
+      {category:"Kosakata JLPT",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"あそこで タクシーに （　）。",options:["のりました","あがりました","つきました","はいりました"],answer:0,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · context_vocab"},
+      {category:"Kosakata JLPT",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"ここは （　）です。 べんきょうできません。<br><small>Gambar: seorang anak menutup telinga sambil belajar, di sebelahnya orang bermain gitar keras-keras.</small>",options:["くらい","さむい","うるさい","あぶない"],answer:2,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · context_vocab"},
+      {category:"Kosakata JLPT",instruction:"＿＿＿の ぶんと だいたい おなじ いみの ぶんが あります。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"わたしは <u>デパートに つとめて います</u>。",options:["わたしは デパートで かいものを して います。","わたしは デパートで さんぽを して います。","わたしは デパートで しごとを して います。","わたしは デパートで やすんで います。"],answer:2,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · synonym"},
+      {category:"Kosakata JLPT",instruction:"＿＿＿の ぶんと だいたい おなじ いみの ぶんが あります。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"<u>ゆうべ パーティーへ いきました。</u>",options:["きのうの ひる パーティーへ いきました。","きのうの よる パーティーへ いきました。","おとといの ひる パーティーへ いきました。","おとといの よる パーティーへ いきました。"],answer:1,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · synonym"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"<ruby>弟<rt>おとうと</rt></ruby>は へや（　）そうじを しました。",options:["が","を","に","の"],answer:3,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · sentence_grammar"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"きのうは うちに （　）　<ruby>何<rt>なに</rt></ruby>を しましたか。",options:["かえる","かえるから","かえって","かえったり"],answer:2,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · sentence_grammar"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"★ に はいる ものは どれですか。1・2・3・4から いちばん いい ものを ひとつ えらんで、★ の ばしょに はいる ばんごうを こたえて ください。",html:"これは きょねん わたし ＿＿＿ ＿＿＿ ★ ＿＿＿ しゃしんです。<br><small>Urutan lengkap: これはきょねんわたしが海でとったしゃしんです。(1が→4海→2で→3とった)</small>",options:["が","で","とった","海"],answer:1,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · sentence_arrangement"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"★ に はいる ものは どれですか。1・2・3・4から いちばん いい ものを ひとつ えらんで、★ の ばしょに はいる ばんごうを こたえて ください。",html:"きのう、＿＿＿ ＿＿＿ ★ ＿＿＿。<br><small>Urutan lengkap: きのう、日本語のじしょを買いに行きました。(2日本語の→4じしょを→1買いに→3行きました)</small>",options:["買いに","日本語の","行きました","じしょを"],answer:0,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · sentence_arrangement"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"5 から 9 に 何を いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"はじめまして。ジョン・スミスです。アメリカから ［５］。<br>わたしは えいがが 好きです。アメリカの えいがは よく 知っています。［６］、日本の えいがは あまり 知りません。日本では、日本の えいがを たくさん ［７］。<br>どうぞ よろしく おねがいします。",options:["行きます","行きました","来ます","来ました"],answer:3,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · text_grammar"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"5 から 9 に 何を いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"はじめまして。ジョン・スミスです。アメリカから ［５：来ました］。<br>わたしは えいがが 好きです。アメリカの えいがは よく 知っています。［６］、日本の えいがは あまり 知りません。日本では、日本の えいがを たくさん ［７］。<br>どうぞ よろしく おねがいします。",options:["では","だから","でも","それから"],answer:2,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · text_grammar"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"5 から 9 に 何を いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"はじめまして。ジョン・スミスです。アメリカから ［５：来ました］。<br>わたしは えいがが 好きです。アメリカの えいがは よく 知っています。［６：でも］、日本の えいがは あまり 知りません。日本では、日本の えいがを たくさん ［７］。<br>どうぞ よろしく おねがいします。",options:["見ました","見たいです","見て いました","見るからです"],answer:1,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · text_grammar"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"5 から 9 に 何を いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"みなさん、こんにちは。ヤンです。<br>わたしは 日本語学校で 毎日 べんきょうして います。今は、学校の ちかくに 姉と 住んで います。姉が いるから、［８］。<br>わたしは、日本で たくさん 友だちが ほしいです。みなさん、［９］。<br>どうぞ よろしく おねがいします。",options:["さびしく ありません","さびしく ありませんでした","さびしく ありませんか","さびしく ありませんでしたか"],answer:0,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · text_grammar"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"5 から 9 に 何を いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"みなさん、こんにちは。ヤンです。<br>わたしは 日本語学校で 毎日 べんきょうして います。今は、学校の ちかくに 姉と 住んで います。姉が いるから、［８：さびしく ありません］。<br>わたしは、日本で たくさん 友だちが ほしいです。みなさん、［９］。<br>どうぞ よろしく おねがいします。",options:["学校に 毎日 行きませんか","学校で 友だちと あそびました","うちに あそびに 来て ください","うちで 姉と あそびたいです"],answer:2,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · text_grammar"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"つぎの ぶんを 読んで しつもんに こたえて ください。こたえは 1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"<ruby>先生<rt>せんせい</rt></ruby>が アンナさんに <ruby>手紙<rt>てがみ</rt></ruby>を 書きました。<br><blockquote>アンナさん<br><br>今週は しごとが たくさん あります。土曜日と 日曜日も いそがしいです。<br>来週の 月曜日に 来て ください。</blockquote><br><small>先生は いつ 時間が ありますか。</small>",options:["今週","土曜日","日曜日","月曜日"],answer:3,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · short_reading"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"つぎの ぶんを 読んで しつもんに こたえて ください。こたえは 1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"ヤンさんの うちは 町の 中の べんりな ところに あります。<br>となりに パンやが あります。前は はなやで、はなやの となりは さかなやです。近くに くすりやと にくやも あります。ゆうびんきょくと びょういんも あります。<br>今日の ゆうがた、ヤンさんの 友だちが あそびに 来ます。ヤンさんは とりにくの りょうりと さかなの りょうりを 作ります。れいぞうこの 中に とりにくと さかなが ありませんから、ヤンさんは これから 買いものに でかけます。それから、ゆうびんきょくへ 行って、きってを 買います。<br><small>つぎの 中で、ヤンさんの うちから いちばん 近い 店は どれ ですか。</small>",options:["にくや","パンや","くすりや","さかなや"],answer:1,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · short_reading"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"つぎの ぶんを 読んで しつもんに こたえて ください。こたえは 1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"ヤンさんの うちは 町の 中の べんりな ところに あります。<br>となりに パンやが あります。前は はなやで、はなやの となりは さかなやです。近くに くすりやと にくやも あります。ゆうびんきょくと びょういんも あります。<br>今日の ゆうがた、ヤンさんの 友だちが あそびに 来ます。ヤンさんは とりにくの りょうりと さかなの りょうりを 作ります。れいぞうこの 中に とりにくと さかなが ありませんから、ヤンさんは これから 買いものに でかけます。それから、ゆうびんきょくへ 行って、きってを 買います。<br><small>ヤンさんは 今日 どこへ 行きますか。</small>",options:["にくや、さかなや、ゆうびんきょく","パンや、くすりや、ゆうびんきょく","びょういん、はなや、さかなや","びょういん、にくや、パンや"],answer:0,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · medium_reading"},
+      {category:"Tata Bahasa & Bacaan JLPT",instruction:"つぎの ぶんを 読んで、「電車の 時間」と「バスの 時間」を 見て、しつもんに こたえて ください。こたえは 1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"あした いちご山へ 行きます。東京駅から 中川駅まで 電車で 行って、中川駅から いちご山まで バスで 行きます。<br>いちご山に 午前11時ごろ 着きたいです。そして、電車は 安いほうが いいです。<table class=\"exam-table\"><caption>電車の時間（東京駅→中川駅）</caption><tr><th></th><th>東京駅発</th><th>中川駅着</th></tr><tr><td>ふじ1</td><td>8:20</td><td>10:20</td></tr><tr><td>さくら1</td><td>9:10</td><td>10:10</td></tr><tr><td>ふじ3</td><td>9:20</td><td>11:20</td></tr><tr><td>さくら3</td><td>10:10</td><td>11:10</td></tr></table><small>お金：ふじ 3,000円　さくら 5,000円</small><table class=\"exam-table\"><caption>バスの時間（中川駅→いちご山）</caption><tr><th>中川駅発</th><th>いちご山着</th></tr><tr><td>10:30</td><td>11:00</td></tr><tr><td>11:30</td><td>12:00</td></tr></table><small>お金：800円</small><br><small>電車は どれに 乗りますか。</small>",options:["ふじ1","さくら1","ふじ3","さくら3"],answer:0,explanation:"Pembahasan belum tersedia untuk soal contoh resmi ini.",material:"JLPT N5 - Contoh Resmi · information_retrieval"},
+      {category:"Mendengarkan",instruction:"もんだい1では、はじめに しつもんを きいて ください。それから はなしを きいて、もんだいようしの 1から4の なかから、ただしい こたえを ひとつ えらんで ください。",html:"クラスで先生が話しています。学生は、今日、家で、どこを勉強しますか。<br>F：では、今日は20ページまで終わりましたから、21ページは宿題ですね。<br>M：全部ですか。<br>F：いえ、21ページの1番です。2番は、クラスでします。<br>学生は、今日、家で、どこを勉強しますか。",options:["1","2","3","4"],answer:2,explanation:"クラスで先生が話しています。学生は、今日、家で、どこを勉強しますか。<br>F：では、今日は20ページまで終わりましたから、21ページは宿題ですね。<br>M：全部ですか。<br>F：いえ、21ページの1番です。2番は、クラスでします。<br>学生は、今日、家で、どこを勉強しますか。<br><small>(Pembahasan tata bahasa belum tersedia untuk soal contoh resmi ini.)</small>",material:"JLPT N5 - Contoh Resmi · task_comprehension",subcategory:"もんだい1",image:"assets/images/jlpt-n5/listen-p1-q1.png",audioSrc:"assets/audio/n5-tp1-listening.mp3"},
+      {category:"Mendengarkan",instruction:"もんだい1では、はじめに しつもんを きいて ください。それから はなしを きいて、もんだいようしの 1から4の なかから、ただしい こたえを ひとつ えらんで ください。",html:"海の公園で、先生が学生に話しています。学生ははじめに何をしますか。<br>F：この海の公園では遊ぶ前に、映画を見ながら、海の勉強をします。ここでは、切符がいりますから、はじめに切符を買ってきてください。それから、映画を見ましょう。<br>学生ははじめに何をしますか。",options:["1","2","3","4"],answer:3,explanation:"海の公園で、先生が学生に話しています。学生ははじめに何をしますか。<br>F：この海の公園では遊ぶ前に、映画を見ながら、海の勉強をします。ここでは、切符がいりますから、はじめに切符を買ってきてください。それから、映画を見ましょう。<br>学生ははじめに何をしますか。<br><small>(Pembahasan tata bahasa belum tersedia untuk soal contoh resmi ini.)</small>",material:"JLPT N5 - Contoh Resmi · task_comprehension",subcategory:"もんだい1",image:"assets/images/jlpt-n5/listen-p1-q2.png",audioSrc:"assets/audio/n5-tp1-listening.mp3"},
+      {category:"Mendengarkan",instruction:"もんだい2では、はじめに しつもんを きいて ください。それから はなしを きいて、もんだいようしの 1から4の なかから、ただしい こたえを ひとつ えらんで ください。",html:"女の人と男の人が写真を見ながら話しています。田中さんの妹はどの人ですか。<br>F：ああ、この男の人が田中さんですか。<br>M：ええ。その隣の人が奥さんで、前にいる女の子が田中さんの子どもです。<br>F：かわいいですね。この帽子をかぶっている人は誰ですか。<br>M：田中さんの妹さんです。<br>F：そうですか。じゃ、このめがねをかけている人は？<br>M：あ、そちらは妹さんの友だちです。<br>田中さんの妹はどの人ですか。",options:["1","2","3","4"],answer:2,explanation:"女の人と男の人が写真を見ながら話しています。田中さんの妹はどの人ですか。<br>F：ああ、この男の人が田中さんですか。<br>M：ええ。その隣の人が奥さんで、前にいる女の子が田中さんの子どもです。<br>F：かわいいですね。この帽子をかぶっている人は誰ですか。<br>M：田中さんの妹さんです。<br>F：そうですか。じゃ、このめがねをかけている人は？<br>M：あ、そちらは妹さんの友だちです。<br>田中さんの妹はどの人ですか。<br><small>(Pembahasan tata bahasa belum tersedia untuk soal contoh resmi ini.)</small>",material:"JLPT N5 - Contoh Resmi · point_comprehension",subcategory:"もんだい2",image:"assets/images/jlpt-n5/listen-p2-q1.png",audioSrc:"assets/audio/n5-tp1-listening.mp3"},
+      {category:"Mendengarkan",instruction:"もんだい2では、はじめに しつもんを きいて ください。それから はなしを きいて、もんだいようしの 1から4の なかから、ただしい こたえを ひとつ えらんで ください。",html:"男の人と女の人が話しています。女の人は、あしたの午後、何をしますか。<br>M：あした、一緒に映画を見に行きませんか。<br>F：すみません、ちょっと…<br>M：いそがしいですか？<br>F：ええ、朝は洗濯したり、部屋を掃除したりします。それから来週はテストもありますよね？<br>M：え、テスト来週ですか！知りませんでした。いつですか。<br>F：来週の月曜日ですよ。だから、午後は勉強します。<br>M：ああ、僕もそうします。<br>女の人は、あしたの午後、何をしますか。",options:["1","2","3","4"],answer:3,explanation:"男の人と女の人が話しています。女の人は、あしたの午後、何をしますか。<br>M：あした、一緒に映画を見に行きませんか。<br>F：すみません、ちょっと…<br>M：いそがしいですか？<br>F：ええ、朝は洗濯したり、部屋を掃除したりします。それから来週はテストもありますよね？<br>M：え、テスト来週ですか！知りませんでした。いつですか。<br>F：来週の月曜日ですよ。だから、午後は勉強します。<br>M：ああ、僕もそうします。<br>女の人は、あしたの午後、何をしますか。<br><small>(Pembahasan tata bahasa belum tersedia untuk soal contoh resmi ini.)</small>",material:"JLPT N5 - Contoh Resmi · point_comprehension",subcategory:"もんだい2",image:"assets/images/jlpt-n5/listen-p2-q2.png",audioSrc:"assets/audio/n5-tp1-listening.mp3"},
+      {category:"Mendengarkan",instruction:"もんだい3は、えを みながら しつもんを きいて ください。（や じるし）の ひとは なんと いいますか。1から3の なかから、いちばん いい ものを ひとつ えらんで ください。",html:"レストランでお店の人を呼びます。何と言いますか。<br><small>1. いらっしゃいませ。　2. 失礼しました。　3. すみません。</small>",options:["1","2","3"],answer:2,explanation:"レストランでお店の人を呼びます。何と言いますか。<br>1. いらっしゃいませ。　2. 失礼しました。　3. すみません。<br><small>(Pembahasan tata bahasa belum tersedia untuk soal contoh resmi ini.)</small>",material:"JLPT N5 - Contoh Resmi · verbal_expression",subcategory:"もんだい3",image:"assets/images/jlpt-n5/listen-p3-q1.png",audioSrc:"assets/audio/n5-tp1-listening.mp3"},
+      {category:"Mendengarkan",instruction:"もんだい3は、えを みながら しつもんを きいて ください。（や じるし）の ひとは なんと いいますか。1から3の なかから、いちばん いい ものを ひとつ えらんで ください。",html:"友達の辞書を使いたいです。何と言いますか。<br><small>1. この辞書、ありがとうございました。　2. この辞書、貸してください。　3. この辞書、いいですよ。</small>",options:["1","2","3"],answer:1,explanation:"友達の辞書を使いたいです。何と言いますか。<br>1. この辞書、ありがとうございました。　2. この辞書、貸してください。　3. この辞書、いいですよ。<br><small>(Pembahasan tata bahasa belum tersedia untuk soal contoh resmi ini.)</small>",material:"JLPT N5 - Contoh Resmi · verbal_expression",subcategory:"もんだい3",image:"assets/images/jlpt-n5/listen-p3-q2.png",audioSrc:"assets/audio/n5-tp1-listening.mp3"},
+      {category:"Mendengarkan",instruction:"もんだい4は、えが ありません。まず ぶんを きいて ください。それから、その へんじを きいて、1から3の なかから、いちばん いい ものを ひとつ えらんで ください。",html:"F：お国はどちらですか。<br><small>1. あちらです。　2. アメリカです。　3. 部屋です。</small>",options:["1","2","3"],answer:1,explanation:"F：お国はどちらですか。<br>1. あちらです。　2. アメリカです。　3. 部屋です。<br><small>(Pembahasan tata bahasa belum tersedia untuk soal contoh resmi ini.)</small>",material:"JLPT N5 - Contoh Resmi · quick_response",subcategory:"もんだい4",audioSrc:"assets/audio/n5-tp1-listening.mp3"},
+      {category:"Mendengarkan",instruction:"もんだい4は、えが ありません。まず ぶんを きいて ください。それから、その へんじを きいて、1から3の なかから、いちばん いい ものを ひとつ えらんで ください。",html:"F：お茶、どうぞ。<br><small>1. ありがとうございます。　2. いかがですか。　3. どういたしまして。</small>",options:["1","2","3"],answer:0,explanation:"F：お茶、どうぞ。<br>1. ありがとうございます。　2. いかがですか。　3. どういたしまして。<br><small>(Pembahasan tata bahasa belum tersedia untuk soal contoh resmi ini.)</small>",material:"JLPT N5 - Contoh Resmi · quick_response",subcategory:"もんだい4",audioSrc:"assets/audio/n5-tp1-listening.mp3"}
+    ]
   }
 };
 /* Paket ujian per-5-bab yang disusun manual (bukan digenerate acak) -
@@ -511,7 +545,7 @@ const curatedBabPackages={
 };
 
 const $=id=>document.getElementById(id);
-let questions=[...defaultQuestions],testType="vocabulary",rangeStart=1,mockPackage="",current=0,mode="simulation",answers=Array(questions.length).fill(null),checked=Array(questions.length).fill(false),flags=Array(questions.length).fill(false),furigana=true,timerId=null,seconds=720,reviewOnly=false,reviewIndexes=[];
+let questions=[...defaultQuestions],testType="vocabulary",rangeStart=1,mockPackage="",current=0,mode="simulation",answers=Array(questions.length).fill(null),checked=Array(questions.length).fill(false),flags=Array(questions.length).fill(false),furigana=true,timerId=null,seconds=720,reviewOnly=false,reviewIndexes=[],listeningGroupRendered=false;
 /* Kontrol akses tes kemampuan: siswa cuma boleh mulai tes lewat akses yang
    sudah diberikan Sensei/Operator (baris `assignments` dengan test_kind
    terisi). Sensei/Operator sendiri tetap pakai form pilih-bebas di bawah
@@ -613,8 +647,75 @@ function renderNavigator(){
   $("finishEarly").disabled=!allAnswered;
   $("finishHint").hidden=allAnswered;
 }
+/* Soal "Mendengarkan" (khusus paket jlpt-n5-tp1) ditampilkan sebagai SATU
+   layar gabungan berisi semua soal もんだい1-4 sekaligus, bukan satu-per-
+   satu seperti kategori lain - meniru format buku soal JLPT asli (audio
+   diputar dari awal, siswa membaca+menjawab semua soal di bawahnya tanpa
+   berpindah halaman tiap nomor). questions[]/answers[]/checked[] TETAP
+   flat per-index seperti biasa (skoring, bank kesalahan, SRS push semua
+   tetap bekerja tanpa perubahan) - yang berbeda HANYA cara renderQuestion()
+   menggambar kontennya untuk index-index ini. listeningGroupRendered
+   mencegah audio ikut ter-reset tiap kali siswa mengklik satu jawaban
+   (HTML gabungan cuma dibangun ulang penuh saat PERTAMA masuk ke rentang
+   ini, sesudahnya cuma status tombol yang disegarkan). */
+function isListeningQuestion(q){return q.category==="Mendengarkan"}
+function listeningIndices(){return questions.map((_,i)=>i).filter(i=>isListeningQuestion(questions[i]))}
+function renderListeningGroup(forceRebuild){
+  const idxs=listeningIndices(),firstIdx=idxs[0],lastIdx=idxs[idxs.length-1];
+  $("categoryBadge").textContent="MENDENGARKAN";
+  $("questionCounter").textContent=`Soal ${firstIdx+1}–${lastIdx+1} dari ${questions.length}`;
+  $("testProgress").style.width=`${(lastIdx+1)/questions.length*100}%`;
+  $("instruction").textContent="";
+  $("audioButton").hidden=true;
+  $("explanation").hidden=true;
+  if(!forceRebuild&&listeningGroupRendered){
+    idxs.forEach(i=>{
+      $("questionText").querySelectorAll(`button[data-qidx="${i}"]`).forEach(btn=>{
+        btn.classList.toggle("selected",answers[i]===Number(btn.dataset.choice));
+      });
+    });
+    renderNavigator();
+    return;
+  }
+  const groups={},order=[];
+  idxs.forEach(i=>{const key=questions[i].subcategory||"";if(!groups[key]){groups[key]=[];order.push(key)}groups[key].push(i)});
+  const audioSrc=questions[firstIdx].audioSrc;
+  let html="";
+  if(audioSrc)html+=`<div class="listening-audio-top"><audio controls src="../${audioSrc}"></audio><small>Putar rekaman ini dari awal, lalu jawab semua soal mendengarkan di bawah sambil mendengarkan.</small></div>`;
+  order.forEach(key=>{
+    const list=groups[key];
+    html+=`<div class="listening-mondai"><h3>${key}</h3><p class="listening-instruction">${questions[list[0]].instruction}</p>`;
+    list.forEach((qi,subI)=>{
+      const q=questions[qi];
+      html+=`<div class="listening-item"><b>${subI+1}ばん</b>`;
+      if(q.image)html+=`<img class="listening-item-image" src="../${q.image}" alt="Ilustrasi soal">`;
+      html+=`<div class="listening-item-answers">${q.options.map((opt,oi)=>`<button data-qidx="${qi}" data-choice="${oi}" class="${answers[qi]===oi?"selected":""}">${opt}</button>`).join("")}</div></div>`;
+    });
+    html+="</div>";
+  });
+  $("questionText").innerHTML=html;
+  $("questionText").classList.remove("hide-furigana");
+  $("answers").replaceChildren();
+  $("questionText").querySelectorAll("button[data-qidx]").forEach(btn=>{
+    btn.onclick=()=>{
+      const qi=Number(btn.dataset.qidx),choice=Number(btn.dataset.choice);
+      answers[qi]=choice;
+      btn.parentElement.querySelectorAll("button").forEach(b=>b.classList.remove("selected"));
+      btn.classList.add("selected");
+      renderNavigator();
+    };
+  });
+  listeningGroupRendered=true;
+  $("flagQuestion").classList.toggle("active",flags[firstIdx]);$("flagQuestion").textContent=flags[firstIdx]?"★ Ditandai":"☆ Tandai soal";
+  $("previousQuestion").disabled=firstIdx===0;
+  $("checkAnswer").hidden=false;$("checkAnswer").textContent=lastIdx===questions.length-1?"Simpan & lihat hasil":"Simpan & berikutnya";
+  $("nextQuestion").hidden=true;
+  renderNavigator();
+}
 function renderQuestion(){
   const index=activeQuestionIndex(),q=questions[index];
+  if(isListeningQuestion(q)&&!reviewOnly){renderListeningGroup(!listeningGroupRendered);return}
+  listeningGroupRendered=false;
   $("categoryBadge").textContent=q.category.toUpperCase();$("questionCounter").textContent=reviewOnly?`Tinjauan ${current+1} dari ${reviewIndexes.length}`:`Soal ${index+1} dari ${questions.length}`;$("instruction").textContent=q.instruction;$("questionText").innerHTML=q.html;$("questionText").classList.toggle("hide-furigana",!furigana);$("testProgress").style.width=`${((reviewOnly?current:index)+1)/(reviewOnly?reviewIndexes.length:questions.length)*100}%`;
   $("audioButton").hidden=!q.audio;if(q.audio)$("audioButton").onclick=()=>speak(q.audio);
   const box=$("answers");box.replaceChildren();q.options.forEach((option,choice)=>{const b=document.createElement("button");b.innerHTML=`<b>${String.fromCharCode(65+choice)}</b><span></span>`;b.querySelector("span").textContent=option;b.classList.toggle("selected",answers[index]===choice);if(checked[index]||reviewOnly){b.disabled=true;b.classList.toggle("correct",choice===q.answer);b.classList.toggle("wrong",answers[index]===choice&&choice!==q.answer)}b.onclick=()=>{answers[index]=choice;renderQuestion()};box.append(b)});
@@ -624,7 +725,15 @@ function renderQuestion(){
   renderNavigator();
 }
 function checkOrAdvance(){
-  const index=activeQuestionIndex();if(answers[index]===null){$("explanation").hidden=false;$("explanation").className="explanation wrong";$("explanation").innerHTML="<b>Pilih satu jawaban terlebih dahulu.</b>Setelah memilih, jawaban dapat diperiksa.";return}
+  const index=activeQuestionIndex();
+  if(isListeningQuestion(questions[index])){
+    const idxs=listeningIndices(),lastIdx=idxs[idxs.length-1];
+    if(idxs.some(i=>answers[i]===null)){$("explanation").hidden=false;$("explanation").className="explanation wrong";$("explanation").innerHTML="<b>Masih ada soal mendengarkan yang belum dijawab.</b>Jawab semua soal di atas dulu sebelum lanjut.";return}
+    idxs.forEach(i=>checked[i]=true);
+    if(lastIdx===questions.length-1)finishTest();else{current=lastIdx+1;renderQuestion()}
+    return;
+  }
+  if(answers[index]===null){$("explanation").hidden=false;$("explanation").className="explanation wrong";$("explanation").innerHTML="<b>Pilih satu jawaban terlebih dahulu.</b>Setelah memilih, jawaban dapat diperiksa.";return}
   checked[index]=true;if(mode==="simulation"){if(index===questions.length-1)finishTest();else{current++;renderQuestion()}}else renderQuestion();
 }
 function advance(){if(activeQuestionIndex()===questions.length-1)finishTest();else{current++;renderQuestion()}}
@@ -684,7 +793,7 @@ async function startTest(){
   const button=$("startTest");button.disabled=true;const originalLabel=button.innerHTML;button.innerHTML="Memuat soal…";
   await buildSelectedQuestions();
   button.disabled=false;button.innerHTML=originalLabel;
-  current=0;answers=Array(questions.length).fill(null);checked=Array(questions.length).fill(false);flags=Array(questions.length).fill(false);reviewOnly=false;$("startScreen").hidden=true;$("resultScreen").hidden=true;$("testScreen").hidden=false;startTimer();renderQuestion();window.scrollTo({top:0,behavior:"smooth"})
+  current=0;answers=Array(questions.length).fill(null);checked=Array(questions.length).fill(false);flags=Array(questions.length).fill(false);reviewOnly=false;listeningGroupRendered=false;$("startScreen").hidden=true;$("resultScreen").hidden=true;$("testScreen").hidden=false;startTimer();renderQuestion();window.scrollTo({top:0,behavior:"smooth"})
 }
 document.querySelectorAll("#sourceChoice button").forEach(button=>button.onclick=()=>{
   mockPackage=button.dataset.package||"";
