@@ -545,7 +545,7 @@ const curatedBabPackages={
 };
 
 const $=id=>document.getElementById(id);
-let questions=[...defaultQuestions],testType="vocabulary",rangeStart=1,mockPackage="",current=0,mode="simulation",answers=Array(questions.length).fill(null),checked=Array(questions.length).fill(false),flags=Array(questions.length).fill(false),furigana=true,timerId=null,seconds=720,reviewOnly=false,reviewIndexes=[],listeningGroupRendered=false;
+let questions=[...defaultQuestions],testType="vocabulary",rangeStart=1,mockPackage="",current=0,mode="simulation",answers=Array(questions.length).fill(null),checked=Array(questions.length).fill(false),flags=Array(questions.length).fill(false),furigana=true,timerId=null,seconds=720,reviewOnly=false,reviewIndexes=[],onePageExamRendered=false;
 /* Kontrol akses tes kemampuan: siswa cuma boleh mulai tes lewat akses yang
    sudah diberikan Sensei/Operator (baris `assignments` dengan test_kind
    terisi). Sensei/Operator sendiri tetap pakai form pilih-bebas di bawah
@@ -647,92 +647,114 @@ function renderNavigator(){
   $("finishEarly").disabled=!allAnswered;
   $("finishHint").hidden=allAnswered;
 }
-/* Soal "Mendengarkan" (khusus paket jlpt-n5-tp1) ditampilkan sebagai SATU
-   layar gabungan berisi semua soal もんだい1-4 sekaligus, bukan satu-per-
-   satu seperti kategori lain - meniru format buku soal JLPT asli (audio
-   diputar dari awal, siswa membaca+menjawab semua soal di bawahnya tanpa
-   berpindah halaman tiap nomor). questions[]/answers[]/checked[] TETAP
+/* Paket "jlpt-n5-tp1" ditampilkan sebagai SATU HALAMAN UTUH berisi semua
+   28 soal sekaligus (dikelompokkan per kategori lalu per もんだい), meniru
+   cara dokumen contoh resmi (N5-mondai.pdf) menyajikan soal - bukan satu
+   soal per layar seperti paket lain. questions[]/answers[]/checked[] TETAP
    flat per-index seperti biasa (skoring, bank kesalahan, SRS push semua
    tetap bekerja tanpa perubahan) - yang berbeda HANYA cara renderQuestion()
-   menggambar kontennya untuk index-index ini. listeningGroupRendered
-   mencegah audio ikut ter-reset tiap kali siswa mengklik satu jawaban
-   (HTML gabungan cuma dibangun ulang penuh saat PERTAMA masuk ke rentang
-   ini, sesudahnya cuma status tombol yang disegarkan). */
+   menggambar kontennya untuk paket ini. onePageExamRendered mencegah audio
+   ikut ter-reset tiap kali siswa mengklik satu jawaban (HTML gabungan cuma
+   dibangun ulang penuh saat PERTAMA kali tes dimulai, sesudahnya cuma
+   status tombol yang disegarkan). Karena semua soal sudah tampil sekaligus,
+   navigasi per-soal (Sebelumnya/Tandai/Periksa/Berikutnya) disembunyikan -
+   siswa mengisi lewat halaman ini lalu menekan "Selesaikan tes" di panel
+   navigasi (tombol itu sudah generik, aktif begitu answers[] terisi semua). */
 function isListeningQuestion(q){return q.category==="Mendengarkan"}
-function listeningIndices(){return questions.map((_,i)=>i).filter(i=>isListeningQuestion(questions[i]))}
-function renderListeningGroup(forceRebuild){
-  const idxs=listeningIndices(),firstIdx=idxs[0],lastIdx=idxs[idxs.length-1];
-  $("categoryBadge").textContent="MENDENGARKAN";
-  $("questionCounter").textContent=`Soal ${firstIdx+1}–${lastIdx+1} dari ${questions.length}`;
-  $("testProgress").style.width=`${(lastIdx+1)/questions.length*100}%`;
-  $("instruction").textContent="";
-  $("audioButton").hidden=true;
-  $("explanation").hidden=true;
-  if(!forceRebuild&&listeningGroupRendered){
-    idxs.forEach(i=>{
-      $("questionText").querySelectorAll(`button[data-qidx="${i}"]`).forEach(btn=>{
-        btn.classList.toggle("selected",answers[i]===Number(btn.dataset.choice));
-      });
-    });
-    renderNavigator();
-    return;
-  }
-  const groups={},order=[];
-  idxs.forEach(i=>{const key=questions[i].subcategory||"";if(!groups[key]){groups[key]=[];order.push(key)}groups[key].push(i)});
-  const audioSrc=questions[firstIdx].audioSrc;
-  let html="";
-  if(audioSrc)html+=`<div class="listening-audio-top"><audio controls src="../${audioSrc}"></audio><small>Putar rekaman ini dari awal, lalu jawab semua soal mendengarkan di bawah sambil mendengarkan.</small></div>`;
-  order.forEach(key=>{
-    const list=groups[key];
-    html+=`<div class="listening-mondai"><h3>${key}</h3><p class="listening-instruction">${questions[list[0]].instruction}</p>`;
-    list.forEach((qi,subI)=>{
-      const q=questions[qi];
-      html+=`<div class="listening-item"><b>${subI+1}ばん</b>`;
-      if(q.image)html+=`<img class="listening-item-image" src="../${q.image}" alt="Ilustrasi soal">`;
-      html+=`<div class="listening-item-answers">${q.options.map((opt,oi)=>`<button data-qidx="${qi}" data-choice="${oi}" class="${answers[qi]===oi?"selected":""}">${opt}</button>`).join("")}</div></div>`;
-    });
-    html+="</div>";
+function isOnePageExam(){return mockPackage==="jlpt-n5-tp1"}
+/* Mengelompokkan index-index satu kategori jadi beberapa もんだい: soal
+   Mendengarkan sudah punya field subcategory eksplisit (sudah diverifikasi
+   manual terhadap PDF); kategori lain belum punya label eksplisit, jadi
+   nomor もんだい diturunkan dari field material (bagian setelah "·") -
+   soal dengan slug material yang sama dianggap satu もんだい, nomornya
+   mengikuti urutan kemunculan pertama dalam kategori tersebut. */
+function mondaiGroupsFor(indices){
+  const groups={},order=[];let counter=0;const seen={};
+  indices.forEach(i=>{
+    const q=questions[i];
+    let key=q.subcategory;
+    if(!key){
+      const slug=(q.material||"").split("·").pop().trim()||"soal";
+      if(!seen[slug]){counter++;seen[slug]=`もんだい${counter}`}
+      key=seen[slug];
+    }
+    if(!groups[key]){groups[key]=[];order.push(key)}
+    groups[key].push(i);
   });
-  $("questionText").innerHTML=html;
-  $("questionText").classList.remove("hide-furigana");
-  $("answers").replaceChildren();
-  $("questionText").querySelectorAll("button[data-qidx]").forEach(btn=>{
+  return order.map(key=>({key,indices:groups[key]}));
+}
+function bindExamAnswerButtons(container){
+  container.querySelectorAll("button[data-qidx]").forEach(btn=>{
     btn.onclick=()=>{
       const qi=Number(btn.dataset.qidx),choice=Number(btn.dataset.choice);
       answers[qi]=choice;
       btn.parentElement.querySelectorAll("button").forEach(b=>b.classList.remove("selected"));
       btn.classList.add("selected");
+      $("testProgress").style.width=`${answers.filter(v=>v!==null).length/questions.length*100}%`;
       renderNavigator();
     };
   });
-  listeningGroupRendered=true;
-  $("flagQuestion").classList.toggle("active",flags[firstIdx]);$("flagQuestion").textContent=flags[firstIdx]?"★ Ditandai":"☆ Tandai soal";
-  $("previousQuestion").disabled=firstIdx===0;
-  $("checkAnswer").hidden=false;$("checkAnswer").textContent=lastIdx===questions.length-1?"Simpan & lihat hasil":"Simpan & berikutnya";
-  $("nextQuestion").hidden=true;
+}
+function renderExamOnePage(forceRebuild){
+  $("categoryBadge").textContent="SIMULASI JLPT N5";
+  $("questionCounter").textContent=`${questions.length} soal · isi semua lalu klik "Selesaikan tes"`;
+  $("testProgress").style.width=`${answers.filter(v=>v!==null).length/questions.length*100}%`;
+  $("instruction").textContent="";
+  $("audioButton").hidden=true;
+  $("explanation").hidden=true;
+  $("questionText").classList.toggle("hide-furigana",!furigana);
+  $("flagQuestion").hidden=true;$("previousQuestion").hidden=true;$("checkAnswer").hidden=true;$("nextQuestion").hidden=true;
+  if(!forceRebuild&&onePageExamRendered){
+    questions.forEach((q,i)=>{
+      $("questionText").querySelectorAll(`button[data-qidx="${i}"]`).forEach(btn=>{
+        btn.classList.toggle("selected",answers[i]===Number(btn.dataset.choice));
+      });
+    });
+    document.getElementById(`examQ${current}`)?.scrollIntoView({behavior:"smooth",block:"center"});
+    renderNavigator();
+    return;
+  }
+  const categories={},catOrder=[];
+  questions.forEach((q,i)=>{if(!categories[q.category]){categories[q.category]=[];catOrder.push(q.category)}categories[q.category].push(i)});
+  let html=`<p class="operator-hint">Kerjakan seluruh soal di halaman ini, lalu klik "Selesaikan tes" di panel navigasi sebelah kanan.</p>`;
+  catOrder.forEach(cat=>{
+    html+=`<h2 class="exam-category-title">${cat.toUpperCase()}</h2>`;
+    mondaiGroupsFor(categories[cat]).forEach(({key,indices:idxs})=>{
+      const audioSrc=questions[idxs[0]].audioSrc;
+      html+=`<div class="listening-mondai"><h3>${key}</h3><p class="listening-instruction">${questions[idxs[0]].instruction}</p>`;
+      if(audioSrc)html+=`<div class="listening-audio-top"><audio controls src="../${audioSrc}"></audio><small>Putar rekaman ini dari awal, lalu jawab semua soal mendengarkan di bawah sambil mendengarkan.</small></div>`;
+      idxs.forEach((qi,subI)=>{
+        const q=questions[qi],listening=isListeningQuestion(q);
+        html+=`<div class="listening-item" id="examQ${qi}"><b>${listening?`${subI+1}ばん`:`Soal ${qi+1}`}</b>`;
+        if(!listening)html+=`<div class="question-text">${q.html}</div>`;
+        if(q.image)html+=`<img class="listening-item-image" src="../${q.image}" alt="Ilustrasi soal">`;
+        if(listening)html+=`<div class="listening-item-answers">${q.options.map((opt,oi)=>`<button data-qidx="${qi}" data-choice="${oi}" class="${answers[qi]===oi?"selected":""}">${opt}</button>`).join("")}</div>`;
+        else html+=`<div class="answers">${q.options.map((opt,oi)=>`<button data-qidx="${qi}" data-choice="${oi}" class="${answers[qi]===oi?"selected":""}"><b>${String.fromCharCode(65+oi)}</b><span>${escapeHtmlTes(opt)}</span></button>`).join("")}</div>`;
+        html+="</div>";
+      });
+      html+="</div>";
+    });
+  });
+  $("questionText").innerHTML=html;
+  $("answers").replaceChildren();
+  bindExamAnswerButtons($("questionText"));
+  onePageExamRendered=true;
   renderNavigator();
 }
 function renderQuestion(){
   const index=activeQuestionIndex(),q=questions[index];
-  if(isListeningQuestion(q)&&!reviewOnly){renderListeningGroup(!listeningGroupRendered);return}
-  listeningGroupRendered=false;
+  if(isOnePageExam()&&!reviewOnly){renderExamOnePage(!onePageExamRendered);return}
+  onePageExamRendered=false;
   $("categoryBadge").textContent=q.category.toUpperCase();$("questionCounter").textContent=reviewOnly?`Tinjauan ${current+1} dari ${reviewIndexes.length}`:`Soal ${index+1} dari ${questions.length}`;$("instruction").textContent=q.instruction;$("questionText").innerHTML=q.html;$("questionText").classList.toggle("hide-furigana",!furigana);$("testProgress").style.width=`${((reviewOnly?current:index)+1)/(reviewOnly?reviewIndexes.length:questions.length)*100}%`;
   $("audioButton").hidden=!q.audio;if(q.audio)$("audioButton").onclick=()=>speak(q.audio);
   const box=$("answers");box.replaceChildren();q.options.forEach((option,choice)=>{const b=document.createElement("button");b.innerHTML=`<b>${String.fromCharCode(65+choice)}</b><span></span>`;b.querySelector("span").textContent=option;b.classList.toggle("selected",answers[index]===choice);if(checked[index]||reviewOnly){b.disabled=true;b.classList.toggle("correct",choice===q.answer);b.classList.toggle("wrong",answers[index]===choice&&choice!==q.answer)}b.onclick=()=>{answers[index]=choice;renderQuestion()};box.append(b)});
   const showExplanation=(checked[index]&&mode==="practice")||reviewOnly;$("explanation").hidden=!showExplanation;if(showExplanation){const correct=answers[index]===q.answer;$("explanation").className=`explanation${correct?"":" wrong"}`;$("explanation").innerHTML=`<b>${correct?"Jawaban benar":"Belum tepat"}</b>${q.explanation}`}
-  $("flagQuestion").classList.toggle("active",flags[index]);$("flagQuestion").textContent=flags[index]?"★ Ditandai":"☆ Tandai soal";$("previousQuestion").disabled=current===0;$("checkAnswer").hidden=reviewOnly||checked[index]||mode==="simulation";$("checkAnswer").textContent="Periksa jawaban";$("nextQuestion").hidden=reviewOnly||(!checked[index]&&mode==="practice");$("nextQuestion").textContent=index===questions.length-1?"Lihat hasil →":"Soal berikutnya →";
+  $("flagQuestion").hidden=false;$("flagQuestion").classList.toggle("active",flags[index]);$("flagQuestion").textContent=flags[index]?"★ Ditandai":"☆ Tandai soal";$("previousQuestion").hidden=false;$("previousQuestion").disabled=current===0;$("checkAnswer").hidden=reviewOnly||checked[index]||mode==="simulation";$("checkAnswer").textContent="Periksa jawaban";$("nextQuestion").hidden=reviewOnly||(!checked[index]&&mode==="practice");$("nextQuestion").textContent=index===questions.length-1?"Lihat hasil →":"Soal berikutnya →";
   if(mode==="simulation"&&!reviewOnly){$("checkAnswer").hidden=false;$("checkAnswer").textContent=index===questions.length-1?"Simpan & lihat hasil":"Simpan & berikutnya"}
   renderNavigator();
 }
 function checkOrAdvance(){
   const index=activeQuestionIndex();
-  if(isListeningQuestion(questions[index])){
-    const idxs=listeningIndices(),lastIdx=idxs[idxs.length-1];
-    if(idxs.some(i=>answers[i]===null)){$("explanation").hidden=false;$("explanation").className="explanation wrong";$("explanation").innerHTML="<b>Masih ada soal mendengarkan yang belum dijawab.</b>Jawab semua soal di atas dulu sebelum lanjut.";return}
-    idxs.forEach(i=>checked[i]=true);
-    if(lastIdx===questions.length-1)finishTest();else{current=lastIdx+1;renderQuestion()}
-    return;
-  }
   if(answers[index]===null){$("explanation").hidden=false;$("explanation").className="explanation wrong";$("explanation").innerHTML="<b>Pilih satu jawaban terlebih dahulu.</b>Setelah memilih, jawaban dapat diperiksa.";return}
   checked[index]=true;if(mode==="simulation"){if(index===questions.length-1)finishTest();else{current++;renderQuestion()}}else renderQuestion();
 }
@@ -793,7 +815,7 @@ async function startTest(){
   const button=$("startTest");button.disabled=true;const originalLabel=button.innerHTML;button.innerHTML="Memuat soal…";
   await buildSelectedQuestions();
   button.disabled=false;button.innerHTML=originalLabel;
-  current=0;answers=Array(questions.length).fill(null);checked=Array(questions.length).fill(false);flags=Array(questions.length).fill(false);reviewOnly=false;listeningGroupRendered=false;$("startScreen").hidden=true;$("resultScreen").hidden=true;$("testScreen").hidden=false;startTimer();renderQuestion();window.scrollTo({top:0,behavior:"smooth"})
+  current=0;answers=Array(questions.length).fill(null);checked=Array(questions.length).fill(false);flags=Array(questions.length).fill(false);reviewOnly=false;onePageExamRendered=false;$("startScreen").hidden=true;$("resultScreen").hidden=true;$("testScreen").hidden=false;startTimer();renderQuestion();window.scrollTo({top:0,behavior:"smooth"})
 }
 document.querySelectorAll("#sourceChoice button").forEach(button=>button.onclick=()=>{
   mockPackage=button.dataset.package||"";
