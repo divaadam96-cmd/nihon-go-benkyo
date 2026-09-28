@@ -33,7 +33,8 @@ Ambil contoh membuka `pages/materi.html`:
 
 1. Browser memuat `materi.html`. Isinya sengaja sangat minim — cuma
    `<main class="main" id="pageMain">` kosong berisi placeholder konten,
-   lalu deretan tag `<script>`.
+   lalu deretan tag `<script defer>` (dieksekusi berurutan setelah HTML
+   selesai di-parse).
 2. Script pertama yang benar-benar membangun tampilan adalah
    **`js/app-shell.js`**. Ia menyisipkan HTML login-screen + header +
    sidebar ke `<body>`, lalu memindahkan `#pageMain` ke dalam struktur

@@ -22,7 +22,9 @@ Dokumentasi lebih detail ada di folder [`docs/`](docs/):
   dipakai offline untuk aset yang sudah pernah dimuat.
 
 Tidak ada `package.json`/npm dependency — satu-satunya library eksternal
-adalah `@supabase/supabase-js@2` yang dimuat lewat CDN jsdelivr.
+adalah `@supabase/supabase-js` (versi dipatok, mis. `@2.117.2`) yang dimuat
+lewat CDN jsdelivr tepat sebelum `js/auth.js`. Semua `<script>` di halaman
+memakai `defer` (urutan eksekusi tetap sesuai urutan tag).
 
 ## Struktur project
 

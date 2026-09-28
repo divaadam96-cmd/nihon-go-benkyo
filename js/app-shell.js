@@ -23,6 +23,18 @@
   // Cegah form login berkedip saat berpindah halaman sementara Supabase
   // masih memeriksa apakah sesi pengguna sebelumnya tetap valid.
   document.body.classList.add("auth-checking");
+  // Jalur cepat: kalau browser ini tidak menyimpan token sesi Supabase sama
+  // sekali (pengunjung baru/sudah logout), hasil pemeriksaan sesi di auth.js
+  // pasti "belum login" - tampilkan form login sekarang juga, tanpa menunggu
+  // supabase-js (~50 KB dari CDN) selesai diunduh. Link reset password
+  // (type=recovery) dikecualikan karena harus menampilkan form lain.
+  try {
+    const isRecoveryLink = /type=recovery/.test(location.hash + location.search);
+    const hasStoredSession = Object.keys(localStorage).some((key) => /^sb-.+-auth-token$/.test(key));
+    if (!isRecoveryLink && !hasStoredSession) document.body.classList.remove("auth-checking");
+  } catch (error) {
+    // localStorage tidak bisa diakses - biarkan auth.js yang memutuskan.
+  }
 
   const IS_SUBPAGE = /\/pages\//.test(location.pathname);
   const ROOT = IS_SUBPAGE ? "../" : "";
@@ -57,6 +69,12 @@
   const layoutEl = appEl.querySelector(".layout");
 
   document.body.insertBefore(loginScreenEl, document.body.firstChild);
+  // Form login bisa tampil sebelum auth.js selesai dimuat (jalur cepat di
+  // atas) - cegah submit bawaan browser (reload halaman) di jeda itu.
+  // auth.js memasang handler submit yang sebenarnya.
+  loginScreenEl
+    .querySelectorAll("form")
+    .forEach((form) => form.addEventListener("submit", (event) => event.preventDefault()));
   document.body.insertBefore(appEl, pageMain);
   layoutEl.appendChild(pageMain);
 
@@ -230,8 +248,14 @@
 
   window.addEventListener("resize", moveTopnavIndicator);
   window.addEventListener("resize", updateSidebarActiveIndicator);
+  // Sebelum login .app masih display:none - mengukur di situ cuma memaksa
+  // reflow tanpa hasil (lihat catatan refreshShellNav di bawah).
   if (document.fonts && document.fonts.ready)
-    document.fonts.ready.then(moveTopnavIndicator).catch(() => {});
+    document.fonts.ready
+      .then(() => {
+        if (document.body.classList.contains("authed")) moveTopnavIndicator();
+      })
+      .catch(() => {});
 
   // Halaman default: kalau tidak ada hash, tandai "dashboard"/view utama
   // halaman ini sebagai aktif di sidebar/topnav/mobile-nav.

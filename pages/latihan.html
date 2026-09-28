@@ -4,9 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tes Kemampuan — Nihon GO Benkyo</title>
+  <meta name="description" content="Tes kemampuan dan latihan soal JLPT N5 (kosakata, tata bahasa, membaca, mendengarkan) di Nihon GO Benkyo.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap"></noscript>
   <meta name="theme-color" content="#142945">
   <link rel="manifest" href="../nihon-go-benkyo.webmanifest">
   <link rel="icon" type="image/png" href="../assets/icons/icon-192.png">
@@ -15,7 +17,6 @@
   <link rel="stylesheet" href="../css/shell.css">
   <link rel="stylesheet" href="../css/auth.css">
   <link rel="stylesheet" href="../css/pages/latihan.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body class="auth-checking">
 <main class="main" id="pageMain">
@@ -87,14 +88,15 @@
     <p class="disclaimer">Soal dibuat untuk pembelajaran mandiri dan bukan soal ujian resmi.</p>
   </section>
 </main>
-<script src="../js/pwa.js"></script>
-<script src="../data/bab-data.js"></script>
-<script src="../data/materi-data.js"></script>
-<script src="../js/srs.js"></script>
-<script src="../js/app-effects.js"></script>
-<script src="../js/app-sidebar.js"></script>
-<script src="../js/app-shell.js"></script>
-<script src="../js/pages/latihan.js"></script>
-<script src="../js/auth.js"></script>
+<script defer src="../js/pwa.js"></script>
+<script defer src="../data/bab-data.js"></script>
+<script defer src="../data/materi-data.js"></script>
+<script defer src="../js/srs.js"></script>
+<script defer src="../js/app-effects.js"></script>
+<script defer src="../js/app-sidebar.js"></script>
+<script defer src="../js/app-shell.js"></script>
+<script defer src="../js/pages/latihan.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+<script defer src="../js/auth.js"></script>
 </body>
 </html>
