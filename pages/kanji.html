@@ -7,7 +7,7 @@
   <meta name="description" content="Belajar kanji bahasa Jepang lengkap dengan urutan goresan dan pengulangan berjarak di Nihon GO Benkyo.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@500;700;900&display=swap"></noscript>
   <meta name="theme-color" content="#142945">
   <link rel="manifest" href="../nihon-go-benkyo.webmanifest">
@@ -83,7 +83,7 @@
 <script defer src="../js/app-sidebar.js"></script>
 <script defer src="../js/app-shell.js"></script>
 <script defer src="../js/pages/kanji.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+<script defer fetchpriority="low" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
 <script defer src="../js/auth.js"></script>
 </body>
 </html>
