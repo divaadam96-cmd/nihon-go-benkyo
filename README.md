@@ -39,8 +39,9 @@ pages/                   halaman lain, masing-masing dokumen HTML sendiri
   admin.html               panel Operator: kelola akun
 
 css/
-  base.css                 variabel warna (:root), reset dasar, [hidden] -
-                           dimuat PERTAMA di index.html & semua pages/*.html
+  base.css                 variabel warna (:root), @font-face DM Sans
+                           (self-host), reset dasar, [hidden] - dimuat
+                           PERTAMA di index.html & semua pages/*.html
   shell.css                header/sidebar/nav + kartu/tombol dasar dipakai
                            semua halaman (lihat catatan di bawah)
   auth.css                 layar login + account-box, dimuat semua halaman
@@ -55,7 +56,10 @@ css/
 js/
   app-shell.js             login-screen + header + sidebar + mobile-nav -
                            dibangun SEKALI di sini, dipakai sama persis di
-                           SEMUA halaman (lihat docs/struktur-aplikasi.md)
+                           SEMUA halaman (lihat docs/struktur-aplikasi.md).
+                           Pengecualian: index.html menulis layar login yang
+                           sama secara statis (supaya tampil tanpa menunggu
+                           JS) - ubah markup login? samakan di keduanya
   app-sidebar.js           interaksi sidebar (toggle rail/drawer, tooltip)
   app-effects.js           efek visual (sakura) & bantuan tampilan materi
   auth.js                  login Supabase, sinkronisasi profil/peran,
@@ -63,7 +67,8 @@ js/
   srs.js                   mesin spaced-repetition bersama + sync Supabase
   quiz-results.js          cache + perhitungan XP dari riwayat quiz_results
   assignments.js           kartu "Tugas dari Sensei" + pengingat harian
-  pwa.js                   install prompt (service worker didaftarkan di sini)
+  pwa.js                   install prompt (service worker didaftarkan di sini,
+                           setelah event load)
   pages/                   1 file JS per halaman di atas (dashboard.js,
                            materi.js, hafalan.js, kanji.js, latihan.js,
                            pantau.js, admin.js) - isinya dibungkus
@@ -74,6 +79,8 @@ data/*.js                dataset murni (kanji, kana, materi per-bab, bab
 assets/
   icons/                  ikon PWA
   images/                 logo & gambar latar
+  fonts/                  DM Sans woff2 self-host (OFL) - nama file
+                          berversi, di-cache immutable (vercel.json)
 
 sw.js                     service worker (WAJIB tetap di root - lihat di bawah)
 nihon-go-benkyo.webmanifest  manifest PWA

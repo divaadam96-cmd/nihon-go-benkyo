@@ -4,9 +4,13 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Nihon GO Benkyo — Belajar Bahasa Jepang</title>
   <meta name="description" content="Nihon GO Benkyo — platform belajar bahasa Jepang: materi Minna no Nihongo, hafalan kosakata & kanji dengan SRS, serta latihan soal JLPT N5.">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap"></noscript>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <!-- Di halaman ini Zen Kaku Gothic New hanya dipakai ikon sidebar/mobile-nav
+       & subjudul brand (css/shell.css .jp, .brand small; js/app-shell.js) -
+       minta subset glyph itu saja (param text=) alih-alih ~120 potongan CSS
+       unicode-range font lengkap. Tambah huruf Jepang baru di shell? Tambahkan juga di sini. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&text=%E2%8C%82%E6%96%87%E6%BC%A2%E8%AA%9E%E8%A9%A6%E7%9B%A3%E7%AE%A1%E6%97%A5%E6%9C%AC%E5%8B%89%E5%BC%B7&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap"></noscript>
   <meta name="theme-color" content="#142945">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,12 +19,36 @@
   <link rel="manifest" href="nihon-go-benkyo.webmanifest">
   <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <!-- Satu-satunya preload: font teks layar login (elemen LCP). -->
+  <link rel="preload" href="assets/fonts/dm-sans-latin-v17.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/shell.css">
   <link rel="stylesheet" href="css/auth.css">
   <link rel="stylesheet" href="css/pages/dashboard.css">
 </head>
 <body class="auth-checking">
+<script>
+  /* Layar login di bawah ditulis statis (bukan dari template app-shell.js)
+     supaya langsung tampil tanpa menunggu rantai script defer - ini elemen
+     LCP halaman. Jalur cepat sesi sama persis dengan di app-shell.js:
+     tanpa token sesi Supabase tersimpan, tampilkan form login sejak paint
+     pertama; kalau ada, biarkan loader "Memeriksa sesi…" sampai auth.js
+     memutuskan. Sengaja diletakkan SEBELUM markup login supaya browser
+     tidak sempat mem-paint loader dulu. */
+  (function () {
+    try {
+      var isRecoveryLink = /type=recovery/.test(location.hash + location.search);
+      var hasStoredSession = Object.keys(localStorage).some(function (key) { return /^sb-.+-auth-token$/.test(key); });
+      if (!isRecoveryLink && !hasStoredSession) document.body.classList.remove("auth-checking");
+    } catch (error) {}
+    // Submit sebelum auth.js siap ditahan supaya halaman tidak reload
+    // (auth.js memasang handler submit yang sebenarnya).
+    document.addEventListener("submit", function (event) {
+      if (event.target.closest("#loginScreen")) event.preventDefault();
+    });
+  })();
+</script>
+<div class="login-screen" id="loginScreen"><div class="auth-session-loader" role="status" aria-live="polite"><img src="assets/images/logo.webp" alt="" width="54" height="54"><span class="auth-session-spinner" aria-hidden="true"></span><b>Memeriksa sesi…</b></div><form class="login-card" id="loginForm"><img class="mark" src="assets/images/logo.webp" alt="Logo Nihon GO Benkyo" width="52" height="52"><h1>Nihon GO Benkyo</h1><p>Masuk untuk melanjutkan belajar. Akun Sensei &amp; Siswa dibuat oleh Operator.</p><label>Email / ID<input type="text" id="loginEmail" autocomplete="username" required></label><label>Password<input type="password" id="loginPassword" autocomplete="current-password" required></label><p class="login-error" id="loginError" hidden></p><button type="submit" class="primary" id="loginSubmit">Masuk</button><button type="button" class="link-btn" id="forgotPasswordLink">Lupa password?</button><button type="button" class="install-app-btn" hidden>Install aplikasi</button><p class="ios-install-hint" hidden>Di iPhone/iPad: buka menu Bagikan (Share) lalu pilih "Tambah ke Layar Utama".</p></form><form class="login-card" id="forgotForm" hidden><img class="mark" src="assets/images/logo.webp" alt="Logo Nihon GO Benkyo" width="52" height="52"><h1>Lupa password</h1><p>Masukkan email akun Anda (hanya berlaku untuk akun yang login pakai email asli, mis. akun Operator). Link reset akan dikirim ke email tersebut.</p><label>Email<input type="email" id="forgotEmail" autocomplete="username" required></label><p class="login-error" id="forgotError" hidden></p><p class="form-success" id="forgotSuccess" hidden></p><button type="submit" class="primary" id="forgotSubmit">Kirim link reset</button><button type="button" class="link-btn" id="backToLoginLink">← Kembali ke login</button></form><form class="login-card" id="resetPasswordForm" hidden><img class="mark" src="assets/images/logo.webp" alt="Logo Nihon GO Benkyo" width="52" height="52"><h1>Buat password baru</h1><p>Masukkan password baru untuk akun Anda.</p><label>Password baru<input type="password" id="newPassword" autocomplete="new-password" required minlength="6"></label><label>Ulangi password baru<input type="password" id="newPasswordConfirm" autocomplete="new-password" required minlength="6"></label><p class="login-error" id="resetError" hidden></p><button type="submit" class="primary" id="resetSubmit">Simpan password baru</button></form></div>
 <main class="main" id="pageMain">
     <section class="view active" id="dashboard"><div class="head"><div><div class="eyebrow">Dashboard siswa</div><h1>Selamat datang kembali, Divha.</h1><p>Belajar sedikit demi sedikit untuk menuju kemampuan bahasa Jepang yang nyata.</p></div><p>Streak belajar: <b id="streakDays">0 hari</b></p></div><div id="studyReminderBanner" class="study-reminder" hidden><span id="studyReminderText"></span><button type="button" id="studyReminderEnableBtn">Aktifkan pengingat notifikasi</button></div><div class="overview"><article class="card metric"><small>Aktivitas hari ini</small><b id="taskHeadline">0 dari 4</b><p>Selesaikan target dan dapatkan XP tambahan.</p></article><article class="card metric"><small>Total XP</small><b id="xpCard">0</b><p id="xpWeeklyNote">+0 XP minggu ini</p></article><article class="card metric"><small>Target utama</small><b>JLPT N4</b><p>40% modul selesai</p></article><article class="card metric"><small>Kanji dikuasai</small><b id="kanjiCount">0</b><p>Dari target 100 kanji</p></article></div><div class="dashboard-grid"><article class="card"><h2>Rencana hari ini</h2><div class="todo" data-task="hafalan" data-goto="memorization"><button aria-label="Tandai hafalan hari ini selesai"></button><span id="taskHafalanLabel">Hafalan kosakata &amp; kanji</span><small id="taskHafalanSub">Memuat…</small></div><div class="todo" data-task="materi" data-goto="materials"><button aria-label="Tandai review materi selesai"></button><span id="taskMateriLabel">Review pelajaran</span><small id="taskMateriSub">Memuat…</small></div><div class="todo" data-task="kanji" data-goto="kanji-study"><button aria-label="Tandai latihan kanji selesai"></button><span id="taskKanjiLabel">Latihan kanji</span><small id="taskKanjiSub">Memuat…</small></div><div class="todo" data-task="quiz" data-goto="test"><button aria-label="Selesaikan quiz"></button><span>Kerjakan quiz singkat</span><small>Tes kemampuan</small></div></article><article class="card" id="assignmentsCard" data-role-only="siswa" hidden><h2>Tugas dari Sensei</h2><div id="assignmentsList"><p class="muted">Memuat…</p></div></article><article class="card"><h2>Aktivitas 6 minggu terakhir</h2><div class="chart"><svg viewBox="0 0 600 165" preserveAspectRatio="none" aria-label="Grafik aktivitas belajar 6 minggu terakhir"><path id="activityChartPath" d="M0,165 L120,165 L240,165 L360,165 L480,165 L600,165" fill="none" stroke="#bd725b" stroke-width="4" vector-effect="non-scaling-stroke"/><path id="activityGoalPath" d="M0,165 L600,165" fill="none" stroke="#ad8b50" stroke-width="3" stroke-dasharray="5 5" vector-effect="non-scaling-stroke"/></svg><div class="axis"><span>M-5</span><span>M-4</span><span>M-3</span><span>M-2</span><span>M-1</span><span>M ini</span></div></div><div class="legend"><span><i></i>Ulasan per minggu</span><span><i class="gold"></i>Target mingguan</span></div></article></div><article class="card" style="margin-top:14px"><h2>Progres level</h2><div class="levels"><div class="level"><b>N5</b><div class="track"><div class="fill" style="width:86%"></div></div><span>86%</span></div><div class="level"><b>N4</b><div class="track"><div class="fill" style="width:40%"></div></div><span>40%</span></div></div></article></section>
 

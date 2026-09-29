@@ -41,6 +41,11 @@ Ambil contoh membuka `pages/materi.html`:
    itu. Di titik ini halaman terlihat "lengkap" (ada header/sidebar),
    tapi seluruhnya masih tersembunyi oleh gerbang login (CSS
    `body:not(.authed) .app{display:none}`).
+   Pengecualian: `index.html` (halaman masuk utama) sudah menulis
+   login-screen yang sama secara statis di HTML, plus inline script kecil
+   yang memutuskan jalur cepat sesi sebelum paint pertama — supaya form
+   login (elemen LCP) tampil tanpa menunggu rantai script defer.
+   `app-shell.js` memakai markup itu alih-alih menyisipkan yang baru.
 3. **`js/app-sidebar.js`** dipanggil oleh `app-shell.js` untuk memasang
    perilaku sidebar (buka/tutup, tooltip saat mode ringkas).
 4. **`js/auth.js`** memeriksa sesi Supabase. Kalau belum login, form

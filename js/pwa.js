@@ -3,8 +3,14 @@
    login), bukan cuma setelah masuk, supaya app bisa di-install dan tetap
    di-cache walau pengunjung belum login. */
 
+// Didaftarkan setelah event load: instalasi service worker langsung
+// men-precache seluruh ASSETS di sw.js (>1 MB) - kalau mulai lebih awal,
+// unduhan itu berebut bandwidth dengan CSS/font/script halaman ini sendiri
+// pada kunjungan pertama.
 if ("serviceWorker" in navigator && location.protocol !== "file:") {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
 }
 
 let deferredInstallPrompt = null;

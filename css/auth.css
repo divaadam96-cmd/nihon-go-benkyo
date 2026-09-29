@@ -4,6 +4,18 @@
 body:not(.authed) .app {
   display: none;
 }
+/* Mobile-nav (dipasang app-shell.js langsung di body, di luar .app) juga
+   ikut disembunyikan - selain memang tertutup layar login, ini mencegah
+   browser mengunduh font Jepang untuk ikon-ikonnya sebelum login. */
+body:not(.authed) .mobile-nav {
+  display: none !important;
+}
+/* Konten halaman (#pageMain) baru dipindah ke dalam .app oleh app-shell.js
+   setelah script defer jalan - sebelum itu sembunyikan juga, supaya tidak
+   ikut di-layout di balik layar login (mempercepat paint pertama). */
+body:not(.authed) #pageMain {
+  display: none;
+}
 body.authed .login-screen {
   display: none;
 }
@@ -60,6 +72,14 @@ body.auth-checking .login-card {
   background: var(--paper);
   box-shadow: 0 30px 70px #05101f66;
   text-align: center;
+  /* Tetap di tengah vertikal, tapi lewat transform (bukan align-items:
+     center) - tombol "Install aplikasi" yang dimunculkan pwa.js belakangan
+     membuat kartu lebih tinggi; dengan transform, kartu yang sudah tampil
+     tidak tercatat sebagai layout shift (CLS). Hasil visual sama. */
+  align-self: flex-start;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .login-card .mark {
   width: 52px;
@@ -90,7 +110,7 @@ body.auth-checking .login-card {
   padding: 11px 13px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  font: 14px "DM Sans", sans-serif;
+  font: 14px "DM Sans", "DM Sans Fallback", sans-serif;
   color: var(--ink);
   background: #fff;
 }
@@ -114,7 +134,7 @@ body.auth-checking .login-card {
   border-radius: 9px;
   background: var(--navy);
   color: #f8e8c4;
-  font: 700 14px "DM Sans", sans-serif;
+  font: 700 14px "DM Sans", "DM Sans Fallback", sans-serif;
   cursor: pointer;
 }
 .login-card button:disabled {
