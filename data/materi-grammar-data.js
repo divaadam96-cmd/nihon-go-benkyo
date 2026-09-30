@@ -2777,35 +2777,85 @@ const MATERI_BOOK2_LESSONS = [
   {
     title: "Melakukan dua kegiatan",
     items: [
-          [
-            "Vますながら",
-            "Menyatakan melakukan dua kegiatan sekaligus; kegiatan utama berada di bagian akhir.",
-            "音楽を 聞きながら 勉強します。",
-            "Saya belajar sambil mendengarkan musik.",
-          ],
-          [
-            "Vています",
-            "Menyatakan kebiasaan atau keadaan yang berlanjut.",
-            "毎朝 ジョギングを しています。",
-            "Saya joging setiap pagi.",
-          ],
-          [
-            "し",
-            "Menyebut alasan atau beberapa sifat secara berturut.",
-            "この まちは 便利だし、静かです。",
-            "Kota ini praktis dan tenang.",
-          ],
-          [
-            "それで",
-            "Menghubungkan sebab dan akibat yang logis.",
-            "雨でした。それで、行きませんでした。",
-            "Hujan. Karena itu, saya tidak pergi.",
-          ],
+      {
+        title: "Kata Kerja<sub>1</sub>（Bentuk ます）ながら Kata Kerja<sub>2</sub>",
+        blocks: [
+          {
+            text: "Pola kalimat ini menyatakan bahwa ketika pelaku yang sama melakukan aksi<sub>2</sub> dan aksi<sub>1</sub> secara bersamaan. Kata Kerja<sub>2</sub> yang merupakan aksi utama.",
+            examples: [["① 音楽を 聞きながら 食事します。", "Makan sambil mendengar musik."]],
+          },
+          {
+            text: "Seperti ②, digunakan pula jika melakukan dua hal dengan terus-menerus dalam suatu jangka waktu tertentu.",
+            examples: [["② 働きながら 日本語を 勉強して います。", "Belajar bahasa Jepang sambil bekerja."]],
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja Bentuk て います",
+        blocks: [
+          {
+            text: "Pola kalimat ini digunakan pula ketika menyatakan perbuatan yang berulang kali sebagai kebiasaan. Jika perbuatan tersebut dilakukan pada masa lampau sebelum titik ucapannya, bentuknya berubah menjadi Kata Kerja Bentuk て いました.",
+            examples: [
+              ["③ 毎朝 ジョギングを して います。", "Setiap pagi, saya <i>joging</i>."],
+              ["④ 子どもの とき、毎晩 8時に 寝て いました。", "Ketika masih kecil, setiap malam saya tidur pukul delapan."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Bentuk Biasa し、Bentuk Biasa し、～",
+        blocks: [
+          {
+            label: "1) Pola kalimat ini digunakan jika menjelaskan lebih dari dua hal yang mirip mengenai topik dengan setaraf. Yang dimaksud mirip di sini adalah hal yang dijelaskannya semuanya kelebihan seperti ⑤ yang dicontohkan.",
+            examples: [["⑤ 鈴木さんは ピアノも 弾けるし、歌も 歌えるし、ダンスも できます。", "Sdr. Suzuki bisa bermain piano, bisa bernyanyi, juga bisa berdansa."]],
+          },
+          {
+            text: "Dengan catatan bahwa pola kalimat ini tidak hanya satu hal, melainkan mengandung satu hal lagi yang dibubuhkan mengenai perasaan si pembicara, maka sering digunakan も. Agar lebih jelas, adakalanya menggunakan それに, seperti ⑥.",
+            examples: [["⑥ 田中さんは まじめだし、中国語も 上手だし、それに 経験も あります。", "Sdr. Tanaka rajin, pandai bahasa Tionghoa, lagi pula berpengalaman."]],
+          },
+          {
+            label: "2) Pola kalimat ini digunakan pula untuk cara menyatakan alasan dibelakang bagian～し、～し.",
+            examples: [["⑦ ここは 値段も 安いし、魚も 新しいし、よく 食べに 来ます。", "Di sini harganya murah, ikan juga segar, maka sering datang untuk makan."]],
+          },
+          {
+            text: "Untuk ini, jika kesimpulannya sudah jelas, adakalanya alasan saja yang dijelaskan tanpa kesimpulan.",
+            examples: [["⑧ どうして この 店へ 来るんですか。<br>……ここは 値段も 安いし、魚も 新しいし……。", "Kenapa datang ke toko ini?<br>…… Di sini harganya murah, ikan juga segar..."]],
+          },
+          {
+            text: "Adakalanya し paling belakang dinyatakan dengan から untuk alasan.",
+            examples: [["⑨ どうして 日本の アニメが 好きなんですか。<br>……話も おもしろいし、音楽も すてきですから。", "Kenapa suka animasi Jepang?<br>…… Ceritanya menarik, dan musiknya juga bagus."]],
+          },
+        ],
+      },
+      {
+        title: "それで",
+        blocks: [
+          {
+            text: "それで digunakan jika menjelaskan kesimpulan yang ditemukan oleh hal yang dijelaskan sebelumnya sebagai alasan.",
+            examples: [
+              ["⑩ 将来 小説家に なりたいです。それで 今は アルバイトを しながら 小説を 書いて います。", "(Saya) Ingin menjadi pengarang novel pada masa depan.<br>Oleh karena itu, sekarang menulis novel sambil bekerja paruh waktu."],
+              ["⑪ ここは コーヒーも おいしいし、食事も できるし……。<br>……それで 人気が あるんですね。", "Di sini kopinya enak, dan juga bisa makan...<br>…… Oleh karena itu, populer, ya."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "～とき＋Kata Bantu",
+        blocks: [
+          {
+            text: "とき yang telah dipelajari pada Pelajaran 23 adalah Kata Benda, maka dapat menggunakannya dengan menyertai Kata Bantu di belakangnya.",
+            examples: [
+              ["⑫ 勉強する ときは、音楽を 聞きません。", "Ketika belajar tidak mendengar musik."],
+              ["⑬ 疲れた ときや 寂しい とき、よく 田舎の 青い 空を 思い出す。", "Ketika lelah atau sepi, saya sering ingat langit biru kampung halaman. (Pel.31)"],
+            ],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 28",
+    focus: "Menyatakan dua kegiatan sekaligus dengan ながら, kebiasaan dengan ～て います, alasan dengan ～し、～し, それで, dan ～とき＋Kata Bantu.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Keadaan dan persiapan",
