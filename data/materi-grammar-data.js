@@ -2657,35 +2657,122 @@ const MATERI_BOOK2_LESSONS = [
   {
     title: "Bentuk potensial dan kemampuan",
     items: [
-        [
-          "Bentuk potensial",
-          "Menyatakan bahwa seseorang mampu melakukan suatu tindakan.",
-          "わたしは 日本語が 話せます。",
-          "Saya bisa berbicara Jepang.",
+      {
+        title: "Kata Kerja Potensial",
+        noBox: true,
+        blocks: [
+          {
+            text: "Sebagai cara menyatakan kebisaan, pada Pelajaran 18 di tingkat dasar I, telah mempelajari Kata Benda/Kata Kerja Bentuk Kamus＋ことが できます. Di sini Anda akan mempelajari cara lain untuk menyatakan Kata Kerja Potensial.",
+            table: {
+              headers: ["", "Kata Kerja Potensial<br>Bentuk Sopan", "Kata Kerja Potensial<br>Bentuk Biasa"],
+              rows: [
+                ["I", "かきます<br>かいます", "かけます<br>かえます", "かける<br>かえる"],
+                ["II", "たべます", "たべられます", "たべられる"],
+                ["III", "きます<br>します", "こられます<br>できます", "こられる<br>できる"],
+              ],
+            },
+          },
+          {
+            text: "(Lihat Buku Induk Pel.27 Latihan A1)<br>Kata Kerja Potensial dikonjugasi sebagai Kata Kerja Kelompok II.<br>Contoh: かえます　かえる　かえ(ない)　かえて<br>Dengan catatan bahwa わかります sudah bermakna kebisaan maka tidak menjadi dalam bentuk わかれます.",
+          },
         ],
-        [
-          "Kata kerja potensial",
-          "Objek kemampuan lazim memakai が.",
-          "この みせで カードが 使えます。",
-          "Kartu dapat digunakan di toko ini.",
+      },
+      {
+        title: "Kalimat yang digunakan Kata Kerja Potensial",
+        noBox: true,
+        blocks: [
+          {
+            label: "1) Kata Kerja Potensial tidak menyatakan gerakan, melainkan keadaan. Objek dari Kata Kerja Transitif dinyatakan dengan を, sedangkan pada prinsipnya objek dari Kata Kerja Potensial dinyatakan dengan が.",
+            examples: [
+              ["① わたしは 日本語<u>を</u> 話します。", "Saya berbahasa Jepang."],
+              ["② わたしは 日本語<u>が</u> 話せます。", "Saya bisa berbahasa Jepang."],
+            ],
+          },
+          {
+            text: "Tidak berubah kecuali Kata Bantu が.",
+            examples: [
+              ["③ 一人で 病院へ 行けますか。", "Bisa pergi ke rumah sakit sendiri?"],
+              ["④ 田中さんに 会えませんでした。", "Tidak bisa bertemu dengan sdr. Tanaka."],
+            ],
+          },
+          {
+            label: "2) Dalam Kata Kerja Potensial, terdapat cara penggunaan untuk menyatakan kemampuan dari pelaku ⑤, dan menyatakan kemungkinan untuk melakukan suatu perbuatan dalam kondisi tertentu ⑥.",
+            examples: [
+              ["⑤ ミラーさんは 漢字が 読めます。", "Sdr. Miller bisa membaca huruf <i>Kanji</i>."],
+              ["⑥ この 銀行で ドルが 換えられます。", "Di bank ini dolar dapat ditukar."],
+            ],
+          },
         ],
-        [
-          "見えます／聞こえます",
-          "Menyatakan sesuatu terlihat atau terdengar secara alami.",
-          "海が 見えます。",
-          "Laut terlihat.",
+      },
+      {
+        title: "見えます dan 聞こえます",
+        blocks: [
+          {
+            text: "みえます, きこえます dengan tidak sengaja menyatakan suatu objek yang dapat ditangkap di dalam wawasan secara alami, atau bunyi yang tercapai di telinga secara alami. Objek tersebut dinyatakan dengan が. みえます, きこえます tidak dapat dipakai untuk hal yang memperhatikan secara sengaja, dan untuk itu dipakai Kata Kerja Potensional.",
+            examples: [
+              ["⑦ 新幹線から 富士山が 見えます。", "Dari <i>Shinkansen</i> terlihat Gunung Fuji."],
+              ["⑧ ラジオの 音が 聞こえます。", "Terdengar suara radio."],
+              ["⑨ 新宿で 今 黒沢の 映画が 見られます。", "Di Shinjuku sekarang kita bisa menonton film karya sutradara Kurosawa."],
+              ["⑩ 電話で 天気予報が 聞けます。", "Melalui telepon dapat mendengar prakiraan cuaca."],
+            ],
+          },
         ],
-        [
-          "できます",
-          "Menyatakan sesuatu selesai dibuat atau fasilitas tersedia.",
-          "駅の 前に 新しい ホテルが できました。",
-          "Hotel baru telah dibangun di depan stasiun.",
+      },
+      {
+        title: "できます",
+        blocks: [
+          {
+            text: "できます yang dipelajari di sini bermakna “menimbulkan”, “rampung”, “selesai”, “dibuat”, dan lain-lain.",
+            examples: [
+              ["⑪ 駅の 前に 大きい スーパーが できました。", "Di depan stasiun, telah dibangun pasar swalayan besar."],
+              ["⑫ 時計の 修理は いつ できますか。", "Kapan perbaikan jam akan selesai?"],
+            ],
+          },
         ],
-      ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "しか",
+        blocks: [
+          {
+            text: "しか dibubuhkan pada Kata Benda atau Kata Keterangan Bilangan, dan selalu digunakan dengan menyertakan kata bentuk negatif. Mengangkat kata yang dibubuhkan しか, dan menyangkal semua kata yang lain. Jika dibubuhkan pada Kata Benda yang dibubuhkan が atau を, が atau を dihilangkan. Untuk selain Kata Bantu tersebut, langsung dibubuhkan di belakangnya. しか bernuansa tidak sempurna.",
+            examples: [
+              ["⑬ ローマ字しか 書けません。", "Hanya bisa menulis huruf latin saja."],
+              ["⑭ ローマ字だけ 書けます。", "Bisa menulis huruf latin saja."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda は（Perbandingan）",
+        blocks: [
+          {
+            text: "Selain menyatakan topik, は berfungsi untuk menyatakan perbandingan.",
+            examples: [
+              ["⑮ ワインは 飲みますが、ビールは 飲みません。", "(Saya) Minum aggur, tetapi tidak minum bir."],
+              ["⑯ きのうは 山が 見えましたが、きょうは 見えません。", "Kemarin gunung terlihat, tetapi hari ini tidak terlihat."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "は yang dianggap kata yang disertai Kata Bantu",
+        noBox: true,
+        blocks: [
+          {
+            text: "Sebagaimana telah dijelaskan di Kolom 1 pada Tingkat Dasar I (h.160), jika は disertai Kata Benda yang dibubuhkan が atau を, maka が atau を dihilangkan, tetapi selain Kata Bantu tersebut, dibubuhkan di belakangnya.",
+            examples: [
+              ["⑰ 日本では 馬を 見る ことが できません。", "Di Jepang tidak bisa melihat kuda. (Pel.18)"],
+              ["⑱ 天気の いい 日には 海が 見えるんです。", "Pada hari yang bercuaca baik, laut terlihat."],
+              ["⑲ ここからは 東京スカイツリーが 見えません。", "Dari sini, Tokyo Sky Tree tidak terlihat."],
+            ],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 27",
+    focus: "Menyatakan kemampuan dengan Kata Kerja Potensial, 見えます／聞こえます, できます, しか, dan は untuk perbandingan.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Melakukan dua kegiatan",

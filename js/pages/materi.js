@@ -195,6 +195,8 @@ const materialFuriganaReadings = {
   // Pelajaran 26
   "気分": "きぶん", "頭": "あたま", "湯": "ゆ", "紹介": "しょうかい", "見学": "けんがく",
   "国会議事堂": "こっかいぎじどう", "直接": "ちょくせつ", "来な": "こな",
+  // Pelajaran 27
+  "換": "か", "新宿": "しんじゅく", "黒沢": "くろさわ", "時計": "とけい", "修理": "しゅうり", "字": "じ",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
