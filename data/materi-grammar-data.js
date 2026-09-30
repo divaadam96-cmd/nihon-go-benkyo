@@ -36,7 +36,10 @@ function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel,
          dulu baru contoh ③④⑤) karena begitu urutannya di buku sumber.
          noBox opsional: sebagian nomor di buku (mis. Pelajaran 8 nomor 1
          "Kata Sifat") bukan kotak pola kalimat, cuma judul sub-bagian biasa
-         tanpa kotak - beda dari nomor lain di pelajaran yang sama. */
+         tanpa kotak - beda dari nomor lain di pelajaran yang sama.
+         figure opsional {src, alt}: diagram/ilustrasi yang memang ada di
+         buku (mis. garis waktu Pelajaran 29 pola 1), dipotong dari PDF ke
+         assets/images/materi/. Dirender setelah text, sebelum table. */
   const normalize = (item) =>
     Array.isArray(item)
       ? { pola: item[0], suffix: "", noBox: false, blocks: [{ text: item[1], examples: [[item[2], item[3]]], note: item[4] }] }
@@ -46,7 +49,7 @@ function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel,
   const renderTable = (table) =>
     `<table class="grammar-table"><thead><tr><th></th>${table.headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${table.rows.map((row) => `<tr>${row.map((cell, i) => `<${i === 0 ? "th" : "td"}>${cell}</${i === 0 ? "th" : "td"}>`).join("")}</tr>`).join("")}</tbody></table>`;
   const renderBlock = (b) =>
-    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${b.table ? renderTable(b.table) : ""}${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
+    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${b.figure ? `<figure class="grammar-figure"><img src="../${b.figure.src}" alt="${b.figure.alt}" loading="lazy"></figure>` : ""}${b.table ? renderTable(b.table) : ""}${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
   const renderPoint = (item, i) => {
     const { pola, suffix, noBox, blocks } = normalize(item);
     const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="${noBox ? "grammar-pola-plain" : "grammar-pola-box"}">${pola}</span>${suffix ? `<span class="grammar-pola-suffix"> ${suffix}</span>` : ""}</h3>`;
@@ -2860,35 +2863,106 @@ const MATERI_BOOK2_LESSONS = [
   {
     title: "Keadaan dan persiapan",
     items: [
-          [
-            "Vています",
-            "Menyatakan keadaan hasil tindakan, bukan hanya aksi sedang berlangsung.",
-            "窓が 閉まっています。",
-            "Jendelanya tertutup.",
-          ],
-          [
-            "Vてしまいます",
-            "Menyatakan menyelesaikan sesuatu atau penyesalan atas kejadian.",
-            "宿題を 忘れてしまいました。",
-            "Saya terlanjur lupa PR.",
-          ],
-          [
-            "Vますに 行きます",
-            "Pergi ke suatu tempat dengan tujuan melakukan kegiatan.",
-            "買い物に 行きます。",
-            "Saya pergi berbelanja.",
-          ],
-          [
-            "これ／それ／あれ",
-            "Dapat menunjuk benda atau peristiwa dalam konteks percakapan.",
-            "それは いい 考えです。",
-            "Itu ide yang bagus.",
-          ],
+      {
+        title: "Kata Kerja Bentuk て います",
+        blocks: [
+          {
+            text: "Kata Kerja Bentukて います ini adalah cara penggunaan untuk menyatakan hal yang berlangsung atas akibat dari aksi itu.",
+            examples: [
+              ["① 窓が 割れて います。", "Kaca jendela pecah."],
+              ["② 電気が ついて います。", "Listrik menyala."],
+            ],
+          },
+          {
+            text: "Misalnya, ① menyatakan bahwa kaca jendela pecah pada suatu titik, kemudian saat ini pun akibatnya tetap berlangsung (= keadaan kaca jendela pecah).",
+            figure: { src: "assets/images/materi/p29-mado.png", alt: "Garis waktu: 窓が 割れました (jendela pecah pada suatu titik), lalu 窓が 割れて います (keadaan pecah berlangsung sampai sekarang)" },
+          },
+          {
+            text: "Kata Kerja yang digunakan dengan cara penggunaan ini adalah Kata Kerja yang mengalami perubahan sebelum dan sesudah terjadi aksi tersebut, seperti あきます, しまります, つきます, きえます, こわれます, われます.<br>Dengan catatan bahwa jika menggambarkan keadaan di depan mata secara langsung, seperti ① atau ②, subjek dinyatakan dengan が.<br>Jika subjek dianggap sebagai topik, digunakan Kata Bantu は seperti ③.",
+            examples: [["③ この いすは 壊れて います。", "Kursi ini rusak."]],
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja Bentuk て しまいました／しまいます",
+        blocks: [
+          {
+            text: "～て しまいました menyatakan bahwa aksi telah selesai.～て しまいます menyatakan bahwa aksi akan selesai pada suatu titik pada masa depan.",
+            examples: [
+              ["④ シュミットさんが 持って 来た ワインは みんなで 飲んで しまいました。", "Anggur yang dibawa oleh sdr. Schmidt telah diminum oleh semuanya."],
+              ["⑤ 漢字の 宿題は もう やって しまいました。", "PR mengenai huruf <i>Kanji</i> telah saya selesaikan."],
+              ["⑥ 昼ごはんまでに レポートを 書いて しまいます。", "Sampai dengan makan siang, saya akan menyelesaikan menulis laporan."],
+            ],
+          },
+          {
+            text: "Dalam～て しまいました adakalanya untuk menyatakan perasaan penyesalan atau kekecewaan si pembicara seperti ⑦ atau ⑧.",
+            examples: [
+              ["⑦ パスポートを なくして しまいました。", "(Saya) Kehilangan paspor."],
+              ["⑧ パソコンが 故障して しまいました。", "PC rusak."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda（Tempat）に 行きます／来ます／帰ります",
+        blocks: [
+          {
+            text: "Pada ⑨ (Lihat Latihan C3), untuk menggantikan Kata Bantu へ yang menunjuk arah, digunakan Kata Bantu に untuk menyatakan titik sampainya. Sebagaimana pada keterangan itu, Kata Kerja いきます, きます, かえります dan lain-lainnya keduanya dapat digunakan untuk tempat へ atau tempat に.",
+            examples: [["⑨ どこかで 財布を 落として しまったんです。<br>……それは 大変ですね。すぐ 交番に 行かないと。", "Dompet (Saya) terjatuh di suatu tempat.<br>…… Susah, ya. Harus pergi ke pos polisi dengan segera."]],
+          },
+        ],
+      },
+      {
+        title: "それ／その／そう",
+        blocks: [
+          {
+            text: "Pada Pelajaran 2 telah dipelajari cara penggunaan mengenai Kata Petunjuk yang menunjukkan benda yang ada di tempat itu. Di sini diperkenalkan それ, その, そう yang menunjukkan benda yang muncul di dalam cerita si pembicara atau kalimat.",
+          },
+          {
+            label: "1) Untuk percakapan",
+            text: "それ pada ⑩ dan ⑪, その pada ⑫, dan そう pada ⑬ menunjuk isi yang dijelaskan oleh lawan bicara tepat sebelumnya.",
+            examples: [
+              ["⑩ <u>どこかで 財布を 落として しまった</u>んです。<br>……<u>それ</u>は 大変ですね。すぐ 交番に 行かないと。", "Dompet (Saya) terjatuh di suatu tempat.<br>…… Susah, ya. Harus pergi ke pos polisi dengan segera."],
+              ["⑪ 来月から <u>大阪の 本社に 転勤</u>なんです。<br>……<u>それ</u>は おめでとう ございます。", "Mulai bulan depan, (saya) pindah ke kantor pusat di Osaka.<br>…… Oh, saya mengucapkan selamat! (Pel.31)"],
+              ["⑫ あのう、<u>途中で やめたい</u> 場合は？<br>……<u>その</u> 場合は、近くの 係員に 名前を 言って、帰って ください。", "Anu..., kalau mau berhenti setengah jalan?<br>…… Untuk masalah itu, beritahukan nama (Anda) kepada staf terdekat, lalu silakan pulang. (Pel.45)"],
+              ["⑬ <u>うちへ 帰って、休んだ</u> ほうが いいですよ。<br>……ええ、<u>そう</u> します。", "Lebih baik pulang ke rumah, dan beristirahat.<br>…… Ya, benar. (Pel.32)"],
+            ],
+          },
+          {
+            label: "2) Untuk Kalimat",
+            text: "その pada ⑭ menunjuk isi dari kalimat yang terdapat pada kalimat sebelumnya.",
+            examples: [["⑭ 一人で <u>コンサートや 展覧会に 出かける</u>と、いいでしょう。<u>その</u> とき 会った 人が 将来の 恋人に なるかも しれません。", "Bagus juga kalau pergi ke konser atau pameran sendirian. Siapa tahu kalau orang yang Anda jumpai pada saat itu yang menjadi pacar untuk masa depan. (Pel.32)"]],
+          },
+        ],
+      },
+      {
+        title: "ありました",
+        blocks: [
+          {
+            examples: [["⑮ ［かばんが］ ありましたよ。", "[Tasnya] Ada."]],
+          },
+          {
+            text: "ありました ini menyatakan bahwa lawan bicaranya menemukan keberadaan tas. Tidak bermaksud bahwa pernah ada tas di situ.",
+          },
+        ],
+      },
+      {
+        title: "どこかで／どこかに",
+        blocks: [
+          {
+            text: "Kata Bantu へ dan を di belakang どこか dan なにか dapat dihilangkan, sedangkan Kata Bantu で dan に di belakang どこかで dan どこかに tidak dapat dihilangkan.",
+            examples: [
+              ["⑯ どこかで 財布を なくして しまいました。", "Entah di mana (saya) kehilangan dompet."],
+              ["⑰ どこかに 電話が ありますか。", "Apakah ada telepon dari suatu tempat?"],
+            ],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 29",
+    focus: "Menyatakan keadaan hasil aksi dengan ～て います, selesai/penyesalan dengan ～て しまいました, serta それ／その／そう dalam percakapan.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Persiapan dan perubahan keadaan",

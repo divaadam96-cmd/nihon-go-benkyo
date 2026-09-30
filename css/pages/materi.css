@@ -1224,6 +1224,21 @@
   font-weight: 700;
   white-space: nowrap;
 }
+/* Diagram dari buku sumber (mis. garis waktu Pelajaran 29 pola 1). */
+.grammar-figure {
+  margin: 0 0 12px;
+  padding: 10px;
+  border: 1px solid #e3d6bd;
+  border-radius: 8px;
+  background: #fff;
+}
+.grammar-figure img {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  margin: 0 auto;
+}
 .grammar-audio-button {
   display: inline-flex;
   align-items: center;
