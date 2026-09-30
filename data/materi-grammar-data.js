@@ -2557,11 +2557,102 @@ const book2 = document.getElementById("book2");
 const MATERI_BOOK2_LESSONS = [
   {
     title: "Meminta bantuan dan menjelaskan alasan",
-    items: [["Bentuk biasa + んです", "～んです dipakai untuk menjelaskan alasan, keadaan, atau latar belakang suatu informasi. Sebelum んです digunakan bentuk biasa. Untuk kata benda dan な形容詞, gunakan ～なんです.", "どうして 遅れたんですか。……電車が 遅れたんです。", "Mengapa terlambat? …Karena keretanya terlambat."], ["Vていただけませんか", "Pola ini adalah cara sangat sopan untuk meminta seseorang melakukan sesuatu. Secara harfiah pembicara meminta lawan bicara berkenan melakukan bantuan untuknya.", "この 漢字を 読んで いただけませんか。", "Bisakah Anda berkenan membacakan kanji ini?"], ["Vたら いいですか", "Digunakan untuk meminta saran mengenai tindakan terbaik dalam suatu keadaan. Kata kerja memakai bentuk lampau た sebelum ら.", "ごみは どこに 捨てたら いいですか。", "Sampah sebaiknya dibuang di mana?"], ["N は bagaimana melakukan tindakan", "Topik dengan は dapat dipakai untuk menanyakan cara menangani benda tertentu, misalnya sampah, barang, atau dokumen. Jawaban menjelaskan tindakan dan tempat/cara yang tepat.", "この かさは どうしたら いいですか。", "Payung ini sebaiknya bagaimana?"]],
+    items: [
+      {
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ→～な｝んです",
+        blocks: [
+          {
+            text: "～んです dipakai dalam bahasa lisan, sedangkan dalam bahasa tertulis bentuknya menjadi～のです.<br>～んです dipakai seperti berikut;",
+          },
+          {
+            label: "1) ～んですか",
+          },
+          {
+            label: "(1) Ketika pembicara memastikan atau meminta keterangan tentang hal yang dilihat atau didengar.",
+            examples: [["①（ぬれた 傘を 持って いる 人を 見て） 雨が 降って いるんですか。", "(Ketika melihat orang yang membawa payung yang basah) Apakah turun hujan?"]],
+          },
+          {
+            label: "(2) Ketika meminta keterangan lebih lanjut tentang hal yang dilihat atau didengar oleh lawan bicara.",
+            examples: [["② おもしろい デザインの 靴ですね。どこで 買ったんですか。", "Sepatu yang desainnya lucu, ya. Beli di mana?"]],
+          },
+          {
+            label: "(3) Ketika meminta keterangan alasan tentang hal yang dilihat atau didengar oleh lawan bicara.",
+            examples: [["③ どうして 遅れたんですか。", "Kenapa terlambat?"]],
+          },
+          {
+            label: "(4) Ketika meminta keterangan tentang keadaan.",
+            examples: [["④ どう したんですか。", "Kenapa?"]],
+            note: "[Perhatian] Jika memakai～んですか pada bagian yang seharusnya tidak perlu, akan memberikan perasaan yang tidak nyaman, maka perlu berhati-hati.",
+          },
+          {
+            label: "2) ～んです",
+          },
+          {
+            label: "(1) Ketika menjelaskan alasan sebagai jawaban dari kalimat pada～んですか (3) atau (4) dari 1) di atas.",
+            examples: [
+              ["⑤ どうして 遅れたんですか。<br>……バスが 来なかったんです。", "Kenapa terlambat?<br>…… Karena bus tidak datang."],
+              ["⑥ どう したんですか。<br>……ちょっと 気分が 悪いんです。", "Kenapa?<br>…… Saya sedikit tidak enak badan."],
+            ],
+          },
+          {
+            label: "(2) Ketika menambahkan alasan pada hal yang telah dijelaskan oleh pembicara sendiri.",
+            examples: [["⑦ よく カラオケに 行きますか。<br>……いいえ、あまり 行きません。カラオケは 好きじゃ ないんです。", "Sering pergi ke <i>Karaoke</i>?<br>…… Tidak, jarang pergi. Saya tidak suka <i>Karaoke</i>."]],
+            note: "[Perhatian] Jika tidak menjelaskan alasan, melainkan kenyataan,～んです tidak dipakai.<br>×わたしは マイク・ミラーなんです。",
+          },
+          {
+            label: "3) ～んですが、～",
+            text: "～んですが berfungsi untuk memulai suatu cerita. Di belakangnya disusul ekspresi permohonan, ajakan, atau permohonan izin. が ini dipakai sebagai prakata yang ringan (Lihat Pel.14). Seperti ⑩, isi yang disusul di belakang～んですが memang telah nyata, adakalanya kalimat lanjutannya dihilangkan.",
+            examples: [
+              ["⑧ 頭が 痛いんですが、帰っても いいですか。", "Sakit kepala, boleh pulang?"],
+              ["⑨ 来週 友達と スキーに 行くんですが、ミラーさんも いっしょに 行きませんか。", "Minggu depan, saya pergi bermain ski dengan teman, bagaimana kalau sdr. Miller juga pergi sama-sama?"],
+              ["⑩ お湯が 出ないんですが……。", "Air panas tidak keluar..."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk て いただけませんか",
+        suffix: "Dapatkah Anda ～ untuk saya?",
+        blocks: [
+          {
+            text: "Ungkapan ini adalah ungkapan yang lebih sopan daripada～て ください:",
+            examples: [["⑪ いい 先生を 紹介して いただけませんか。", "Bisakah perkenalkan saya guru yang baik?"]],
+          },
+        ],
+      },
+      {
+        title: "Kata Tanya Kata Kerja Bentuk たら いいですか",
+        suffix: "Sebaiknya saya...?/ Bagaimana cara...?",
+        blocks: [
+          {
+            text: "Ini adalah ungkapan untuk meminta masukan atau petunjuk.",
+            examples: [
+              ["⑫ どこで カメラを 買ったら いいですか。<br>……ABC ストアが 安いですよ。", "Sebaiknya saya membeli kamera di mana?<br>…… ABC store yang murah."],
+              ["⑬ 国会議事堂を 見学したいんですが、どう したら いいですか。<br>……直接 行ったら いいですよ。", "Saya ingin mengunjungi Gedung Parlemen Nasional, bagaimana caranya?<br>…… Langsung pergi saja."],
+            ],
+          },
+          {
+            text: "Seperti jawaban untuk ⑬, dengan cara ucapan Kata Kerja Bentuk たら いいですよ, dapat memberi masukan atau tawaran kepada lawan bicara.",
+          },
+        ],
+      },
+      {
+        title: "Kata Benda（objek）は｛好きです／嫌いです<br>　　　　　　　　　上手です／下手です<br>　　　　　　　　　あります, dll.",
+        suffix: "suka/tidak suka<br>pandai/tidak pandai<br>ada dll.｝Kata Benda",
+        blocks: [
+          {
+            examples: [["⑭ よく カラオケに 行きますか。<br>……いいえ、あまり 行きません。カラオケは 好きじゃ ないんです。", "Sering pergi ke <i>Karaoke</i>?<br>…… Tidak, jarang pergi. Saya tidak suka <i>Karaoke</i>."]],
+          },
+          {
+            text: "Pada tingkat dasar I, telah mempelajari hal tentang objek langsung yang ditunjuk oleh を yang diangkat sebagai topik (Pel.17). Seperti ⑭, kata benda yang ditunjuk oleh が sebagai objek dari すきです dan lain-lainnya juga dapat diangkat sebagai topik.",
+          },
+        ],
+      },
+    ],
     focusLabel: "Fokus Pelajaran 26",
-    focus: "Menjelaskan penyebab, meminta bantuan dengan sopan, dan meminta saran dalam situasi sehari-hari.",
+    focus: "Menjelaskan dan menanyakan alasan dengan ～んです, meminta dengan sopan ～て いただけませんか, dan meminta saran dengan ～たら いいですか.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga pertanyaan: satu memakai んです, satu permintaan Vていただけませんか, dan satu saran Vたらいいですか.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bentuk potensial dan kemampuan",
