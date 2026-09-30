@@ -207,6 +207,8 @@ const materialFuriganaReadings = {
   "展覧会": "てんらんかい", "恋人": "こいびと",
   // Pelajaran 30
   "今月": "こんげつ", "元": "もと", "戻": "もど", "道具": "どうぐ", "片": "かた", "水泳": "すいえい",
+  // Pelajaran 31
+  "週末": "しゅうまつ", "何曜日": "なんようび", "答": "こた", "申し込": "もうしこ",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(

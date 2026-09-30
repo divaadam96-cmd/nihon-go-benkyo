@@ -3069,29 +3069,108 @@ const MATERI_BOOK2_LESSONS = [
   {
     title: "Niat dan rencana",
     items: [
-        [
-          "Bentuk maksud",
-          "～つもりです menyatakan niat pribadi untuk melakukan atau tidak melakukan tindakan.",
-          "来年 日本へ 行くつもりです。",
-          "Saya berniat pergi ke Jepang tahun depan.",
+      {
+        title: "Bentuk Maksud",
+        noBox: true,
+        blocks: [
+          {
+            text: "Cara membuat Bentuk Maksud dari Bentuk ます adalah sebagai berikut; (Lihat Buku Induk Pel.31 Latihan A1)",
+          },
+          {
+            text: "Kelompok I: Bunyi dari kolom い sebagai bunyi terakhir dari Bentuk ます diubah menjadi bunyi kolom お kemudian dibubuhkan う.<br>か<u>き</u>－ます → か<u>こ</u>－う　　いそ<u>ぎ</u>－ます → いそ<u>ご</u>－う<br>よ<u>み</u>－ます → よ<u>も</u>－う　　あそ<u>び</u>－ます → あそ<u>ぼ</u>－う",
+          },
+          {
+            text: "Kelompok II: Dibubuhkan よう pada Bentuk ます<br>たべ－ます → たべ－よう　　み－ます → み－よう",
+          },
+          {
+            text: "Kelompok III:<br>し－ます → し－よう　　き－ます → こ－よう",
+          },
         ],
-        [
-          "V辞書形／Vない形 つもりです",
-          "Gunakan bentuk kamus untuk niat melakukan dan bentuk ない untuk niat tidak melakukan.",
-          "きょうは 出かけないつもりです。",
-          "Hari ini saya berniat tidak keluar.",
+      },
+      {
+        title: "Cara pemakaian Bentuk Maksud",
+        noBox: true,
+        blocks: [
+          {
+            label: "1) Merupakan Bentuk Biasa dari～ましょう, digunakan dalam kalimat Bentuk Biasa.",
+            examples: [
+              ["① ちょっと 休まない？<br>……うん、休もう。", "Bagaima kalau beristirahat sebentar?<br>……Ya, mari beristirahat."],
+              ["② 手伝おうか。", "Mari saya bantu!"],
+              ["③ 傘を 持って 行こうか。", "Apa sebaiknya bawa payung?"],
+            ],
+            note: "[Perhatian] Pada kalimat tanya Bentuk Biasa, pada umumnya tidak membubuhkan Kata Bantu か pada akhir kalimat, tetapi untuk kalimat tanya Bentuk Biasa～ましょうか seperti ② atau ③ diperlukan Kata Bantu か pada akhir kalimat.",
+          },
+          {
+            label: "2) Kata Kerja Bentuk Maksud と 思って います",
+            text: "Pola kalimat ini digunakan untuk menyatakan kehendak si pembicara kepada lawan bicaranya. Kata Kerja Bentuk Maksud と おもいます juga dapat digunakan dengan makna yang sama, tetapi Kata Kerja Bentuk Maksud と おもって います menyatakan jangka waktu tertentu sampai dan saat ini kehendak itu masih dipertahankan.",
+            examples: [
+              ["④ 週末は 海へ 行こうと 思って います。", "Pada akhir minggu ingin pergi ke laut."],
+              ["⑤ 今から 銀行へ 行こうと 思います。", "Sekarang mau pergi ke bank."],
+            ],
+            note: "[Perhatian] Kata Kerja Bentuk Maksud と おもいます hanya dapat menyatakan maksud dari si pembicara, sedangkan Kata Kerja Bentuk Maksud と おもって います dapat menyatakan maksud dari orang ketiga.",
+          },
+          {
+            examples: [["⑥ 彼は 学校を 作ろうと 思って います。", "Rencananya dia ingin membangun sekolah."]],
+          },
         ],
-        [
-          "予定です",
-          "Menyatakan jadwal atau rencana yang lebih objektif.",
-          "会議は 3時からの予定です。",
-          "Rapat dijadwalkan mulai jam tiga.",
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus<br>Kata Kerja（Bentuk ない）ない｝つもりです",
+        blocks: [
+          {
+            text: "Kata Kerja Bentuk Kamus つもりです menyatakan kehendak. Bentuk negatif biasanya menggunakan dengan bentuk Kata Kerja (Bentuk ない) ない つもりです.",
+            examples: [
+              ["⑦ 国へ 帰っても、日本語の 勉強を 続ける つもりです。", "Kalau pulang ke tanah air, (saya) ingin meneruskan belajar bahasa Jepang."],
+              ["⑧ あしたからは たばこを 吸わない つもりです。", "Mulai besok, (saya) bermaksud tidak merokok."],
+            ],
+            note: "[Perhatian] Antara Kata Kerja Bentuk Maksud と おもって います dan Kata Kerja Bentuk Kamus つもり tidak terdapat perbedaan yang besar, namun untuk menyatakan kehendak yang pasti, atau ketepatan hati yang kukuh, kebanyakan Kata Kerja Bentuk Kamus つもりです yang digunakan.",
+          },
         ],
-      ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus<br>Kata Benda の｝予定です",
+        blocks: [
+          {
+            text: "Cara untuk menjelaskan pernyatakan rencana.",
+            examples: [
+              ["⑨ 7月の 終わりに ドイツへ 出張する 予定です。", "Rencananya pada akhir bulan Juli (saya) dinas ke Jerman."],
+              ["⑩ 旅行は 1週間ぐらいの 予定です。", "Rencananya perjalanan kurang lebih seminggu."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "まだ Kata Kerja Bentuk て いません",
+        blocks: [
+          {
+            text: "Ekspresi ini menyatakan bahwa pada saat ungkapan/pembicaraan, belum terjadi kejadian atau perbuatan belum selesai.",
+            examples: [
+              ["⑪ 銀行は まだ 開いて いません。", "Bank belum buka."],
+              ["⑫ レポートは もう 書きましたか。<br>……いいえ、まだ 書いて いません。", "Apakah (Anda) telah menulis laporan?<br>…… Belum, belum menulisnya."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "帰ります － 帰り",
+        blocks: [
+          {
+            text: "Seperti ⑬ atau ⑭, adakalanya bentuk yang sama dengan Bentuk ます digunakan sebagai Kata Benda.",
+            examples: [
+              ["⑬ 帰りの 新幹線は どこから 乗りますか。", "Naik dari mana <i>Shinkansen</i> untuk pulangnya?"],
+              ["⑭ 休みは 何曜日ですか。", "Hari apa hari libur? (Pel.4)."],
+            ],
+          },
+          {
+            text: "Selain itu, terdapat contoh seperti di bawah ini;<br>遊びます － 遊び　　答えます － 答え<br>申し込みます － 申し込み　　楽しみます (menikmati) － 楽しみ",
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 31",
+    focus: "Menyatakan niat dengan Bentuk Maksud, ～と 思って います, つもりです, rencana dengan 予定です, dan まだ～て いません.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Nasihat dan kebiasaan",
