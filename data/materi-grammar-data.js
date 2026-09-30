@@ -2967,35 +2967,104 @@ const MATERI_BOOK2_LESSONS = [
   {
     title: "Persiapan dan perubahan keadaan",
     items: [
-          [
-            "Vてあります",
-            "Menyatakan keadaan hasil tindakan yang dilakukan dengan tujuan tertentu.",
-            "机の 上に メモが 置いてあります。",
-            "Catatan diletakkan di atas meja.",
-          ],
-          [
-            "Vておきます",
-            "Melakukan sesuatu sebagai persiapan atau membiarkannya tetap begitu.",
-            "旅行の 前に 切符を 買っておきます。",
-            "Saya membeli tiket terlebih dahulu sebelum perjalanan.",
-          ],
-          [
-            "Vますはじめます",
-            "Menyatakan mulai melakukan suatu aktivitas.",
-            "雨が 降り始めました。",
-            "Hujan mulai turun.",
-          ],
-          [
-            "Nでも",
-            "Memberi contoh atau saran yang tidak membatasi pilihan.",
-            "コーヒーでも 飲みませんか。",
-            "Mau minum kopi atau semacamnya?",
-          ],
+      {
+        title: "Kata Kerja Bentuk て あります",
+        blocks: [
+          {
+            text: "Kata Kerja Bentuk て あります adalah perbuatan dari seseorang untuk suatu tujuan, kemudian menyatakan bahwa akibat atau hasil dari perbuatan itu sedang berlangsung. Kata Kerja yang digunakan berupa Kata Kerja Transitif.",
+          },
+          {
+            label: "1) <span class=\"grammar-pola-box\">Kata Benda<sub>1</sub> に Kata Benda<sub>2</sub> が Kata Kerja Bentuk て あります</span>",
+            examples: [
+              ["① 机の 上に メモが 置いて あります。", "Di atas meja diletakkan catatan."],
+              ["② カレンダーに 今月の 予定が 書いて あります。", "Pada kalender ditulis rencana bulan ini."],
+            ],
+          },
+          {
+            label: "2) <span class=\"grammar-pola-box\">Kata Benda<sub>2</sub> は Kata Benda<sub>1</sub> に Kata Kerja Bentuk て あります</span>",
+            text: "Jika Kata Benda<sub>2</sub> diangkat sebagai topik, maka menggunakan Kata Bantu は.",
+            examples: [
+              ["③ メモは どこですか。<br>……［メモは］ 机の 上に 置いて あります。", "Di mana catatan?<br>…… [Catatan] Diletakkan di atas meja."],
+              ["④ 今月の 予定は カレンダーに 書いて あります。", "Rencana bulan ini ditulis pada kalender."],
+            ],
+          },
+          {
+            note: "[Perhatian] Perbedaan antara Kata Kerja Bentuk て います dan Kata Kerja Bentuk て あります.",
+            examples: [
+              ["⑤ 窓が 閉まって います。", "Jendela tertutup."],
+              ["⑥ 窓が 閉めて あります。", "Jendela ditutup."],
+            ],
+          },
+          {
+            text: "Seperti ⑤ dan ⑥, jika dipakai Kata Kerja Intransitif (しまります) dan Kata Kerja Transitif (しめます) yang berpasangan dengan Kata Kerja Bentuk て います dan Kata Kerja Bentuk て あります, ⑤ hanya menjelaskan untuk keadaan jendela tertutup, sedangkan pada ⑥ menyatakan bahwa terjadi keadaan disebabkan oleh perbuatan dari seseorang.",
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja Bentuk て おきます",
+        blocks: [
+          {
+            label: "1) Menyatakan bahwa menyelesaikan aksi atau perbuatan yang diperlukan sampai dengan waktu tertentu.",
+            examples: [
+              ["⑦ 旅行の まえに、切符を 買って おきます。", "Sebelum perjalanan, membeli karcis."],
+              ["⑧ 次の 会議までに 何を して おいたら いいですか。<br>……この 資料を 読んで おいて ください。", "Apa yang harus saya lakukan sampai dengan rapat berikut?<br>…… Diharapkan untuk membaca materi ini."],
+            ],
+          },
+          {
+            label: "2) Menyatakan bahwa menyelesaikan aksi yang diperlukan untuk persiapan pemakaian berikutnya, atau tindakan untuk sementara.",
+            examples: [["⑨ はさみを 使ったら、元の 所に 戻して おいて ください。", "Jika memakai gunting, tolong kembalikan ke tempat semula."]],
+          },
+          {
+            label: "3) Menyatakan akibat dari mempertahankan suatu keadaan.",
+            examples: [["⑩ あした 会議が ありますから、いすは この ままに して おいて ください。", "Karena besok ada rapat, kursinya dibiarkan begini saja."]],
+            note: "[Perhatian] Dalam bahasa lisan,～て おきます sering berubah menjadi～ときます.",
+          },
+          {
+            examples: [["⑪ そこに 置いといて（置いて おいて） ください。", "Tolong letakkan di situ saja. (Pel.38)"]],
+          },
+        ],
+      },
+      {
+        title: "まだ＋Bentuk positif",
+        suffix: "masih...",
+        blocks: [
+          {
+            examples: [
+              ["⑫ まだ 雨が 降って います。", "Masih turun hujan."],
+              ["⑬ 道具を 片づけましょうか。<br>……まだ 使って いますから、その ままに して おいて ください。", "Apa saya yang membereskan alatnya?<br>…… Karena masih dipakai, tolong dibiarkan begitu saja."],
+            ],
+          },
+          {
+            text: "まだ ini berarti masih, dan menyatakan bahwa aksi atau keadaannya sedang berlangsung.",
+          },
+        ],
+      },
+      {
+        title: "とか",
+        blocks: [
+          {
+            text: "とか digunakan jika memberikan contoh seperti sama halnya dengan や. とか jika dibandingan dengan や dalam bahasa lisan, dapat digunakan di belakang Kata Benda terakhir di antara yang disebutkan.",
+            examples: [["⑭ どんな スポーツを して いますか。<br>……そうですね。テニスとか 水泳とか……。", "Berolahraga apa saja?<br>…… Apa ya? Tenis, atau renang..."]],
+          },
+        ],
+      },
+      {
+        title: "Partikel＋も",
+        blocks: [
+          {
+            text: "Jika も digabung dengan Kata Benda yang dibubuhkan が atau を, maka が atau を dihapuskan.<br>Jika selain Kata Bantu tersebut, (Contoh: に, で, から, まで, と) dibubuhkan di belakangnya.<br>へ boleh dihapuskan dan juga boleh untuk tidak dihapuskan.",
+            examples: [
+              ["⑮ ほか<u>にも</u> いろいろ あります。", "Selain itu masih ada macam-macam."],
+              ["⑯ どこ<u>［へ］も</u> 行きません。", "Tidak pergi ke mana-mana."],
+            ],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 30",
+    focus: "Menyatakan hasil perbuatan dengan ～て あります, persiapan dengan ～て おきます, まだ, とか, dan Partikel＋も.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Niat dan rencana",

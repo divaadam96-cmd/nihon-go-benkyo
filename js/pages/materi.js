@@ -205,6 +205,8 @@ const materialFuriganaReadings = {
   "割": "わ", "壊": "こわ", "落": "お", "故障": "こしょう", "財布": "さいふ", "交番": "こうばん",
   "来月": "らいげつ", "本社": "ほんしゃ", "転勤": "てんきん", "途中": "とちゅう", "係員": "かかりいん",
   "展覧会": "てんらんかい", "恋人": "こいびと",
+  // Pelajaran 30
+  "今月": "こんげつ", "元": "もと", "戻": "もど", "道具": "どうぐ", "片": "かた", "水泳": "すいえい",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
