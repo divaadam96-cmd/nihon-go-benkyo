@@ -3173,31 +3173,84 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Nasihat dan kebiasaan",
+    title: "Nasihat dan kemungkinan",
     items: [
-          [
-            "Vたほうがいいです",
-            "Memberi saran agar seseorang melakukan sesuatu.",
-            "もっと 野菜を 食べたほうがいいです。",
-            "Sebaiknya makan lebih banyak sayur.",
-          ],
-          [
-            "Vないほうがいいです",
-            "Memberi saran agar tidak melakukan sesuatu.",
-            "お酒を 飲みすぎないほうがいいです。",
-            "Sebaiknya jangan terlalu banyak minum alkohol.",
-          ],
-          [
-            "Vませんか／Vましょうか",
-            "Menawarkan bantuan atau mengajak dengan sopan.",
-            "荷物を 持ちましょうか。",
-            "Bolehkah saya membawakan barangnya?",
-          ],
+      {
+        title: "Kata Kerja Bentuk た<br>Kata Kerja（Bentuk ない）ない｝ほうが いいです",
+        blocks: [
+          {
+            examples: [
+              ["① 毎日 運動した ほうが いいです。", "Lebih baik berolahraga setiap hari."],
+              ["② 熱が あるんです。<br>……じゃ、おふろに 入らない ほうが いいですよ。", "Berdemam.<br>…… Kalau begitu, lebih baik jangan mandi."],
+            ],
+          },
+          {
+            text: "Pola kalimat ini digunakan jika memberi masukan atau nasihat kepada lawan bicara. Kata Kerja Bentuk た ほうが いいです mengandung makna untuk memperbandingkan dua hal kemudian memilih salah satunya, maka mempunyai maksud tidak baik jika tidak melakukan perbuatan tersebut. Karena itu, kalimat ini memberi kesan bahwa si pembicara sedikit memaksa. Ketika hanya merekomendasikan tindakan tertentu digunakan～たら いい (Pel.26).",
+            examples: [["③ 日本の お寺が 見たいんですが……。<br>……じゃ、京都へ 行ったら いいですよ。", "(Saya) Ingin melihat kuil Jepang ….<br>…… Kalau begitu, sebaiknya pergi ke Kyoto."]],
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ｝でしょう",
+        blocks: [
+          {
+            text: "～でしょう digunakan jika menjelaskan pikiran si pembicara secara tidak pasti terhadap hal untuk masa depan atau hal yang tidak tentu.",
+            examples: [
+              ["④ あしたは 雨が 降るでしょう。", "Besok akan turun hujan."],
+              ["⑤ タワポンさんは 合格するでしょうか。<br>……きっと 合格するでしょう。", "Apakah sdr. Thawapon akan lulus?<br>…… Pasti akan lulus."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ｝かも しれません",
+        blocks: [
+          {
+            text: "～かもしれません dapat menggunakan ketika ingin berkata bahwa ada kemungkinan walaupun sedikit.",
+            examples: [["⑥ 約束の 時間に 間に 合わないかも しれません。", "Ada kemungkinan terlambat untuk jam yang telah saya janjikan."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja（Bentuk ます）ましょう",
+        blocks: [
+          {
+            examples: [["⑦ エンジンの 音が おかしいんですが。<br>……そうですね。故障かも しれません。ちょっと 調べましょう。", "Bunyi mesinnya aneh ...<br>…… Ya, benar. Mungkin kerusakan. Mari periksanya sebentar."]],
+          },
+          {
+            text: "Kata Kerja (Bentuk ます) ましょう pada ⑦ adalah ekspresi untuk menyampaikan maksud si pembicara kepada lawan bicara. Digunakan jika mengusulkan suatu perbuatan. Bernuansa lebih tegas daripada Kata Kerja (Bentuk ます) ましょうか (Pel.14).",
+          },
+        ],
+      },
+      {
+        title: "Kata Keterangan Bilangan で",
+        blocks: [
+          {
+            text: "Menyatakan batas waktu atau batasan.",
+            examples: [
+              ["⑧ 駅まで 30分で 行けますか。", "Dapat pergi sampai stasiun dalam waktu tiga puluh menit?"],
+              ["⑨ 3万円で パソコンが 買えますか。", "Dapat membeli PC dengan tiga puluh ribu yen?"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "何か 心配な こと",
+        blocks: [
+          {
+            examples: [["⑩ 何か 心配な ことが あるんですか。", "Ada suatu hal yang mengkhawatirkan?"]],
+          },
+          {
+            text: "Untuk contoh seperti ⑩, yang digunakan bukan しんぱいな なにか (khawatir akan suatu hal) melainkan なにか しんぱいな こと (suatu hal yang mengkhawatirkan). Untuk ekspresi serupa, selain ini ada なにか～もの, どこか～ところ, だれか～ひと, いつか～とき dan sebagainya.",
+            examples: [["⑪ スキーに 行きたいんですが、どこか いい 所、ありますか。", "(Saya) Ingin pergi bermain ski, apakah ada suatu tempat yang bagus?"]],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 32",
+    focus: "Memberi nasihat dengan ～ほうが いいです, menyatakan dugaan dengan でしょう dan かも しれません, serta ～ましょう, Kata Keterangan Bilangan で, dan 何か 心配な こと.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Perintah dan larangan",
