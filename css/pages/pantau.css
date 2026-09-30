@@ -8,6 +8,7 @@
 }
 .monitor-card {
   display: grid;
+  min-width: 0;
   gap: 6px;
   padding: 14px;
   border: 1px solid var(--line);
@@ -27,6 +28,12 @@
 .monitor-card small {
   color: var(--muted);
   font-size: 11px;
+}
+
+/* Nama/ID login yang panjang dibungkus, bukan keluar dari kartu. */
+.monitor-card b,
+.monitor-card small {
+  overflow-wrap: anywhere;
 }
 .monitor-card-stats {
   display: flex;
@@ -325,6 +332,10 @@ body.monitor-modal-open {
 
 .monitor-detail-body {
   display: grid;
+  /* Baris setinggi isinya: tanpa ini .monitor-secondary-list (overflow:
+     hidden) diperas ke sisa tinggi modal dan riwayat tes/tugas yang
+     panjang terpotong tanpa bisa di-scroll. */
+  grid-auto-rows: max-content;
   align-content: start;
   gap: 12px;
   padding: 18px 22px 22px;
