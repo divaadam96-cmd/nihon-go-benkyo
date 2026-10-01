@@ -4100,31 +4100,74 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Tujuan dan keadaan",
+    title: "Tujuan dan kegunaan",
     items: [
-          [
-            "V辞書形ために",
-            "Menyatakan tujuan yang disengaja.",
-            "日本で 働くために、日本語を 勉強します。",
-            "Saya belajar Jepang untuk bekerja di Jepang.",
-          ],
-          [
-            "Nのために",
-            "Menyatakan tujuan/manfaat bagi sesuatu.",
-            "健康のために 歩きます。",
-            "Saya berjalan demi kesehatan.",
-          ],
-          [
-            "V辞書形ように",
-            "Tujuan berkaitan kemampuan atau keadaan.",
-            "忘れないように メモします。",
-            "Saya mencatat agar tidak lupa.",
-          ],
+      {
+        title: "Kata Kerja Bentuk Kamus<br>Kata Benda の｝ために、～",
+        suffix: "untuk...",
+        blocks: [
+          {
+            text: "ために menyatakan tujuan. Kata Benda の ために digunakan dengan maksud menguntungkan Kata Benda ④.",
+            examples: [
+              ["① 自分の 店を 持つ ために、貯金して います。", "Saya menabung uang untuk memiliki toko sendiri."],
+              ["② 引っ越しの ために、車を 借ります。", "Saya meminjam/menyewa mobil untuk pindah rumah."],
+              ["③ 健康の ために、毎朝 走って います。", "Saya berlari setiap pagi demi kesehatan."],
+              ["④ 家族の ために、うちを 建てます。", "Saya membangun rumah untuk keluarga."],
+            ],
+            note: "[Perhatian 1] Sebagai ungkapan yang mirip terdapat～ように yang telah dipelajari pada Pelajaran 36, namun sebelum ために digunakan Kata Kerja Keinginan Bentuk Kamus, sedangkan sebelum ように digunakan Kata Kerja Non Keinginan Bentuk Kamus atau Kata Kerja Bentuk Negatif.",
+          },
+          {
+            text: "Jika membandingkan kedua kalimat di bawah ini, ① di bawah ini bernuansa dengan tujuan untuk “memiliki toko sendiri” dengan keinginannya, kemudian untuk mencapainya menabung uang, sedangkan berbeda nuansanya yaitu ⑤ dengan tujuan untuk menabung uang agar menjadi kondisi “dapat memiliki toko sendiri”.",
+            examples: [
+              ["① 自分の 店を 持つ ために、貯金して います。", "Saya menabung uang untuk memiliki toko sendiri."],
+              ["⑤ 自分の 店が 持てるように、貯金して います。", "Saya menabung uang agar dapat memiliki toko sendiri."],
+            ],
+            note: "[Perhatian 2] なります terdapat dua macam cara penggunaan, yaitu segabai Kata Kerja Keinginan dan Kata Kerja Non Keinginan.",
+          },
+          {
+            examples: [
+              ["⑥ 弁護士に なる ために、法律を 勉強して います。", "Saya belajar hukum untuk menjadi pengacara."],
+              ["⑦ 日本語が 上手に なるように、毎日 勉強して います。", "Saya belajar setiap hari agar pandai berbahasa Jepang. (Pel.36)"],
+            ],
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus の<br>Kata Benda｝に ～",
+        blocks: [
+          {
+            text: "Pola Kalimat ini digunakan bersama dengan つかいます, いいです, べんりです, やくにたちます, ［じかん］が かかります dan lain-lainnya untuk menyatakan kegunaan atau tujuannya.",
+            examples: [
+              ["⑧ この はさみは 花を 切るのに 使います。", "Gunting ini digunakan untuk memotong bunga."],
+              ["⑨ この かばんは 大きくて、旅行に 便利です。", "Tas ini besar sehingga praktis untuk perjalanan."],
+              ["⑩ 電話番号を 調べるのに 時間が かかりました。", "Memakan waktu lama untuk memeriksa nomor telepon."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Keterangan Bilangan は／も",
+        blocks: [
+          {
+            text: "Kata Bantu は dibubuhkan pada Kata Keterangan Bilangan, menyatakan batas minimal yang dikisarkan oleh pembicara. Kata Bantu も dibubuhkan pada Kata Keterangan Bilangan, menyatakan bahwa pembicara merasa banyak jumlahnya.",
+            examples: [["⑪ わたしは ［ボーナスの］ 半分は 貯金する つもりです。<br>……えっ、半分も 貯金するんですか。", "Saya berencana menabung separuhnya [bonus].<br>…… Eh! menabung separuhnya?"]],
+          },
+        ],
+      },
+      {
+        title: "～に よって",
+        blocks: [
+          {
+            text: "Jika Kata Kerja yang menyatakan penciptaan atau penemuan digunakan dalam bentuk pasif (Contoh: かきます, はつめいします, はっけんします dan lain-lainnya), pelaku ditunjuk dengan に よって, tetapi bukan dengan に.",
+            examples: [["⑫ チキンラーメンは 1958年に 安藤百福さんに よって 発明されました。", "<i>Chicken Ramen</i> diciptakan oleh Bapak Ando Momofuku pada tahun 1958."]],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 42",
+    focus: "Menyatakan tujuan dengan ために, kegunaan dengan ～のに, Kata Keterangan Bilangan は／も, dan pelaku pasif dengan ～に よって.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Perubahan dan keberlanjutan",
