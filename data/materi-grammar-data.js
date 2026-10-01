@@ -3447,31 +3447,108 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Syarat dan pengandaian",
+    title: "Syarat dan saran",
     items: [
-          [
-            "Bentuk ば",
-            "Menyatakan syarat umum atau hasil yang terjadi bila kondisi terpenuhi.",
-            "時間が あれば、行きます。",
-            "Jika ada waktu, saya pergi.",
-          ],
-          [
-            "～なら",
-            "Menyatakan saran atau informasi berdasarkan topik yang disebut lawan bicara.",
-            "京都へ 行くなら、春が いいです。",
-            "Kalau pergi ke Kyoto, musim semi bagus.",
-          ],
-          [
-            "～ても",
-            "Menyatakan hasil tetap berlaku walaupun syarat terjadi.",
-            "雨が 降っても、行きます。",
-            "Walaupun hujan, saya pergi.",
-          ],
+      {
+        title: "Cara membuat Bentuk Syarat",
+        suffix: "(Lihat Buku Induk Pel.35 Latihan A1)",
+        noBox: true,
+        blocks: [
+          {
+            text: "Kelompok I: Bunyi dari kolom い sebagai bunyi terakhir dari Bentuk ます diubah menjadi bunyi kolom え kemudian dibubuhkan ば.<br>Kelompok II: Dibubuhkan れば pada Bentuk ます.<br>Kelompok III: し－ます → すれば　　き－ます → くれば",
+            note: "[Perhatian] Jika Bentuk Negatif dari Kata Kerja (Contoh: いかない) diubah menjadi Bentuk Syarat, dengan membubuhkan なければ pada Bentuk ない (Contoh: いか).",
+          },
+          {
+            text: "Kata Sifat い: い diubah menjadi ければ.<br>Kata Sifat な: Dibubuhkan なら pada Bentuk yang dihilangkan な.<br>Kata Benda: Dibubuhkan なら.",
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Bentuk Syarat、～",
+        blocks: [
+          {
+            label: "1) Pada hal awal yang menyatakan syarat yang diperlukan untuk mencapai hal-hal pada bagian belakang (klausa pokok).",
+            examples: [
+              ["① ボタンを 押せば、窓が 開きます。", "Kalau menekan tombol, jendelanya terbuka."],
+              ["② 彼が 行けば、わたしも 行きます。", "Kalau dia pergi, saya juga pergi."],
+              ["③ あした 都合が よければ、来て ください。", "Jika besok ada waktu, silakan datang."],
+              ["④ いい 天気なら、向こうに 島が 見えます。", "Kalau cuaca baik, terlihat pulau di selebah sana."],
+            ],
+          },
+          {
+            label: "2) Untuk merespon perkataan lawan bicara atau suatu keadaan, menyatakan keputusan si pembicara.",
+            examples: [
+              ["⑤ ボールペンが ないんですが。<br>……ボールペンが なければ、鉛筆で 書いて ください。", "Tidak ada bolpoin...<br>…… Kalau tidak ada bolpoin, silakan tulis dengan pensil."],
+              ["⑥ あしたまでに レポートを 出さなければ なりませんか。<br>……無理なら、金曜日までに 出して ください。", "Apakah (saya) harus menyerahkan laporan sampai dengan besok?<br>…… Kalau tidak bisa, serahkan sampai dengan hari Jumat."],
+            ],
+          },
+          {
+            text: "Pada dasarnya, dalam hal bagian belakang (klausa pokok) tidak akan diletakkan ekspresi mengenai keinginan, harapan, perintah, permintaan dan lain-lainya, tetapi jika subjek antara hal awal dan belakangnya berbeda (②), atau predikat dari hal awal secara keadaan (③ dan ⑤) dapat digunakan ekspresi tersebut.",
+          },
+          {
+            text: "[Referensi] Perbandingan dengan ekspresi mirip yang telah dipelajari sampai dengan pelajaran ini",
+          },
+          {
+            label: "1) ～と (Pel.23)",
+            text: "～と menyatakan bahwa jika terjadi aksi atau situasi di depan と, secara pasti mencapai keadaan, aksi yang dinyatakan oleh klausa pokok yang disusulkanya di belakang, fenomena atau situasi. Pada bagian belakang (kalimat pokok) tidak digunakan ekspresi keinginan, harapan, perintah, permintaan dan lain-lain.",
+            examples: [["⑦ ここを 押すと、ドアが 開きます。", "Kalau menekan di sini, pintunya terbuka."]],
+          },
+          {
+            text: "⑦ dapat menyatakan dengan menggunakan～ば.",
+            examples: [["⑧ ここを 押せば、ドアが 開きます。", "Jika menekan di sini, pintunya terbuka."]],
+          },
+          {
+            label: "2) ～たら (Pel.25)",
+            text: "～たら mempunyai dua cara penggunaan yaitu, (1) cara penggunaan untuk menyatakan syarat pengandaian, dan (2) cara penggunanan untuk jika sebelumnya jelas bahwa akan mencapai Kata Kerja Bentuk たら, setelah tercapai yang tersebut, akan mencapai aksi atau keadaan pada kalimat pokok yang menyusulinya. Untuk hal di belakang (kalimat pokok) dapat menggunakan ekspresi keinginan, harapan, perintah dan permintaan.",
+            examples: [
+              ["⑨ 東京へ 来たら、ぜひ 連絡して ください。", "Kalau datang ke Tokyo, silakan hubungi (saya)."],
+              ["×東京へ 来ると、ぜひ 連絡して ください。", ""],
+              ["×東京へ 来れば、ぜひ 連絡して ください。", ""],
+              ["⑩ 田中さんが 東京へ 来れば、［わたしは］ 会いに 行きます。", "Kalau sdr.Tanaka datang ke Tokyo, saya pergi bertemu."],
+            ],
+          },
+          {
+            text: "Jika terdapat keinginan si pembicara pada kalimat pokok seperti ⑨, dapat memakai～たら, tetapi tidak dapat memakai～と,～ば. Dengan catatan bahwa seperti ⑩ subjek dari hal di depan dan belakang (kalimat pokok) berbeda, walaupun keinginan si pembicara terdapat pada hal di belakang (kalimat pokok),～ば dapat dipakai. Dengan demikian,～たら dapat dikatakan bahwa batas pemakaiannya paling luas, tetapi karena bahasa lisan maka jarang digunakan pada bahasa tertulis.",
+          },
+        ],
+      },
+      {
+        title: "Kata Tanya Kata Kerja Bentuk Syarat いいですか",
+        blocks: [
+          {
+            text: "Ekspresi untuk meminta masukan atau petunjuk dari lawan bicara. Dapat memakainya sama seperti～たら いいですか yang telah dipelajari pada Pel.26.",
+            examples: [
+              ["⑪ 本を 借りたいんですが、どう すれば いいですか。", "Ingin meminjam buku, bagaimana caranya?"],
+              ["⑫ 本を 借りたいんですが、どう したら いいですか。", "Ingin meminjam buku, bagaimana caranya? (Pel.26)"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda なら、～",
+        blocks: [
+          {
+            text: "Kata Benda なら、～ digunakan pula jika merespon perkataan lawan bicara, kemudian memberikan informasi mengenai sesuatu hal tersebut.",
+            examples: [["⑬ 温泉に 行きたいんですが、どこが いいですか。<br>……温泉なら、白馬が いいですよ。", "Ingin pergi ke permandian air panas, yang bagus di mana?<br>…… Kalau permandian air panas, Hakuba yang bagus."]],
+          },
+        ],
+      },
+      {
+        title: "～は ありませんか（Kalimat Tanya Negatif）",
+        blocks: [
+          {
+            examples: [["⑭ 2、3日 旅行を しようと 思って いるんですが、どこか いい 所は ありませんか。", "Saya pikir mau berjalan-jalan selama dua, tiga hari, apakah ada tempat yang Anda rekomendasikan?"]],
+          },
+          {
+            text: "いい ところは ありませんか pada ⑭ artinya sama dengan いい ところは ありますか, tetapi bertanya dengan ありませんか, lawan bicara dengan mudah menjawab “tidak ada” maka dianggap cara bertanya yang menjaga perasaan lawan bicara. Dengan demikian, pada umumnya bentuk Tanya Negatif yang dijadikan cara untuk menanyakan secara halus. Ketika menjawab, menggunakan はい、あります atau いいえ、ありません.",
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 35",
+    focus: "Membuat dan memakai Bentuk Syarat ～ば, membandingkannya dengan ～と／～たら, serta どう すれば いいですか, Kata Benda なら, dan ～は ありませんか.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Tujuan dan perubahan kemampuan",

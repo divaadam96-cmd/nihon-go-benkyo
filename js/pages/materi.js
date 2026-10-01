@@ -216,6 +216,9 @@ const materialFuriganaReadings = {
   "逃": "に", "頑張": "がんば", "負": "ま", "洗濯機": "せんたくき", "渡辺": "わたなべ",
   // Pelajaran 34
   "線": "せん", "紙": "かみ", "組": "く", "立": "た",
+  // Pelajaran 35
+  "都合": "つごう", "向": "む", "島": "しま", "鉛筆": "えんぴつ", "無理": "むり", "金曜日": "きんようび",
+  "温泉": "おんせん", "白馬": "はくば",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
@@ -257,7 +260,7 @@ function resolveCounterReading(word, text, cursor) {
   if (word === "来") {
     const next = text[cursor + word.length];
     if (next === "な" || next === "い") return "こ";
-    if (next === "る") return "く";
+    if (next === "る" || next === "れ") return "く";
   }
   if (word === "回" && text[cursor + word.length] === "す") return "まわ";
   return null;
