@@ -4528,31 +4528,93 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Hubungan sebab dan tujuan",
+    title: "Kalimat kausatif",
     items: [
-          [
-            "～のは ～からです",
-            "Menjelaskan alasan suatu keadaan dengan bentuk nominal.",
-            "日本語を 勉強するのは 日本で 働きたいからです。",
-            "Saya belajar Jepang karena ingin bekerja di Jepang.",
-          ],
-          [
-            "～ために",
-            "Menyatakan sebab formal atau tujuan.",
-            "台風のために、電車が 止まりました。",
-            "Karena topan, kereta berhenti.",
-          ],
-          [
-            "～ように",
-            "Menyatakan tujuan yang berkaitan kemampuan/keadaan.",
-            "よく 見えるように、前に 座ります。",
-            "Saya duduk di depan agar terlihat jelas.",
-          ],
+      {
+        title: "Kata Kerja Kausatif",
+        noBox: true,
+        blocks: [
+          {
+            table: {
+              headers: ["", "Kata Kerja Kausatif<br>Bentuk Sopan", "Kata Kerja Kausatif<br>Bentuk Biasa"],
+              rows: [
+                ["I", "いきます", "いかせます", "いかせる"],
+                ["II", "たべます", "たべさせます", "たべさせる"],
+                ["III", "きます<br>します", "こさせます<br>させます", "こさせる<br>させる"],
+              ],
+            },
+          },
+          {
+            text: "(Lihat Buku Induk Pel.48 Latihan A1)<br>Kata Kerja Kausatif dikonjugasi sebagai Kata Kerja Kelompok II.<br>Contoh: かかせます　かかせる　かかせ(ない)　かかせて",
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kalimat Kata Kerja Kausatif",
+        noBox: true,
+        blocks: [
+          {
+            text: "Dalam Kata Kerja Kausatif, terdapat dua jenis yakni pelaku ditunjuk dengan を dan に. Seperti 1) di bawah ini, jika Kata Kerja berasal dari Kata Kerja Intransitif pada dasarnya pelaku ditunjuk dengan を, dan seperti 2) jika Kata Kerja Transitif pelaku ditunjuk dengan に.",
+          },
+          {
+            label: "1) <span class=\"grammar-pola-box\">Kata Benda（orang）を　Kata Kerja Kausatif（Kata Kerja Intransitif）</span>",
+            text: "menyuruh orang melakukan (Kata Kerja Intransitif)",
+            examples: [
+              ["① 部長は ミラーさん<u>を</u> アメリカへ 出張させます。", "Kepala Bagian menyuruh sdr. Miller dinas ke Amerika Serikat."],
+              ["② わたしは 娘<u>を</u> 自由に 遊ばせました。", "Saya membiarkan anak perempuan saya bermain dengan bebas."],
+            ],
+            note: "[Perhatian] Kata Kerja Intransitif yang menggunakan “Kata Benda (tempat) を”, pelakunya dinyatakan dengan に.",
+          },
+          {
+            examples: [["③ わたしは 子ども<u>に</u> 道の 右側を 歩かせます。", "Saya menyuruh anak berjalan di sebelah kanan jalan."]],
+          },
+          {
+            label: "2) <span class=\"grammar-pola-box\">Kata Benda<sub>1</sub>（orang）に　Kata Benda<sub>2</sub> を　Kata Kerja Kausatif（Kata Kerja Transitif）</span>",
+            text: "menyuruh orang melakukan (Kata Kerja Transitif)",
+            examples: [
+              ["④ 朝は 忙しいですから、娘<u>に</u> 朝ごはんの 準備を 手伝わせます。", "Karena pagi hari sibuk, saya menyuruh anak perempuan saya membantu saya untuk mempersiapkan sarapan."],
+              ["⑤ 先生は 生徒<u>に</u> 自由に 意見を 言わせました。", "Guru membiarkan siswanya untuk mengutarakan pendapat secara bebas."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Cara memakai Kata Kerja Kausatif",
+        noBox: true,
+        blocks: [
+          {
+            text: "Kata Kerja Kausatif menyatakan paksaan atau persetujuan. Misalnya digunakan ketika orang yang posisinya di atas memaksakan suatu perbuatan terhadap orang yang posisinya di bawah seperti orang tua terhadap anaknya, kakak laki-laki terhadap adik laki-lakinya, atasan terhadap bawahannya dan lain-lainnya, atau menyetujui perbuatan orang yang posisinya di bawah. ①, ③, dan ④ di atas ini adalah contoh dari paksaan, dan ② dan ⑤ adalah contoh persetujuan.",
+            note: "[Perhatian] Biasanya terhadap orang yang tidak memiliki posisi untuk memaksa atau menyetujui, maka tidak memakai cara ungkapan yang menggunakan Kata Kerja Kausatif. Untuk menyatakan sesuatu (せつめいします dari ⑥ di bawah) memperwujudkan orang lain (ぶちょう dari ⑥), menggunakan cara ungkapan Kata Kerja Bentuk て いただきます, Kata Kerja Bentuk て もらいます yang menyatakan kebaikan. Seperti ⑦, ungkapan ini dapat digunakan terhadap orang yang setaraf atau orang yang berposisi lebih rendah jika ingin menyatakan bahwa menerima kebaikan.",
+          },
+          {
+            examples: [
+              ["⑥ わたしは 部長に 説明して いただきました。", "Saya minta kepada kepala bagian untuk menjelaskan."],
+              ["⑦ わたしは 友達に 説明して もらいました。", "Saya minta kepada teman untuk menjelaskan."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Kausatif Bentuk て いただけませんか",
+        suffix: "Tolong ～!/Minta ～!",
+        blocks: [
+          {
+            text: "Pada Pelajaran 26 telah mempelajari Kata Kerja Bentuk て いただけませんか. Ini adalah cara ungkapan meminta suatu perbuatan kepada lawan bicara, tetapi jika si pembicara meminta persetujuan akan perbuatan sendiri maka Kata Kerja Kausatif Bentuk て いただけませんか.",
+            examples: [
+              ["⑧ いい 先生を <u>紹介して</u> いただけませんか。", "Apakah dapat memperkenalkan guru yang baik? (Pel.26)"],
+              ["⑨ 友達の 結婚式が あるので、早く <u>帰らせて</u> いただけませんか。", "Mohon izinkan saya untuk pulang cepat sebab ada pesta pernikahan teman?"],
+            ],
+          },
+          {
+            text: "しょうかいします pada ⑧ adalah lawan bicara, dan かえります pada ⑨ adalah pembicara.",
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 48",
+    focus: "Membentuk Kata Kerja Kausatif, memakainya untuk paksaan atau persetujuan (pelaku を／に), dan meminta izin dengan Kata Kerja Kausatif Bentuk て いただけませんか.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bahasa hormat lanjutan",

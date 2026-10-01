@@ -250,6 +250,8 @@ const materialFuriganaReadings = {
   "原因": "げんいん", "先月": "せんげつ", "先週": "せんしゅう",
   // Pelajaran 47
   "大勢": "おおぜい", "集": "あつ", "救急車": "きゅうきゅうしゃ", "声": "こえ", "味": "あじ",
+  // Pelajaran 48
+  "自由": "じゆう", "右側": "みぎがわ", "準備": "じゅんび", "生徒": "せいと", "説明": "せつめい", "結婚式": "けっこんしき",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
