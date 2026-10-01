@@ -246,6 +246,8 @@ const materialFuriganaReadings = {
   "乾": "かわ", "砂糖": "さとう", "安全": "あんぜん", "量": "りょう",
   // Pelajaran 45
   "会場": "かいじょう", "領収書": "りょうしゅうしょ", "必要": "ひつよう", "火事": "かじ",
+  // Pelajaran 46
+  "原因": "げんいん", "先月": "せんげつ", "先週": "せんしゅう",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(

@@ -4382,31 +4382,74 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Tindakan yang terjadi bersamaan",
+    title: "Tahap suatu aksi dan keyakinan",
     items: [
-        [
-          "Vているあいだに",
-          "Menyatakan suatu kejadian terjadi selama kegiatan lain berlangsung.",
-          "寝ている あいだに、雨が 降りました。",
-          "Saat saya tidur, hujan turun.",
+      {
+        title: "Kata Kerja Bentuk Kamus<br>Kata Kerja Bentuk て いる<br>Kata Kerja Bentuk た｝ところです",
+        blocks: [
+          {
+            text: "ところ yang kita pelajari pada pelajaran ini digunakan ketika menjelaskan kondisi akan suatu aksi atau peristiwa.",
+          },
+          {
+            label: "1) <span class=\"grammar-pola-box\">Kata Kerja Bentuk Kamus ところです</span>",
+            text: "Menyatakan bahwa aksi baru akan dimulai. Kebanyakan digunakan bersama dengan Kata Keterangan seperti これから, ［ちょうど］いまから dan lain-lainnya.",
+            examples: [
+              ["① 昼ごはんは もう 食べましたか。<br>……いいえ、これから 食べる ところです。", "Sudah makan siang?<br>…… Belum, baru mau makan sekarang."],
+              ["② 会議は もう 始まりましたか。<br>……いいえ、今から 始まる ところです。", "Rapat sudah dimulai?<br>…… Belum, baru mau dimulai sekarang."],
+            ],
+          },
+          {
+            label: "2) <span class=\"grammar-pola-box\">Kata Kerja Bentuk て いる ところです</span>",
+            text: "Menunjukkan bahwa aksi sedang dilakukan. Kebanyakan dipakai bersama dengan いま.",
+            examples: [["③ 故障の 原因が わかりましたか。<br>……いいえ、今 調べて いる ところです。", "Apakah sudah jelas apa penyebab kerusakan?<br>…… Belum, sekarang sedang diperiksa."]],
+          },
+          {
+            label: "3) <span class=\"grammar-pola-box\">Kata Kerja Bentuk た ところです</span>",
+            text: "Menunjukkan bahwa aksi baru saja diselesaikan. Kebanyakan digunakan bersama dengan Kata Keterangan seperti たったいま dan lain-lainnya.",
+            examples: [
+              ["④ 渡辺さんは いますか。<br>……あ、たった今 帰った ところです。", "Apakah ada sdri. Watanabe?<br>…… Ah, baru saja pulang."],
+              ["⑤ たった今 バスが 出た ところです。", "Baru saja bus berangkat."],
+            ],
+            note: "[Perhatian]～ところです disambung ke berbagai pola kalimat sebagai Kalimat Nominal.",
+          },
+          {
+            examples: [["⑥ もしもし 田中ですが、今 いいでしょうか。<br>……すみません。今から 出かける ところなんです。", "Halo, saya Tanaka, boleh mengganggu sebentar?<br>…… Maaf. Sekarang mau keluar."]],
+          },
         ],
-        [
-          "Vたところです",
-          "Menyatakan tindakan baru saja selesai.",
-          "いま ごはんを 食べたところです。",
-          "Saya baru saja makan.",
+      },
+      {
+        title: "Kata Kerja Bentuk た ばかりです",
+        blocks: [
+          {
+            text: "Pola kalimat ini juga menyatakan perasaan si pembicara bahwa waktu belum lama setelah dilakukan aksi atau terjadi peristiwa. Tidak terpengaruh pada lama atau singkatnya waktu yang telah dilampaui sebenarnya, pola kalimat ini dapat digunakan jika lawan bicara merasa tidak lama. Hal inilah yang berbeda dengan Kata Kerja Bentuk た ところです.",
+            examples: [
+              ["⑦ さっき 昼ごはんを 食べた ばかりです。", "Tadi baru makan siang."],
+              ["⑧ 木村さんは 先月 この 会社に 入った ばかりです。", "Sdri. Kimura baru masuk ke perusahaan ini bulan lalu."],
+            ],
+            note: "[Perhatian]～ばかりです disambungkan ke berbagai pola kalimat sebagai Kalimat Nominal.",
+          },
+          {
+            examples: [["⑨ この ビデオは 先週 買った ばかりなのに、調子が おかしいです。", "<i>Video player</i> ini kondisinya kurang baik, padahal baru dibeli bulan lalu."]],
+          },
         ],
-        [
-          "Vているところです",
-          "Menyatakan tindakan sedang tepat berlangsung.",
-          "いま 電話しているところです。",
-          "Saya sedang menelepon.",
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus<br>Kata Kerja（Bentuk ない）ない<br>Kata Sifat い（～い）<br>Kata Sifat な［な］<br>Kata Benda の｝はずです",
+        blocks: [
+          {
+            text: "Pola kalimat ini dipakai waktu pembicara menjelaskan keputusan diri sendiri secara pasti yang berdasarkan dengan suatu bukti.",
+            examples: [["⑩ ミラーさんは きょう 来るでしょうか。<br>……来る はずですよ。きのう 電話が ありましたから。", "Apakah sdr. Miller datang hari ini?<br>…… Harusnya datang. Sebab kemarin dia menelepon."]],
+          },
+          {
+            text: "Pada ⑩ bukti untuk keputusan adalah “telepon kemarin”, dan berdasarkan dengan bukti itu si pembicara memutuskan bahwa “Sdr. Miller datang hari ini”, kemudian menyatakan keputusan yang dia yakin dengan menggunakan～はずです.",
+          },
         ],
-      ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 46",
+    focus: "Menyatakan tahap suatu aksi dengan ～ところです, baru saja dengan ～たばかりです, dan keyakinan berdasarkan bukti dengan ～はずです.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Pola pasif lanjutan",
