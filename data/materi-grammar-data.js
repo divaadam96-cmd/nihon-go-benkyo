@@ -4247,31 +4247,86 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Menyampaikan informasi",
+    title: "Terlalu, mudah, sulit, dan mengubah",
     items: [
-          [
-            "普通形そうです",
-            "Menyampaikan informasi yang didengar dari sumber lain.",
-            "天気予報では 雨が 降るそうです。",
-            "Menurut ramalan cuaca, katanya akan hujan.",
-          ],
-          [
-            "～によると",
-            "Menyebutkan sumber informasi.",
-            "ニュースによると、電車が 遅れているそうです。",
-            "Menurut berita, kereta terlambat.",
-          ],
-          [
-            "～らしいです",
-            "Menyatakan informasi atau dugaan berdasar beberapa petunjuk.",
-            "あの 人は 学生らしいです。",
-            "Orang itu tampaknya mahasiswa.",
-          ],
+      {
+        title: "Kata Kerja Bentuk ます<br>Kata Sifat い（～い）<br>Kata Sifat な［な］｝すぎます",
+        blocks: [
+          {
+            text: "～すぎます menunjuk bahwa tingkat dari perbuatan atau keadaan kelewatan. Biasanya digunakan jika perbuatan atau kondisinya tidak menyenangkan.",
+            examples: [
+              ["① ゆうべ お酒を 飲みすぎました。", "Tadi malam (saya) minum terlalu banyak minuman keras."],
+              ["② この セーターは 大きすぎます。", "<i>Sweater</i> ini terlalu besar."],
+            ],
+            note: "[Perhatian]～すぎます dikonjugasi sebagai Kata Kerja Kelompok II.<br>Contoh: のみすぎる　のみすぎ(ない)　のみすぎた",
+          },
+          {
+            examples: [
+              ["③ 最近の 車は 操作が 簡単すぎて、運転が おもしろくないです。", "Mobil pada akhir-akhir ini tidak menarik sebab operasinya terlalu mudah."],
+              ["④ いくら 好きでも、飲みすぎると、体に 悪いですよ。", "Walaupun suka, kalau terlalu banyak minum tidak baik untuk badan."],
+            ],
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja Bentuk ます｛やすいです<br>　　　　　　　　　 にくいです",
+        blocks: [
+          {
+            label: "1) Jika Kata Kerja Bentuk ます adalah Kata Kerja Keinginan,～やすい bermakna bahwa melakukan aksi itu mudah, dan～にくい bermakna bahwa melakukan aksi itu sulit.",
+            examples: [
+              ["⑤ この パソコンは 使いやすいです。", "PC ini mudah dipakai."],
+              ["⑥ 東京は 住みにくいです。", "Tokyo tidak nyaman untuk didiami."],
+            ],
+          },
+          {
+            text: "⑤ menyatakan bahwa PC memilili sifat untuk mudah dipakai, dan ⑥ menyatakan bahwa kota yang namanya Tokyo melibatkan kesulitan untuk didiami.",
+          },
+          {
+            label: "2) Jika Kata Kerja Bentuk ます adalah bukan Kata Kerja secara keinginan,～やすい menyatakan akan terjadi aksi itu dengan mudah, dan～にくい menyatakan bahwa aksi itu jarang terjadi.",
+            examples: [
+              ["⑦ 白い シャツは 汚れやすいです。", "Kemaja putih mudah kotor."],
+              ["⑧ 雨の 日は 洗濯物が 乾きにくいです。", "Pada hari yang hujan, cucian sulit mengering."],
+            ],
+            note: "[Perhatian]～やすい,～にくい dikonjugasi sama seperti Kata Sifat い.",
+          },
+          {
+            examples: [
+              ["⑨ この 薬は 砂糖を 入れると、飲みやすく なりますよ。", "Kalau memasukkan gula, obat ini menjadi mudah diminum."],
+              ["⑩ この コップは 割れにくくて、安全ですよ。", "Gelas ini tidak mudah pecah dan aman."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> を｛Kata Sifat い（～い）→～く<br>　　　　　　　Kata Sifat な［な］→～に<br>　　　　　　　Kata Benda<sub>2</sub> に｝します",
+        blocks: [
+          {
+            text: "～く／～に なります yang telah dipelajari pada Pelajaran 19 adalah ungkapan untuk menyatakan perubahan unsur pokok, sedangkan～く／～に します adalah ungkapan untuk menyatakan mengubah obyek (Kata Benda<sub>1</sub>).",
+            examples: [
+              ["⑪ 音を 大きく します。", "Mengeras bunyi."],
+              ["⑫ 部屋を きれいに します。", "Membersihkan kamar."],
+              ["⑬ 塩の 量を 半分に しました。", "Mengurangi jumlah garam sampai setengah."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda に します",
+        blocks: [
+          {
+            text: "Pola kalimat ini menyatakan pilihan atau keputusan.",
+            examples: [
+              ["⑭ 部屋は シングルに しますか、ツインに しますか。", "Kamarnya mau <i>single</i> atau <i>twin</i>?"],
+              ["⑮ 会議は あしたに します。", "Rapat diadakan besok."],
+            ],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 44",
+    focus: "Menyatakan berlebihan dengan ～すぎます, mudah/sulit dengan ～やすい／～にくい, mengubah obyek dengan ～く／～に します, dan memilih dengan Kata Benda に します.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Pengandaian lanjutan",
