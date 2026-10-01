@@ -4329,31 +4329,57 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Pengandaian lanjutan",
+    title: "Jika terjadi dan padahal",
     items: [
-          [
-            "Vたら",
-            "Syarat yang terjadi lebih dahulu sebelum hasil.",
-            "時間が あったら、電話します。",
-            "Jika ada waktu, saya telepon.",
-          ],
-          [
-            "～場合は",
-            "Menyatakan kondisi formal, misalnya pada pengumuman.",
-            "遅れる 場合は、連絡してください。",
-            "Jika terlambat, tolong hubungi.",
-          ],
-          [
-            "～のに",
-            "Menyatakan hasil yang berlawanan dengan harapan.",
-            "薬を 飲んだのに、治りません。",
-            "Walau minum obat, tidak sembuh.",
-          ],
+      {
+        title: "Kata Kerja Bentuk Kamus<br>Kata Kerja（Bentuk ない）ない<br>Kata Kerja Bentuk た<br>Kata Sifat い（～い）<br>Kata Sifat な［な］<br>Kata Benda の｝場合は、～",
+        blocks: [
+          {
+            text: "～ばあい adalah ungkapan yang mengandaikan suatu kondisi. Kalimat yang disusul di belakangnya menyatakan cara mengatasinya, atau isi dari akibat yang terjadi. Cara menyambungnya, karena ばあい adalah Kata Benda maka sama dengan cara menyambung untuk menerangkan Kata Benda.",
+            examples: [
+              ["① 会議に 間に 合わない 場合は、連絡して ください。", "Jika tidak tepat waktu pada rapat, tolong hubungi!"],
+              ["② 時間に 遅れた 場合は、会場に 入れません。", "Jika terlambat pada waktunya, tidak bisa masuk ke dalam tempat."],
+              ["③ パソコンの 調子が 悪い 場合は、どう したら いいですか。", "Bagaimana caranya jika kondisi PC tidak baik?"],
+              ["④ 領収書が 必要な 場合は、言って ください。", "Jika perlu kuitansi, tolong diberitahukan!"],
+              ["⑤ 火事や 地震の 場合は、エレベーターを 使わないで ください。", "Jika terjadi kebakaran atau gempa bumi, jangan gunakan <i>lift</i>."],
+            ],
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ→～な｝のに、～",
+        blocks: [
+          {
+            text: "のに digunakan jika hal yang berbeda dengan dugaan sesungguhnya dari hal di bagian depan kalimat diletakkan di bagian hal belakang kalimat.<br>Kebanyakan kasus menjelaskan perasaan di luar dugaan atau ketidakpuasan.",
+            examples: [
+              ["⑥ 約束を したのに、彼女は 来ませんでした。", "Dia tidak datang padahal sudah berjanji."],
+              ["⑦ きょうは 日曜日なのに、働かなければ なりません。", "Hari ini (saya) harus bekerja padahal hari Minggu."],
+            ],
+          },
+          {
+            text: "Misalnya, untuk ⑥ menyatakan perasaan dikhianati sebab dari hal di bagian depan kalimat yakini “sudah berjanji” dapat terduga dugaan “datang”. Kemudian, untuk ⑦ dari hal di bagian depan kalimat diyakini “hari Minggu”, sesungguhnya akan diakibatkan untuk “dapat berlibur”, tetapi harus bekerja, maka menyatakan perasaan tidak puas dengan menggunakan のに.",
+            note: "[Perhatian 1] Perbedaan antara～のに dan～が<br>Jika のに pada ⑥ dan ⑦ diganti dengan が, maka tidak dapat menyatakan perasaan di luar dugaan atau ketidakpuasan.",
+          },
+          {
+            examples: [
+              ["⑧ 約束を しましたが、彼女は 来ませんでした。", "Dia tidak datang walaupun sudah berjanji."],
+              ["⑨ きょうは 日曜日ですが、働かなければ なりません。", "Hari ini (saya) harus bekerja walaupun hari Minggu."],
+            ],
+            note: "[Perhatian 2] Perbedaan antara～のに dan～ても<br>～のに adalah kata yang menyatakan perasaan pembicara mengenai hal yang telah terjadi, dan tidak dapat menyatakan paradoks secara prakiraan seperti～ても.",
+          },
+          {
+            examples: [
+              ["⑩ あした 雨が 降っても、サッカーを します。", "Besok bermain sepak bola walaupun hujan."],
+              ["×あした 雨が 降るのに、サッカーを します。", ""],
+            ],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 45",
+    focus: "Mengandaikan kondisi dengan ～場合は dan menyatakan di luar dugaan atau ketidakpuasan dengan ～のに, serta perbedaannya dengan ～が dan ～ても.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Tindakan yang terjadi bersamaan",

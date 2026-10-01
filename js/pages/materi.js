@@ -244,6 +244,8 @@ const materialFuriganaReadings = {
   // Pelajaran 44
   "最近": "さいきん", "操作": "そうさ", "運転": "うんてん", "白": "しろ", "汚": "よご", "洗濯物": "せんたくもの",
   "乾": "かわ", "砂糖": "さとう", "安全": "あんぜん", "量": "りょう",
+  // Pelajaran 45
+  "会場": "かいじょう", "領収書": "りょうしゅうしょ", "必要": "ひつよう", "火事": "かじ",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
