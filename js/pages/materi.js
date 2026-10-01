@@ -239,6 +239,8 @@ const materialFuriganaReadings = {
   // Pelajaran 42
   "自分": "じぶん", "貯金": "ちょきん", "走": "はし", "建": "た", "弁護士": "べんごし",
   "法律": "ほうりつ", "半分": "はんぶん", "安藤百福": "あんどうももふく",
+  // Pelajaran 43
+  "咲": "さ", "彼女": "かのじょ", "丈夫": "じょうぶ", "台所": "だいどころ", "弁当": "べんとう",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(

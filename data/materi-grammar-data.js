@@ -4170,31 +4170,81 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Perubahan dan keberlanjutan",
+    title: "Dugaan dari penampilan dan pergi lalu kembali",
     items: [
-          [
-            "Vてきます",
-            "Menunjukkan perubahan yang mendekat ke masa kini atau pergi lalu kembali.",
-            "だんだん 暑く なってきました。",
-            "Lambat-laun mulai panas.",
-          ],
-          [
-            "Vていきます",
-            "Menunjukkan perubahan yang berlanjut ke masa depan.",
-            "これからも 日本語を 勉強していきます。",
-            "Mulai sekarang saya akan terus belajar Jepang.",
-          ],
-          [
-            "～そうです",
-            "Menyatakan tampak/sepertinya berdasarkan pengamatan.",
-            "雨が 降りそうです。",
-            "Sepertinya akan hujan.",
-          ],
+      {
+        title: "～そうです",
+        suffix: "rupanya～/kelihatannya～",
+        blocks: [
+          {
+            label: "1) <span class=\"grammar-pola-box\">Kata Kerja（Bentuk ます）そうです</span>",
+            text: "Pola kalimat ini menyatakan gejala akan terjadinya gerakan atau perubahan yang dinyatakan dengan Kata Kerja. Dapat digunakan bersama dengan Kata Keterangan いまにも, もうすぐ, これから dan lain-lainnya yang menyatakan masa gerakan atau perubahannya akan terjadi.",
+            examples: [
+              ["① 今にも 雨が 降りそうです。", "Mau hujan sekarang juga."],
+              ["② もうすぐ 桜が 咲きそうです。", "Sebentar lagi <i>Sakura</i> mau mekar."],
+              ["③ これから 寒く なりそうです。", "Rupanya mau menjadi dingin."],
+            ],
+          },
+          {
+            label: "2) <span class=\"grammar-pola-box\">Kata Sifat い（～い）<br>Kata Sifat な［な］｝そうです</span>",
+            text: "Cara ungkapan untuk menjelaskan sifat dari pandangan/pengelihatan luar dengan menduga tanpa mengechek sesungguhnya.",
+            examples: [
+              ["④ この 料理は 辛そうです。", "Rupanya masakan ini pedas."],
+              ["⑤ 彼女は 頭が よさそうです。", "Rupanya dia pintar."],
+              ["⑥ この 机は 丈夫そうです。", "Rupanya meja ini kuat."],
+            ],
+            note: "[Perhatian] Ketika menyatakan perasaan orang, Kata Sifat yang menyatakan perasaan (うれしい, かなしい, さびしい dan lain-lainnya) tidak dapat digunakan langsung. Digunakan cara ungkapan setelah membubuhkan そうです dengan menduga dari pandangan/pengelihatan luar.",
+          },
+          {
+            examples: [["⑦ うれしそうですね。<br>……ええ、実は きのう 結婚を 申し込まれたんです。", "Kelihatan senang, ya.<br>…… Ya, soalnya kemarin dilamar."]],
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja Bentuk て 来ます",
+        blocks: [
+          {
+            label: "1) Kata Kerja Bentuk て きます menyatakan arti bahwa pergi ke suatu tempat, dan melakulan suatu aksi, kemudian kembali.",
+            examples: [["⑧ ちょっと たばこを 買って 来ます。", "Pergi beli rokok sebentar."]],
+          },
+          {
+            text: "⑧ menyatakan tiga aksi, yakni (1) pergi ke tempat menjual rokok, (2) membeli rokok di situ, dan (3) kembali ke tempat semula.",
+            figure: { src: "assets/images/materi/p43-tekimasu.png", alt: "Ilustrasi: (1) pergi ke mesin penjual rokok, (2) membeli rokok, (3) kembali ke tempat semula" },
+          },
+          {
+            text: "Seperti ⑨, tempat beraksi yang dinyatakan dengan Kata Kerja Bentuk て ditunjuk dengan で, sedangkan seperti ⑩, jika dianggap sebagai asal usul barang yang ditunjuk dengan を (titik awal untuk keluar barang), digunakan から. Selain とって きます, Kata Kerja yang menggunakan から terdapat もって きます, はこんで きます dan lain-lainnya.",
+            examples: [
+              ["⑨ スーパーで 牛乳を 買って 来ます。", "Pergi membeli susu di pasar swalayan."],
+              ["⑩ 台所から コップを 取って 来ます。", "Pergi mengambil gelas dari dapur."],
+            ],
+          },
+          {
+            label: "2) Kata Benda（tempat）へ 行って 来ます",
+            text: "Sebelum きます memakai Kata Kerja いきます Bentuk て menyatakan arti untuk pergi ke suatu tempat kemudian kembali. Mengenai aksi yang dilakukan di tempat dimana pergi digunakan jika tidak diungkapkan secara khusus.",
+            examples: [["⑪ 郵便局へ 行って 来ます。", "Pergi ke kantor pos."]],
+          },
+          {
+            label: "3) 出かけて 来ます",
+            text: "Sebelum きます menggunakan Kata Kerja でかけます Bentuk て menyatakan arti untuk pergi ke suatu tempat dan kembali. Digunakan jika secara khusus tidak berkata mengenai tempat di mana pergi dan tujuan.",
+            examples: [["⑫ ちょっと 出かけて 来ます。", "Pergi sebentar."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk て くれませんか",
+        suffix: "Apakah (Anda) dapat ～ untuk ... ?",
+        blocks: [
+          {
+            text: "Ungkapan permintaan yang lebih halus daripada～て ください, namun kurang halus daripada～て いただけませんか (Pel.26) atau～て くださいませんか (Pel.46). Ungkapan yang cocok untuk dipakai kepada orang yang setaraf atau di bawah dari diri sendiri.",
+            examples: [["⑬ コンビニへ 行って 来ます。<br>……じゃ、お弁当を 買って 来て くれませんか。", "Pergi ke toko 24 jam.<br>…… Kalau begitu, tolong belikan saya bekal?"]],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 43",
+    focus: "Menduga dari penampilan dengan ～そうです, menyatakan pergi lalu kembali dengan ～て 来ます, dan meminta dengan ～て くれませんか.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Menyampaikan informasi",
