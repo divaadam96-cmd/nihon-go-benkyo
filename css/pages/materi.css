@@ -1227,17 +1227,18 @@
 /* Diagram dari buku sumber (mis. garis waktu Pelajaran 29 pola 1). */
 .grammar-figure {
   margin: 0 0 12px;
-  padding: 10px;
-  border: 1px solid #e3d6bd;
-  border-radius: 8px;
-  background: #fff;
+  padding: 0;
+  background: transparent;
 }
+/* Hasil scan berlatar putih: multiply membuat putihnya ikut warna
+   halaman sehingga diagram menyatu, garisnya tetap gelap. */
 .grammar-figure img {
   display: block;
   width: 100%;
   max-width: 640px;
   height: auto;
   margin: 0 auto;
+  mix-blend-mode: multiply;
 }
 .grammar-audio-button {
   display: inline-flex;
