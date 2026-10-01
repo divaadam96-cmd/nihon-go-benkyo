@@ -3551,31 +3551,82 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Tujuan dan perubahan kemampuan",
+    title: "Tujuan dan perubahan kebiasaan",
     items: [
-        [
-          "V辞書形ように",
-          "Menyatakan tujuan yang berkaitan dengan kemampuan atau keadaan.",
-          "日本語が 話せるように、毎日 練習します。",
-          "Saya berlatih setiap hari agar bisa berbicara Jepang.",
+      {
+        title: "Kata Kerja<sub>1</sub> Bentuk Kamus<br>Kata Kerja<sub>1</sub>（Bentuk ない）ない｝ように、Kata Kerja<sub>2</sub>",
+        blocks: [
+          {
+            text: "ように menunjukan objek dari Kata Kerja<sub>2</sub> untuk mencapai keadaan yang dinyatakan oleh～ように. Sebelum ように, digunakan Kata Kerja yang bukan keinginan Bentuk Kamus (①) (Contoh: Kata Kerja Potensial, わかります, みえます, きこえます, なります dan lain-lain), atau Kata Kerja Bentuk Negatif (②).",
+            examples: [
+              ["① 速く 泳げるように、毎日 練習して います。", "Setiap hari (saya) berlatih agar bisa berenang dengan cepat."],
+              ["② 忘れないように、メモして ください。", "Tolong dicatat supaya tidak lupa."],
+            ],
+          },
         ],
-        [
-          "V辞書形ようにします",
-          "Berusaha membiasakan diri melakukan sesuatu.",
-          "毎日 野菜を 食べるようにしています。",
-          "Saya membiasakan makan sayur setiap hari.",
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus ように なります",
+        blocks: [
+          {
+            label: "1) なります menyatakan keadaan. Jika dipakai Kata Kerja Potensial seperti わかります, atau みえます Kata Kerja Bentuk Kamus ように なります menyatakan perubahan dari keadaan tidak bisa menjadi keadaan bisa.",
+            examples: [
+              ["③ 毎日 練習すれば、泳げるように なります。", "Kalau setiap hari berlatih, bisa berenang."],
+              ["④ やっと 自転車に 乗れるように なりました。", "Akhirnya bisa bersepeda."],
+            ],
+          },
+          {
+            label: "2) Jika menjawab dengan いいえ untuk Kalimat Tanya～ように なりましたか caranya sebagai berikut;",
+            examples: [["⑤ ショパンの 曲が 弾けるように なりましたか。<br>……いいえ、まだ 弾けません。", "Apakah sudah bisa bermain musik Chopin?<br>…… Belum, belum bisa bermain."]],
+            note: "[Perhatian] Dalam Buku Induk tidak menyinggung halnya, tetapi jika pada pola kalimat 2 dipakai Kata Kerja kecuali Kata Kerja Potensial, わかります, atau みえます maka bermakna bahwa dapat kebiasaan baru yang sebelumnya tidak ada (⑥).",
+          },
+          {
+            examples: [["⑥ 日本人は 100年ぐらいまえから 牛肉や 豚肉を 食べるように なりました。", "Orang Jepang telah makan daging sapi dan daging babi sejak kira-kira seratus tahun yang lalu."]],
+          },
         ],
-        [
-          "Vないようにします",
-          "Berusaha agar tidak melakukan sesuatu.",
-          "遅れないようにします。",
-          "Saya akan berusaha tidak terlambat.",
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus<br>Kata Kerja（Bentuk ない）ない｝ように します",
+        blocks: [
+          {
+            label: "1) ～ように して います",
+            text: "Menyatakan bahwa berusaha untuk melakukan suatu aksi secara kebiasan.",
+            examples: [
+              ["⑦ 毎日 運動して、何でも 食べるように して います。", "Setiap hari berolahraga dan berusaha untuk makan apa saja."],
+              ["⑧ 歯に 悪いですから、甘い 物を 食べないように して います。", "Karena tidak baik untuk gigi, maka berusaha tidak makan makanan manis."],
+            ],
+          },
+          {
+            label: "2) ～ように して ください",
+            text: "Ekspresi untuk meminta agar berusaha mencapai suatu aksi. Dibandingkan dengan～て／～ないで ください yang ungkapan permintaan secara langsung,～ように して ください adalah ungkapan tidak langsung maka menjadi ungkapan lebih halus daripada～て／～ないで ください. Digunakan seperti di bawah ini;",
+            examples: [
+              ["⑨ もっと 野菜を 食べるように して ください。", "Usahakan makan sayur-mayur yang lebih banyak."],
+              ["⑩ 絶対に パスポートを なくさないように して ください。", "Sama sekali jangan sampai kehilangan paspor."],
+            ],
+            note: "[Perhatian]～ように して ください tidak dapat digunakan untuk permintaan pada saat itu juga.",
+          },
+          {
+            examples: [
+              ["⑪ すみませんが、塩を 取って ください。", "Maaf, tolong ambilkan saya garam."],
+              ["×すみませんが、塩を 取るように して ください。", ""],
+            ],
+          },
         ],
-      ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "早い→早く　　上手な→上手に",
+        blocks: [
+          {
+            text: "Jika Kata Sifat menerangkan Kata Sifat atau Kata Kerja lain, mengubah Kata Sifat い menjadi～く, dan Kata Sifat な menjadi～に.",
+            examples: [["⑫ 早く 上手に お茶が たてられるように なりたいです。", "(Saya) ingin menjadi cepat pandai membuat teh."]],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 36",
+    focus: "Menyatakan tujuan dengan ように, perubahan kemampuan atau kebiasaan dengan ように なります, usaha dengan ように します, dan bentuk kata keterangan dari Kata Sifat.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bentuk pasif",

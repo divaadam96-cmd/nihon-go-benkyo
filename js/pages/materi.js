@@ -219,6 +219,9 @@ const materialFuriganaReadings = {
   // Pelajaran 35
   "都合": "つごう", "向": "む", "島": "しま", "鉛筆": "えんぴつ", "無理": "むり", "金曜日": "きんようび",
   "温泉": "おんせん", "白馬": "はくば",
+  // Pelajaran 36
+  "速": "はや", "自転車": "じてんしゃ", "日本人": "にほんじん", "牛肉": "ぎゅうにく", "豚肉": "ぶたにく",
+  "歯": "は", "甘": "あま", "絶対": "ぜったい",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
@@ -263,6 +266,8 @@ function resolveCounterReading(word, text, cursor) {
     if (next === "る" || next === "れ") return "く";
   }
   if (word === "回" && text[cursor + word.length] === "す") return "まわ";
+  // 曲 default "ま" (曲がる); kata benda 曲（lagu）dibaca きょく.
+  if (word === "曲" && !(text[cursor + 1] === "が" && /[っらりるれろ]/.test(text[cursor + 2] || ""))) return "きょく";
   return null;
 }
 
