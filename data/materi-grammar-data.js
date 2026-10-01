@@ -4001,31 +4001,103 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Bahasa merendahkan diri",
+    title: "Memberi dan menerima dengan hormat",
     items: [
-        [
-          "お／ご～します",
-          "Menyatakan tindakan pembicara dengan rendah hati kepada orang yang dihormati.",
-          "わたしが ご案内します。",
-          "Saya akan memandu Anda.",
+      {
+        title: "Ungkapan Pemberian dan Penerimaan",
+        noBox: true,
+        blocks: [
+          {
+            text: "Pada Pelajaran 7 dan Pelajaran 24 telah mempelajari ungkapan pemberian dan penerimaan untuk barang atau perbuatan. Selanjutnya pada pelajaran ini mempelajari ungkapan pemberian dan penerimaan yang mencerminkan hubungan antara pemberi dan penerimaya.",
+          },
+          {
+            label: "1) <span class=\"grammar-pola-box\">Kata Benda<sub>1</sub>（orang）に Kata Benda<sub>2</sub> を いただきます</span>",
+            text: "Jika pembicara menerima barang (Kata Benda<sub>2</sub>) dari orang yang berpangkat lebih tinggi (Kata Benda<sub>1</sub>) daripada diri sendiri, menggunakan いただきます, tetapi tidak menggunakan もらいます.",
+            figure: { src: "assets/images/materi/p41-itadakimasu.png", alt: "Diagram: ［わたしは］ menerima dari ［部長に］ dengan いただきます, dari ［友達に］ dan ［子どもに］ dengan もらいます" },
+            examples: [["① わたしは 社長に お土産を いただきました。", "Saya menerima oleh-oleh dari direktur."]],
+          },
+          {
+            label: "2) <span class=\"grammar-pola-box\">［わたしに］ Kata Benda を くださいます</span>",
+            text: "Jika orang yang berpangkat tinggi yang memberi barang kepada lawan bicaranya, menggunakan くださいます, tetapi tidak menggunakan くれます.",
+            figure: { src: "assets/images/materi/p41-kudasaimasu.png", alt: "Diagram: ［部長が］ memberi ［わたしに］ dengan くださいます, ［友達が］ dan ［子どもが］ dengan くれます" },
+            examples: [["② 社長が わたしに お土産を くださいました。", "Direktur memberikan saya oleh-oleh."]],
+            note: "[Perhatian] Adakalanya いただきます, dan くださいます digunakan jika penerimanya anggota keluarga dari pembicara.",
+          },
+          {
+            examples: [
+              ["③ 娘は 部長に お土産を いただきました。", "Anak perempuan saya menerima oleh-oleh dari direktur."],
+              ["④ 部長が 娘に お土産を くださいました。", "Kepala bagian memberikan anak perempuan saya oleh-oleh."],
+            ],
+          },
+          {
+            label: "3) <span class=\"grammar-pola-box\">Kata Benda<sub>1</sub> に Kata Benda<sub>2</sub> を やります</span>",
+            text: "Jika pembicara memberi barang (Kata Benda<sub>2</sub>) terhadap tumbuhan dan fauna (Kata Benda<sub>1</sub>), sesungguhnya menggunakan やります. Tetapi, akhir-akhir ini banyak orang menggunkan あげます karena merasa lebih sopan daripada やります.",
+            figure: { src: "assets/images/materi/p41-yarimasu.png", alt: "Diagram: ［わたしは］ memberi ［部長に］ dengan さしあげます, ［友達に］ dengan あげます, ［子どもに］［犬／花に］ dengan やります（あげます）" },
+            examples: [
+              ["⑤ わたしは 息子に お菓子を やりました（あげました）。", "Saya memberikan anak laki-laki saya kue."],
+              ["⑥ わたしは 犬に えさを やりました。", "Saya memberi umpan pada anjing."],
+            ],
+          },
         ],
-        [
-          "～ていただきます",
-          "Menyatakan menerima izin atau kebaikan dari orang lain dengan sopan.",
-          "休ませていただきます。",
-          "Izinkan saya beristirahat.",
+      },
+      {
+        title: "Pemberian dan Penerimaan Perbuatan",
+        noBox: true,
+        blocks: [
+          {
+            text: "Jika menyatakan pemberian dan penerimaan perbuatan digunakan いただきます, くださいます, dan やります. Diberikan contoh di bawah ini.",
+          },
+          {
+            label: "1) <span class=\"grammar-pola-box\">Kata Kerja Bentuk て いただきます</span>",
+            examples: [["⑦ わたしは 課長に 手紙の まちがいを 直して いただきました。", "Saya dibantu oleh kepala bagian untuk dikoreksikan kesalahan surat."]],
+          },
+          {
+            label: "2) <span class=\"grammar-pola-box\">Kata Kerja Bentuk て くださいます</span>",
+            examples: [
+              ["⑧ 部長の 奥さんが ［わたしに］ お茶を 教えて くださいました。", "Istri kepala bagian mengajarkan saya cara membuat teh."],
+              ["⑨ 部長が ［わたしを］ 駅まで 送って くださいました。", "Kepala bagian mengantarkan (saya) sampai stasiun."],
+              ["⑩ 部長が ［わたしの］ レポートを 直して くださいました。", "Kepala bagian mengoreksikan laporan (saya)."],
+            ],
+          },
+          {
+            label: "3) <span class=\"grammar-pola-box\">Kata Kerja Bentuk て やります</span>",
+            examples: [
+              ["⑪ わたしは 息子に 紙飛行機を 作って やりました（あげました）。", "Saya membuat pesawat-pesawatan dari kertas untuk anak laki-laki. (membuatkan anak laki-laki)"],
+              ["⑫ わたしは 犬を 散歩に 連れて 行って やりました。", "Saya membawa anjing jalan-jalan."],
+              ["⑬ わたしは 娘の 宿題を 見て やりました（あげました）。", "Saya membantu adik saya untuk membuat PR-nya."],
+            ],
+          },
         ],
-        [
-          "拝見します",
-          "Bentuk rendah hati dari 見ます.",
-          "資料を 拝見します。",
-          "Saya akan melihat dokumen.",
+      },
+      {
+        title: "Kata Kerja Bentuk て くださいませんか",
+        blocks: [
+          {
+            text: "Dibandingkan dengan～て ください, ungkapan ini permintaan yang sikap halusnya lebih kuat. Akan tetapi, sikap halusnya kurang daripada～て いただけませんか yang telah dipelajari pada Pelajaran 26.",
+            examples: [
+              ["⑭ コピー機の 使い方を 教えて くださいませんか。", "Tolong ajarkan (saya) cara pemakaian mesin fotocopy."],
+              ["⑮ コピー機の 使い方を 教えて いただけませんか。", "Apakah (Anda) bisa mengajarkan saya cara pemakaian mesin fotocopy? (Pel.26)"],
+            ],
+          },
         ],
-      ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Benda に Kata Kerja",
+        blocks: [
+          {
+            text: "Kata Bantu に yang digukanan dalam contoh kalimat di bawah ini menyatakan arti “sebagai tanda～” atau “sebagai kenang-kenangan～”.",
+            examples: [
+              ["⑯ 田中さんが 結婚祝いに この お皿を くださいました。", "Srd. Tanaka memberikan saya piring ini sebagai tanda ucapan selamat atas pernikahan (saya)."],
+              ["⑰ 北海道旅行の お土産に 人形を 買いました。", "(Saya) Membeli boneka ini sebagai oleh-oleh perjalanan ke Hokkaido."],
+            ],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 41",
+    focus: "Memberi dan menerima barang serta perbuatan dengan いただきます, くださいます, やります, meminta dengan ～て くださいませんか, dan Kata Benda に Kata Kerja.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Tujuan dan keadaan",

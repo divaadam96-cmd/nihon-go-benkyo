@@ -233,6 +233,9 @@ const materialFuriganaReadings = {
   // Pelajaran 40
   "便": "びん", "到着": "とうちゃく", "祝": "いわ", "覚": "おぼ", "忘年会": "ぼうねんかい", "出席": "しゅっせき",
   "返事": "へんじ", "測": "はか", "橋": "はし", "20日": "はつか",
+  // Pelajaran 41
+  "土産": "みやげ", "娘": "むすめ", "息子": "むすこ", "課長": "かちょう", "直": "なお", "奥": "おく",
+  "飛行機": "ひこうき", "機": "き", "皿": "さら", "人形": "にんぎょう", "結婚祝": "けっこんいわ",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(

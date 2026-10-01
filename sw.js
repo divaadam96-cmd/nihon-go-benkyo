@@ -1,7 +1,7 @@
 // Satu-satunya angka yang perlu dinaikkan setiap kali ada file di ASSETS
 // yang isinya berubah (JS/CSS/data/gambar). Tanpa ini, service worker
 // akan terus menyajikan versi lama dari cache ke user yang sudah install.
-const CACHE_NAME = 'nihon-go-benkyo-v210';
+const CACHE_NAME = 'nihon-go-benkyo-v211';
 const ASSETS = [
   'index.html',
   'css/base.css', 'css/shell.css', 'css/auth.css',
@@ -25,7 +25,7 @@ const ASSETS = [
   'assets/images/jlpt-n4/listen-p1-q1.png', 'assets/images/jlpt-n4/listen-p1-q2.png', 'assets/images/jlpt-n4/listen-p2-q1.png', 'assets/images/jlpt-n4/listen-p2-q2.png', 'assets/images/jlpt-n4/listen-p3-q1.png', 'assets/images/jlpt-n4/listen-p3-q2.png',
   'assets/images/jlpt-n4/tp2-listen-p1-q1.png', 'assets/images/jlpt-n4/tp2-listen-p1-q2.png', 'assets/images/jlpt-n4/tp2-listen-p2-q1.png', 'assets/images/jlpt-n4/tp2-listen-p2-q2.png', 'assets/images/jlpt-n4/tp2-listen-p3-q1.png', 'assets/images/jlpt-n4/tp2-listen-p3-q2.png',
   'data/materi-data.js', 'data/kanji-data.js', 'data/kanji-stroke-data.js', 'data/kana-data.js', 'data/bab-data.js',
-  'assets/images/japan-paper-background.webp', 'assets/images/logo.webp', 'assets/images/materi/p29-mado.png',
+  'assets/images/japan-paper-background.webp', 'assets/images/logo.webp', 'assets/images/materi/p29-mado.png', 'assets/images/materi/p41-itadakimasu.png', 'assets/images/materi/p41-kudasaimasu.png', 'assets/images/materi/p41-yarimasu.png',
   'assets/fonts/dm-sans-latin-v17.woff2', 'assets/fonts/dm-sans-latin-ext-v17.woff2',
   // Catatan: assets/audio/n5-tp1..tp6-listening.mp3 & n4-tp1/tp2-listening.mp3
   // SENGAJA tidak di-precache di sini supaya install PWA tetap ringan untuk
