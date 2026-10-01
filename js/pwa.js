@@ -11,6 +11,18 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   });
+
+  // sw.js menyajikan CSS/JS cache-first, jadi kunjungan pertama setelah
+  // deploy masih memakai file lama sementara versi baru terpasang di
+  // belakang layar (skipWaiting + clients.claim). Begitu versi baru
+  // mengambil alih, muat ulang sekali supaya file terbaru langsung
+  // dipakai - hanya di awal buka halaman, supaya siswa yang sedang
+  // mengerjakan tes tidak kehilangan jawabannya.
+  const hadController = !!navigator.serviceWorker.controller;
+  const pageOpenedAt = Date.now();
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (hadController && Date.now() - pageOpenedAt < 15000) location.reload();
+  });
 }
 
 let deferredInstallPrompt = null;
