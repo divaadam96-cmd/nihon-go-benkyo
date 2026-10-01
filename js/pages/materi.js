@@ -214,6 +214,8 @@ const materialFuriganaReadings = {
   "調": "しら", "万円": "まんえん", "万": "まん",
   // Pelajaran 33
   "逃": "に", "頑張": "がんば", "負": "ま", "洗濯機": "せんたくき", "渡辺": "わたなべ",
+  // Pelajaran 34
+  "線": "せん", "紙": "かみ", "組": "く", "立": "た",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(

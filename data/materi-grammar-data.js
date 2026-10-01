@@ -3382,31 +3382,69 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Urutan dan perubahan",
+    title: "Melakukan sesuai contoh dan urutan",
     items: [
-          [
-            "Vたあとで",
-            "Menyatakan tindakan yang dilakukan setelah tindakan lain selesai.",
-            "ごはんを 食べたあとで、勉強します。",
-            "Setelah makan, saya belajar.",
-          ],
-          [
-            "Vて／Vないで",
-            "Menjelaskan cara atau keadaan saat melakukan tindakan.",
-            "靴を 脱いで、入ってください。",
-            "Lepaskan sepatu lalu silakan masuk.",
-          ],
-          [
-            "～とおりに",
-            "Menyatakan melakukan sesuatu sesuai contoh, petunjuk, atau rencana.",
-            "説明書の とおりに してください。",
-            "Tolong lakukan sesuai petunjuk.",
-          ],
+      {
+        title: "Kata Kerja<sub>1</sub> Bentuk た<br>Kata Benda の｝とおりに、Kata Kerja<sub>2</sub>",
+        blocks: [
+          {
+            label: "1) <span class=\"grammar-pola-box\">Kata Kerja<sub>1</sub> Bentuk た とおりに、Kata Kerja<sub>2</sub></span>",
+            text: "Menyatakan bahwa melakukan Kata Kerja<sub>2</sub> dengan keadaan atau cara yang sama dengan Kata Kerja<sub>1</sub>,",
+            examples: [
+              ["① わたしが やった とおりに、やって ください。", "Silakan lakukan sama seperti yang saya buat!"],
+              ["② 見た とおりに、話して ください。", "Silakan berbicara sama seperti yang Anda lihat!"],
+            ],
+          },
+          {
+            label: "2) <span class=\"grammar-pola-box\">Kata Benda の とおりに、Kata Kerja</span>",
+            text: "Menyatakan hal yang melakukan aksi tanpa terlepas dari standar yang ditunjuk oleh Kata Benda.",
+            examples: [
+              ["③ 線の とおりに、紙を 切って ください。", "Silakan menggunting kertas sesuai dengan garis!"],
+              ["④ 説明書の とおりに、組み立てました。", "(Saya) Memasang sesuai dengan petunjuk."],
+            ],
+            note: "[Perhatian] とおり adalah Kata Benda, maka langsung menyertai Kata Tunjuk seperti この, その, あの kemudian dapat menyatakan bahwa bermaksud keadaan atau cara yang sama seperti ditunjuk oleh Kata Tunjuk tersebut.",
+          },
+          {
+            examples: [["⑤ この とおりに、書いて ください。", "Silakan tulis sama seperti ini!"]],
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja<sub>1</sub> Bentuk た<br>Kata Benda の｝あとで、Kata Kerja<sub>2</sub>",
+        blocks: [
+          {
+            text: "Menyatakan bahwa Kata Kerja<sub>2</sub> terjadi setelah Kata Kerja<sub>1</sub> atau Kata Benda.",
+            examples: [
+              ["⑥ 新しいのを 買った あとで、なくした 時計が 見つかりました。", "Setelah membeli yang baru, ditemukan arloji yang hilang."],
+              ["⑦ 仕事の あとで、飲みに 行きませんか。", "Setelah selesai bekerja, bagaimana kalau pergi minum?"],
+            ],
+          },
+          {
+            text: "Jika dibandingkan dengan Kata Kerja Bentuk て から yang menyatakan arti yang sama (Lihat Pel.16), menggunakannya jika mengfokuskan hubungan waktu yang pra dan pasca. Kemudian berbeda dengan Kata Kerja Bentuk て から, Kata Kerja<sub>1</sub> atau Kata Benda tidak bernuansa sebagai dasar pikiran atau aksi persiapan utuk Kata Kerja<sub>2</sub>.",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja<sub>1</sub> Bentuk て<br>Kata Kerja<sub>1</sub>（Bentuk ない）ないで｝Kata Kerja<sub>2</sub>",
+        blocks: [
+          {
+            label: "1) Kata Kerja<sub>1</sub> menyatakan aksi dan keadaan yang disertai Kata Kerja<sub>2</sub>. Misalnya dalam contoh kalimat ⑧ dan ⑨, ketika aksi たべます dilakukan, dijelaskan untuk memakai atau tidaknya kecap asin. Aksi dari unsur pokok kalimat Kata Kerja<sub>1</sub> dan Kata Kerja<sub>2</sub> adalah sama.",
+            examples: [
+              ["⑧ しょうゆを つけて 食べます。", "Makan dibubuhkan kecap asin."],
+              ["⑨ しょうゆを つけないで 食べます。", "Makan tanpa kecap asin."],
+            ],
+          },
+          {
+            label: "2) Dalam Kata Kerja<sub>1</sub> (Bentuk ない) ないで Kata Kerja<sub>2</sub>, terdapat pula cara penggunaan untuk menyatakan memilih salah satunya (Kata Kerja<sub>2</sub>) di antara aksi yang tidak dapat dilakukan secara bersamaan (Kata Kerja<sub>1</sub>, Kata Kerja<sub>2</sub>).",
+            examples: [["⑩ 日曜日は どこも 行かないで、うちで ゆっくり 休みます。", "Hari Minggu tidak pergi ke mana-mana, tetapi beristirahat santai-santai di rumah."]],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 34",
+    focus: "Melakukan sesuatu sesuai contoh dengan とおりに, menyatakan urutan dengan あとで, dan keadaan penyerta dengan ～て／～ないで.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Syarat dan pengandaian",
