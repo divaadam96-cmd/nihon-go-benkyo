@@ -3847,31 +3847,80 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Bentuk kausatif",
+    title: "Sebab dan alasan",
     items: [
-          [
-            "Bentuk kausatif",
-            "Menyatakan membuat atau membiarkan seseorang melakukan tindakan.",
-            "母は 子どもを 勉強させます。",
-            "Ibu menyuruh anak belajar.",
-          ],
-          [
-            "Vさせてください",
-            "Meminta izin untuk melakukan sesuatu.",
-            "先に 帰らせてください。",
-            "Izinkan saya pulang lebih dulu.",
-          ],
-          [
-            "Pihak yang bertindak",
-            "Orang yang melakukan tindakan kausatif ditandai dengan を atau に sesuai jenis kata kerja.",
-            "先生は 学生に 発表させました。",
-            "Guru membuat siswa presentasi.",
-          ],
+      {
+        title: "～て（で）、～",
+        blocks: [
+          {
+            text: "Pada Pelajaran 16 dan Pelajaran 34 telah dipelajari pola kalimat mengenai～て（で）、～. Di sini kita belajar cara penggunaan untuk menyatakan sebab atau alasan yang dikarenakan oleh hal di bagian depan kalimat (bagian～て（で）), kemudian menyatakan akibat yang didatangkan oleh hal di bagian belakang kalimat yang disebabkan oleh hal di bagian depan kalimat. Pada bagian belakang tidak digunakan ekspresi keinginan atau keadaan.",
+          },
+          {
+            label: "1) <span class=\"grammar-pola-box\">Kata Kerja Bentuk て<br>Kata Kerja（Bentuk ない）なくて<br>Kata Sifat い（～い）→～くて<br>Kata Sifat な［な］→で｝、～</span>",
+            text: "Untuk hal di bagian belakang kalimat kebanyakan terletak ekspresi sebagai berikut;",
+          },
+          {
+            label: "(1) Kata Kerja atau Kata Sifat yang menyatakan perasaan: びっくりします, あんしんします, こまります, さびしい, うれしい, ざんねん［な］ dan lain-lainnya.",
+            examples: [
+              ["① ニュースを 聞いて、びっくりしました。", "(Saya) Kaget karena mendengar berita."],
+              ["② 家族に 会えなくて、寂しいです。", "(Saya) Kesepian karena tidak dapat bertemu dengan keluarga."],
+            ],
+          },
+          {
+            label: "(2) Kata Kerja atau ekspresi yang menyatakan potensial atau keadaan",
+            examples: [
+              ["③ 土曜日は 都合が 悪くて、行けません。", "(Saya) Tidak bisa pergi karena berhalangan pada hari Sabtu."],
+              ["④ 話が 複雑で、よく わかりませんでした。", "Ceritanya rumit maka kurang mengerti."],
+              ["⑤ 事故が あって、バスが 遅れて しまいました。", "Bus terlambat karena mengalami kecelakaan."],
+              ["⑥ 授業に 遅れて、先生に しかられました。", "(Saya) Dimarahi guru karena terlambat masuk kelas."],
+            ],
+            note: "[Perhatian] Jika menggunakan ekspresi yang mengandung keinginan pada hal di bagian belakang kalimat (keinginan, perintah, ajakan, permintaan), digunakan～から.",
+          },
+          {
+            examples: [
+              ["⑦ 危ないですから、機械に 触らないで ください。", "Jangan menyentuh mesin karena bahaya."],
+              ["×危なくて、機械に 触らないで ください。", ""],
+            ],
+          },
+          {
+            label: "2) <span class=\"grammar-pola-box\">Kata Benda で</span>",
+            text: "Kata Benda, kebanyakan menyatakan fenomena alam, kejadian atau peristiwa seperti じこ, じしん, かじ dan lain-lain.",
+            examples: [
+              ["⑧ 地震で ビルが 倒れました。", "Gedung roboh karena terjadi gempa bumi."],
+              ["⑨ 病気で 会社を 休みました。", "(Saya) Tidak masuk kerja karena sakit."],
+            ],
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ→～な｝ので、～",
+        blocks: [
+          {
+            text: "Sama halnya dengan～から yang telah dipelajari pada Pelajaran 9,～ので juga menyatakan sebab atau alasan. ので sebenarnya menyatakan hubungan sebab akibat, kemudian bersifat untuk menjelaskan akibat yang dituntun oleh sebab, maka cocok untuk memperlembut ekspresi alasan meminta izin atau pengertian.",
+            examples: [
+              ["⑩ 日本語が わからないので、英語で 話して いただけませんか。", "Karena tidak mengerti bahasa Jepang, tolong berbicara dalam bahasa Inggris."],
+              ["⑪ 用事が あるので、お先に 失礼します。", "Karena ada urusan, (saya) pamit duluan."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "途中で",
+        blocks: [
+          {
+            text: "とちゅうで bermakna suatu titik untuk berpindah ke suatu tempat. Digunakan bersama dengan Kata Kerja Bentuk Kamus atau Kata Benda の.",
+            examples: [
+              ["⑫ 実は 来る 途中で 事故が あって、バスが 遅れて しまったんです。", "Soalnya, di tengah perjalanan ada kecelakaan hingga bus terlambat."],
+              ["⑬ マラソンの 途中で 気分が 悪く なりました。", "Ketika sedang maraton, badan kurang enak."],
+            ],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 39",
+    focus: "Menyatakan sebab dan akibat dengan ～て（で）, Kata Benda で, dan ～ので, serta 途中で.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bentuk kehormatan",
