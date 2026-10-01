@@ -255,6 +255,9 @@ const materialFuriganaReadings = {
   // Pelajaran 49
   "中村": "なかむら", "研究室": "けんきゅうしつ", "召し上": "めしあ", "注意": "ちゅうい", "奥様": "おくさま", "下が": "さが",
   "忘れ物": "わすれもの",
+  // Pelajaran 50
+  "重": "おも", "私": "わたくし", "兄": "あに", "江戸東京博物館": "えどとうきょうはくぶつかん", "目": "め", "伺": "うかが",
+  "申": "もう", "参": "まい",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(

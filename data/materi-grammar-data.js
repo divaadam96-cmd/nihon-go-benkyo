@@ -4727,31 +4727,70 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Merangkum pengalaman belajar",
+    title: "Kata merendahkan diri",
     items: [
-          [
-            "～たら／～なら",
-            "Menyatakan pengandaian dan saran sesuai situasi.",
-            "時間が あったら、復習してください。",
-            "Jika ada waktu, silakan mengulang.",
-          ],
-          [
-            "普通形と思います",
-            "Menyatakan pendapat atau rencana pribadi.",
-            "これからも 勉強を 続けようと 思います。",
-            "Saya berpikir akan terus belajar.",
-          ],
-          [
-            "～ようにしています",
-            "Menyatakan kebiasaan yang diusahakan secara berkelanjutan.",
-            "毎日 日本語を 読むようにしています。",
-            "Saya membiasakan membaca bahasa Jepang setiap hari.",
-          ],
+      {
+        title: "謙譲語Ⅰ（Kata Merendahkan Diri I-Kata Kerja）",
+        noBox: true,
+        blocks: [
+          {
+            text: "Kata Merendahkan Diri I adalah ungkapan untuk menjelaskan dengan merendahkan aksi pembicara atau orang pihak pembicara demi menyatakan rasa hormat aksi pembicara atau orang yang pihak pembicara dituju kepada lawan bicara atau orang yang pihak lawan bicara.",
+          },
+          {
+            label: "1) お／ご～します",
+          },
+          {
+            label: "(1) お Kata Kerja（Kelompok I・II）（Bentuk ます）します",
+            examples: [
+              ["① 重そうですね。お持ちしましょうか。", "Kelihatannya berat, ya. Mari saya bawa!"],
+              ["② 私が 社長に スケジュールを お知らせします。", "Saya yang menyampaikan jadwal kepada direktur."],
+              ["③ 兄が 車で お送りします。", "Kakak laki-laki saya yang antarkan (Anda)."],
+            ],
+          },
+          {
+            text: "① menyatakan rasa hormat pembicara terhadap orang yang membawa (barang) (pemilik barang, dan untuk di sini adalah lawan bicara), ② terhadap “direktur” yang dituju aksi yang “memberitahu”, dan ③ terhadap orang yang diantar (untuk di sini adalah lawan bicara).<br>Dengan catatan bahwa bentuk ini tidak dapat dipakai untuk Kata Kerja yang suku kata pertamanya Bentuk ます seperti みます, dan います.",
+          },
+          {
+            label: "(2) ご Kata Kerja（Kelompok III）",
+            examples: [
+              ["④ 江戸東京博物館へ ご案内します。", "Mari (saya) antarkan (Anda) ke Museum Edo Tokyo!"],
+              ["⑤ きょうの 予定を ご説明します。", "(Saya) Menjelaskan jadwal hari ini."],
+            ],
+          },
+          {
+            text: "Bentuk ini digunakan untuk Kata Kerja Kelompok III. Selain contoh Kata Kerja di atas, terdapat しょうかいします, しょうたいします, そうだんします, れんらくします dan lain-lainya. Akan tetapi, sebagai luar contoh, でんわします, やくそくします dan lain-lainnya dibubuhkan お, tetapi tidak dibubuhkan ご.",
+          },
+          {
+            label: "2) Kata Merendahkan Diri Khusus (Lihat Buku Induk Pel.50 Latihan A3)",
+            text: "Beberapa Kata Kerja memiliki Kata Merendahkan Diri Khusus",
+            examples: [
+              ["⑥ 社長の 奥様に お目に かかりました。", "Bertemu dengan istri direktur."],
+              ["⑦ あしたは だれが 手伝いに 来て くれますか。<br>……私が 伺います。", "Besok siapa yang datang untuk membantu?<br>…… Saya yang datang."],
+            ],
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "謙譲語Ⅱ（Kata Merendahkan Diri II-Kata Kerja）",
+        noBox: true,
+        blocks: [
+          {
+            text: "Cara ungkapan untuk menjelaskan aksi pembicara atau orang pihak pembicara teradap lawan bicara secara halus.",
+            examples: [
+              ["⑧ 私は ミラーと 申します。", "Saya Miller."],
+              ["⑨ アメリカから 参りました。", "Datang dari Amerika Serikat."],
+            ],
+          },
+          {
+            text: "⑧ menggunakan もうします sebagai gantinya いいます, ⑨ menggunakan まいりました sebagai gantinya きました untuk menjelaskan perbuatan dirinya kepada lawan bicara secara halus.<br>Selain yang di atas, dalam Kata Merendahkan Diri terdapat いたします, (～て) おります dan lain-lainnya.",
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 50",
+    focus: "Memakai 謙譲語Ⅰ (お／ご～します dan Kata Merendahkan Diri Khusus) serta 謙譲語Ⅱ (申します, 参ります, いたします, おります).",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
 ];
 if (book2) {
