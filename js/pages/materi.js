@@ -225,6 +225,8 @@ const materialFuriganaReadings = {
   // Pelajaran 37
   "褒": "ほ", "頼": "たの", "世紀": "せいき", "発明": "はつめい", "世界中": "せかいじゅう", "麦": "むぎ",
   "造": "つく", "昔": "むかし", "木": "き", "原料": "げんりょう", "開か": "ひらか",
+  // Pelajaran 38
+  "育": "そだ", "牛乳": "ぎゅうにゅう", "初": "はじ", "村": "むら",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(

@@ -3746,31 +3746,105 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Nominalisasi dan indera",
+    title: "Nominalisasi dengan の",
     items: [
-          [
-            "V辞書形のは",
-            "Mengubah kegiatan menjadi topik kalimat.",
-            "日本語を 勉強するのは 楽しいです。",
-            "Belajar bahasa Jepang menyenangkan.",
-          ],
-          [
-            "V辞書形のが",
-            "Menyatakan kesukaan atau kemampuan terhadap kegiatan.",
-            "わたしは 歌うのが 好きです。",
-            "Saya suka bernyanyi.",
-          ],
-          [
-            "見えます／聞こえます",
-            "Menyatakan sesuatu terlihat atau terdengar secara alami.",
-            "ここから 海が 見えます。",
-            "Dari sini laut terlihat.",
-          ],
+      {
+        title: "の sebagai fungsi pembentukan Kata Benda",
+        noBox: true,
+        blocks: [
+          {
+            text: "の berfungsi sebagai membentukkan Kata Benda untuk bermacam-macam ekspresi. Kata Kerja, Kata Sifat dan Kata Benda yang disambung dengan の tidak dibentukkan sebagai bentuk sopan, tetapi bentuk biasa. Ekspresi yang terbentuk sebagai Kata Benda menjadi berbagai unsur seperti di bawah ini;",
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus のは Kata Sifat です",
+        blocks: [
+          {
+            examples: [
+              ["① テニスは おもしろいです。", "Tenis itu menarik."],
+              ["② テニスを するのは おもしろいです。", "Bermain tenis menarik."],
+              ["③ テニスを 見るのは おもしろいです。", "Menonton tenis menarik."],
+            ],
+          },
+          {
+            text: "Pola kalimat Kata Kerja Bentuk Kamus の sebagai topik yang ditandai dengan は. Kata Sifat yang sering digunakan untuk pola kalimat ini, yaitu むずかしい, やさしい, おもしろい, たのしい, たいへん［な］ dan lain-lain.<br>Dibandingkan dengan kalimat ① yang tidak memakai の, kalimat ② dan ③ yang memakai の secara kongkret menjelaskan hal bermain tenis dan hal menonton tenis adalah hal yang menarik.",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus のが Kata Sifat です",
+        blocks: [
+          {
+            examples: [
+              ["④ わたしは 花が 好きです。", "Saya suka bunga."],
+              ["⑤ わたしは 花を 育てるのが 好きです。", "Saya suka memelihara bunga."],
+              ["⑥ 東京の 人は 歩くのが 速いです。", "Orang di Tokyo berjalannya cepat."],
+            ],
+          },
+          {
+            text: "Kata Kerja Bentuk Kamus の yang menjadi sasaran daripada Kata Sifat. Kata Sifat yang sering digunakan pada pola kalimat ini adalah Kata Sifat yang menyatakan kesukaan, keterampilan, kemampuan, misalnya すき［な］, きらい［な］, じょうず［な］, へた［な］, はやい, おそい dan lain-lainnya.",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk Kamus のを 忘れました",
+        suffix: "lupa...",
+        blocks: [
+          {
+            examples: [
+              ["⑦ かぎを 忘れました。", "Lupa kunci."],
+              ["⑧ 牛乳を 買うのを 忘れました。", "Lupa membeli susu."],
+              ["⑨ 車の 窓を 閉めるのを 忘れました。", "Lupa menutup jendela mobil."],
+            ],
+          },
+          {
+            text: "Contoh Kata Kerja Bentuk Kamus の yang ditandai dengan を. Menjelaskan isi mengenai hal yang dilupakan secara kongkret.",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk Biasa のを 知って いますか",
+        suffix: "Apakah Anda tahu...?",
+        blocks: [
+          {
+            text: "Contoh Kata Kerja Bentuk Biasa の yang ditandai dengan を. Digunakan ketika menanyakan bahwa apakah tahu atau tidak mengenai isi kalimat secara kongkret.",
+            examples: [["⑩ 鈴木さんが 来月 結婚するのを 知って いますか。", "Apakah Anda tahu sdr. Suzuki akan menikah pada bulan depan?"]],
+            note: "[Perhatian] Perbedaan antara しりません dan しりませんでした:",
+          },
+          {
+            examples: [
+              ["⑪ 木村さんに 赤ちゃんが 生まれたのを 知って いますか。<br>……いいえ、知りませんでした。", "Apakah Anda tahu bahwa sdri. Kimura telah melahirkan?<br>…… Tidak, tidak tahu."],
+              ["⑫ ミラーさんの 住所を 知って いますか。<br>……いいえ、知りません。", "Apakah Anda tahu alamat sdr. Miller?<br>…… Tidak, tidak tahu."],
+            ],
+          },
+          {
+            text: "Pada ⑪, lawan bicara tidak memiliki informasi bahwa bayi telah lahir, tetapi dengan pertanyaan dia mendapatkan informasinya, maka menjawab dengan しりませんでした. Sedangankan pada ⑫, sebelum pertanyaan dan dengan pertanyaan pun, tidak mempunyai informasi maka menjawab dengan しりません.",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda<sub>1</sub>｝Bentuk Biasa ～だ→～な｝のは Kata Benda<sub>2</sub> です",
+        blocks: [
+          {
+            text: "Pola kalimat sebagai cara ungkapan untuk menekankan Kata Benda<sub>2</sub>.",
+            examples: [["⑬ 初めて 会ったのは いつですか。<br>……3年まえです。", "Kapan pertama kali bertemu?<br>…… Tiga tahun yang lalu."]],
+          },
+          {
+            text: "Pada ⑬ hal yang si pembicara ingin tanyai adalah hal mengenai pertama kalinya bertemu, dan secara khusus kapan waktunya.<br>Pola kalimat ini sering digunakan ketika mengoreksikan perkataan lawan bicara seperti ⑭.",
+            examples: [["⑭ バンコクで 生まれたんですか。<br>……いいえ、生まれたのは チェンマイです。", "Lahir di Bangkok?<br>…… Tidak, lahirnya di Chiang Mai."]],
+          },
+          {
+            text: "Unsur pokok pada kalimat sebelum～のは ditunjuk dengan が, tetapi bukan dengan は.",
+            examples: [["⑮ 父が 生まれたのは 北海道の 小さな 村です。", "Tempat ayah saya lahir adalah sebuah desa kecil di Hokkaido."]],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 38",
+    focus: "Membentuk Kata Benda dengan の: のは／のが Kata Sifat, のを 忘れました, のを 知って いますか, dan ～のは Kata Benda です untuk penekanan.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bentuk kausatif",
