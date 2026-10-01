@@ -3253,31 +3253,133 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Perintah dan larangan",
+    title: "Perintah, larangan, dan pesan",
     items: [
-          [
-            "Bentuk perintah",
-            "Dipakai pada keadaan darurat, olahraga, atau instruksi tegas; tidak cocok untuk percakapan biasa.",
-            "止まれ。",
-            "Berhenti.",
-          ],
-          [
-            "Bentuk larangan",
-            "Bentuk kamus + な menyatakan larangan tegas.",
-            "入るな。",
-            "Jangan masuk.",
-          ],
-          [
-            "～という意味です",
-            "Menjelaskan arti suatu kata, tanda, atau aturan.",
-            "「立入禁止」は 入るなという意味です。",
-            "“Dilarang masuk” berarti jangan masuk.",
-          ],
+      {
+        title: "Bentuk Imperatif・Bentuk Larangan",
+        noBox: true,
+        blocks: [
+          {
+            label: "1) Cara membuat Bentuk Imperatif (Lihat Buku Induk Pel.33 Latihan A1)",
+            text: "Kelompok I: Bunyi dari kolom い sebagai bunyi terakhir dari Bentuk ます diubah menjadi bunyi kolom え.<br>か<u>き</u>－ます → か<u>け</u>　　いそ<u>ぎ</u>－ます → いそ<u>げ</u><br>よ<u>み</u>－ます → よ<u>め</u>　　あそ<u>び</u>－ます → あそ<u>べ</u><br>Kelompok II: Dibubuhi ろ pada Bentuk ます.<br>たべ－ます → たべ－ろ　　み－ます → み－ろ<br>Pengecualian: くれ－ます → くれろ<br>Kelompok III: し－ます → しろ　　き－ます → こい",
+            note: "[Perhatian] Kata Kerja Keadaan seperti ある, できる, わかる dan sebagainya tidak memiliki Bentuk Imperatif.",
+          },
+          {
+            label: "2) Cara membuat Bentuk Larangan (Lihat Buku Induk Pel.33 Latihan A1)",
+            text: "Membubuhkan な pada Bentuk Kamus.",
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Cara pemakaian Bentuk Imperatif dan Bentuk Larangan",
+        noBox: true,
+        blocks: [
+          {
+            text: "Bentuk Imperatif dipakai jika memaksa suatu aksi, dan Bentuk Larangan dipakai jika memerintah untuk tidak melakukan suatu aksi kepada lawan biacara. Ini mempunyai nada paksaan serta kedengaran sangat keras sehingga adegan pemakaiannya sangat terbatas jika memakainya pada akhir kalimat. Kemudian yang menggunakannya secara lisan, kebanyakan kasus hanya terbatas bagi kaum pria. Bentuk Imperatif atau Bentuk Larangan yang dipakai pada akhir kalimat adalah kasus di bawah berikut ini;",
+          },
+          {
+            label: "1) Pria yang posisi atau usianya dari atas ke bawah, atau ayah memakainya kepada anak.",
+            examples: [
+              ["① 早く 寝ろ。", "Cepat tidur!"],
+              ["② 遅れるな。", "Jangan terlambat!"],
+            ],
+          },
+          {
+            label: "2) Dipakai antara sesama pria. Untuk memperlembut suasana perkataan, biasanya sering dibubuhkan Kata Bantu よ pada akhir kalimat.",
+            examples: [
+              ["③ あした うちへ 来い［よ］。", "Besok datanglah ke rumahku!"],
+              ["④ あまり 飲むな［よ］。", "Jangan minum terlalu banyak!"],
+            ],
+          },
+          {
+            label: "3) Ketika memberi petunjuk saat bekerja sama di pabrik, atau jika tidak ada peluang untuk cara ungkap terhadap lawan bicara karena saat darurat seperti kebakaran, gempa bumi. Untuk kasus itu pun, kebanyakan dipakai oleh pria yang posisi atau usianya atas saja.",
+            examples: [
+              ["⑤ 逃げろ。", "Berlarilah!"],
+              ["⑥ エレベーターを 使うな。", "Jangan gunakan tangga berjalan!"],
+            ],
+          },
+          {
+            label: "4) Ketika memberi perintah pada saat latihan berkelompok, atau mata pelajaran olah raga, kurikulum ektra di bidang kegiatan olah raga di sekolah.",
+            examples: [
+              ["⑦ 休め。", "Beristirahat!"],
+              ["⑧ 休むな。", "Jangan beristirahat!"],
+            ],
+          },
+          {
+            label: "5) Pengobaran semangat pada saat menonton pertandingan olah raga. Untuk kasus ini adakalanya wanita juga memakainya.",
+            examples: [
+              ["⑨ 頑張れ。", "Semangat!"],
+              ["⑩ 負けるな。", "Jangan kalah!/Jangan menyerah!"],
+            ],
+          },
+          {
+            label: "6) Jika mementingkan kesederhanaan seperti tanda lalu-lintas, slogan, atau mengharapkan efek yang tinggi.",
+            examples: [
+              ["⑪ 止まれ。", "Berhenti!"],
+              ["⑫ 入るな。", "Dilarang masuk!"],
+            ],
+            note: "[Perhatian] Dalam bentuk imperatif terdapat pula Kata Kerja (Bentuk ます) なさい. Bentuk ini dipakai oleh orang tua kepada anak, atau guru kepada murid, dan terasa bunyi yang lebih halus daripada Kata Kerja Bentuk Imperatif. Namun, tidak bisa digunakan untuk orang yang lebih tua.",
+          },
+          {
+            examples: [["⑬ 勉強しなさい。", "Belajarlah!"]],
+          },
+        ],
+      },
+      {
+        title: "～と 書いて あります／～と 読みます",
+        blocks: [
+          {
+            examples: [
+              ["⑭ あの 漢字は 何と 読むんですか。", "Huruf <i>Kanji</i> itu cara membacanya bagaimana?"],
+              ["⑮ あそこに「止まれ」と 書いて あります。", "Di sana bertuliskan “Berhenti”."],
+            ],
+          },
+          {
+            text: "と pada ⑭ dan ⑮ berfungsi sama dengan と dari～と いいます (Pel.21).",
+          },
+        ],
+      },
+      {
+        title: "X は Y と いう 意味です",
+        blocks: [
+          {
+            text: "Bentuk ini digunakan untuk mendefinisikan makna X. と いう berasal dari と いいます. Jika bertanya artinya, menggunakan Kata Tanya どういう.",
+            examples: [
+              ["⑯「立入禁止」は 入るなと いう 意味です。", "“<i>Tachiiri Kinshi</i>” berarti dilarang masuk."],
+              ["⑰ この マークは どういう 意味ですか。<br>……洗濯機で 洗えると いう 意味です。", "Apa maksud tanda ini?<br>…… Maksudnya dapat dicuci dengan mesin cuci."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "“Kalimat”<br>Bentuk Biasa｝と 言って いました",
+        blocks: [
+          {
+            text: "Jika mengutip perkataan orang ketiga menggunakan～と いいました (Pel.21), sedangkan jika menyampaikan perkataan orang ketiga menggunakan～と いって いました.",
+            examples: [
+              ["⑱ 田中さんは「あした 休みます」と 言って いました。", "Sdr. Tanaka berkata bahwa “Besok tidak masuk”."],
+              ["⑲ 田中さんは あした 休むと 言って いました。", "Katanya sdr. Tanaka besok tidak masuk."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "“Kalimat”<br>Bentuk Biasa｝と 伝えて いただけませんか",
+        blocks: [
+          {
+            text: "Memakai jika meminta pesan secara halus.",
+            examples: [
+              ["⑳ ワンさんに「あとで 電話を ください」と 伝えて いただけませんか。", "Tolong sampaikan kepada sdr. Wang bahwa “Minta ditelepon nanti”."],
+              ["㉑ すみませんが、渡辺さんに あしたの パーティーは 6時からだと 伝えて いただけませんか。", "Maaf; tolong sampaikan kepada sdri. Watanabe bahwa pesta besok dari pukul enam."],
+            ],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 33",
+    focus: "Memahami Bentuk Imperatif dan Bentuk Larangan, ～と 書いて あります／読みます, ～と いう 意味です, dan menyampaikan pesan orang lain.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Urutan dan perubahan",
