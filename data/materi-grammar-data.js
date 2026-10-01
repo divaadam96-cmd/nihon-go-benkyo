@@ -4452,31 +4452,80 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Pola pasif lanjutan",
+    title: "Kabar dan dugaan",
     items: [
-          [
-            "～と 言われます",
-            "Menyampaikan perkataan orang kepada pembicara.",
-            "先生に もっと 練習しなさいと 言われました。",
-            "Saya diberi tahu guru agar lebih banyak berlatih.",
-          ],
-          [
-            "～ように 言います",
-            "Menyampaikan instruksi atau permintaan tidak langsung.",
-            "母は 早く 寝るように 言いました。",
-            "Ibu berkata agar tidur lebih cepat.",
-          ],
-          [
-            "～と 伝えていただけませんか",
-            "Meminta seseorang menyampaikan pesan dengan sopan.",
-            "田中さんに 電話を くださいと 伝えていただけませんか。",
-            "Bisakah Anda menyampaikan kepada Tanaka agar menelepon saya?",
-          ],
+      {
+        title: "Bentuk Biasa そうです",
+        suffix: "Katanya～",
+        blocks: [
+          {
+            text: "Ekspresi untuk menyampaikan informasi yang diperoleh pembicara dari pihak lain tanpa menambahkan pendapat sendiri. Ketika informasi diberikan maka diletakkan di depan kalimat yang ditandai bentuk～に よると.",
+            examples: [
+              ["① 天気予報に よると、あしたは 寒く なるそうです。", "Menurut prakiraan cuaca, besok akan menjadi dingin."],
+              ["② クララさんは 子どもの とき、フランスに 住んで いたそうです。", "Katanya ketika sdri. Klara masih kecil, dia tinggal di Prancis."],
+              ["③ バリは とても きれいだそうです。", "Katanya Bali sangat indah."],
+            ],
+            note: "[Perhatian 1] Perlu hati-hati karena cara menyambung serta juga maknanya berbeda dengan～そうです yang telah dipelajari pada Pelajaran 43. Mari perbandingkan contoh di bawa ini;",
+          },
+          {
+            examples: [
+              ["④ 雨が 降りそうです。", "Rupanya mau hujan. (Pel.43)"],
+              ["⑤ 雨が 降るそうです。", "Katanya hujan turun."],
+              ["⑥ この 料理は おいしそうです。", "Kelihatannya masakan ini enak. (Pel.43)"],
+              ["⑦ この 料理は おいしいそうです。", "Katanya masakan ini enak."],
+            ],
+            note: "[Perhatian 2] Perbedaan antara～そうです (desas-desus) dan～と いって いました (Pel.33)",
+          },
+          {
+            examples: [
+              ["⑧ ミラーさんは あした 京都へ 行くそうです。", "Katanya sdr. Miller pergi ke Kyoto besok."],
+              ["⑨ ミラーさんは あした 京都へ 行くと 言って いました。", "Sdr. Miller berkata bahwa dia pergi ke Kyoto besok."],
+            ],
+          },
+          {
+            text: "Pada ⑨ sumber informasi adalah sdr. Miller, sedangkan untuk ⑧ adakalanya sumber informasinya bukan sdr. Miller.",
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な　Bentuk Biasa ～だ→～な<br>Kata Benda　Bentuk Biasa ～だ→～の｝ようです",
+        suffix: "Rupanya.../ Kelihatannya...",
+        blocks: [
+          {
+            text: "～ようです adalah ungkapan yang menyatakan hal yang diputuskan oleh si pembicara dari kondisi setempat. Adakalanya disertakan Kata Keterangan どうも yang berarti “tidak menyimpulkan secara pasti, tetapi”.",
+            examples: [
+              ["⑩ 人が 大勢 集まって いますね。<br>……事故のようですね。パトカーと 救急車が 来て いますよ。", "Orang berkumpul banyak, ya.<br>…… Rupanya kecelakaan. Mobil patrol dan ambulan sudah datang."],
+              ["⑪ せきも 出るし、頭も 痛い。どうも かぜを ひいたようだ。", "Berbatuk dan sakit kepala juga. Rupanya masuk angin."],
+            ],
+            note: "[Perhatian] Perbedaan antara～そうです (Pel.43) dan～ようです",
+          },
+          {
+            examples: [
+              ["⑫ ミラーさんは 忙しそうです。", "Sdr. Miller kelihatan sibuk."],
+              ["⑬ ミラーさんは 忙しいようです。", "Rupanya sdr. Miller sibuk."],
+            ],
+          },
+          {
+            text: "⑫ adalah cara ungkapan yang hanya menjelaskan kondisi luar dari sdr. Miller, sedangkan ⑬ menyatakan keputusan yang diputuskan oleh si pembicara yang berdasarkan dengan suatu kondisi (seperti “sudah dihubungi”, “tidak datang ke pesta yang telah direncanakan” dan lain-lainnya).",
+          },
+        ],
+      },
+      {
+        title: "声／音／におい／味が します",
+        blocks: [
+          {
+            examples: [["⑭ にぎやかな 声が しますね。", "Terdengar suara yang ramai, ya."]],
+          },
+          {
+            text: "Menyatakan hal yang dirasakan melalui organ panca indera seperti suara, bunyi, bau, rasa dan lain-lain.",
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 47",
+    focus: "Menyampaikan kabar dengan Bentuk Biasa そうです (～に よると), menduga dari kondisi dengan ～ようです, dan 声／音／におい／味が します.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Hubungan sebab dan tujuan",
