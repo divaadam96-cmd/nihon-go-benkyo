@@ -3923,31 +3923,82 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Bentuk kehormatan",
+    title: "Kalimat tanya di dalam kalimat",
     items: [
-          [
-            "お／ご～になります",
-            "Menyatakan tindakan orang yang dihormati dengan sopan.",
-            "先生は もう お帰りに なりました。",
-            "Guru sudah pulang.",
-          ],
-          [
-            "お／ご～ください",
-            "Meminta lawan bicara melakukan sesuatu dengan hormat.",
-            "こちらに お名前を お書きください。",
-            "Silakan tulis nama Anda di sini.",
-          ],
-          [
-            "いらっしゃいます",
-            "Bentuk hormat untuk 行きます、来ます、います.",
-            "社長は 会議室に いらっしゃいます。",
-            "Presiden direktur ada di ruang rapat.",
-          ],
+      {
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ｝か、～",
+        blocks: [
+          {
+            text: "Pola kalimat ini digunakan jika Kalimat Tanya yang mengandung Kata Tanya dimasukkan ke dalam kalimat lain.",
+            examples: [
+              ["① JL107便は 何時に 到着するか、調べて ください。", "Tolong dicek, pukul berapa kedatangan penerbangan dengan nomor JL107!"],
+              ["② 結婚の お祝いは 何が いいか、話して います。", "Sedang membicarakan tentang hadiah apa yang cocok untuk pernikahan."],
+              ["③ わたしたちが 初めて 会ったのは いつか、覚えて いますか。", "Apakah (Anda) masih ingat kapan pertama kali kita bertemu?"],
+            ],
+          },
+          {
+            text: "Dengan catatan bahwa Kata Tanya bukan Kata Benda, maka bentuknya menjadi Kata Tanya か seperti ③.",
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ｝か どうか、～",
+        blocks: [
+          {
+            text: "Pola kalimat ini digunakan jika Kalimat Tanya yang tidak mengandung Kata Tanya dimasukkan ke dalam kalimat. Berhati-hatilah karena di belakang Bentuk Biasa か perlu どうか.",
+            examples: [
+              ["④ 忘年会に 出席するか どうか、20日までに 返事を ください。", "Tolong berikan jawaban sampai dengan tanggal 20 bahwa apakah bisa hadir pada pesta akhir tahun atau tidak."],
+              ["⑤ その 話は ほんとうか どうか、わかりません。", "(Saya) Kurang tahu apakah cerita itu benar atau tidak."],
+              ["⑥ まちがいが ないか どうか、調べて ください。", "Tolong diperiksa apakah ada kesalahan tidak!"],
+            ],
+          },
+          {
+            text: "Pada ⑥, bukan まちがいが あるか どうか, melainkan まちがいが ないか どうか karena si pembicara ingin memastikan hal yang まちがいが ない.",
+          },
+        ],
+      },
+      {
+        title: "Kata Kerja Bentuk て みます",
+        blocks: [
+          {
+            text: "Pola Kalimat ini menyatakan arti melakukan aksi sebagai percobaan.",
+            examples: [
+              ["⑦ もう 一度 考えて みます。", "Coba berpikir sekali lagi."],
+              ["⑧ この ズボンを はいて みても いいですか。", "Bolehkah mencoba memakai celana ini?"],
+              ["⑨ 北海道へ 行って みたいです。", "(Saya) Ingin pergi ke Hokkaido."],
+            ],
+          },
+          {
+            text: "Seperti ⑨, kalau memakai bentuk～て みたい, dapat menyampaikan harapan diri sendiri secara lunak atau secara tidak langsung daripada～たい.",
+          },
+        ],
+      },
+      {
+        title: "Kata Sifat い（～い）→～さ",
+        blocks: [
+          {
+            text: "Kata Sifat い dengan mengubah い ke さ pada akhir kata, dapat membuat Kata Benda.<br>Contoh: 高い → 高さ　　長い → 長さ　　速い → 速さ",
+            examples: [
+              ["⑩ 山の 高さは どうやって 測るか、知って いますか。", "Apakah (Anda) tahu bagaimana caranya untuk mengukur tingginya gunung?"],
+              ["⑪ 新しい 橋の 長さは 3,911 メートルです。", "Panjangnya jembatan baru 3.911 meter."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "～でしょうか",
+        blocks: [
+          {
+            text: "Kalau～でしょう (Pel.32) digunakan pada Kalimat Pertanyaan seperti ⑫, ungkapannya tidak meminta jawaban yang pasti, maka dapat memberi kesan yang lembut terhadap lawan bicara.",
+            examples: [["⑫ ハンスは 学校で どうでしょうか。", "Bagaimana Hans di sekolah?"]],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 40",
+    focus: "Memasukkan kalimat tanya ke dalam kalimat dengan ～か dan ～か どうか, mencoba dengan ～て みます, Kata Sifat い→～さ, dan ～でしょうか.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bahasa merendahkan diri",
