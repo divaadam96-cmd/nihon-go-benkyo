@@ -4617,31 +4617,114 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Bahasa hormat lanjutan",
+    title: "Kata hormat",
     items: [
-          [
-            "お／ご～になります",
-            "Menyatakan tindakan orang yang dihormati.",
-            "部長は もう お帰りに なりました。",
-            "Kepala bagian sudah pulang.",
-          ],
-          [
-            "お／ご～ください",
-            "Meminta dengan sangat sopan.",
-            "こちらを ご覧ください。",
-            "Silakan lihat ini.",
-          ],
-          [
-            "お／ご～します",
-            "Merendahkan tindakan pembicara untuk menghormati lawan bicara.",
-            "荷物を お持ちします。",
-            "Saya akan membawakan barang Anda.",
-          ],
+      {
+        title: "敬語（Kata Halus）",
+        noBox: true,
+        blocks: [
+          {
+            text: "けいご adalah ungkapan untuk menyatakan rasa hormat terhadap lawan bicara atau orang yang menjadi topik. Memakai atau tidaknya Kata Halus dipastikan dengan lawan bicara, orang yang menjadi topik, atau adegan. Pada prinsipnya, digunakan (1) ketika berbicara dengan orang yang lebih tua, orang yang tidak kenal, atau orang yang kurang akrab, (2) berbicara tentang orang yang lebih tua, (3) pada adegan formal dan lain-lainnya. Pada Pelajaran 49 dari buku ini, mempelajari そんけいご (Kata Hormat) dan pada Pelajaran 50 mempelajari けんじょうご (Kata Merendahkan Diri).",
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "尊敬語（Kata Hormat）",
+        noBox: true,
+        blocks: [
+          {
+            text: "Kata Hormat menyatakan rasa hormat terhadap aksi atau keadaan dari unsur pokok.",
+          },
+          {
+            label: "1) Kata Kerja",
+            text: "Menyatakan rasa hormat terhadap orang yang melakukan aksi itu.",
+          },
+          {
+            label: "(1) Kata Kerja Hormat (Lihat Buku Induk Pel.49 Latihan A1)",
+            text: "Sama bentuknya dengan Kata Kerja Pasif, dikonjugasi sebagai Kata Kerja Kelompok II.<br>Contoh: かかれます　かかれる　かかれ(ない)　かかれて",
+            examples: [
+              ["① 中村さんは 7時に 来られます。", "Sdri. Nakamura akan datang pada pukul tujuh."],
+              ["② お酒を やめられたんですか。", "Apakah sudah berhenti mimun sake?"],
+            ],
+          },
+          {
+            label: "(2) お Kata Kerja（Bentuk ます）に なります",
+            text: "Bentuk ini pada umumnya dianggap lebih halus daripada Kata Kerja Hormat pada (1). Tidak terdapat pada Kata Kerja yang terdiri dari satu suku kata yang berbentuk ます seperti みます, ねます dan lain-lain serta Kata Kerja Kelompok III. Dengan catatan bahwa apabila Kata Kerja yang terdapat Kata Hormat Khusus yang diangkat pada (3) di bawah, maka dibunakan itu.",
+            examples: [["③ 社長は もう お帰りに なりました。", "Direktur sudah pulang."]],
+          },
+          {
+            label: "(3) Kata Hormat Khusus (Lihat Buku Induk Pel.49 Latihan A4)",
+            text: "Beberapa Kata Kerja memiliki Kata Hormat Khusus. Menyatakan rasa hormat setingkat (2).",
+            examples: [
+              ["④ ワット先生は 研究室に いらっしゃいます。", "Apakah Bapak Watt ada di laboratori?"],
+              ["⑤ どうぞ 召し上がって ください。", "Silakan dimakan!"],
+            ],
+            note: "[Perhatian 1] いらっしゃいます (Bentuk Kamus: いらっしゃる), なさいます (Bentuk Kamus: なさる), くださいます (Bentuk Kamus: くださる), おっしゃいます (Bentuk Kamus: おっしゃる) adalah Kata Kerja Kelompok I, tetapi perlu hati-hati untuk konjugasi.<br>Contoh: いらっしゃ<u>い</u>ます (×いらっしゃ<u>り</u>ます)　いらっしゃる<br>　　　　いらっしゃ<u>ら</u>ない　いらっしゃった　いらっしゃらなかった",
+          },
+          {
+            label: "(4) お／ご～ ください",
+            text: "Pola kalimat ini adalah bentuk hormat dari Kata Kerja Bentuk て ください (Lihat Pel.14). Kata Kerja Kelompok I dan II menjadi bentuk お Kata Kerja (Bentuk ます) ください, dan Kata Kerja Kelompok III menjadi bentuk ご Kata Benda ください.",
+            examples: [
+              ["⑥ どうぞ お入り ください。", "Silakan masuk!"],
+              ["⑦ 忘れ物に ご注意 ください。", "Hati-hati barang bawaan Anda agar tidak ketinggalan!"],
+            ],
+          },
+          {
+            text: "Kata Kerja yang suku kata pertamanya Bentuk ます seperti みます dan ねます tidak menggunakan bentuk ini. Untuk Kata Kerja yang memiliki Kata Hormat Khusus yang terdapat pada (3) menggunakan Bentuk て ください dari Kata Hormat Khusus.",
+            examples: [["⑧ また いらっしゃって ください。", "Silakan datang lagi!"]],
+          },
+          {
+            label: "2) Kata Benda, Kata Sifat, Kata Keterangan",
+            text: "Membubuhkan お atau ご pada Kata Benda, Kata Sifat dan Kata Keterangan untuk menyatakan rasa hormat kepada pemilik Kata Benda tersebut, atau orang yang sedang dalam keadaan tersebut.<br>Antara お dan ご, yang mana yang harus dibubuhkan itu ditentukan dari setiap kata. pada umumnya, kebanyakan お dibubuhkan pada kata asli bahasa Jepang, sedangkan ご dibubuhkan pada kata yang berasal dari bahasa Tionghua.",
+            table: {
+              headers: ["Contoh untuk kata yang dibubuhkan お", "Contoh untuk kata yang dibubuhkan ご"],
+              rows: [
+                ["Kata Benda", "お国, お名前, お仕事, お約束, お電話", "ご家族, ご意見, ご旅行"],
+                ["Kata Sifat な", "お元気, お上手, お暇", "ご熱心, ご親切"],
+                ["Kata Sifat い", "お忙しい, お若い", ""],
+                ["Kata Keterangan", "", "ご自由に"],
+              ],
+            },
+            note: "[Perhatian 2] Jika memakai けいご, tidak hanya untuk Kata Kerja saja, tetapi kebanyakan kata yang dipakai dalam kalimat itu juga dipakai Kata Hormat.",
+          },
+          {
+            examples: [["⑨ 部長の <u>奥様</u>も <u>ごいっしょに</u> ゴルフに <u>行かれます</u>。", "Istri kepala bagian juga bersama-sama pergi ke golf."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Halus dan Bentuk Kalimat",
+        noBox: true,
+        blocks: [
+          {
+            text: "Menyatakan rasa hormat terhadap orang yang menjadi topik, tetapi apabila tidak perlu menyatakan rasa hormat terhadap lawan bicara, maka seperti ⑩ けいご digunakan dalam kalimat Bentuk Biasa.",
+            examples: [["⑩ 部長は 何時に いらっしゃる？", "Kepala bagian datang pada pukul berapa?"]],
+          },
+        ],
+      },
+      {
+        title: "～まして",
+        blocks: [
+          {
+            text: "Jika ingin berbicara dengan halus, adakalanya Kata Kerja Bentuk て diubah menjadi Kata Kerja (Bentuk ます) まして.",
+            examples: [["⑪ ハンスが ゆうべ 熱を 出しまして、けさも まだ 下がらないんです。", "Tadi malam Hans deman, dan pagi ini demam belum turun juga."]],
+          },
+        ],
+      },
+      {
+        title: "～ますので",
+        blocks: [
+          {
+            text: "Apabila Bentuk Biasa ので ingin dijadikan lebih halus, adakalanya dipakai Bentuk Sopan ので.",
+            examples: [["⑫ きょうは 学校を 休ませますので、先生に よろしく お伝え ください。", "Tolong sampaikan salam kepada guru karena hari ini saya menyuruh anak saya untuk tidak masu sekolah!"]],
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 49",
+    focus: "Memahami 敬語 dan memakai 尊敬語: Kata Kerja Hormat, お～に なります, Kata Hormat Khusus, お／ご～ください, お／ご pada kata benda dan sifat, serta ～まして dan ～ますので.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Merangkum pengalaman belajar",

@@ -252,6 +252,9 @@ const materialFuriganaReadings = {
   "大勢": "おおぜい", "集": "あつ", "救急車": "きゅうきゅうしゃ", "声": "こえ", "味": "あじ",
   // Pelajaran 48
   "自由": "じゆう", "右側": "みぎがわ", "準備": "じゅんび", "生徒": "せいと", "説明": "せつめい", "結婚式": "けっこんしき",
+  // Pelajaran 49
+  "中村": "なかむら", "研究室": "けんきゅうしつ", "召し上": "めしあ", "注意": "ちゅうい", "奥様": "おくさま", "下が": "さが",
+  "忘れ物": "わすれもの",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
@@ -292,7 +295,7 @@ function resolveCounterReading(word, text, cursor) {
   }
   if (word === "来") {
     const next = text[cursor + word.length];
-    if (next === "な" || next === "い") return "こ";
+    if (next === "な" || next === "い" || next === "ら") return "こ";
     if (next === "る" || next === "れ") return "く";
   }
   if (word === "回" && text[cursor + word.length] === "す") return "まわ";
