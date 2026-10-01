@@ -12,112 +12,13 @@ function initPage() {
 // === Pasang konten pelajaran Buku 1 & 2 (data ada di data/materi-grammar-data.js) ===
 installMateriGrammarContent();
 
-// === Mini-quiz di akhir tiap pelajaran ===
-const enrichLessons = (root, offset) =>
-  root.querySelectorAll(".html-lesson").forEach((lesson, i) => {
-    if (offset === 0 && i === 0) return;
-    if (lesson.querySelector(".lesson-quiz")) return;
-    const body = lesson.querySelector(".html-content");
-    if (!body) return;
-    const pattern =
-      body
-        .querySelector(".grammar-example")
-        ?.textContent.split("Contoh:")[0]
-        .trim() || "Pola pelajaran";
-    const uid = `practice-${offset + i}`;
-    body.insertAdjacentHTML(
-      "beforeend",
-      `<div class="grammar-point"><h3>Ringkasan praktik</h3><table class="pattern-table"><thead><tr><th>Langkah</th><th>Praktik</th></tr></thead><tbody><tr><td>Baca</td><td>Baca pola dan contoh dengan suara keras.</td></tr><tr><td>Ubah</td><td>Ganti subjek, waktu, atau tempat pada contoh dengan informasi Anda sendiri.</td></tr><tr><td>Buat</td><td>Tulis dua kalimat baru menggunakan pola pelajaran ini.</td></tr></tbody></table></div><div class="grammar-point"><h3>Dialog latihan</h3><div class="mini-dialog"><b>A:</b> この 文を 読みましたか。<br><b>B:</b> はい、読みました。もう一度 練習します。<br><br><small>Arti: Apakah kamu sudah membaca kalimat ini? — Ya, sudah. Saya akan berlatih sekali lagi.</small></div></div><div class="lesson-quiz"><b>Latihan cepat</b><p>Pilih kebiasaan belajar yang tepat setelah mempelajari pola baru.</p><button class="secondary" data-practice="wrong">Langsung melupakan contohnya</button><button class="secondary" data-practice="correct">Membuat kalimat sendiri</button><button class="secondary" data-practice="wrong">Tidak membaca ulang</button><div class="quiz-feedback" id="${uid}"></div></div>`,
-    );
-    body.querySelectorAll("[data-practice]").forEach(
-      (b) =>
-        (b.onclick = () => {
-          document.getElementById(uid).textContent =
-            b.dataset.practice === "correct"
-              ? "Benar! Membuat kalimat sendiri membantu memahami pola dalam konteks."
-              : "Coba lagi. Setelah belajar pola, buat contoh kalimat sendiri agar lebih melekat.";
-        }),
-    );
-  });
-enrichLessons(document.getElementById("materials"), 0);
-enrichLessons(document.getElementById("book2"), 100);
-/* Kuis disesuaikan dengan fokus tata bahasa setiap pelajaran. */
-/* Legacy Unicode quiz block is retained only as a record and is not executed.
-    const lessonQuizzes={
-      1:['Lengkapi: わたし は 学生 ___。',['です','を','に'],0,'Benar. です digunakan untuk menutup kalimat nominal sopan.'],
-      2:['Manakah kata tunjuk untuk benda yang dekat dengan pembicara?',['これ','それ','あれ'],0,'Benar. これ berarti “ini” dan digunakan untuk benda dekat pembicara.'],
-      3:['Lengkapi: トイレ は ___ ですか。',['どこ','だれ','いつ'],0,'Benar. どこ digunakan untuk menanyakan lokasi.'],
-      4:['Partikel yang menandai waktu spesifik adalah …',['に','を','と'],0,'Benar. に dipakai dengan waktu spesifik, misalnya 7時に.'],
-      5:['Lengkapi: 電車 ___ 東京へ 行きます。',['で','を','が'],0,'Benar. で menandai sarana/alat transportasi.'],
-      6:['Lengkapi: 図書館 ___ 本を 読みます。',['で','に','と'],0,'Benar. で menunjukkan tempat suatu kegiatan berlangsung.'],
-      7:['Pola 友だちに プレゼントを あげます berarti …',['Memberi hadiah kepada teman','Menerima hadiah dari teman','Pergi bersama teman'],0,'Benar. あげます berarti memberi kepada orang lain.'],
-      8:['Untuk menyatakan “tidak terlalu mahal”, bentuk yang tepat adalah …',['あまり 高くないです','とても 高いです','高い ですか'],0,'Benar. あまり digunakan bersama bentuk negatif.'],
-      9:['Partikel yang lazim dipakai dengan 好きです adalah …',['が','を','へ'],0,'Benar. Objek kesukaan umumnya memakai が.'],
-      10:['Kata kerja untuk menyatakan “ada” bagi manusia/hewan adalah …',['います','あります','です'],0,'Benar. います digunakan untuk manusia dan hewan.'],
-      11:['Lengkapi: わたし は 一週間に 二回 日本語を 勉強します。Maknanya adalah …',['Belajar dua kali seminggu','Belajar selama dua minggu','Belajar satu kali setiap hari'],0,'Benar. ～に二回 menunjukkan frekuensi dua kali dalam periode tersebut.'],
-      12:['Bentuk lampau dari 元気です adalah …',['元気でした','元気ます','元気て'],0,'Benar. Kata benda/kata sifat-na memakai でした dalam bentuk lampau sopan.'],
-      13:['Lengkapi: 日本へ 行き ___ です。',['たい','ます','ない'],0,'Benar. Bentuk masu-stem + たい menyatakan keinginan melakukan tindakan.'],
-      14:['Bentuk sopan untuk meminta “tolong baca” adalah …',['読んで ください','読みます か','読まないで'],0,'Benar. Bentuk て + ください digunakan untuk permintaan sopan.'],
-      15:['Pola 写真を 撮っても いいですか berarti …',['Bolehkah saya memotret?','Jangan memotret.','Saya sedang memotret.'],0,'Benar. ～てもいいですか digunakan untuk meminta izin.'],
-      16:['Untuk menyambungkan dua tindakan “makan lalu belajar”, gunakan …',['食べて、勉強します','食べない、勉強します','食べた、勉強します'],0,'Benar. Bentuk て dapat menyambungkan urutan tindakan.'],
-      17:['Pola ここで 写真を 撮らないでください berarti …',['Tolong jangan memotret di sini','Silakan memotret di sini','Bolehkah memotret di sini?'],0,'Benar. Bentuk ないでください adalah permintaan agar tidak melakukan sesuatu.'],
-      18:['Pola 日本語を 話すことが できます berarti …',['Bisa berbicara bahasa Jepang','Ingin berbicara bahasa Jepang','Sedang berbicara bahasa Jepang'],0,'Benar. Bentuk kamus + ことができます menyatakan kemampuan.'],
-      19:['Pola 富士山に 登ったことが あります berarti …',['Pernah mendaki Gunung Fuji','Sedang mendaki Gunung Fuji','Ingin mendaki Gunung Fuji'],0,'Benar. ～たことがあります menyatakan pengalaman.'],
-      20:['Gaya biasa dari 食べます adalah …',['食べる','食べて','食べたい'],0,'Benar. 食べる adalah bentuk biasa/kamus positif.'],
-      21:['Lengkapi: 日本語は おもしろいと ___。',['思います','します','います'],0,'Benar. ～と思います dipakai untuk menyatakan pendapat.'],
-      22:['Pada frasa わたしが 昨日 買った 本, bagian yang menerangkan 本 adalah …',['わたしが 昨日 買った','本','が'],0,'Benar. Klausa biasa diletakkan sebelum kata benda yang diterangkan.'],
-      23:['Lengkapi: 家に 帰る ___、手を 洗います。',['と','を','が'],0,'Benar. ～と dapat menunjukkan hasil yang terjadi secara alami/setiap kali.'],
-      24:['Pola 友だちが 荷物を 持って くれました berarti …',['Teman membawakan barang untuk saya','Saya membawakan barang untuk teman','Saya menerima barang dari teman'],0,'Benar. ～てくれました menyatakan orang lain melakukan kebaikan untuk pembicara.'],
-      25:['Lengkapi: 時間が あっ ___、映画を 見ます。',['たら','て','で'],0,'Benar. ～たら menyatakan “jika/ketika” syarat terpenuhi.'],
-      26:['Pola どうして 遅れたんですか berarti …',['Mengapa kamu terlambat?','Kapan kamu terlambat?','Di mana kamu terlambat?'],0,'Benar. ～んですか meminta penjelasan atau alasan.'],
-      27:['Lengkapi: 病院へ 行った ほうが ___ です。',['いい','たい','ある'],0,'Benar. ～たほうがいいです dipakai untuk memberi saran.'],
-      28:['Pola 雨が 降ったら、行きません berarti …',['Jika hujan, saya tidak pergi','Karena hujan, saya pergi','Saya ingin hujan'],0,'Benar. ～たら menyatakan syarat.'],
-      29:['Pola 窓が 閉まっています menjelaskan …',['Jendelanya dalam keadaan tertutup','Seseorang sedang menutup jendela','Tolong tutup jendela'],0,'Benar. ～ています dapat menunjukkan keadaan hasil suatu tindakan.'],
-      30:['Pola 切符を 買っておきます berarti …',['Membeli tiket sebagai persiapan','Sedang membeli tiket','Tidak jadi membeli tiket'],0,'Benar. ～ておきます menyatakan persiapan sebelumnya.'],
-      31:['Pola 来年 日本へ 行くつもりです berarti …',['Berniat pergi ke Jepang tahun depan','Sudah pergi ke Jepang tahun depan','Disuruh pergi ke Jepang tahun depan'],0,'Benar. ～つもりです menyatakan niat pribadi.'],
-      32:['Saran “sebaiknya jangan tidur terlalu larut” memakai …',['遅くまで 起きないほうがいいです','遅くまで 起きたいです','遅くまで 起きています'],0,'Benar. Bentuk ないほうがいいです digunakan untuk saran agar tidak melakukan sesuatu.'],
-      33:['Bentuk larangan tegas dari 入る adalah …',['入るな','入ってください','入ります'],0,'Benar. Bentuk kamus + な menyatakan larangan tegas.'],
-      34:['Lengkapi: ご飯を 食べた ___、勉強します。',['あとで','から','まで'],0,'Benar. ～たあとで berarti “setelah melakukan …”.'],
-      35:['Pola 時間が あれば、行きます berarti …',['Jika ada waktu, saya pergi','Ketika pergi, ada waktu','Saya ingin punya waktu'],0,'Benar. ～ば adalah pola syarat/pengandaian.'],
-      36:['Pola 日本語が 話せるように 毎日 練習します menyatakan …',['Berlatih agar mampu berbicara Jepang','Berlatih karena sudah bisa Jepang','Tidak mau berlatih Jepang'],0,'Benar. ～ように menunjukkan tujuan terkait kemampuan/keadaan.'],
-      37:['Pola わたしは 先生に ほめられました berarti …',['Saya dipuji oleh guru','Saya memuji guru','Guru sedang dipuji'],0,'Benar. ～られました adalah bentuk pasif.'],
-      38:['Pola 日本語を 勉強するのは 楽しいです berarti …',['Belajar Jepang itu menyenangkan','Saya sedang belajar Jepang','Tolong belajar Jepang'],0,'Benar. Bentuk kamus + のは menominalkan kegiatan.'],
-      39:['Pola 母は 子どもを 勉強させます berarti …',['Ibu menyuruh/membiarkan anak belajar','Anak mengajari ibu','Ibu sedang belajar'],0,'Benar. Bentuk kausatif menyatakan membuat atau membiarkan orang bertindak.'],
-      40:['Bentuk hormat yang tepat untuk meminta seseorang menulis adalah …',['お名前を お書きください','名前を 書きます','名前を 書きたいです'],0,'Benar. お～ください dipakai saat meminta tindakan dengan hormat.'],
-      41:['Ungkapan rendah hati untuk “saya akan melihat” adalah …',['拝見します','見ます','見られます'],0,'Benar. 拝見します adalah bentuk rendah hati dari 見ます.'],
-      42:['Pola 日本で 働くために 日本語を 勉強します berarti …',['Belajar Jepang untuk bekerja di Jepang','Belajar Jepang sambil bekerja','Belajar Jepang setelah bekerja'],0,'Benar. ～ために menunjukkan tujuan yang disengaja.'],
-      43:['Pola だんだん 暑く なってきました berarti …',['Lambat-laun mulai menjadi panas','Dari dulu selalu panas','Akan langsung menjadi panas'],0,'Benar. ～てきました menunjukkan perubahan yang mendekat hingga kini.'],
-      44:['Pola 天気予報に よると、明日は 雨だそうです berarti …',['Menurut ramalan cuaca, besok katanya hujan','Saya ingin hujan besok','Besok saya melihat hujan'],0,'Benar. ～そうです menyampaikan informasi yang didengar.'],
-      45:['Pola 雨が 降っても、行きます berarti …',['Walaupun hujan, saya pergi','Jika hujan, saya tidak pergi','Karena hujan, saya pergi'],0,'Benar. ～ても menyatakan hasil tetap terjadi walaupun ada kondisi.'],
-      46:['Pola 寝ている間に、雨が 降りました berarti …',['Hujan turun saat saya tidur','Saya tidur karena hujan','Saya ingin tidur saat hujan'],0,'Benar. ～間に menunjukkan kejadian yang terjadi selama rentang kegiatan lain.'],
-      47:['Pola 先生に もっと 練習するように 言われました berarti …',['Saya diberi tahu guru agar lebih banyak berlatih','Saya menyuruh guru berlatih','Guru sedang berlatih'],0,'Benar. ～ように言われました menyampaikan instruksi tidak langsung.'],
-      48:['Pola よく 見えるように、前に 座ります berarti …',['Duduk di depan agar dapat melihat jelas','Duduk di depan karena sudah melihat','Duduk di depan setelah melihat'],0,'Benar. ～ように menyatakan tujuan kemampuan/keadaan.'],
-      49:['Bentuk rendah hati yang tepat untuk “saya akan membawa” adalah …',['お持ちします','持ちます','持たれます'],0,'Benar. お持ちします adalah bentuk rendah hati dari 持っていきます/持ってきます.'],
-      50:['Pola 毎日 日本語を 読むようにしています berarti …',['Saya mengusahakan kebiasaan membaca Jepang setiap hari','Saya sedang membaca Jepang sekarang','Saya ingin membaca Jepang sekali'],0,'Benar. ～ようにしています menyatakan kebiasaan yang diusahakan berkelanjutan.']
-    };
-    document.querySelectorAll('.html-lesson').forEach(lesson=>{
-      const num=Number((lesson.id.match(/lesson-(\d+)/)||[])[1]);
-      const data=lessonQuizzes[num]; if(!data)return;
-      const quiz=lesson.querySelector('.lesson-quiz'); if(!quiz)return;
-      const feedbackId=`lesson-feedback-${num}`;
-      quiz.innerHTML=`<b>Latihan cepat Pelajaran ${num}</b><p>${data[0]}</p>${data[1].map((choice,i)=>`<button class="secondary" data-answer="${i}">${choice}</button>`).join('')}<div class="quiz-feedback" id="${feedbackId}"></div>`;
-      quiz.querySelectorAll('[data-answer]').forEach(button=>button.onclick=()=>{
-        const correct=Number(button.dataset.answer)===data[2];
-        quiz.querySelectorAll('[data-answer]').forEach((item,i)=>{item.disabled=true;if(i===data[2])item.classList.add('correct');});
-        if(!correct)button.classList.add('wrong');
-        document.getElementById(feedbackId).textContent=correct?data[3]:`Belum tepat. ${data[3]}`;
-      });
-    });
-    */
-
-simplifyLessonMaterials();
 structureGrammarPoints();
 
 // === Furigana ===
 /* Furigana kontekstual untuk contoh dan latihan materi Buku 1-2. */
 const materialFuriganaReadings = {
   "立入禁止": "たちいりきんし", "天気予報": "てんきよほう", "電話番号": "でんわばんごう",
-  "一週間": "いっしゅうかん", "会議室": "かいぎしつ", "会社員": "かいしゃいん",
+  "会社員": "かいしゃいん",
   "図書館": "としょかん", "説明書": "せつめいしょ", "日本語": "にほんご",
   "郵便局": "ゆうびんきょく", "富士山": "ふじさん", "月曜日": "げつようび",
   "大阪": "おおさか", "昼休み": "ひるやすみ", "大変": "たいへん",
@@ -132,8 +33,8 @@ const materialFuriganaReadings = {
   "沖縄": "おきなわ", "美術": "びじゅつ", "注文": "ちゅうもん", "失礼": "しつれい",
   "禁煙": "きんえん", "結婚": "けっこん", "市役所": "しやくしょ", "住所": "じゅうしょ",
   "天気": "てんき", "留学生": "りゅうがくせい", "主婦": "しゅふ", "梅田": "うめだ", "富士": "ふじ",
-  "土曜日": "どようび", "日曜日": "にちようび", "普通形": "ふつうけい",
-  "形容詞": "けいようし", "事務所": "じむしょ", "辞書形": "じしょけい", "辞書": "じしょ",
+  "土曜日": "どようび", "日曜日": "にちようび",
+  "事務所": "じむしょ", "辞書": "じしょ",
   "心配": "しんぱい", "食堂": "しょくどう", "趣味": "しゅみ", "食事": "しょくじ", "去年": "きょねん",
   "今晩": "こんばん", "相撲": "すもう", "物価": "ぶっか", "空港": "くうこう", "交通": "こうつう",
   "不便": "ふべん", "出張": "しゅっちょう", "留学": "りゅうがく", "試合": "しあい", "意見": "いけん",
@@ -147,23 +48,22 @@ const materialFuriganaReadings = {
   "佐藤": "さとう", "山田": "やまだ", "仕事": "しごと", "資料": "しりょう",
   "写真": "しゃしん", "社長": "しゃちょう", "宿題": "しゅくだい", "新聞": "しんぶん",
   "新しい": "あたらしい", "場合": "ばあい", "生活": "せいかつ", "切符": "きっぷ",
-  "先生": "せんせい", "台風": "たいふう", "田中": "たなか", "電気": "でんき",
+  "先生": "せんせい", "田中": "たなか", "電気": "でんき",
   "電車": "でんしゃ", "電話": "でんわ", "東京": "とうきょう", "奈良": "なら",
-  "二回": "にかい", "日本": "にほん", "病院": "びょういん", "普通": "ふつう",
-  "部屋": "へや", "部長": "ぶちょう", "復習": "ふくしゅう", "便利": "べんり",
+  "日本": "にほん", "病院": "びょういん", "普通": "ふつう",
+  "部屋": "へや", "部長": "ぶちょう", "便利": "べんり",
   "勉強": "べんきょう", "毎朝": "まいあさ", "毎日": "まいにち", "名前": "なまえ",
-  "明日": "あした", "木村": "きむら", "問題": "もんだい", "野菜": "やさい",
-  "友達": "ともだち", "有名": "ゆうめい", "予定": "よてい", "来年": "らいねん",
+  "木村": "きむら", "野菜": "やさい",
+  "友達": "ともだち", "有名": "ゆうめい", "予定": "よてい",
   "旅行": "りょこう", "練習": "れんしゅう", "連絡": "れんらく", "時間": "じかん",
   "週間": "しゅうかん", "親切": "しんせつ", "手伝": "てつだ", "何時間": "なんじかん", "何時": "なんじ",
   "神戸": "こうべ", "何ですか": "なんですか", "何人": "なんにん", "何を": "なにを",
-  "何の": "なんの", "何か": "なにか", "何が": "なにが", "何に": "なにに",
+  "何の": "なんの", "何か": "なにか", "何が": "なにが",
   "何で": "なんで", "何と": "なんと", "何歳": "なんさい",
-  "下さい": "ください", "拝見": "はいけん",
   "駅": "えき", "家": "いえ", "花": "はな", "海": "うみ", "靴": "くつ",
   "机": "つくえ", "酒": "さけ", "春": "はる", "人": "ひと", "先": "さき",
   "前": "まえ", "窓": "まど", "中": "なか", "朝": "あさ", "町": "まち",
-  "猫": "ねこ", "箱": "はこ", "飯": "はん", "物": "もの", "文": "ぶん",
+  "猫": "ねこ", "箱": "はこ", "物": "もの", "文": "ぶん",
   "母": "はは", "本": "ほん", "友": "とも", "手": "て", "雨": "あめ",
   "安": "やす", "歌": "うた", "回": "かい", "間": "あいだ", "形": "かたち",
   "寒": "さむ", "漢": "かん", "語": "ご", "好": "す", "今": "いま", "子": "こ",
@@ -186,9 +86,9 @@ const materialFuriganaReadings = {
   "飲": "の", "押": "お", "開": "あ", "帰": "かえ", "起": "お", "休": "やす",
   "吸": "す", "教": "おし", "見": "み", "言": "い", "古": "ふる", "考": "かんが",
   "行": "い", "降": "ふ", "高": "たか", "座": "すわ", "使": "つか", "始": "はじ",
-  "思": "おも", "止": "と", "試": "ため", "持": "も", "治": "なお", "捨": "す",
-  "出": "で", "暑": "あつ", "書": "か", "消": "け", "食": "た", "寝": "ね",
-  "静": "しず", "洗": "あら", "送": "おく", "続": "つづ", "貸": "か", "脱": "ぬ",
+  "思": "おも", "止": "と", "試": "ため", "持": "も",
+  "出": "で", "暑": "あつ", "書": "か", "食": "た", "寝": "ね",
+  "静": "しず", "洗": "あら", "送": "おく", "続": "つづ", "貸": "か",
   "知": "し", "置": "お", "遅": "おく", "伝": "つた", "登": "のぼ", "働": "はたら", "返": "かえ", "払": "はら",
   "読": "よ", "入": "はい", "買": "か", "聞": "き", "閉": "し", "歩": "ある",
   "忘": "わす", "忙": "いそが", "話": "はな", "来": "き", "楽": "たの",
@@ -200,7 +100,7 @@ const materialFuriganaReadings = {
   // Pelajaran 28
   "弾": "ひ", "中国語": "ちゅうごくご", "経験": "けいけん", "値段": "ねだん", "魚": "さかな", "店": "みせ",
   "将来": "しょうらい", "小説家": "しょうせつか", "小説": "しょうせつ", "人気": "にんき",
-  "疲": "つか", "寂": "さび", "田舎": "いなか", "空": "そら", "空港": "くうこう", "思い出": "おもいだ",
+  "疲": "つか", "寂": "さび", "田舎": "いなか", "空": "そら", "思い出": "おもいだ",
   // Pelajaran 29
   "割": "わ", "壊": "こわ", "落": "お", "故障": "こしょう", "財布": "さいふ", "交番": "こうばん",
   "来月": "らいげつ", "本社": "ほんしゃ", "転勤": "てんきん", "途中": "とちゅう", "係員": "かかりいん",
@@ -210,7 +110,7 @@ const materialFuriganaReadings = {
   // Pelajaran 31
   "週末": "しゅうまつ", "何曜日": "なんようび", "答": "こた", "申し込": "もうしこ",
   // Pelajaran 32
-  "運動": "うんどう", "熱": "ねつ", "寺": "てら", "合格": "ごうかく", "間に合": "まにあ", "合": "あ",
+  "運動": "うんどう", "熱": "ねつ", "寺": "てら", "合格": "ごうかく", "合": "あ",
   "調": "しら", "万円": "まんえん", "万": "まん",
   // Pelajaran 33
   "逃": "に", "頑張": "がんば", "負": "ま", "洗濯機": "せんたくき", "渡辺": "わたなべ",
@@ -254,10 +154,10 @@ const materialFuriganaReadings = {
   "自由": "じゆう", "右側": "みぎがわ", "準備": "じゅんび", "生徒": "せいと", "説明": "せつめい", "結婚式": "けっこんしき",
   // Pelajaran 49
   "中村": "なかむら", "研究室": "けんきゅうしつ", "召し上": "めしあ", "注意": "ちゅうい", "奥様": "おくさま", "下が": "さが",
-  "忘れ物": "わすれもの",
+  "忘れ物": "わすれもの", "尊敬語": "そんけいご", "敬語": "けいご", "熱心": "ねっしん",
   // Pelajaran 50
   "重": "おも", "私": "わたくし", "兄": "あに", "江戸東京博物館": "えどとうきょうはくぶつかん", "目": "め", "伺": "うかが",
-  "申": "もう", "参": "まい",
+  "申": "もう", "参": "まい", "謙譲語": "けんじょうご",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
@@ -371,7 +271,7 @@ function materiStatusesForBook(bookNumber) {
   const lessonEls = courseEl ? Array.from(courseEl.querySelectorAll(":scope > .html-lesson")) : [];
   return Array.from({ length: 25 }, (_, index) => {
     const patternCount =
-      lessonEls[index]?.querySelectorAll(".grammar-point:not(.lesson-quiz)").length || 0;
+      lessonEls[index]?.querySelectorAll(".grammar-point").length || 0;
     return srsLessonStatus(bookNumber, index, patternCount);
   });
 }
@@ -420,7 +320,7 @@ function initMaterialLessonPicker({
      .html-content antara lessons[] dan reader - supaya jumlah pola per
      pelajaran tetap akurat berapa pun lesson yang sedang aktif. */
   const patternCounts = lessons.map(
-    (lesson) => lesson.querySelectorAll(".grammar-point:not(.lesson-quiz)").length,
+    (lesson) => lesson.querySelectorAll(".grammar-point").length,
   );
 
   const picker = document.createElement("section");
@@ -553,9 +453,7 @@ function initMaterialLessonPicker({
   function setLessonStatus(index, outcome) {
     const content = lessons[index]?.querySelector(".html-content") || activeContent;
     const points = content
-      ? Array.from(content.querySelectorAll(".grammar-point")).filter(
-          (point) => !point.classList.contains("lesson-quiz"),
-        )
+      ? Array.from(content.querySelectorAll(".grammar-point"))
       : [];
     points.forEach((point, patternIndex) => {
       const id = materiSrsId(index, patternIndex);

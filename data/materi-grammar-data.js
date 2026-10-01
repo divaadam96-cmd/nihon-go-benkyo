@@ -1,49 +1,34 @@
-/* Konten teks pelajaran (grammar Pelajaran 1-50, Buku 1 & Buku 2) untuk
-   halaman Materi. installMateriGrammarContent() dipanggil SEKALI oleh
-   initPage() di materi.js, di awal fungsi.
+/* Konten teks pelajaran (Keterangan Tata Bahasa Pelajaran 1-50, Buku 1 &
+   Buku 2) untuk halaman Materi. installMateriGrammarContent() dipanggil
+   SEKALI oleh initPage() di materi.js, di awal fungsi.
 
-   Buku 1 dan Buku 2 dulu punya cara pasang konten yang BEDA (Buku 2 tadinya
-   fitur terpisah "Kelas" di sidebar, digabung belakangan cuma di tampilan -
-   lihat README.md/docs/desain.md). Sekarang KEDUANYA memakai bentuk yang
-   sama: satu array data (MATERI_BOOK1_LESSONS / MATERI_BOOK2_LESSONS), satu
-   fungsi render bersama (buildLessonHtml). Mau tambah/hapus/ubah 1 pelajaran?
-   Tinggal ubah 1 entri array - tidak perlu utak-atik fungsi render atau
-   file lain.
+   Buku 1 dan Buku 2 memakai bentuk yang sama: satu array data
+   (MATERI_BOOK1_LESSONS / MATERI_BOOK2_LESSONS) dan satu fungsi render
+   bersama (buildLessonHtml). Mau tambah/hapus/ubah 1 pelajaran? Tinggal
+   ubah 1 entri array - tidak perlu utak-atik fungsi render atau file lain.
+   Isinya ditranskripsi kata demi kata dari bagian "IV. Keterangan Tata
+   Bahasa" buku sumber per pelajaran. */
 
-   Isi tiap pelajaran (teks, urutan, nomor tampil) PERSIS SAMA seperti
-   sebelum restrukturisasi ini - diverifikasi byte-demi-byte di browser
-   sungguhan untuk seluruh 50 pelajaran sebelum di-commit. Ini murni
-   perubahan STRUKTUR kode, bukan konten. */
-
-function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel, practice) {
-  /* Tiap item pola bisa ditulis dalam 2 bentuk, keduanya dinormalisasi ke
-     bentuk {pola, suffix, blocks} yang sama sebelum dirender - supaya HANYA
-     ADA SATU jalur render/gaya visual untuk seluruh Materi (bukan 2 template
-     terpisah):
-     - array lama [pola, penjelasan, contoh, arti, catatan?] - 1 blok, 1 contoh.
-     - objek baru {title, suffix?, blocks:[{label?, text?, examples?:[[contoh, arti], ...], note?, table?}]}
-       - dipakai saat pola sumber (Keterangan Tata Bahasa asli) punya beberapa
-         sub-penjelasan dan/atau beberapa contoh kalimat per pola (mis. Pelajaran 1).
-         suffix = keterangan di luar kotak pola, mis. "(kalimat tanya)".
-         text opsional: sebagian sub-poin di buku (mis. Pelajaran 2 pola 5)
-         cuma satu baris "N) <kalimat>" tanpa paragraf penjelasan terpisah -
-         taruh kalimatnya di `label` saja dan biarkan `text` kosong.
-         table opsional {headers:[...], rows:[[...], ...]}: sebagian pola
-         di buku memang berupa tabel referensi, bukan penjelasan+contoh
-         (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど"). Urutan render SATU
-         blok tetap: label, text, table, examples, note - table SELALU
-         sebelum examples (mis. Pelajaran 4 pola 2 sub 2: tabel konjugasi
-         dulu baru contoh ③④⑤) karena begitu urutannya di buku sumber.
-         noBox opsional: sebagian nomor di buku (mis. Pelajaran 8 nomor 1
-         "Kata Sifat") bukan kotak pola kalimat, cuma judul sub-bagian biasa
-         tanpa kotak - beda dari nomor lain di pelajaran yang sama.
-         figure opsional {src, alt}: diagram/ilustrasi yang memang ada di
-         buku (mis. garis waktu Pelajaran 29 pola 1), dipotong dari PDF ke
-         assets/images/materi/. Dirender setelah text, sebelum table. */
-  const normalize = (item) =>
-    Array.isArray(item)
-      ? { pola: item[0], suffix: "", noBox: false, blocks: [{ text: item[1], examples: [[item[2], item[3]]], note: item[4] }] }
-      : { pola: item.title, suffix: item.suffix || "", noBox: !!item.noBox, blocks: item.blocks };
+function buildLessonHtml(number, title, items) {
+  /* Bentuk tiap item pola:
+     {title, suffix?, noBox?, blocks:[{label?, text?, figure?, table?, examples?:[[contoh, arti], ...], note?}]}
+     - suffix = keterangan di luar kotak pola, mis. "(kalimat tanya)".
+     - noBox: sebagian nomor di buku (mis. Pelajaran 8 nomor 1 "Kata Sifat")
+       bukan kotak pola kalimat, cuma judul sub-bagian biasa tanpa kotak.
+     - blocks = sub-penjelasan 1)/2)/3) dari buku sumber. Urutan render SATU
+       blok tetap: label, text, figure, table, examples, note - persis
+       urutannya di buku (mis. Pelajaran 4 pola 2 sub 2: tabel konjugasi
+       dulu baru contoh ③④⑤).
+     - text opsional: sebagian sub-poin di buku (mis. Pelajaran 2 pola 5)
+       cuma satu baris "N) <kalimat>" tanpa paragraf penjelasan - taruh
+       kalimatnya di `label` saja.
+     - figure {src, alt}: diagram/ilustrasi yang memang ada di buku (mis.
+       garis waktu Pelajaran 29 pola 1), dipotong dari PDF ke
+       assets/images/materi/.
+     - table {headers:[...], rows:[[...], ...]}: pola yang di buku berupa
+       tabel referensi (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど").
+     - contoh bertanda "×" (contoh pemakaian salah) boleh tanpa arti; tetap
+       tampil di Tahap 2 tapi tidak dipakai sebagai soal Tahap 3. */
   const renderExample = ([contoh, arti]) =>
     `<div class="grammar-example"><span class="grammar-jp">${contoh}</span><span class="grammar-meaning">${arti}</span></div>`;
   const renderTable = (table) =>
@@ -51,23 +36,15 @@ function buildLessonHtml(number, title, items, focusLabel, focus, practiceLabel,
   const renderBlock = (b) =>
     `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${b.figure ? `<figure class="grammar-figure"><img src="../${b.figure.src}" alt="${b.figure.alt}" loading="lazy"></figure>` : ""}${b.table ? renderTable(b.table) : ""}${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
   const renderPoint = (item, i) => {
-    const { pola, suffix, noBox, blocks } = normalize(item);
-    const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="${noBox ? "grammar-pola-plain" : "grammar-pola-box"}">${pola}</span>${suffix ? `<span class="grammar-pola-suffix"> ${suffix}</span>` : ""}</h3>`;
-    return `<div class="grammar-point">${heading}${blocks.map(renderBlock).join("")}</div>`;
+    const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="${item.noBox ? "grammar-pola-plain" : "grammar-pola-box"}">${item.title}</span>${item.suffix ? `<span class="grammar-pola-suffix"> ${item.suffix}</span>` : ""}</h3>`;
+    return `<div class="grammar-point">${heading}${item.blocks.map(renderBlock).join("")}</div>`;
   };
-  return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${title}</summary><div class="html-content">${items.map(renderPoint).join("")}<div class="html-note"><div><b>${focusLabel}</b>${focus}</div><div><b>${practiceLabel}</b>${practice}</div></div></div></details>`;
+  return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${title}</summary><div class="html-content">${items.map(renderPoint).join("")}</div></details>`;
 }
 
 function installMateriGrammarContent() {
-if (new URLSearchParams(location.search).get("source") === "1") {
-  const sourceModeStyle = document.createElement("style");
-  sourceModeStyle.textContent =
-    ".top,.side,.mobile-nav{display:none!important}.layout{display:block;min-height:0}.main{padding:0;background:transparent}#materials .head,#materials>.material-grid,#materials>.notice{display:none!important}#materials{padding:0}.app{max-width:none;box-shadow:none;background:transparent}";
-  document.head.appendChild(sourceModeStyle);
-}
-
 document.getElementById("materials").innerHTML =
-  `<div class="head"><div><div class="eyebrow">Materi pembelajaran HTML lengkap</div><h1>Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Setiap pelajaran memuat seluruh poin inti tata bahasa dalam penulisan ulang yang terstruktur untuk web.</p></div></div><div class="html-course"></div>`;
+  `<div class="head"><div><div class="eyebrow">Materi pembelajaran HTML lengkap</div><h1>Dasar — Buku 1: Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Setiap pelajaran memuat seluruh poin inti tata bahasa dalam penulisan ulang yang terstruktur untuk web.</p></div></div><div class="html-course"></div>`;
 
 const MATERI_BOOK1_LESSONS = [
   {
@@ -157,10 +134,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 1",
-    focus: "Perkenalan diri, pekerjaan, asal negara, serta cara bertanya dan menjawab secara sopan.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat lima kalimat: dua pernyataan です, satu negatif, satu pertanyaan, dan satu kalimat memakai の atau も.",
   },
   {
     title: "Kata tunjuk dan persamaan",
@@ -261,10 +234,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 2",
-    focus: "Menunjuk benda, membedakan jarak, menanyakan kepemilikan, dan memberi jawaban atas informasi.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Pilih lima benda di sekitar Anda. Buat pertanyaan memakai これ／それ／あれ lalu jawab dengan そうです atau ちがいます.",
   },
   {
     title: "Tempat, arah, dan asal produk",
@@ -350,10 +319,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 3",
-    focus: "Menanyakan dan menjelaskan lokasi, arah, asal produk, serta bentuk penunjuk yang sopan.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Gambarkan denah sederhana rumah atau sekolah, lalu buat enam kalimat memakai ここ、そこ、あそこ、どこ、dan どちら.",
   },
   {
     title: "Waktu dan kegiatan harian",
@@ -468,10 +433,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 4",
-    focus: "Menyatakan jam, kebiasaan, waktu kegiatan, rentang waktu, dan respons persetujuan dalam percakapan.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Tuliskan jadwal harian Anda dari bangun sampai tidur dengan minimal lima kata kerja bentuk ます dan tiga penanda waktu.",
   },
   {
     title: "Perjalanan dan perpindahan",
@@ -567,10 +528,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 5",
-    focus: "Menyatakan tujuan perjalanan, transportasi, teman perjalanan, waktu, serta cara menanggapi informasi.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Tulis rencana perjalanan akhir pekan dengan tempat tujuan, kendaraan, teman perjalanan, dan waktu keberangkatan.",
   },
   {
     title: "Aktivitas dan ajakan",
@@ -698,10 +655,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 6",
-    focus: "Menyatakan aktivitas, objek, tempat kegiatan, pertanyaan kegiatan, serta cara mengajak orang lain.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Tulis jadwal akhir pekan dengan tiga aktivitas, objeknya, tempatnya, dan satu ajakan memakai Vませんか atau Vましょう.",
   },
   {
     title: "Alat, bahasa, memberi dan menerima",
@@ -788,10 +741,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 7",
-    focus: "Menjelaskan alat dan bahasa, memberi/menerima, serta menyatakan pekerjaan yang sudah selesai.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat dialog singkat tentang meminjam buku, mengajari bahasa, dan mengirim hadiah kepada teman.",
   },
   {
     title: "Kata sifat dan kesan",
@@ -908,10 +857,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 8",
-    focus: "Mendeskripsikan sifat, bertanya kesan, membuat frasa kata sifat, dan menyatakan kontras.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Pilih tiga tempat atau benda. Jelaskan masing-masing dengan い形容詞 dan な形容詞, lalu bandingkan dengan ～が.",
   },
   {
     title: "Kesukaan, kemampuan, dan jumlah",
@@ -995,10 +940,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 9",
-    focus: "Menyatakan kesukaan, kemampuan, keterangan tingkat, dan alasan.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Keberadaan benda dan makhluk",
@@ -1111,10 +1052,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 10",
-    focus: "Menjelaskan keberadaan dan posisi benda, orang, serta hewan.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bilangan dan cara menghitung",
@@ -1201,10 +1138,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 11",
-    focus: "Menghitung benda, orang, dan waktu dengan Kata Bantu Bilangan yang tepat, serta menanyakan dan menyatakan jumlah dan frekuensi.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Waktu lampau, perbandingan, dan superlatif",
@@ -1297,10 +1230,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 12",
-    focus: "Menyatakan kejadian waktu lampau, membandingkan dua hal, menentukan yang paling unggul dalam suatu kelompok, dan memakai Kata Sifat の sebagai pengganti Kata Benda.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Keinginan dan tujuan kepergian",
@@ -1390,10 +1319,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 13",
-    focus: "Menyatakan keinginan memiliki benda atau melakukan sesuatu, serta menjelaskan tujuan bepergian ke suatu tempat.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Kelompok kata kerja dan bentuk te",
@@ -1518,10 +1443,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 14",
-    focus: "Mengenal kelompok kata kerja, membentuk dan menggunakan bentuk て untuk meminta, menawarkan, dan menyatakan aksi yang sedang berlangsung.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Izin, larangan, dan keadaan berlanjut",
@@ -1618,10 +1539,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 15",
-    focus: "Meminta dan memberi izin, menyatakan larangan, serta menjelaskan keadaan dan kebiasaan dengan bentuk て います.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Menyambung kalimat dan menunjuk pilihan",
@@ -1727,10 +1644,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 16",
-    focus: "Menyambung beberapa kalimat menjadi satu, menjelaskan sifat topik, serta menanyakan cara dan menunjuk pilihan dari beberapa benda.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bentuk ない dan cara memerintah",
@@ -1826,10 +1739,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 17",
-    focus: "Membentuk kata kerja bentuk ない untuk melarang, mewajibkan, dan membebaskan dari kewajiban, serta menopikkan objek dan menyatakan batas waktu.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bentuk kamus dan kemampuan",
@@ -1940,10 +1849,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 18",
-    focus: "Membentuk kata kerja bentuk kamus untuk menyatakan kemampuan, hobi, dan urutan waktu, serta menekankan harapan dan kesulitan melakukan sesuatu.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Pengalaman dan perubahan",
@@ -2007,10 +1912,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 19",
-    focus: "Menceritakan pengalaman dengan bentuk た, menyebutkan beberapa aksi yang mewakili, dan menyatakan perubahan kondisi.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bentuk biasa",
@@ -2092,10 +1993,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 20",
-    focus: "Membedakan bentuk sopan dan bentuk biasa, serta memakai bentuk biasa dalam percakapan sehari-hari.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Gaya biasa dalam percakapan",
@@ -2208,10 +2105,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 21",
-    focus: "Menyampaikan dugaan dan pendapat, mengutip perkataan, meminta persetujuan, serta menyatakan peristiwa dan tawaran.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Anak kalimat dan janji",
@@ -2283,10 +2176,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 22",
-    focus: "Menerangkan Kata Benda dengan anak kalimat, serta menyatakan waktu, janji, urusan, dan ajakan bersama.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Waktu, syarat, dan gerakan berpindah",
@@ -2363,10 +2252,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 23",
-    focus: "Menyatakan waktu terjadinya sesuatu dengan とき, syarat pasti dengan と, serta kesan panca indera dan gerakan berpindah dengan を.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Memberi dan menerima kebaikan",
@@ -2433,10 +2318,6 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 24",
-    focus: "Menyatakan pemberian dan penerimaan kebaikan dengan あげます, もらいます, dan くれます.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Pengandaian dan konsesi",
@@ -2510,52 +2391,19 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 25",
-    focus: "Menyatakan pengandaian dengan ら／たら dan konsesi dengan ても, serta subjek dalam anak kalimat.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
 ];
-document.querySelector("#materials .html-course").innerHTML = MATERI_BOOK1_LESSONS.map((l, i) => buildLessonHtml(i + 1, l.title, l.items, l.focusLabel, l.focus, l.practiceLabel, l.practice)).join("");
-const firstLesson = document.querySelector("#materials .html-lesson");
-if (firstLesson) {
-  firstLesson.open = true;
-}
+document.querySelector("#materials .html-course").innerHTML = MATERI_BOOK1_LESSONS.map((l, i) => buildLessonHtml(i + 1, l.title, l.items)).join("");
 
-const lessonOneMore = document.querySelector("#materials .html-lesson");
-if (lessonOneMore) {
-  const body = lessonOneMore.querySelector(".html-content");
-  if (body) {
-    body.insertAdjacentHTML(
-      "beforeend",
-      `<div class="grammar-point"><h3>Ringkasan perubahan bentuk kalimat</h3><table class="pattern-table"><thead><tr><th>Fungsi</th><th>Pola</th><th>Contoh</th></tr></thead><tbody><tr><td>Pernyataan</td><td>N1 は N2 です</td><td>わたしは 学生です。</td></tr><tr><td>Negatif</td><td>N1 は N2 じゃありません</td><td>わたしは 先生じゃありません。</td></tr><tr><td>Pertanyaan</td><td>N1 は N2 ですか</td><td>あなたは 学生ですか。</td></tr><tr><td>Juga</td><td>N も N です</td><td>田中さんも 学生です。</td></tr></tbody></table></div><div class="grammar-point"><h3>Dialog contoh</h3><div class="mini-dialog"><b>A:</b> はじめまして。わたしは ディバです。<br><b>B:</b> はじめまして。わたしは アニです。学生ですか。<br><b>A:</b> はい、学生です。アニさんも 学生ですか。<br><b>B:</b> いいえ、学生じゃありません。会社員です。<br><br><small>Arti: Salam kenal. Saya Divha. — Salam kenal. Saya Ani. Apakah kamu mahasiswa? — Ya. Kamu juga mahasiswa? — Tidak, saya pegawai perusahaan.</small></div></div><div class="lesson-quiz"><b>Latihan cepat Pelajaran 1</b><p>Pilih kata yang tepat: わたしは 学生（　）。</p><button class="secondary" data-l1="wrong">か</button><button class="secondary" data-l1="correct">です</button><button class="secondary" data-l1="wrong">を</button><div class="quiz-feedback" id="l1Feedback"></div></div>`,
-    );
-    body.querySelectorAll("[data-l1]").forEach(
-      (b) =>
-        (b.onclick = () => {
-          document.getElementById("l1Feedback").textContent =
-            b.dataset.l1 === "correct"
-              ? "Benar! です menutup pernyataan nominal secara sopan."
-              : "Belum tepat. Jawabannya adalah です.";
-        }),
-    );
-  }
-}
-
-const materialsHeading = document.querySelector("#materials .head h1");
-if (materialsHeading)
-  materialsHeading.textContent =
-    "Dasar — Buku 1: Keterangan Tata Bahasa Pelajaran 1–25";
 /* Buku 2 BUKAN view/nav terpisah lagi ("fitur Kelas" sudah dihapus) -
    section ini ditaruh di DALAM #materials supaya seluruh materi (Buku 1
    dan Buku 2) bisa diakses dari satu tempat: menu "Materi pelajaran".
    id="book2" tetap dipertahankan karena masih dipakai sebagai penanda
-   viewId oleh initMaterialLessonPicker/enrichLessons di js/pages/materi.js. */
+   viewId oleh initMaterialLessonPicker di js/pages/materi.js. */
 const bookTwo = document.createElement("section");
 bookTwo.id = "book2";
 bookTwo.innerHTML = `<div class="head"><div><div class="eyebrow">Materi pembelajaran menengah</div><h1>Menengah — Buku 2</h1><p>Pelajaran 26–50 disusun bertahap dari materi tata bahasa Buku 2.</p></div></div><div class="html-course"></div>`;
 document.getElementById("materials").appendChild(bookTwo);
-const book2 = document.getElementById("book2");
 
 const MATERI_BOOK2_LESSONS = [
   {
@@ -2652,10 +2500,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 26",
-    focus: "Menjelaskan dan menanyakan alasan dengan ～んです, meminta dengan sopan ～て いただけませんか, dan meminta saran dengan ～たら いいですか.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Bentuk potensial dan kemampuan",
@@ -2772,10 +2616,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 27",
-    focus: "Menyatakan kemampuan dengan Kata Kerja Potensial, 見えます／聞こえます, できます, しか, dan は untuk perbandingan.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Melakukan dua kegiatan",
@@ -2855,10 +2695,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 28",
-    focus: "Menyatakan dua kegiatan sekaligus dengan ながら, kebiasaan dengan ～て います, alasan dengan ～し、～し, それで, dan ～とき＋Kata Bantu.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Keadaan dan persiapan",
@@ -2959,10 +2795,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 29",
-    focus: "Menyatakan keadaan hasil aksi dengan ～て います, selesai/penyesalan dengan ～て しまいました, serta それ／その／そう dalam percakapan.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Persiapan dan perubahan keadaan",
@@ -3061,10 +2893,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 30",
-    focus: "Menyatakan hasil perbuatan dengan ～て あります, persiapan dengan ～て おきます, まだ, とか, dan Partikel＋も.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Niat dan rencana",
@@ -3167,10 +2995,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 31",
-    focus: "Menyatakan niat dengan Bentuk Maksud, ～と 思って います, つもりです, rencana dengan 予定です, dan まだ～て いません.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Nasihat dan kemungkinan",
@@ -3247,10 +3071,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 32",
-    focus: "Memberi nasihat dengan ～ほうが いいです, menyatakan dugaan dengan でしょう dan かも しれません, serta ～ましょう, Kata Keterangan Bilangan で, dan 何か 心配な こと.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Perintah, larangan, dan pesan",
@@ -3376,10 +3196,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 33",
-    focus: "Memahami Bentuk Imperatif dan Bentuk Larangan, ～と 書いて あります／読みます, ～と いう 意味です, dan menyampaikan pesan orang lain.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Melakukan sesuai contoh dan urutan",
@@ -3441,10 +3257,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 34",
-    focus: "Melakukan sesuatu sesuai contoh dengan とおりに, menyatakan urutan dengan あとで, dan keadaan penyerta dengan ～て／～ないで.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Syarat dan saran",
@@ -3545,10 +3357,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 35",
-    focus: "Membuat dan memakai Bentuk Syarat ～ば, membandingkannya dengan ～と／～たら, serta どう すれば いいですか, Kata Benda なら, dan ～は ありませんか.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Tujuan dan perubahan kebiasaan",
@@ -3623,10 +3431,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 36",
-    focus: "Menyatakan tujuan dengan ように, perubahan kemampuan atau kebiasaan dengan ように なります, usaha dengan ように します, dan bentuk kata keterangan dari Kata Sifat.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Kalimat pasif",
@@ -3740,10 +3544,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 37",
-    focus: "Membentuk dan memakai Kata Kerja Pasif untuk orang, benda milik, dan hal, serta から／で つくります, Kata Benda の Kata Benda, dan この／その／あの + posisi.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Nominalisasi dengan の",
@@ -3841,10 +3641,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 38",
-    focus: "Membentuk Kata Benda dengan の: のは／のが Kata Sifat, のを 忘れました, のを 知って いますか, dan ～のは Kata Benda です untuk penekanan.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Sebab dan alasan",
@@ -3917,10 +3713,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 39",
-    focus: "Menyatakan sebab dan akibat dengan ～て（で）, Kata Benda で, dan ～ので, serta 途中で.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Kalimat tanya di dalam kalimat",
@@ -3995,10 +3787,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 40",
-    focus: "Memasukkan kalimat tanya ke dalam kalimat dengan ～か dan ～か どうか, mencoba dengan ～て みます, Kata Sifat い→～さ, dan ～でしょうか.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Memberi dan menerima dengan hormat",
@@ -4094,10 +3882,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 41",
-    focus: "Memberi dan menerima barang serta perbuatan dengan いただきます, くださいます, やります, meminta dengan ～て くださいませんか, dan Kata Benda に Kata Kerja.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Tujuan dan kegunaan",
@@ -4164,10 +3948,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 42",
-    focus: "Menyatakan tujuan dengan ために, kegunaan dengan ～のに, Kata Keterangan Bilangan は／も, dan pelaku pasif dengan ～に よって.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Dugaan dari penampilan dan pergi lalu kembali",
@@ -4241,10 +4021,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 43",
-    focus: "Menduga dari penampilan dengan ～そうです, menyatakan pergi lalu kembali dengan ～て 来ます, dan meminta dengan ～て くれませんか.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Terlalu, mudah, sulit, dan mengubah",
@@ -4323,10 +4099,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 44",
-    focus: "Menyatakan berlebihan dengan ～すぎます, mudah/sulit dengan ～やすい／～にくい, mengubah obyek dengan ～く／～に します, dan memilih dengan Kata Benda に します.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Jika terjadi dan padahal",
@@ -4376,10 +4148,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 45",
-    focus: "Mengandaikan kondisi dengan ～場合は dan menyatakan di luar dugaan atau ketidakpuasan dengan ～のに, serta perbedaannya dengan ～が dan ～ても.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Tahap suatu aksi dan keyakinan",
@@ -4446,10 +4214,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 46",
-    focus: "Menyatakan tahap suatu aksi dengan ～ところです, baru saja dengan ～たばかりです, dan keyakinan berdasarkan bukti dengan ～はずです.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Kabar dan dugaan",
@@ -4522,10 +4286,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 47",
-    focus: "Menyampaikan kabar dengan Bentuk Biasa そうです (～に よると), menduga dari kondisi dengan ～ようです, dan 声／音／におい／味が します.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Kalimat kausatif",
@@ -4611,10 +4371,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 48",
-    focus: "Membentuk Kata Kerja Kausatif, memakainya untuk paksaan atau persetujuan (pelaku を／に), dan meminta izin dengan Kata Kerja Kausatif Bentuk て いただけませんか.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Kata hormat",
@@ -4721,10 +4477,6 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 49",
-    focus: "Memahami 敬語 dan memakai 尊敬語: Kata Kerja Hormat, お～に なります, Kata Hormat Khusus, お／ご～ください, お／ご pada kata benda dan sifat, serta ～まして dan ～ますので.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Kata merendahkan diri",
@@ -4787,95 +4539,7 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
     ],
-    focusLabel: "Fokus Pelajaran 50",
-    focus: "Memakai 謙譲語Ⅰ (お／ご～します dan Kata Merendahkan Diri Khusus) serta 謙譲語Ⅱ (申します, 参ります, いたします, おります).",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
 ];
-if (book2) {
-  const course = book2.querySelector(".html-course");
-  if (course) {
-    course.innerHTML = MATERI_BOOK2_LESSONS.map((l, i) => buildLessonHtml(i + 26, l.title, l.items, l.focusLabel, l.focus, l.practiceLabel, l.practice)).join("");
-    course.querySelector(".html-lesson").open = true;
-    course.insertAdjacentHTML(
-      "beforeend",
-      '<article class="card"><h2>Buku 2 selesai disusun</h2><p style="color:var(--muted);line-height:1.65">Pelajaran 26–50 kini tersedia sebagai materi menengah. Gunakan flashcard dan tes untuk mengulang pola yang telah dipelajari.</p></article>',
-    );
-  }
-}
-
-/* 2 pelajaran Buku 1 yang SAAT INI TIDAK TAMPIL ke siswa - bug lama
-   (bukan disebabkan reorganisasi ini). Dulu masing-masing punya index
-   manual yang salah: installLesson(15, "Izin, larangan, dan keadaan")
-   langsung ditimpa add(15, "Menghubungkan informasi") yang dipanggil
-   sesudahnya (index sama), dan add(25, "Pengandaian dan syarat") memakai
-   index di luar batas 25 elemen Buku 1 sehingga tidak pernah terpasang.
-   Isinya disimpan di sini APA ADANYA supaya tidak hilang - SENGAJA belum
-   dimasukkan ke MATERI_BOOK1_LESSONS karena menambahnya di akhir akan
-   membuat Buku 1 jadi 27 pelajaran dan tabrakan nomor dengan Pelajaran 27
-   Buku 2 (lihat MATERI_BOOK2_LESSONS). Keputusan mau ditaruh di mana/
-   diberi nomor berapa ditunggu dari pemilik aplikasi - JANGAN dirender. */
-const MATERI_BOOK1_UNPLACED_LESSONS = [
-  {
-    title: "Izin, larangan, dan keadaan",
-    items: [
-    [
-      "Vてもいいです",
-      "Meminta atau memberi izin melakukan sesuatu.",
-      "ここで 写真を 撮っても いいですか。",
-      "Bolehkah memotret di sini?",
-    ],
-    [
-      "Vてはいけません",
-      "Menyatakan larangan atau aturan.",
-      "ここで タバコを 吸っては いけません。",
-      "Tidak boleh merokok di sini.",
-    ],
-    [
-      "Vています sebagai keadaan",
-      "Selain aksi sedang berlangsung, pola ini dapat menunjukkan pekerjaan, kebiasaan, atau keadaan.",
-      "わたしは 銀行で 働いています。",
-      "Saya bekerja di bank.",
-    ],
-    [
-      "知っています",
-      "しっています berarti tahu/kenal; bentuk negatif umum adalah しりません.",
-      "田中さんの 電話番号を 知っていますか。",
-      "Apakah Anda tahu nomor telepon Tanaka?",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Meminta izin, memahami larangan, dan membedakan fungsi Vています.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
-  },
-  {
-    title: "Pengandaian dan syarat",
-    items: [
-    [
-      "Vたら",
-      "Menyatakan jika/ketika kondisi terjadi.",
-      "雨が 降ったら、行きません。",
-      "Jika hujan, saya tidak pergi.",
-    ],
-    [
-      "A／Nだったら",
-      "Menyatakan pengandaian untuk kata sifat atau kata benda.",
-      "ひまだったら、来てください。",
-      "Jika senggang, silakan datang.",
-    ],
-    [
-      "Vても",
-      "Hasil tidak berubah walaupun kondisi terjadi.",
-      "高くても、この かばんを 買います。",
-      "Walaupun mahal, saya membeli tas ini.",
-    ],
-  ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Membuat pengandaian dan menyatakan kondisi.",
-    practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
-  },
-];
+bookTwo.querySelector(".html-course").innerHTML = MATERI_BOOK2_LESSONS.map((l, i) => buildLessonHtml(i + 26, l.title, l.items)).join("");
 }

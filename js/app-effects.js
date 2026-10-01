@@ -1,7 +1,7 @@
-/* Efek visual & pembersihan tampilan materi yang mandiri (tidak butuh
-   variabel/state lain dari initApp()) - dipanggil dari app.js persis
-   di titik yang sama seperti sebelumnya, cuma dipindah ke file
-   terpisah supaya app.js tidak makin panjang. */
+/* Efek visual bersama (kelopak sakura, dipanggil app-shell.js) dan
+   penyusun tampilan pola materi (audio penjelasan, rating SRS per pola,
+   structureGrammarPoints - dipanggil initPage() di js/pages/materi.js).
+   Mandiri: tidak butuh variabel/state halaman lain. */
 
 function initSakuraPetals() {
   const layer = document.createElement("div");
@@ -20,31 +20,6 @@ function initSakuraPetals() {
     layer.appendChild(petal);
   }
   document.body.appendChild(layer);
-}
-
-/* Hilangkan blok tambahan yang tidak diperlukan dari seluruh materi. */
-function simplifyLessonMaterials() {
-  const removableLabels = ["fokus pelajaran", "fokus pembelajaran", "latihan mandiri"];
-  document
-    .querySelectorAll("#materials .html-content, #book2 .html-content")
-    .forEach((content) => {
-      content.querySelectorAll(".html-note > div").forEach((note) => {
-        const label = note.querySelector("b")?.textContent.trim().toLowerCase();
-        if (label && removableLabels.some((target) => label.startsWith(target)))
-          note.remove();
-      });
-      content.querySelectorAll(".grammar-point").forEach((section) => {
-        const heading = section.querySelector("h3")?.textContent.trim().toLowerCase();
-        if (
-          heading === "ringkasan praktik" ||
-          heading === "ringkasan perubahan bentuk kalimat" ||
-          heading === "dialog latihan" ||
-          heading === "dialog contoh"
-        )
-          section.remove();
-      });
-      content.querySelectorAll(".html-note:empty").forEach((emptyNote) => emptyNote.remove());
-    });
 }
 
 /* Ucapkan teks lewat Web Speech API - dipakai tombol audio penjelasan
@@ -140,9 +115,7 @@ function structureGrammarPoints() {
     { selector: "#book2 .html-course > .html-lesson", book: 2 },
   ].forEach(({ selector, book }) => {
     document.querySelectorAll(selector).forEach((lesson, lessonIndex) => {
-      const points = Array.from(lesson.querySelectorAll(".grammar-point")).filter(
-        (point) => !point.classList.contains("lesson-quiz"),
-      );
+      const points = lesson.querySelectorAll(".grammar-point");
       points.forEach((point, patternIndex) => {
         /* Satu pola bisa punya beberapa .grammar-block (sub-penjelasan 1)/2)/3)
            dari buku sumber, mis. Pelajaran 1) - proses SETIAP blok, bukan cuma
