@@ -3629,31 +3629,121 @@ const MATERI_BOOK2_LESSONS = [
     practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
-    title: "Bentuk pasif",
+    title: "Kalimat pasif",
     items: [
-          [
-            "Bentuk pasif",
-            "Digunakan saat subjek menerima tindakan dari orang lain.",
-            "わたしは 先生に ほめられました。",
-            "Saya dipuji oleh guru.",
-          ],
-          [
-            "Pasif gangguan",
-            "Menyatakan dampak tidak menyenangkan dari tindakan orang lain/alam.",
-            "雨に 降られました。",
-            "Saya kehujanan.",
-          ],
-          [
-            "Oleh pelaku",
-            "Pelaku tindakan pasif lazim ditandai dengan に.",
-            "友達に 写真を 撮られました。",
-            "Saya difoto oleh teman.",
-          ],
+      {
+        title: "Kata Kerja Pasif",
+        noBox: true,
+        blocks: [
+          {
+            table: {
+              headers: ["", "Kata Kerja Pasif<br>Bentuk Sopan", "Kata Kerja Pasif<br>Bentuk Biasa"],
+              rows: [
+                ["I", "かきます", "かかれます", "かかれる"],
+                ["II", "ほめます", "ほめられます", "ほめられる"],
+                ["III", "きます<br>します", "こられます<br>されます", "こられる<br>される"],
+              ],
+            },
+          },
+          {
+            text: "(Lihat Buku Induk Pel.37 Latihan A1)<br>Kata Kerja Pasif dikonjugasi sebagai Kata Kerja Kelompok II.<br>Contoh: かかれます　かかれる　かかれ(ない)　かかれて",
+          },
         ],
-    focusLabel: "Fokus pelajaran",
-    focus: "Gunakan pola dalam percakapan sehari-hari dan perhatikan perubahan bentuk kata kerja.",
+      },
+      {
+        title: "Kata Benda<sub>1</sub>（orang<sub>1</sub>）は Kata Benda<sub>2</sub>（orang<sub>2</sub>）に Kata Kerja Pasif",
+        blocks: [
+          {
+            text: "Pola kalimat yang perbuatan yang dilakukan oleh orang<sub>2</sub> terhadap orang<sub>1</sub> mengekspresikan dari pihak yang menerika perbuatan (orang<sub>1</sub>).<br>Menyatakan dengan cara bahwa orang<sub>1</sub> diangkat sebagai topik, kemudian pelaku (orang<sub>2</sub>) dibubuhkan Kata Bantu に.",
+            examples: [
+              ["先生が <u>わたし</u>を 褒めました。", "Guru yang memuji saya."],
+              ["① <u>わたし</u>は 先生に 褒められました。", "Saya dipuji oleh guru."],
+              ["母が <u>わたし</u>に 買い物を 頼みました。", "Ibu yang meminta kepada saya untuk berbelanja."],
+              ["② <u>わたし</u>は 母に 買い物を 頼まれました。", "Saya diminta oleh ibu untuk berbelanja."],
+            ],
+          },
+          {
+            text: "Adakalanya selain manusia, benda yang bergerak (hewan, mobil dan lain-lain) menjadi pelaku.",
+            examples: [["③ わたしは 犬に かまれました。", "Saya digigit anjing."]],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub>（orang<sub>1</sub>）は Kata Benda<sub>2</sub>（orang<sub>2</sub>）に<br>Kata Benda<sub>3</sub> を Kata Kerja Pasif",
+        blocks: [
+          {
+            text: "Menyatakan bahwa orang<sub>2</sub> melakukan suatu perbuatan terhadap benda milik orang<sub>1</sub> (Kata Benda<sub>3</sub>), kemudian pada umumnya perbuatan tersebut sering dianggap gangguan oleh orang<sub>1</sub> (pemiliknya).",
+            examples: [
+              ["弟が <u>わたし</u>の パソコンを 壊しました。", "Adik laki-laki saya merusak PC saya."],
+              ["④ <u>わたし</u>は 弟に パソコンを 壊されました。", "PC saya dirusak oleh adik laki-laki saya."],
+            ],
+          },
+          {
+            text: "Adakalanya selain manusia, benda yang bergerak (hewan, mobil dan lain-lain) menjadi pelaku.",
+            examples: [["⑤ わたしは 犬に 手を かまれました。", "Tangan saya digigit anjing."]],
+            note: "[Perhatian 1] Yang diangkat sebagai topik adalah bukan benda milik melainkan orang (pemilik) yang merasa terganggu akan perbuatan. Misalnya, ④ tidak menjadi わたしの パソコンは おとうとに こわされました.<br>[Perhatian 2] Pola kalimat ini dalam kebanyakan kasus berarti orang yang melakukan perbuatan yang menganggap perbuatan tersebut sebagai gangguan, maka perlu hati-hati.～て もらいます digunakan jika berterima kasih karena dilakukan sesuatu.",
+          },
+          {
+            examples: [
+              ["×わたしは 友達に 自転車を 修理されました。", ""],
+              ["⑥ わたしは 友達に 自転車を 修理して もらいました。", "Saya dibantu oleh teman untuk memperbaiki sepeda."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda（benda/hal）が／は Kata Kerja Pasif",
+        blocks: [
+          {
+            text: "Ketika kejelaskan suatu prihal dan tidak mempersoalkan orang yang melakukan perbuatan, maka adakalanya untuk mengekspresikan dengan memakai Kata Kerja Pasif yang benda atau prihal dijadikan sebagai subjek atau topik.",
+            examples: [
+              ["⑦ 大阪で 展覧会が 開かれました。", "Di Osaka diadakan pameran."],
+              ["⑧ 電話は 19世紀に 発明されました。", "Telepon ditemukan pada abad kesembilan belas."],
+              ["⑨ この 本は 世界中で 読まれて います。", "Buku ini dibaca di seluruh dunia."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda から／Kata Benda で つくります",
+        blocks: [
+          {
+            text: "Jika membuat barang, bahan baku itu dinyatakan dengan から, dan bahan dinyatakan dengan で.",
+            examples: [
+              ["⑩ ビールは 麦から 造られます。", "Bir terbuat dari gandum."],
+              ["⑪ 昔 日本の 家は 木で 造られました。", "Pada zaman dulu, perumahan Jepang dibuat dari kayu."],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Kata Benda<sub>1</sub> の Kata Benda<sub>2</sub>",
+        blocks: [
+          {
+            examples: [["⑫ ビールは 麦から 造られます。<br>これが 原料の 麦です。", "Bir terbuat dari gandum.<br>Inilah bahan bakunya, yaitu gandum."]],
+          },
+          {
+            text: "げんりょうの むぎ pada ⑫ bermaksud untuk menyebutkan bahwa bahan bakunya gandum. Sebagai contoh lain, ada ペットの いぬ (Pel.39), むすこの ハンス (Pel.43) dan lain-lain.",
+          },
+        ],
+      },
+      {
+        title: "この／その／あの Kata Benda（Posisi）",
+        blocks: [
+          {
+            text: "Kata Benda yang menyatakan posisi seperti うえ, した, なか, となり, ちかく dibubuhkan この, その, あの, kemudian Kata Petunjuk menyatakan hubungan posisi dengan benda yang ditunjuk.",
+            examples: [["⑬ あの 中に 入れますか。", "Apakah bisa masuk ke dalam itu?"]],
+          },
+          {
+            text: "あの なか pada ⑬ berarti あの たてものの なか.",
+          },
+        ],
+      },
+    ],
+    focusLabel: "Fokus Pelajaran 37",
+    focus: "Membentuk dan memakai Kata Kerja Pasif untuk orang, benda milik, dan hal, serta から／で つくります, Kata Benda の Kata Benda, dan この／その／あの + posisi.",
     practiceLabel: "Latihan mandiri",
-    practice: "Buat tiga kalimat memakai pola utama pada pelajaran ini.",
+    practice: "Buat tiga kalimat menggunakan pola utama pelajaran ini, lalu ucapkan dengan suara keras.",
   },
   {
     title: "Nominalisasi dan indera",

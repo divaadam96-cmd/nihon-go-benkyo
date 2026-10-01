@@ -222,6 +222,9 @@ const materialFuriganaReadings = {
   // Pelajaran 36
   "速": "はや", "自転車": "じてんしゃ", "日本人": "にほんじん", "牛肉": "ぎゅうにく", "豚肉": "ぶたにく",
   "歯": "は", "甘": "あま", "絶対": "ぜったい",
+  // Pelajaran 37
+  "褒": "ほ", "頼": "たの", "世紀": "せいき", "発明": "はつめい", "世界中": "せかいじゅう", "麦": "むぎ",
+  "造": "つく", "昔": "むかし", "木": "き", "原料": "げんりょう", "開か": "ひらか",
 };
 
 const materialFuriganaEntries = Object.entries(materialFuriganaReadings).sort(
