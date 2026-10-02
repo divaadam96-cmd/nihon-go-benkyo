@@ -723,6 +723,17 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+/* Sebelum logout otomatis karena tidak aktif (js/sesi-idle.js), editan yang
+   belum disimpan disimpan dulu sebagai draft supaya tidak hilang. */
+if (window.IdleSession) {
+  window.IdleSession.beforeLogout(async () => {
+    if (current && current.dirty) {
+      await saveDraft();
+      current.dirty = false; // jangan memicu peringatan "tinggalkan halaman"
+    }
+  });
+}
+
 loadTests();
 }
 window.initPage = initPage;

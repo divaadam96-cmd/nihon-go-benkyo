@@ -65,6 +65,7 @@ js/
   app-effects.js           efek visual (sakura) & bantuan tampilan materi
   auth.js                  login Supabase, sinkronisasi profil/peran,
                            memanggil initPage() tiap halaman setelah login
+  sesi-idle.js             logout otomatis setelah 1 jam tidak aktif
   srs.js                   mesin spaced-repetition bersama + sync Supabase
   quiz-results.js          cache + perhitungan XP dari riwayat quiz_results
   assignments.js           kartu "Tugas dari Sensei" + pengingat harian
@@ -267,6 +268,22 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   maksimal 300 ulasan XP per hari (`srs_daily_review_cap()`, sama dengan
   `SRS_DAILY_REVIEW_CAP` di `js/srs.js`). Format id item yang valid
   dibatasi di fungsi itu - id item baru harus ditambahkan ke regex-nya.
+- **Logout otomatis setelah 1 jam tidak aktif** (semua peran -
+  `js/sesi-idle.js`, dimuat sebelum `auth.js` di setiap HTML). Waktu
+  aktivitas terakhir (klik, ketik, gulir, gerak mouse) disimpan di
+  `localStorage` (`nihonBenkyoLastActive`), jadi berlaku bersama untuk
+  semua tab. Menit ke-55 muncul peringatan dengan hitung mundur + tombol
+  "Tetap masuk"; menit ke-60 sesi di browser itu diakhiri
+  (`signOut({ scope: "local" })` - perangkat lain tidak ikut keluar), data
+  pribadi dibersihkan, dan layar login menjelaskan alasannya. Sesi yang
+  ditinggal (browser ditutup, laptop tidur) diakhiri saat halaman dibuka
+  lagi, sebelum isi aplikasi tampil. Pengecualian & kait: tes yang sedang
+  berjalan dihitung aktif (`IdleSession.keepAlive` di `latihan.js`), dan
+  editan Kelola Soal yang belum disimpan disimpan sebagai draft dulu
+  (`IdleSession.beforeLogout` di `kelola-soal.js`). Logout di satu tab
+  (tombol Keluar atau otomatis) membuat tab lain ikut kembali ke layar
+  login. `signOut` juga mencabut sesi itu di server Supabase (kalau
+  sedang online).
 - **Password minimal 10 karakter, huruf + angka** - dicek di form, di
   Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket
