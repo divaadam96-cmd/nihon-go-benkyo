@@ -1,15 +1,45 @@
 /* Halaman Materi (pages/materi.html): daftar pelajaran Buku 1 (1-25) & Buku 2
    (26-50), pembaca per-pelajaran (mode fokus, tahap pahami/contoh/latihan),
    dan progres. Dibungkus initPage(), dijalankan auth.js setelah login.
-   Dipecah dari app.js lama - konten pelajaran (data teks) tetap sama persis,
-   cuma dipindah lokasi; satu kuis "tailored" yang di kode asli dibangun lalu
-   SELALU langsung dihapus lagi sebelum sempat dilihat siapa pun (bukan
-   dipakai) TIDAK dibawa ke sini. syncCurriculumDashboard() diubah agar
-   menyimpan hasilnya ke localStorage (bukan menulis ke #dashboard langsung)
-   karena Dashboard sekarang halaman terpisah - lihat renderCurriculumSummary()
-   di js/pages/dashboard.js. */
+   Data teks pelajaran ada di data/materi-grammar-data.js; file ini yang
+   merendernya (buildLessonHtml). syncCurriculumDashboard() menyimpan
+   progres ke localStorage untuk dibaca Dashboard - lihat
+   renderCurriculumSummary() di js/pages/dashboard.js. */
+// === Render konten pelajaran (data: data/materi-grammar-data.js) ===
+function buildLessonHtml(number, title, items) {
+  /* Bentuk item pola: lihat komentar di atas data/materi-grammar-data.js. */
+  const renderExample = ([contoh, arti]) =>
+    `<div class="grammar-example"><span class="grammar-jp">${contoh}</span><span class="grammar-meaning">${arti}</span></div>`;
+  const renderTable = (table) =>
+    `<table class="grammar-table"><thead><tr><th></th>${table.headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${table.rows.map((row) => `<tr>${row.map((cell, i) => `<${i === 0 ? "th" : "td"}>${cell}</${i === 0 ? "th" : "td"}>`).join("")}</tr>`).join("")}</tbody></table>`;
+  const renderBlock = (b) =>
+    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${b.figure ? `<figure class="grammar-figure"><img src="../${b.figure.src}" alt="${b.figure.alt}" loading="lazy"></figure>` : ""}${b.table ? renderTable(b.table) : ""}${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
+  const renderPoint = (item, i) => {
+    const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="${item.noBox ? "grammar-pola-plain" : "grammar-pola-box"}">${item.title}</span>${item.suffix ? `<span class="grammar-pola-suffix"> ${item.suffix}</span>` : ""}</h3>`;
+    return `<div class="grammar-point">${heading}${item.blocks.map(renderBlock).join("")}</div>`;
+  };
+  return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${title}</summary><div class="html-content">${items.map(renderPoint).join("")}</div></details>`;
+}
+
+function installMateriGrammarContent() {
+  document.getElementById("materials").innerHTML =
+    `<div class="head"><div><div class="eyebrow">Materi pembelajaran HTML lengkap</div><h1>Dasar — Buku 1: Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Setiap pelajaran memuat seluruh poin inti tata bahasa dalam penulisan ulang yang terstruktur untuk web.</p></div></div><div class="html-course"></div>`;
+  document.querySelector("#materials .html-course").innerHTML = MATERI_BOOK1_LESSONS.map((l, i) => buildLessonHtml(i + 1, l.title, l.items)).join("");
+
+  /* Buku 2 BUKAN view/nav terpisah lagi ("fitur Kelas" sudah dihapus) -
+     section ini ditaruh di DALAM #materials supaya seluruh materi (Buku 1
+     dan Buku 2) bisa diakses dari satu tempat: menu "Materi pelajaran".
+     id="book2" tetap dipertahankan karena masih dipakai sebagai penanda
+     viewId oleh initMaterialLessonPicker di bawah. */
+  const bookTwo = document.createElement("section");
+  bookTwo.id = "book2";
+  bookTwo.innerHTML = `<div class="head"><div><div class="eyebrow">Materi pembelajaran menengah</div><h1>Menengah — Buku 2</h1><p>Pelajaran 26–50 disusun bertahap dari materi tata bahasa Buku 2.</p></div></div><div class="html-course"></div>`;
+  document.getElementById("materials").appendChild(bookTwo);
+  bookTwo.querySelector(".html-course").innerHTML = MATERI_BOOK2_LESSONS.map((l, i) => buildLessonHtml(i + 26, l.title, l.items)).join("");
+}
+
 function initPage() {
-// === Pasang konten pelajaran Buku 1 & 2 (data ada di data/materi-grammar-data.js) ===
+// === Pasang konten pelajaran Buku 1 & 2 ===
 installMateriGrammarContent();
 
 structureGrammarPoints();

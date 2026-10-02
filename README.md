@@ -74,8 +74,13 @@ js/
                            pantau.js, admin.js) - isinya dibungkus
                            initPage(), dipanggil auth.js setelah login
 
-data/*.js                dataset murni (kanji, kana, materi per-bab, bab
-                          kosakata/kanji) - dimuat halaman yang perlu saja
+data/                     dataset murni (tanpa kode render), dimuat halaman
+                          yang perlu saja:
+  bab-data.js             kosakata & kanji per Bab 1-50 (Hafalan, Latihan)
+  kana-data.js            tabel hiragana/katakana + jalur goresan (Hafalan)
+  kanji-data.js           daftar kanji per pelajaran (Kanji)
+  kanji-stroke-data.js    jalur goresan kanji (Kanji)
+  materi-grammar-data.js  Keterangan Tata Bahasa Pelajaran 1-50 (Materi)
 assets/
   icons/                  ikon PWA
   images/                 logo & gambar latar

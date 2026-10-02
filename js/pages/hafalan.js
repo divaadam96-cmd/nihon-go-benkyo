@@ -12,7 +12,10 @@ function initPage() {
   // Dashboard sebentar lalu balik ke sini tidak mengulang dari Bab 1 -
   // sebelumnya (saat Hafalan masih section SPA, bukan halaman sendiri)
   // pindah antar menu tidak memuat ulang dokumen sama sekali.
-  let category = sessionStorage.getItem("hafalanCategory") || "noun";
+  /* Kartu flashcard per kategori "bab{N}-kosakata" / "bab{N}-kanji",
+     diisi dari data/bab-data.js di bawah (lihat MAX_BAB_LOADED). */
+  const deck = {};
+  let category = sessionStorage.getItem("hafalanCategory") || "bab1-kosakata";
   let index = 0;
   function save() {
     localStorage.setItem("nihonBenkyoProgress", JSON.stringify(state));
@@ -81,21 +84,6 @@ function initPage() {
       .hafalan-panel-hint{color:var(--muted);font-size:12px;margin:0 0 18px;text-align:center;padding:14px;border:1px dashed #d8cfba;border-radius:10px}
     `;
   document.head.appendChild(hafalanStyle);
-
-  deck.hiragana = [
-    ["あ", "a", "Hiragana a"],
-    ["か", "ka", "Hiragana ka"],
-    ["さ", "sa", "Hiragana sa"],
-    ["た", "ta", "Hiragana ta"],
-    ["こんにちは", "halo", "konnichiwa"],
-  ];
-  deck.katakana = [
-    ["ア", "a", "Katakana a"],
-    ["カ", "ka", "Katakana ka"],
-    ["サ", "sa", "Katakana sa"],
-    ["タ", "ta", "Katakana ta"],
-    ["コーヒー", "kopi", "koohii"],
-  ];
 
   /* Hafalan per Bab (Minna no Nihongo), lengkap Bab 1-50. Kosakata = SEMUA
      kata di bab itu (baik ada kanji maupun tidak). Kanji = subset kata yang

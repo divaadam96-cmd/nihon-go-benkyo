@@ -1129,15 +1129,13 @@ function optionSet(correct,pool){return shuffled([correct,...shuffled(pool.filte
 function materiIdForBab(bab){return `materi:book${bab<=25?1:2}:${bab<=25?bab-1:bab-26}:0`}
 function vocabularyQuestions(){const source=collectRangeData(babKosakataData),rows=shuffled(source).slice(0,10),meanings=source.map(row=>row.item[1]);return rows.map(({item,bab})=>{const options=optionSet(item[1],meanings);return{category:"Kosakata",instruction:"Pilih arti kosakata yang paling tepat.",html:item[0],options,answer:options.indexOf(item[1]),explanation:`${item[0]} berarti “${item[1]}”. Kosakata ini berasal dari Bab ${bab}.`,material:`Bab ${bab} · Kosakata`,srsId:`hafalan:bab${bab}:${item[0]}`}})}
 function kanjiQuestions(){const source=collectRangeData(babKanjiData),rows=shuffled(source).slice(0,10),readings=source.map(row=>row.item[1]);return rows.map(({item,bab})=>{const options=optionSet(item[1],readings);return{category:"Kanji",instruction:"Pilih cara baca kanji yang benar.",html:`<ruby>${item[0]}<rt>${item[1]}</rt></ruby>`,options,answer:options.indexOf(item[1]),explanation:`${item[0]} dibaca ${item[1]} dan berarti “${item[2]}”.`,material:`Bab ${bab} · Kanji dan cara baca`,srsId:`kanji:${item[0]}`}})}
-function grammarQuestions(){const result=[];for(let bab=rangeStart;bab<rangeStart+5;bab++){const item=tailoredQuizData[bab];if(item)result.push({category:"Tata Bahasa",instruction:`Pilih jawaban yang sesuai dengan pola Bab ${bab}.`,html:item[0],options:item[1],answer:item[2],explanation:item[3],material:`Bab ${bab} · Tata bahasa`,srsId:materiIdForBab(bab)})}return result}
 function contextualQuestions(kind){const source=collectRangeData(babKanjiData),rows=shuffled(source).slice(0,10),allWords=source.map(row=>row.item[0]),allMeanings=source.map(row=>row.item[2]);return rows.map(({item,bab})=>{const [word,reading,meaning]=item;
   if(kind==="sentence"){const correct=`${word}を おぼえます。`,options=optionSet(correct,[`${word}が おぼえます。`,`${word}へ おぼえます。`,`おぼえます ${word}を。`]);return{category:"Susunan Kalimat",instruction:"Pilih susunan kalimat yang paling tepat.",html:`“Saya menghafalkan ${meaning}.”`,options,answer:options.indexOf(correct),explanation:`Objek ditandai を dan diletakkan sebelum kata kerja: ${correct}`,material:`Bab ${bab} · Kosakata dalam kalimat`,srsId:`kanji:${word}`}}
   if(kind==="reading"){const options=optionSet(meaning,allMeanings);return{category:"Bacaan",instruction:"Baca kalimat pendek, lalu pilih maknanya.",html:`これは <ruby>${word}<rt>${reading}</rt></ruby> です。`,options,answer:options.indexOf(meaning),explanation:`Kata ${word} (${reading}) pada teks berarti “${meaning}”.`,material:`Bab ${bab} · Bacaan pendek`,srsId:`kanji:${word}`}}
   if(kind==="audio"){const options=optionSet(word,allWords);return{category:"Audio",instruction:"Dengarkan audio, lalu pilih kata yang diucapkan.",html:"音声を聞いてください。",audio:reading,options,answer:options.indexOf(word),explanation:`Audio mengucapkan ${reading}, yaitu ${word} yang berarti “${meaning}”.`,material:`Bab ${bab} · Pemahaman audio`,srsId:`kanji:${word}`}}
   const correct=`${word}を ください。`,options=optionSet(correct,[`${word}へ ください。`,`${word}が ください。`,`${word}で ください。`]);return{category:"Situasional",instruction:"Pilih ungkapan yang paling sesuai dengan situasi.",html:`Kamu ingin meminta “${meaning}” dengan sopan.`,options,answer:options.indexOf(correct),explanation:`Pola benda + をください digunakan untuk meminta sesuatu dengan sopan: ${correct}`,material:`Bab ${bab} · Komunikasi praktis`,srsId:`kanji:${word}`}})}
-/* Bug lama: hampir semua soal di curatedBabPackages (dan tailoredQuizData
-   yang dipakai grammarQuestions) jawaban benarnya SELALU disimpan di index 0
-   ("A") karena ditulis manual tanpa diacak - options di data sumber
+/* Bug lama: hampir semua soal di curatedBabPackages jawaban benarnya
+   SELALU disimpan di index 0 ("A") karena ditulis manual tanpa diacak - options di data sumber
    dianggap urutan TETAP, bukan urutan tampil. Di sini options diacak ULANG
    dan `answer` dihitung ulang dari posisi teks jawaban benar yang baru,
    supaya posisi jawaban benar bervariasi setiap kali - berlaku untuk semua
@@ -1185,8 +1183,8 @@ async function buildSelectedQuestions(){
   const curated=curatedBabPackages[rangeStart];
   const bank=remote||(curated?curated.questions:null);
   if(bank){questions=finalizeQuestions(bank,{reorder:true});$("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`;return}
-  const vocabulary=vocabularyQuestions(),kanji=kanjiQuestions(),grammar=grammarQuestions(),sentence=contextualQuestions("sentence"),reading=contextualQuestions("reading"),audio=contextualQuestions("audio"),situational=contextualQuestions("situational");
-  let list=[...vocabulary.slice(0,2),...kanji.slice(0,2),...grammar.slice(0,2),sentence[0],reading[0],audio[0],situational[0]];
+  const vocabulary=vocabularyQuestions(),kanji=kanjiQuestions(),sentence=contextualQuestions("sentence"),reading=contextualQuestions("reading"),audio=contextualQuestions("audio"),situational=contextualQuestions("situational");
+  let list=[...vocabulary.slice(0,2),...kanji.slice(0,2),sentence[0],reading[0],audio[0],situational[0]];
   list=list.filter(Boolean);if(!list.length)list=[...defaultQuestions];
   questions=finalizeQuestions(list,{reorder:true});
   $("heroQuestionTotal").textContent=questions.length;$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`;

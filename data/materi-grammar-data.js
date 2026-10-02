@@ -1,50 +1,28 @@
-/* Konten teks pelajaran (Keterangan Tata Bahasa Pelajaran 1-50, Buku 1 &
-   Buku 2) untuk halaman Materi. installMateriGrammarContent() dipanggil
-   SEKALI oleh initPage() di materi.js, di awal fungsi.
+/* Data Keterangan Tata Bahasa Pelajaran 1-50 untuk halaman Materi -
+   isinya ditranskripsi kata demi kata dari bagian "IV. Keterangan Tata
+   Bahasa" buku sumber per pelajaran. File ini HANYA data; dirender oleh
+   buildLessonHtml()/installMateriGrammarContent() di js/pages/materi.js.
+   Mau tambah/ubah 1 pelajaran? Cukup ubah 1 entri array di bawah.
 
-   Buku 1 dan Buku 2 memakai bentuk yang sama: satu array data
-   (MATERI_BOOK1_LESSONS / MATERI_BOOK2_LESSONS) dan satu fungsi render
-   bersama (buildLessonHtml). Mau tambah/hapus/ubah 1 pelajaran? Tinggal
-   ubah 1 entri array - tidak perlu utak-atik fungsi render atau file lain.
-   Isinya ditranskripsi kata demi kata dari bagian "IV. Keterangan Tata
-   Bahasa" buku sumber per pelajaran. */
-
-function buildLessonHtml(number, title, items) {
-  /* Bentuk tiap item pola:
-     {title, suffix?, noBox?, blocks:[{label?, text?, figure?, table?, examples?:[[contoh, arti], ...], note?}]}
-     - suffix = keterangan di luar kotak pola, mis. "(kalimat tanya)".
-     - noBox: sebagian nomor di buku (mis. Pelajaran 8 nomor 1 "Kata Sifat")
-       bukan kotak pola kalimat, cuma judul sub-bagian biasa tanpa kotak.
-     - blocks = sub-penjelasan 1)/2)/3) dari buku sumber. Urutan render SATU
-       blok tetap: label, text, figure, table, examples, note - persis
-       urutannya di buku (mis. Pelajaran 4 pola 2 sub 2: tabel konjugasi
-       dulu baru contoh ③④⑤).
-     - text opsional: sebagian sub-poin di buku (mis. Pelajaran 2 pola 5)
-       cuma satu baris "N) <kalimat>" tanpa paragraf penjelasan - taruh
-       kalimatnya di `label` saja.
-     - figure {src, alt}: diagram/ilustrasi yang memang ada di buku (mis.
-       garis waktu Pelajaran 29 pola 1), dipotong dari PDF ke
-       assets/images/materi/.
-     - table {headers:[...], rows:[[...], ...]}: pola yang di buku berupa
-       tabel referensi (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど").
-     - contoh bertanda "×" (contoh pemakaian salah) boleh tanpa arti; tetap
-       tampil di Tahap 2 tapi tidak dipakai sebagai soal Tahap 3. */
-  const renderExample = ([contoh, arti]) =>
-    `<div class="grammar-example"><span class="grammar-jp">${contoh}</span><span class="grammar-meaning">${arti}</span></div>`;
-  const renderTable = (table) =>
-    `<table class="grammar-table"><thead><tr><th></th>${table.headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${table.rows.map((row) => `<tr>${row.map((cell, i) => `<${i === 0 ? "th" : "td"}>${cell}</${i === 0 ? "th" : "td"}>`).join("")}</tr>`).join("")}</tbody></table>`;
-  const renderBlock = (b) =>
-    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${b.figure ? `<figure class="grammar-figure"><img src="../${b.figure.src}" alt="${b.figure.alt}" loading="lazy"></figure>` : ""}${b.table ? renderTable(b.table) : ""}${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
-  const renderPoint = (item, i) => {
-    const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="${item.noBox ? "grammar-pola-plain" : "grammar-pola-box"}">${item.title}</span>${item.suffix ? `<span class="grammar-pola-suffix"> ${item.suffix}</span>` : ""}</h3>`;
-    return `<div class="grammar-point">${heading}${item.blocks.map(renderBlock).join("")}</div>`;
-  };
-  return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${title}</summary><div class="html-content">${items.map(renderPoint).join("")}</div></details>`;
-}
-
-function installMateriGrammarContent() {
-document.getElementById("materials").innerHTML =
-  `<div class="head"><div><div class="eyebrow">Materi pembelajaran HTML lengkap</div><h1>Dasar — Buku 1: Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Setiap pelajaran memuat seluruh poin inti tata bahasa dalam penulisan ulang yang terstruktur untuk web.</p></div></div><div class="html-course"></div>`;
+   Bentuk tiap item pola:
+   {title, suffix?, noBox?, blocks:[{label?, text?, figure?, table?, examples?:[[contoh, arti], ...], note?}]}
+   - suffix = keterangan di luar kotak pola, mis. "(kalimat tanya)".
+   - noBox: sebagian nomor di buku (mis. Pelajaran 8 nomor 1 "Kata Sifat")
+     bukan kotak pola kalimat, cuma judul sub-bagian biasa tanpa kotak.
+   - blocks = sub-penjelasan 1)/2)/3) dari buku sumber. Urutan render SATU
+     blok tetap: label, text, figure, table, examples, note - persis
+     urutannya di buku (mis. Pelajaran 4 pola 2 sub 2: tabel konjugasi
+     dulu baru contoh ③④⑤).
+   - text opsional: sebagian sub-poin di buku (mis. Pelajaran 2 pola 5)
+     cuma satu baris "N) <kalimat>" tanpa paragraf penjelasan - taruh
+     kalimatnya di `label` saja.
+   - figure {src, alt}: diagram/ilustrasi yang memang ada di buku (mis.
+     garis waktu Pelajaran 29 pola 1), dipotong dari PDF ke
+     assets/images/materi/.
+   - table {headers:[...], rows:[[...], ...]}: pola yang di buku berupa
+     tabel referensi (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど").
+   - contoh bertanda "×" (contoh pemakaian salah) boleh tanpa arti; tetap
+     tampil di Tahap 2 tapi tidak dipakai sebagai soal Tahap 3. */
 
 const MATERI_BOOK1_LESSONS = [
   {
@@ -2393,17 +2371,6 @@ const MATERI_BOOK1_LESSONS = [
     ],
   },
 ];
-document.querySelector("#materials .html-course").innerHTML = MATERI_BOOK1_LESSONS.map((l, i) => buildLessonHtml(i + 1, l.title, l.items)).join("");
-
-/* Buku 2 BUKAN view/nav terpisah lagi ("fitur Kelas" sudah dihapus) -
-   section ini ditaruh di DALAM #materials supaya seluruh materi (Buku 1
-   dan Buku 2) bisa diakses dari satu tempat: menu "Materi pelajaran".
-   id="book2" tetap dipertahankan karena masih dipakai sebagai penanda
-   viewId oleh initMaterialLessonPicker di js/pages/materi.js. */
-const bookTwo = document.createElement("section");
-bookTwo.id = "book2";
-bookTwo.innerHTML = `<div class="head"><div><div class="eyebrow">Materi pembelajaran menengah</div><h1>Menengah — Buku 2</h1><p>Pelajaran 26–50 disusun bertahap dari materi tata bahasa Buku 2.</p></div></div><div class="html-course"></div>`;
-document.getElementById("materials").appendChild(bookTwo);
 
 const MATERI_BOOK2_LESSONS = [
   {
@@ -4541,5 +4508,3 @@ const MATERI_BOOK2_LESSONS = [
     ],
   },
 ];
-bookTwo.querySelector(".html-course").innerHTML = MATERI_BOOK2_LESSONS.map((l, i) => buildLessonHtml(i + 26, l.title, l.items)).join("");
-}

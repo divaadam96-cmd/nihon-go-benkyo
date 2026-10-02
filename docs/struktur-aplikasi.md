@@ -56,9 +56,9 @@ Ambil contoh membuka `pages/materi.html`:
    untuk `materi.html`, itu adalah `js/pages/materi.js`. Fungsi inilah
    yang benar-benar mengisi konten (daftar pelajaran, dst). Khusus
    `materi.js`: teks pelajaran (grammar Pelajaran 1-50) sendiri ada di
-   `data/materi-grammar-data.js` (dipasang lewat satu pemanggilan
-   `installMateriGrammarContent()` di awal `initPage()`) — kalau mau
-   edit teks pelajaran, di situ tempatnya, bukan di `materi.js`.
+   `data/materi-grammar-data.js` (data murni, dirender oleh
+   `installMateriGrammarContent()` di `materi.js`) — kalau mau edit teks
+   pelajaran, di situ tempatnya, bukan di `materi.js`.
 
 Pola `initPage()` ini SAMA untuk ketujuh halaman — kalau ingin tahu apa
 yang terjadi saat sebuah halaman dibuka, cari `function initPage()` di
