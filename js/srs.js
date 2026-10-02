@@ -8,6 +8,9 @@ const SRS_STORAGE_KEY = "nihonBenkyoSRS_v1";
 const SRS_ACTIVITY_KEY = "nihonBenkyoActivityLog_v1";
 const SRS_INTERVAL_DAYS = [1, 2, 4, 7, 14, 30, 60];
 const SRS_MASTERED_BOX = 3;
+// Maksimal ulasan yang dihitung XP per hari (sama dengan srs_daily_review_cap()
+// di supabase/fix-3-xp-streak-server.sql).
+const SRS_DAILY_REVIEW_CAP = 300;
 
 function srsToday() {
   return new Date().toISOString().slice(0, 10);
@@ -43,56 +46,47 @@ function srsLoadActivity() {
   }
 }
 
-function srsLogActivity() {
+function srsSetActivity(dateStr, count) {
   const log = srsLoadActivity();
-  const today = srsToday();
-  log[today] = (log[today] || 0) + 1;
+  log[dateStr] = count;
   try {
     localStorage.setItem(SRS_ACTIVITY_KEY, JSON.stringify(log));
   } catch {
     // Sama seperti srsSave: abaikan jika penyimpanan tidak tersedia.
   }
-  srsPushActivity(today, log[today]);
 }
 
 /* --- Sinkronisasi ke Supabase ---
-   localStorage tetap sumber kebenaran untuk perangkat ini (instan, tidak
-   perlu menunggu jaringan). Setiap perubahan dikirim ke Supabase di latar
-   belakang (fire-and-forget) supaya Sensei/Operator bisa melihatnya dari
-   perangkat lain, dan supaya progres tidak hilang kalau localStorage
-   perangkat ini dibersihkan. Gagal kirim (offline, dsb.) sengaja dibiarkan
-   diam - tidak boleh mengganggu alur belajar. */
-function srsPushItem(itemId, item) {
+   Setiap ulasan dikirim ke srs_review() (supabase/fix-3-xp-streak-server.sql)
+   yang MENGHITUNG ulang kotak SRS, jadwal, dan XP/streak di server - siswa
+   tidak bisa lagi menulis srs_progress/activity_log langsung (XP, streak,
+   dan "dikuasai" palsu). Tampilan diperbarui lebih dulu di perangkat
+   dengan aturan yang sama (instan), lalu ditimpa hasil dari server begitu
+   jawabannya datang. Gagal kirim (offline, dsb.) sengaja diam - progres
+   lokal tetap tampil, dan disamakan lagi dengan server saat login berikutnya. */
+function srsSyncReview(itemId, outcome) {
   if (!window.supabaseClient || !window.currentProfile) return;
   window.supabaseClient
-    .from("srs_progress")
-    .upsert(
-      {
-        user_id: window.currentProfile.id,
-        item_id: itemId,
-        box: item.box,
-        due: item.due,
-        reviews: item.reviews,
-        last_result: item.lastResult,
-        last_reviewed_at: item.lastReviewedAt,
-      },
-      { onConflict: "user_id,item_id" },
-    )
-    .then(({ error }) => {
-      if (error) console.warn("srsPushItem gagal:", error.message);
-    });
-}
-
-function srsPushActivity(dateStr, count) {
-  if (!window.supabaseClient || !window.currentProfile) return;
-  window.supabaseClient
-    .from("activity_log")
-    .upsert(
-      { user_id: window.currentProfile.id, activity_date: dateStr, count },
-      { onConflict: "user_id,activity_date" },
-    )
-    .then(({ error }) => {
-      if (error) console.warn("srsPushActivity gagal:", error.message);
+    .rpc("srs_review", { p_item_id: itemId, p_outcome: outcome })
+    .then(({ data, error }) => {
+      if (error) {
+        console.warn("srs_review gagal:", error.message);
+        return;
+      }
+      const row = data && data[0];
+      if (!row) return;
+      // Tanggal dinormalkan ke YYYY-MM-DD (format yang dipakai di seluruh srs.js).
+      const day = (value) => (value ? String(value).slice(0, 10) : null);
+      const store = srsLoad();
+      store[itemId] = {
+        box: row.box,
+        due: day(row.due),
+        reviews: row.reviews,
+        lastResult: row.last_result,
+        lastReviewedAt: day(row.last_reviewed_at),
+      };
+      srsSave(store);
+      srsSetActivity(day(row.last_reviewed_at), row.today_count);
     });
 }
 
@@ -151,20 +145,33 @@ function srsGet(itemId) {
 }
 
 /* outcome: "again" (lupa/sulit), "hard" (masih belajar), "good" (sudah paham/kuat) */
+/* Aturan sama dengan srs_review() di server: kotak hanya naik kalau item
+   sudah jatuh tempo (mengulas berulang di hari yang sama tidak menaikkannya),
+   dan satu item hanya dihitung XP sekali per hari (maks. SRS_DAILY_REVIEW_CAP). */
 function srsReview(itemId, outcome) {
   const data = srsLoad();
+  const today = srsToday();
   const item = data[itemId] || { box: 0, due: null, reviews: 0 };
-  if (outcome === "again") item.box = 0;
-  else if (outcome === "hard") item.box = Math.max(0, item.box - 1);
-  else item.box = Math.min(SRS_INTERVAL_DAYS.length - 1, item.box + 1);
+  const wasDue = !item.reviews || !item.due || item.due <= today;
+  const firstToday = item.lastReviewedAt !== today;
+  if (outcome === "again") {
+    item.box = 0;
+    item.due = srsAddDays(SRS_INTERVAL_DAYS[0]);
+  } else if (outcome === "hard") {
+    item.box = Math.max(0, (item.box || 0) - 1);
+    item.due = srsAddDays(SRS_INTERVAL_DAYS[item.box]);
+  } else if (wasDue) {
+    item.box = Math.min(SRS_INTERVAL_DAYS.length - 1, (item.box || 0) + 1);
+    item.due = srsAddDays(SRS_INTERVAL_DAYS[item.box]);
+  }
   item.reviews = (item.reviews || 0) + 1;
   item.lastResult = outcome;
-  item.lastReviewedAt = srsToday();
-  item.due = srsAddDays(SRS_INTERVAL_DAYS[item.box]);
+  item.lastReviewedAt = today;
   data[itemId] = item;
   srsSave(data);
-  srsLogActivity();
-  srsPushItem(itemId, item);
+  const todayCount = srsTodayCount();
+  if (firstToday && todayCount < SRS_DAILY_REVIEW_CAP) srsSetActivity(today, todayCount + 1);
+  srsSyncReview(itemId, outcome);
   return item;
 }
 
@@ -235,7 +242,7 @@ function srsAnyReviewedToday(prefix) {
 
 /* Jumlah seluruh aksi review (semua kategori, semua waktu) - basis
    perhitungan XP: setiap review, apa pun hasilnya, dihitung sekali di
-   activity log lewat srsLogActivity(). */
+   activity log (sekali per item per hari, lihat srsReview). */
 function srsTotalActivityCount() {
   const log = srsLoadActivity();
   return Object.values(log).reduce((sum, count) => sum + count, 0);

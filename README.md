@@ -231,6 +231,14 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   yang sama. Tes yang ditinggal sampai waktu habis ditutup & dinilai dari
   jawaban tersimpan saat siswa membuka dashboard/Tes Kemampuan atau Sensei
   membuka Pantau Siswa (ditandai "⏱ Waktu habis").
+- **XP, streak, dan progres hafalan dihitung server**
+  (`supabase/fix-3-xp-streak-server.sql`). Siswa hanya bisa membaca
+  `srs_progress`/`activity_log`; setiap ulasan lewat `srs_review()` yang
+  menghitung kotak SRS, jadwal, dan XP memakai tanggal server. Kotak hanya
+  naik kalau item sudah jatuh tempo; satu item dihitung XP sekali per hari,
+  maksimal 300 ulasan XP per hari (`srs_daily_review_cap()`, sama dengan
+  `SRS_DAILY_REVIEW_CAP` di `js/srs.js`). Format id item yang valid
+  dibatasi di fungsi itu - id item baru harus ditambahkan ke regex-nya.
 - **Password minimal 10 karakter, huruf + angka** - dicek di form, di
   Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket
