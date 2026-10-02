@@ -1,0 +1,4 @@
+# Hash skrip inline index.html tercantum di Content-Security-Policy
+# (vercel.json) - line ending harus tetap LF supaya hash-nya tidak berubah
+# saat repo di-checkout di Windows (core.autocrlf).
+index.html text eol=lf
