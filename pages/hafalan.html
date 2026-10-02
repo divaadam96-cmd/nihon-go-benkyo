@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Hafalan — Nihon GO Benkyo</title>
+  <meta name="description" content="Hafalan kosakata dan kana bahasa Jepang dengan kartu hafalan (SRS) di Nihon GO Benkyo.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap"></noscript>
+  <meta name="theme-color" content="#142945">
+  <link rel="manifest" href="../nihon-go-benkyo.webmanifest">
+  <link rel="icon" type="image/png" href="../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/shell.css">
+  <link rel="stylesheet" href="../css/auth.css">
+  <link rel="stylesheet" href="../css/pages/hafalan.css">
+</head>
+<body class="auth-checking">
+<main class="main" id="pageMain">
+  <section id="memorization">
+    <div class="head"><div><div class="eyebrow">Hafalan interaktif</div><h1>Hafalan kanji dan kosakata.</h1><p>Gunakan flashcard untuk mengingat cara baca kanji serta arti kosakata bahasa Indonesia.</p></div></div>
+    <div class="memory-routes"><button class="memory-route" data-memory="hiragana"><span class="route-icon">あ</span><b>Hiragana dan Katakana</b><small>Latihan membaca, menulis, kata pendek, dan cerita sederhana.</small></button><button class="memory-route" data-memory="noun"><span class="route-icon">語</span><b>Masteri Kosakata</b><small>Hafalkan arti bahasa Indonesia untuk semua kata, per Bab.</small></button></div>
+    <p class="hafalan-panel-hint" id="hafalanPanelHint">Pilih salah satu di atas untuk mulai belajar.</p>
+    <div class="flash-layout">
+      <div>
+        <div class="filters"></div>
+        <div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Balik kartu flashcard"><div class="flash-inner"><div class="face"><div class="kana" id="front">学校</div><small>Klik kartu untuk melihat arti</small></div><div class="face back"><div><b id="back">sekolah</b><p id="reading">がっこう · gakkou</p></div></div></div></div>
+        <div class="flash-controls"><button class="secondary" id="again">Belum ingat</button><button class="primary" id="known">Sudah paham</button></div>
+        <div class="card-count" id="cardCount">Kartu 1 dari 5</div>
+      </div>
+      <aside class="card learning-tips"><h3>Catatan belajar</h3><p id="hafalanTip">Pilih Bab dan mode (Kosakata/Kanji), lalu klik kartu untuk melihat arti dan cara bacanya.</p><hr><small>Penguasaan sesi ini</small><div style="display:flex;justify-content:space-between;margin:9px 0"><b id="mastered">0 kata</b><span id="masterPct">0%</span></div><div class="track"><div class="fill" id="masterBar" style="width:0%"></div></div></aside>
+    </div>
+  </section>
+</main>
+<script defer src="../js/pwa.js"></script>
+<script defer src="../data/kana-data.js"></script>
+<script defer src="../data/bab-data.js"></script>
+<script defer src="../js/srs.js"></script>
+<script defer src="../js/quiz-results.js"></script>
+<script defer src="../js/app-effects.js"></script>
+<script defer src="../js/app-sidebar.js"></script>
+<script defer src="../js/app-shell.js"></script>
+<script defer src="../js/pages/hafalan.js"></script>
+<script defer fetchpriority="low" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
+<script defer src="../js/auth.js"></script>
+</body></html>

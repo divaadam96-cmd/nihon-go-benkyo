@@ -39,7 +39,7 @@ sekali penuh sebelum merilis perubahan besar.
 
 - [ ] Flashcard: "Sudah paham" menaikkan box SRS item itu; "Belum ingat" mengembalikannya ke box 0.
 - [ ] Belajar Kanji: animasi urutan goresan tampil, tombol kanji sebelumnya/berikutnya bekerja.
-- [ ] Buka `prototype-kanji-v2.html` atau `prototype-tes-v2.html` langsung di address bar **tanpa login** → otomatis redirect ke `index.html` (guard akses langsung).
+- [ ] Buka `pages/kanji.html` atau `pages/latihan.html` langsung di address bar **tanpa login** → otomatis redirect ke `index.html` (guard akses langsung).
 
 ## 6. Tes Kemampuan
 

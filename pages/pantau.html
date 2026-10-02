@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Pantau Siswa — Nihon GO Benkyo</title>
+  <meta name="description" content="Pantau progres belajar siswa Nihon GO Benkyo untuk Sensei dan Operator.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap"></noscript>
+  <meta name="theme-color" content="#142945">
+  <link rel="manifest" href="../nihon-go-benkyo.webmanifest">
+  <link rel="icon" type="image/png" href="../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/shell.css">
+  <link rel="stylesheet" href="../css/auth.css">
+  <link rel="stylesheet" href="../css/pages/pantau.css">
+</head>
+<body class="auth-checking">
+<main class="main" id="pageMain">
+  <div data-role-only="sensei,operator" hidden>
+    <div class="head"><div><div class="eyebrow">Pantau perkembangan</div><h1>Progres siswa.</h1><p>Lihat progres belajar setiap siswa. Klik satu siswa untuk detail dan opsi reset.</p></div></div>
+    <div id="monitorList" class="monitor-list"><p class="muted">Memuat…</p></div>
+    <div id="monitorDetail" class="monitor-detail-overlay" hidden>
+      <div class="monitor-detail-card" role="dialog" aria-modal="true" aria-labelledby="monitorDetailName">
+        <header class="monitor-detail-header">
+          <span class="monitor-student-avatar" id="monitorDetailAvatar" aria-hidden="true">S</span>
+          <div><span class="monitor-detail-kicker">Ringkasan siswa</span><h3 id="monitorDetailName"></h3><small id="monitorDetailId"></small></div>
+          <button type="button" class="monitor-detail-close" id="monitorDetailClose" aria-label="Tutup detail siswa">&times;</button>
+        </header>
+        <div class="monitor-detail-body">
+          <div class="monitor-detail-stats" id="monitorDetailStats"></div>
+
+          <div class="monitor-secondary-list">
+            <div id="monitorAttentionSlot"></div>
+
+            <details class="monitor-disclosure" id="monitorQuizSection">
+              <summary><span><b>Riwayat tes</b><small>Nilai dan bagian yang masih salah tiap sesi.</small></span><strong id="monitorQuizCount">Memuat…</strong></summary>
+              <div class="monitor-quiz-list" id="monitorQuizList"></div>
+            </details>
+
+            <details class="monitor-disclosure" id="monitorAssignmentSection">
+              <summary><span><b>Tugas &amp; akses tes</b><small>Kelola tugas aktif dan riwayatnya.</small></span><strong id="monitorAssignmentCount">Memuat…</strong></summary>
+              <div class="monitor-assignments">
+                <div id="monitorAssignmentList"></div>
+                <form id="monitorAssignmentForm">
+                  <div class="assignment-type-choice"><label><input type="radio" name="assignmentType" value="umum" checked><span>Tugas umum</span></label><label><input type="radio" name="assignmentType" value="bab"><span>Akses latihan per 5 Bab</span></label><label><input type="radio" name="assignmentType" value="paket"><span>Akses simulasi paket</span></label></div>
+                  <input type="text" id="monitorAssignmentTitle" placeholder="Judul tugas, mis. Selesaikan Pelajaran 3" required autocomplete="off">
+                  <select id="monitorAssignmentBab" hidden><option value="1">Bab 1–5</option><option value="6">Bab 6–10</option><option value="11">Bab 11–15</option><option value="16">Bab 16–20</option><option value="21">Bab 21–25</option><option value="26">Bab 26–30</option><option value="31">Bab 31–35</option><option value="36">Bab 36–40</option><option value="41">Bab 41–45</option><option value="46">Bab 46–50</option></select>
+                  <select id="monitorAssignmentPaket" hidden><option value="" disabled selected>Memuat paket…</option></select>
+                  <input type="date" id="monitorAssignmentDue">
+                  <button type="submit" class="secondary">Beri tugas</button>
+                </form>
+                <p id="monitorAssignmentHint" class="muted">Akses tes: latihan per 5 Bab dibatasi 45 menit; simulasi paket mengikuti batas waktu masing-masing paket. Tes selesai otomatis saat waktu habis.</p>
+                <p id="monitorAssignmentError" class="login-error" hidden></p>
+              </div>
+            </details>
+
+            <details class="monitor-disclosure monitor-danger-zone" id="monitorDangerSection">
+              <summary><span><b>Pengaturan progres</b><small>Tindakan khusus untuk data belajar siswa.</small></span></summary>
+              <div><p id="monitorResetError" class="login-error" hidden></p><button type="button" class="danger" id="monitorResetBtn">Reset seluruh progres siswa</button></div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script defer src="../js/pwa.js"></script>
+<script defer src="../js/srs.js"></script>
+<script defer src="../js/quiz-results.js"></script>
+<script defer src="../js/app-effects.js"></script>
+<script defer src="../js/app-sidebar.js"></script>
+<script defer src="../js/app-shell.js"></script>
+<script defer src="../js/pages/pantau.js"></script>
+<script defer fetchpriority="low" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
+<script defer src="../js/auth.js"></script>
+</body></html>

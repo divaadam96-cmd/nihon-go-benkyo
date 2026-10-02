@@ -1,0 +1,123 @@
+.flash-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 295px;
+  gap: 15px;
+}
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.filter {
+  border: 1px solid #ded9d0;
+  background: #fffdf9;
+  color: #5e6878;
+  border-radius: 20px;
+  padding: 8px 13px;
+  font: 600 12px "DM Sans";
+  cursor: pointer;
+}
+.filter.active {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+.flashcard {
+  height: 320px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+.flash-inner {
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+}
+.flashcard.flipped .flash-inner {
+  transform: rotateY(180deg);
+}
+.face {
+  position: absolute;
+  inset: 0;
+  border: 1px solid #e4ded4;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  backface-visibility: hidden;
+  background: linear-gradient(140deg, #fffefb, #f4f0e8);
+  box-shadow: 0 12px 30px #1d2a3d0a;
+}
+.face .kana {
+  font: 700 76px "Zen Kaku Gothic New";
+  color: var(--navy);
+}
+.face small {
+  display: block;
+  color: var(--muted);
+  margin-top: 11px;
+}
+.back {
+  transform: rotateY(180deg);
+  background: linear-gradient(140deg, #eee6d8, #faf7f0);
+}
+.back b {
+  font-size: 34px;
+  color: var(--navy);
+}
+.back p {
+  color: #5b6778;
+  margin: 8px;
+}
+.flash-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+.card-count {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 15px;
+}
+.learning-tips p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+.learning-tips hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 20px 0;
+}
+.filter.active {
+  background: #142945;
+  border-color: #142945;
+  color: #f6e8c8;
+}
+.face {
+  background: linear-gradient(140deg, #eee4d2, #dfe0d1);
+  border-color: #c6b488;
+  box-shadow: 0 15px 35px #17274025;
+}
+.back {
+  background: linear-gradient(140deg, #d6c29b, #e3d5bd);
+}
+.face .kana,
+.back b {
+  color: #13243e;
+}
+@media (max-width: 900px) {
+  .flash-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 610px) {
+  .flashcard {
+    height: 275px;
+  }
+  .face .kana {
+    font-size: 62px;
+  }
+}

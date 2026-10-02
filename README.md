@@ -5,11 +5,16 @@ repetition, belajar kanji, simulasi tes JLPT/JFT) dengan sistem login 3
 peran: **Operator** (kelola akun), **Sensei** (beri tugas & pantau
 progres), **Siswa** (belajar).
 
+Dokumentasi lebih detail ada di folder [`docs/`](docs/):
+[struktur aplikasi](docs/struktur-aplikasi.md),
+[desain](docs/desain.md), dan
+[daftar fitur](docs/daftar-fitur.md).
+
 ## Teknologi
 
 - **Frontend**: HTML/CSS/JavaScript vanilla, tanpa framework atau build
-  step. Semua file dimuat langsung lewat `<script>`/`<link>` di
-  `index.html`.
+  step. Setiap halaman (`index.html`, `pages/*.html`) memuat file
+  `<script>`/`<link>`-nya sendiri secara langsung.
 - **Backend**: [Supabase](https://supabase.com) — Auth (email+password),
   Postgres dengan Row Level Security, dan 2 Edge Function (Deno) untuk
   operasi yang butuh hak admin (buat/hapus akun).
@@ -17,32 +22,106 @@ progres), **Siswa** (belajar).
   dipakai offline untuk aset yang sudah pernah dimuat.
 
 Tidak ada `package.json`/npm dependency — satu-satunya library eksternal
-adalah `@supabase/supabase-js@2` yang dimuat lewat CDN jsdelivr.
+adalah `@supabase/supabase-js` (versi dipatok, mis. `@2.117.2`) yang dimuat
+lewat CDN jsdelivr tepat sebelum `js/auth.js`. Semua `<script>` di halaman
+memakai `defer` (urutan eksekusi tetap sesuai urutan tag).
 
 ## Struktur project
 
 ```
-index.html              shell aplikasi: login screen + SPA, nav dibangun ulang oleh app.js
-auth.js                 login Supabase, sinkronisasi profil/role
-app.js                  inti aplikasi: dashboard, flashcard, materi, kanji dasar, dsb (dibungkus initApp())
-app-sidebar.js          topnav & sidebar (rebuild menu, toggle rail/drawer, tooltip)
-app-effects.js          efek visual mandiri (sakura petals) & pembersihan tampilan materi
-quiz-results.js         cache + perhitungan XP dari riwayat quiz_results
-srs.js                  mesin spaced-repetition bersama (kanji/materi/hafalan) + sync ke Supabase
-admin.js                panel Operator: buat/hapus akun lewat Edge Function
-monitor.js              panel Sensei/Operator: pantau progres & XP siswa, kelola tugas
-assignments.js          kartu "Tugas dari Sensei" + banner pengingat harian
-pwa.js / sw.js          install prompt & service worker
-prototype-kanji-v2.*    modul Belajar Kanji (dimuat sebagai <iframe>)
-prototype-tes-v2.*      modul simulasi tes JLPT/JFT (dimuat sebagai <iframe>)
-data/*.js               dataset (kanji, kana, materi per-bab, stroke order)
-supabase/                schema.sql + migrasi tambahan + 2 Edge Function
-QA_CHECKLIST.md          checklist QA manual untuk alur kritis
+index.html              Beranda/Dashboard (juga "pintu masuk" - lihat di bawah)
+pages/                   halaman lain, masing-masing dokumen HTML sendiri
+  materi.html              daftar + pembaca materi (Buku 1 & 2, mode fokus)
+  hafalan.html             flashcard per Bab + materi Hiragana/Katakana
+  kanji.html               belajar Kanji (grid, papan goresan, kuis)
+  latihan.html             simulasi Tes Kemampuan (JLPT/JFT)
+  pantau.html              panel Sensei/Operator: pantau progres siswa
+  admin.html               panel Operator: kelola akun
+
+css/
+  base.css                 variabel warna (:root), @font-face DM Sans
+                           (self-host), reset dasar, [hidden] - dimuat
+                           PERTAMA di index.html & semua pages/*.html
+  shell.css                header/sidebar/nav + kartu/tombol dasar dipakai
+                           semua halaman (lihat catatan di bawah)
+  auth.css                 layar login + account-box, dimuat semua halaman
+  pages/dashboard.css      gaya konten khusus Beranda (index.html)
+  pages/materi.css         gaya konten khusus halaman Materi
+  pages/hafalan.css        gaya konten khusus halaman Hafalan (flashcard)
+  pages/kanji.css          gaya konten khusus halaman Kanji
+  pages/latihan.css        gaya konten khusus halaman Tes Kemampuan
+  pages/pantau.css         gaya panel ringkasan progres Pantau Siswa
+  pages/admin.css          gaya konten khusus Panel Admin
+
+js/
+  app-shell.js             login-screen + header + sidebar + mobile-nav -
+                           dibangun SEKALI di sini, dipakai sama persis di
+                           SEMUA halaman (lihat docs/struktur-aplikasi.md).
+                           Pengecualian: index.html menulis layar login yang
+                           sama secara statis (supaya tampil tanpa menunggu
+                           JS) - ubah markup login? samakan di keduanya
+  app-sidebar.js           interaksi sidebar (toggle rail/drawer, tooltip)
+  app-effects.js           efek visual (sakura) & bantuan tampilan materi
+  auth.js                  login Supabase, sinkronisasi profil/peran,
+                           memanggil initPage() tiap halaman setelah login
+  srs.js                   mesin spaced-repetition bersama + sync Supabase
+  quiz-results.js          cache + perhitungan XP dari riwayat quiz_results
+  assignments.js           kartu "Tugas dari Sensei" + pengingat harian
+  pwa.js                   install prompt (service worker didaftarkan di sini,
+                           setelah event load)
+  pages/                   1 file JS per halaman di atas (dashboard.js,
+                           materi.js, hafalan.js, kanji.js, latihan.js,
+                           pantau.js, admin.js) - isinya dibungkus
+                           initPage(), dipanggil auth.js setelah login
+
+data/                     dataset murni (tanpa kode render), dimuat halaman
+                          yang perlu saja:
+  bab-data.js             kosakata & kanji per Bab 1-50 (Hafalan, Latihan)
+  kana-data.js            tabel hiragana/katakana + jalur goresan (Hafalan)
+  kanji-data.js           daftar kanji per pelajaran (Kanji)
+  kanji-stroke-data.js    jalur goresan kanji (Kanji)
+  materi-grammar-data.js  Keterangan Tata Bahasa Pelajaran 1-50 (Materi)
+assets/
+  icons/                  ikon PWA
+  images/                 logo & gambar latar
+  fonts/                  DM Sans woff2 self-host (OFL) - nama file
+                          berversi, di-cache immutable (vercel.json)
+
+sw.js                     service worker (WAJIB tetap di root - lihat di bawah)
+nihon-go-benkyo.webmanifest  manifest PWA
+supabase/                  schema.sql + migrasi tambahan + 2 Edge Function
+QA_CHECKLIST.md            checklist QA manual untuk alur kritis
 ```
 
-`app.js` masih berukuran besar — bagian materi/dashboard/kanji-kana yang
-sangat saling terkait sengaja belum dipecah lebih jauh karena belum ada
-automated test untuk menjamin tidak ada regresi (lihat `QA_CHECKLIST.md`).
+### Kenapa `index.html` tetap di root, bukan `pages/dashboard.html`?
+
+`index.html` adalah Beranda/Dashboard sekaligus **halaman default** yang
+dibuka browser saat mengunjungi domain aplikasi ini (`/`) atau lewat
+shortcut PWA. Service worker (`sw.js`) juga wajib berada di root folder
+supaya cache-nya berlaku untuk seluruh situs, bukan cuma folder `pages/`.
+
+### Kenapa CSS dipecah jadi `base.css` + `shell.css` + `auth.css` + `pages/*.css`?
+
+Sebelumnya seluruh CSS ada di 4 file `legacy-part-1..4.css` hasil
+pemecahan BERURUTAN dari satu `styles.css` lama (3671 baris) — dipecah
+persis berurutan, bukan per-topik, karena beberapa selector yang sama
+(`.card`, `.top`, `.main`, dst) sengaja didefinisikan ulang lebih jauh
+di bawah untuk menimpa definisi sebelumnya, dan waktu itu belum
+dipastikan aman memecahnya tanpa mengubah urutan override tersebut.
+
+Reorganisasi berikutnya menelusuri SETIAP selector yang didefinisikan
+ulang (termasuk `.main` yang override-nya berlapis 4× untuk overlay
+background) untuk memastikan urutan efektifnya tidak berubah, lalu
+memindahkannya ke file per-fungsi: `base.css` (variabel + reset,
+dimuat pertama), `shell.css` (header/sidebar/nav + komponen dasar
+dipakai semua halaman, termasuk override reponsive-nya), `auth.css`
+(layar login, tampil di semua halaman), dan `css/pages/<nama>.css`
+per halaman (dimuat terakhir, cuma di halaman yang butuh). Sudah diuji
+visual di ke-7 halaman (screenshot sebelum/sesudah identik) dan cek
+jaringan (semua aset 200, tanpa 404). Kode yang ternyata sudah tidak
+dipakai (dicek lewat grep) TIDAK dihapus dalam pemindahan ini — cuma
+ditandai jelas dengan komentar di akhir `shell.css`, supaya
+reorganisasi ini murni pemindahan, bukan pembersihan.
 
 ## Setup Supabase dari nol
 
@@ -97,14 +176,51 @@ diblokir CORS saat diakses dari domain baru tersebut.
 
 ## Konvensi cache-busting
 
-File statis dimuat dengan query string versi (`app.js?build=66`,
-`srs.js?v=3`, dst.) dan didaftarkan juga di `sw.js` (`ASSETS` +
-`CACHE_NAME`). **Setiap kali sebuah file diubah, naikkan angka versinya
-di SEMUA tempat ia dirujuk** (tag `<script>`/`<link>` di `index.html`
-atau `prototype-*.html`, referensi iframe di `app.js`, dan entri di
-`sw.js`), lalu naikkan juga `CACHE_NAME` di `sw.js` — kalau tidak,
-pengguna yang sudah meng-install PWA bisa tetap memakai versi lama dari
-cache.
+File statis dimuat tanpa query string versi — URL-nya apa adanya
+(`dashboard.js`, `srs.js`, dst.) baik di `index.html`/`pages/*.html`
+maupun di `APP_FILES` pada `sw.js`. Satu-satunya sumber kebenaran versi
+adalah **`CACHE_NAME` di awal `sw.js`**. Saat `install`, service worker
+mengambil semua file di `APP_FILES` dengan `{cache: 'no-cache'}`
+(revalidasi ke server - file yang tidak berubah cukup dijawab 304), jadi
+tidak perlu query string per file.
+
+**Setiap kali ada file di `APP_FILES` yang isinya diubah, naikkan
+`CACHE_NAME` di `sw.js` (satu tempat saja)** — kalau tidak, pengguna
+yang sudah meng-install PWA bisa tetap memakai versi lama dari cache.
+Kalau menambah file HTML/CSS/JS/data baru, tambahkan juga path-nya ke
+`APP_FILES`.
+
+Gambar di `assets/images/` (gambar soal, ilustrasi materi) dan aset CDN
+**tidak** di-precache: di-cache saat pertama dipakai ke cache runtime
+yang tidak ikut dibersihkan saat versi naik. Karena itu **gambar yang
+isinya diganti wajib diberi nama file baru**. Rekaman audio
+(`assets/audio/`) selalu langsung dari network.
+
+## Keamanan
+
+- **Header** (CSP, X-Frame-Options, nosniff, Referrer-Policy,
+  Permissions-Policy) diatur di `vercel.json`. CSP mengizinkan skrip
+  inline `index.html` lewat hash-nya - **kalau isi `<script>` inline di
+  `index.html` diubah, hash `sha256-…` di `vercel.json` wajib dihitung
+  ulang** (file itu dikunci ke LF lewat `.gitattributes` supaya hash
+  stabil). Domain eksternal baru (CDN, API) juga harus ditambahkan ke CSP.
+- **supabase-js** dimuat dengan atribut `integrity` (SRI) - kalau versi
+  di URL dinaikkan, hash `sha384-…` di ketujuh file HTML ikut diganti.
+- **Tes Kemampuan dinilai di server.** Soal + kunci jawaban ada di
+  database (`quiz_questions` per-5-Bab, `package_questions` paket
+  ujian); browser hanya menerima soal tanpa kunci lewat
+  `get_test_questions()`, lalu `grade_test()` yang menilai, menyimpan
+  `quiz_results`, dan menandai akses tes selesai. Siswa tidak bisa
+  menulis `quiz_results` langsung. Lihat
+  `supabase/secure-test-grading.sql`.
+- **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket
+  (label, kode singkat, deskripsi, batas waktu, tampilan satu halaman,
+  urutan, aktif) ada di tabel `test_packages`; soalnya di
+  `package_questions`. Pantau Siswa dan Tes Kemampuan membacanya lewat
+  `list_test_packages()`, jadi paket baru yang sudah punya soal langsung
+  bisa ditugaskan Sensei. Cara menambah paket: salin
+  `supabase/contoh-tambah-paket.sql`, ganti isinya, jalankan di SQL
+  Editor. Menyembunyikan paket: `active = false`.
 
 ## Testing
 
