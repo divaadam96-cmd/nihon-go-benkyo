@@ -47,7 +47,7 @@ async function quizFetchRemoteFor(userId) {
   if (!window.supabaseClient) return [];
   const { data, error } = await window.supabaseClient
     .from("quiz_results")
-    .select("id, correct_count, total_count, category_scores, created_at")
+    .select("id, correct_count, total_count, category_scores, created_at, finish_reason")
     .eq("user_id", userId);
   return error || !data ? [] : data;
 }

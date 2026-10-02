@@ -178,7 +178,7 @@ function quizHistoryHtml(quizRows) {
             })
             .join("")
         : '<span class="monitor-quiz-tag">Rincian bagian tidak tersedia</span>';
-      return `<div class="monitor-quiz-row${percent < 60 ? " due" : ""}"><div class="monitor-quiz-row-head"><b>${percent}%</b><span>${row.correct_count}/${row.total_count} benar</span><small>${formatQuizDate(row.created_at)}</small></div><div class="monitor-quiz-breakdown">${tagsHtml}</div></div>`;
+      return `<div class="monitor-quiz-row${percent < 60 ? " due" : ""}"><div class="monitor-quiz-row-head"><b>${percent}%</b><span>${row.correct_count}/${row.total_count} benar</span><small>${formatQuizDate(row.created_at)}</small>${row.finish_reason === "timeout" ? '<span class="monitor-quiz-tag wrong" title="Dinilai dari jawaban yang tersimpan sebelum batas waktu">⏱ Waktu habis</span>' : ""}</div><div class="monitor-quiz-breakdown">${tagsHtml}</div></div>`;
     })
     .join("");
 }
@@ -244,6 +244,13 @@ async function loadMonitorPanel() {
     return;
   }
 
+  // Tes yang ditinggal siswa sampai waktunya habis ditutup & dinilai dulu
+  // (dari jawaban yang tersimpan sebelum tenggat), supaya nilainya tampil.
+  try {
+    await window.supabaseClient.rpc("finalize_all_expired_tests");
+  } catch {
+    // Gagal tidak fatal - nilai muncul saat siswa/Sensei membuka berikutnya.
+  }
   const [remoteData, quizData] = await Promise.all([
     Promise.all(students.map((s) => srsFetchRemoteFor(s.id))),
     Promise.all(

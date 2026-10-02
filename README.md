@@ -222,6 +222,15 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   `delete-user` memeriksa hal yang sama. Operator kehilangan HP: pemilik
   proyek Supabase menghapus faktornya lewat SQL Editor (perintahnya ada di
   komentar file SQL tersebut), lalu Operator mendaftar ulang.
+- **Batas waktu tes dijaga server** (`supabase/fix-2-batas-waktu-server.sql`).
+  `start_test()` mencatat jam mulai & tenggat saat soal dibuka (tabel
+  `test_attempts`, satu percobaan per akses tes); soal hanya bisa diambil
+  selama percobaan berjalan; jawaban disimpan ke server setiap dipilih
+  (`save_test_answers`) dan ditolak setelah tenggat (+30 detik kelonggaran).
+  Reload/tutup tab tidak mengulang timer - siswa otomatis melanjutkan tes
+  yang sama. Tes yang ditinggal sampai waktu habis ditutup & dinilai dari
+  jawaban tersimpan saat siswa membuka dashboard/Tes Kemampuan atau Sensei
+  membuka Pantau Siswa (ditandai "⏱ Waktu habis").
 - **Password minimal 10 karakter, huruf + angka** - dicek di form, di
   Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket
