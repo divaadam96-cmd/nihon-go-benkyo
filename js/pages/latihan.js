@@ -46,6 +46,17 @@ let questions=[],rangeStart=1,mockPackage="",current=0,answers=[],checked=[],fla
    (dipakai untuk menyiapkan/mengecek soal), jadi gating ini hanya aktif
    kalau peran login-nya "siswa". */
 let restrictedMode=false,accessAssignments=[],activeAssignmentId=null;
+/* Percobaan tes di server (start_test, supabase/fix-2-batas-waktu-server.sql):
+   waktu mulai & tenggat dicatat server, jadi timer di layar hanya MENAMPILKAN
+   sisa waktu menuju tenggat itu (dihitung ulang tiap detik dari jam server,
+   bukan dikurangi satu-satu) - menghentikan timer, reload, atau mengubah jam
+   laptop tidak memberi waktu tambahan. clockOffset = selisih jam server -
+   jam perangkat. Jawaban dikirim ke server setiap kali dipilih
+   (save_test_answers), jadi tes yang ditinggal tetap dinilai dari jawaban
+   yang sudah tersimpan saat waktunya habis. */
+let attempt=null,clockOffset=0,pendingSave={},saveTimer=null,saving=false;
+function serverNowMs(){return Date.now()+clockOffset}
+function testRunning(){return !!attempt&&!graded}
 function escapeHtmlTes(text){const div=document.createElement("div");div.textContent=text==null?"":String(text);return div.innerHTML}
 function shuffled(values){const list=[...values];for(let i=list.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[list[i],list[j]]=[list[j],list[i]]}return list}
 /* Pilihan jawaban diacak per siswa (kecuali soal Mendengarkan yang
@@ -69,6 +80,9 @@ async function buildSelectedQuestions(){
   if(!data||!data.length)throw new Error("Soal untuk tes ini belum tersedia.");
   const list=data.map(rowToQuestion);
   questions=mockPackage?list:shuffled(list);
+  // Melanjutkan percobaan: pulihkan jawaban yang sudah tersimpan di server.
+  const saved=(attempt&&attempt.answers)||{};
+  answers=questions.map(q=>{const orig=saved[q.id];return orig==null?null:q.order.indexOf(Number(orig))});
   $("heroQuestionTotal").textContent=questions.length;
   $("heroPackage").textContent=mockPackage?packageInfo(mockPackage).label:`Bab ${rangeStart}–${rangeStart+4}`;
 }
@@ -147,11 +161,35 @@ function mondaiGroupsFor(indices){
   });
   return order.map(key=>({key,indices:groups[key]}));
 }
+/* Antrekan jawaban soal qi untuk dikirim ke server (digabung tiap ~0,8 detik
+   supaya klik beruntun = satu request). Gagal kirim -> dicoba lagi; ditolak
+   karena waktu habis -> tes langsung diselesaikan. */
+function queueAnswerSave(qi){
+  if(!attempt||graded)return;
+  const q=questions[qi];if(!q||answers[qi]==null)return;
+  pendingSave[q.id]=q.order[answers[qi]];
+  clearTimeout(saveTimer);saveTimer=setTimeout(flushAnswerSave,800);
+}
+async function flushAnswerSave(){
+  if(saving||!attempt||graded||!Object.keys(pendingSave).length)return;
+  saving=true;const batch=pendingSave;pendingSave={};
+  try{
+    const {data,error}=await window.supabaseClient.rpc("save_test_answers",{p_attempt_id:attempt.attempt_id,p_answers:batch});
+    if(error)throw error;
+    if(data&&data[0])clockOffset=Date.parse(data[0].server_now)-Date.now();
+    $("saveStatus").textContent="✓ Jawaban tersimpan";$("saveStatus").classList.remove("is-error");
+  }catch(e){
+    pendingSave={...batch,...pendingSave};
+    if(/habis|selesai/i.test(e&&e.message||"")){finishTest();return}
+    $("saveStatus").textContent="⚠ Belum tersimpan - mencoba lagi…";$("saveStatus").classList.add("is-error");
+    clearTimeout(saveTimer);saveTimer=setTimeout(flushAnswerSave,3000);
+  }finally{saving=false}
+}
 function bindExamAnswerButtons(container){
   container.querySelectorAll("button[data-qidx]").forEach(btn=>{
     btn.onclick=()=>{
       const qi=Number(btn.dataset.qidx),choice=Number(btn.dataset.choice);
-      answers[qi]=choice;
+      answers[qi]=choice;queueAnswerSave(qi);
       btn.parentElement.querySelectorAll("button").forEach(b=>b.classList.remove("selected"));
       btn.classList.add("selected");
       $("testProgress").style.width=`${answers.filter(v=>v!==null).length/questions.length*100}%`;
@@ -215,7 +253,7 @@ function renderQuestion(){
   onePageExamRendered=false;
   $("categoryBadge").textContent=q.category.toUpperCase();$("questionCounter").textContent=reviewOnly?`Tinjauan ${current+1} dari ${reviewIndexes.length}`:`Soal ${index+1} dari ${questions.length}`;$("instruction").textContent=q.instruction;$("questionText").innerHTML=q.html;$("questionText").classList.toggle("hide-furigana",!furigana);$("testProgress").style.width=`${((reviewOnly?current:index)+1)/(reviewOnly?reviewIndexes.length:questions.length)*100}%`;
   $("audioButton").hidden=!q.audio;if(q.audio)$("audioButton").onclick=()=>speak(q.audio);
-  const box=$("answers");box.replaceChildren();q.options.forEach((option,choice)=>{const b=document.createElement("button");b.innerHTML=`<b>${String.fromCharCode(65+choice)}</b><span></span>`;b.querySelector("span").textContent=option;b.classList.toggle("selected",answers[index]===choice);if(checked[index]||reviewOnly)b.disabled=true;if(reviewOnly){b.classList.toggle("correct",choice===q.answer);b.classList.toggle("wrong",answers[index]===choice&&choice!==q.answer)}b.onclick=()=>{answers[index]=choice;renderQuestion()};box.append(b)});
+  const box=$("answers");box.replaceChildren();q.options.forEach((option,choice)=>{const b=document.createElement("button");b.innerHTML=`<b>${String.fromCharCode(65+choice)}</b><span></span>`;b.querySelector("span").textContent=option;b.classList.toggle("selected",answers[index]===choice);if(checked[index]||reviewOnly)b.disabled=true;if(reviewOnly){b.classList.toggle("correct",choice===q.answer);b.classList.toggle("wrong",answers[index]===choice&&choice!==q.answer)}b.onclick=()=>{answers[index]=choice;queueAnswerSave(index);renderQuestion()};box.append(b)});
   $("explanation").hidden=!reviewOnly;if(reviewOnly){const correct=answers[index]===q.answer;$("explanation").className=`explanation${correct?"":" wrong"}`;$("explanation").innerHTML=`<b>${correct?"Jawaban benar":"Belum tepat"}</b>${q.explanation}`}
   $("flagQuestion").hidden=false;$("flagQuestion").classList.toggle("active",flags[index]);$("flagQuestion").textContent=flags[index]?"★ Ditandai":"☆ Tandai soal";$("previousQuestion").hidden=false;$("previousQuestion").disabled=current===0;$("nextQuestion").hidden=reviewOnly;$("nextQuestion").textContent=index===questions.length-1?"Lihat hasil →":"Soal berikutnya →";
   $("checkAnswer").hidden=reviewOnly;$("checkAnswer").textContent=index===questions.length-1?"Simpan & lihat hasil":"Simpan & berikutnya";
@@ -251,14 +289,14 @@ async function finishTest(){
   grading=true;clearInterval(timerId);checked=checked.map(()=>true);
   $("testScreen").hidden=true;$("resultScreen").hidden=false;$("finalScore").textContent="…";$("resultTitle").textContent="Menilai jawaban…";$("resultSummary").textContent="Jawabanmu sedang dikirim ke server untuk dinilai.";$("retryGrading").hidden=true;
   $("categoryResults").replaceChildren();$("recommendations").replaceChildren();$("mistakeList").replaceChildren();$("reviewMistakes").hidden=true;
-  const {kind,ref}=currentTest();
+  clearTimeout(saveTimer);
   const submitted={};questions.forEach((q,i)=>{if(answers[i]!==null)submitted[q.id]=q.order[answers[i]]});
   try{
-    const {data,error}=await window.supabaseClient.rpc("grade_test",{p_kind:kind,p_ref:ref,p_answers:submitted,p_assignment_id:activeAssignmentId});
+    const {data,error}=await window.supabaseClient.rpc("grade_test",{p_attempt_id:attempt.attempt_id,p_answers:submitted});
     if(error)throw error;
     const byId=new Map((data||[]).map(row=>[String(row.question_id),row]));
     questions.forEach(q=>{const row=byId.get(String(q.id));if(row){q.answer=q.order.indexOf(row.answer);q.explanation=sanitizeHtml(row.explanation)}});
-    graded=true;activeAssignmentId=null;
+    graded=true;activeAssignmentId=null;pendingSave={};
   }catch(e){
     $("finalScore").textContent="!";$("resultTitle").textContent="Jawaban belum terkirim.";$("resultSummary").textContent=`Gagal menghubungi server (${e&&e.message?e.message:e}). Jawabanmu masih tersimpan di halaman ini - periksa koneksi lalu kirim ulang.`;$("retryGrading").hidden=false;
     return;
@@ -266,21 +304,29 @@ async function finishTest(){
   showResults();
 }
 function showResults(){
-  const correct=questions.filter((q,i)=>answers[i]===q.answer).length,score=Math.round(correct/questions.length*100);$("finalScore").textContent=score;$("resultTitle").textContent=score>=80?"Fondasi kamu sudah kuat.":score>=60?"Fondasi sudah terbentuk.":"Mari perkuat dasar sedikit lagi.";$("resultSummary").textContent=`${correct} dari ${questions.length} soal benar. ${questions.length-correct} soal tersimpan dalam bank kesalahan untuk ditinjau kembali.`;$("reviewMistakes").hidden=false;
+  const correct=questions.filter((q,i)=>answers[i]===q.answer).length,score=Math.round(correct/questions.length*100);$("finalScore").textContent=score;$("resultTitle").textContent=(serverNowMs()>Date.parse(attempt.deadline)?"Waktu habis. ":"")+(score>=80?"Fondasi kamu sudah kuat.":score>=60?"Fondasi sudah terbentuk.":"Mari perkuat dasar sedikit lagi.");$("resultSummary").textContent=`${correct} dari ${questions.length} soal benar. ${questions.length-correct} soal tersimpan dalam bank kesalahan untuk ditinjau kembali.`;$("reviewMistakes").hidden=false;
   pushQuizAnswersToSrs();
   const categoryBox=$("categoryResults");categoryBox.replaceChildren();Object.entries(categoryScores()).forEach(([name,value])=>{const pct=Math.round(value.correct/value.total*100),row=document.createElement("div");row.innerHTML=`<span>${name}</span><i style="--score:${pct}%"></i><b>${pct}%</b>`;categoryBox.append(row)});
   const weakest=Object.entries(categoryScores()).sort((a,b)=>a[1].correct/a[1].total-b[1].correct/b[1].total).slice(0,2);$("recommendations").innerHTML=weakest.map(([name])=>`<div><b>Perkuat ${name}</b>Ulangi materi dan latihan terkait sebelum mencoba simulasi berikutnya.</div>`).join("")+`<div><b>Ulangi bank kesalahan</b>Fokuskan sesi berikutnya pada ${questions.length-correct} soal yang masih salah.</div>`;
   reviewIndexes=questions.map((q,i)=>answers[i]!==q.answer?i:-1).filter(i=>i>=0);const list=$("mistakeList");list.replaceChildren();reviewIndexes.forEach(i=>{const q=questions[i],a=document.createElement("article");a.innerHTML=`<b>Soal ${i+1} · ${escapeHtmlTes(q.category)}</b><p>Jawabanmu: ${answers[i]===null?"Belum dijawab":escapeHtmlTes(q.options[answers[i]])} · Jawaban benar: ${escapeHtmlTes(q.options[q.answer])}</p><p>${q.explanation}</p><small>Pelajari kembali: ${escapeHtmlTes(q.material)}</small>`;list.append(a)});window.scrollTo({top:0,behavior:"smooth"});
 }
-/* Timer sekarang wajib dan tidak bisa dimatikan siswa (lihat timeLimitSeconds):
-   latihan per 5 bab 45 menit, simulasi paket 60 menit. Saat waktu habis,
-   tes otomatis selesai lewat finishTest() meski belum semua soal terjawab. */
-function startTimer(){clearInterval(timerId);seconds=timeLimitSeconds();const render=()=>{const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`};render();timerId=setInterval(()=>{seconds--;render();if(seconds<=0)finishTest()},1000)}
+/* Timer wajib, menghitung mundur ke tenggat dari server (attempt.deadline).
+   Saat waktu habis, tes otomatis selesai lewat finishTest() meski belum
+   semua soal terjawab. */
+function startTimer(){clearInterval(timerId);const deadline=Date.parse(attempt.deadline);const tick=()=>{seconds=Math.max(0,Math.ceil((deadline-serverNowMs())/1000));const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`;if(seconds<=0)finishTest()};tick();timerId=setInterval(tick,1000)}
 async function startTest(){
   const button=$("startTest");button.disabled=true;const originalLabel=button.innerHTML;button.innerHTML="Memuat soal…";
-  try{await buildSelectedQuestions()}catch(e){button.disabled=false;button.innerHTML=originalLabel;$("startError").textContent=`Soal gagal dimuat: ${e&&e.message?e.message:e}`;$("startError").hidden=false;return}
-  button.disabled=false;button.innerHTML=originalLabel;$("startError").hidden=true;
-  current=0;graded=false;answers=Array(questions.length).fill(null);checked=Array(questions.length).fill(false);flags=Array(questions.length).fill(false);reviewOnly=false;onePageExamRendered=false;$("startScreen").hidden=true;$("resultScreen").hidden=true;$("testScreen").hidden=false;startTimer();renderQuestion();window.scrollTo({top:0,behavior:"smooth"})
+  try{
+    const {kind,ref}=currentTest();
+    const {data,error}=await window.supabaseClient.rpc("start_test",{p_kind:kind,p_ref:ref,p_assignment_id:activeAssignmentId});
+    if(error)throw error;
+    attempt=data&&data[0];if(!attempt)throw new Error("Tes gagal dibuka.");
+    clockOffset=Date.parse(attempt.server_now)-Date.now();
+    graded=false;pendingSave={};
+    await buildSelectedQuestions();
+  }catch(e){attempt=null;button.disabled=false;button.innerHTML=originalLabel;$("startError").textContent=`Tes gagal dibuka: ${e&&e.message?e.message:e}`;$("startError").hidden=false;if(restrictedMode)loadAccessAssignments();return}
+  button.disabled=false;button.innerHTML=originalLabel;$("startError").hidden=true;$("saveStatus").textContent="";
+  current=0;checked=Array(questions.length).fill(false);flags=Array(questions.length).fill(false);reviewOnly=false;onePageExamRendered=false;$("startScreen").hidden=true;$("resultScreen").hidden=true;$("testScreen").hidden=false;startTimer();renderQuestion();window.scrollTo({top:0,behavior:"smooth"})
 }
 /* Tombol paket dibangun dari database (renderPackageChoices) - jadi klik
    ditangani lewat delegasi di #sourceChoice, bukan per tombol. */
@@ -305,6 +351,16 @@ $("sourceChoice").addEventListener("click",event=>{
 $("chapterRange").onchange=()=>{rangeStart=Number($("chapterRange").value);updatePackagePreview()};
 updatePackagePreview();
 $("startTest").onclick=startTest;$("checkAnswer").onclick=checkOrAdvance;$("nextQuestion").onclick=advance;$("previousQuestion").onclick=()=>{if(current>0){current--;renderQuestion()}};$("flagQuestion").onclick=()=>{const i=activeQuestionIndex();flags[i]=!flags[i];renderQuestion()};$("furiganaToggle").onclick=()=>{furigana=!furigana;$("furiganaToggle").textContent=`振 Furigana: ${furigana?"aktif":"mati"}`;renderQuestion()};$("finishEarly").onclick=()=>{if(answers.some(value=>value===null))return;finishTest()};$("retryGrading").onclick=finishTest;$("restartTest").onclick=()=>{$("resultScreen").hidden=true;$("startScreen").hidden=false;window.scrollTo({top:0,behavior:"smooth"});if(restrictedMode)loadAccessAssignments()};$("reviewMistakes").onclick=()=>{$("mistakeBank").hidden=false;$("mistakeBank").scrollIntoView({behavior:"smooth"})};$("closeMistakes").onclick=()=>{$("mistakeBank").hidden=true};
+
+/* Tes yang sedang berjalan tidak bisa "dikeluarkan": tenggat tetap berjalan
+   di server walau tab ditutup. Peringatkan sebelum meninggalkan halaman; saat
+   kembali, tes otomatis dilanjutkan (resumeOpenAttempt). */
+window.addEventListener("beforeunload",event=>{
+  if(!testRunning())return;
+  flushAnswerSave();
+  event.preventDefault();event.returnValue="";
+});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")flushAnswerSave()});
 
 /* --- Akses tes kemampuan: gating khusus siswa --- */
 async function resolveRole(){
@@ -331,6 +387,8 @@ function renderAccessGate(){
 }
 async function loadAccessAssignments(){
   $("accessList").innerHTML="";
+  // Tes yang ditinggal sampai waktunya habis ditutup & dinilai dulu.
+  try{await window.supabaseClient.rpc("finalize_my_expired_tests")}catch(e){}
   $("accessEmpty").hidden=false;
   const {data}=await window.supabaseClient.auth.getUser();
   const user=data&&data.user;
@@ -479,7 +537,22 @@ async function initAccessControl(){
   if(restrictedMode){
     $("heroExamType").textContent="Akses dari Sensei";$("heroPackage").textContent="Pilih dari daftar";$("heroQuestionTotal").textContent="—";
     await loadAccessAssignments();
+    await resumeOpenAttempt();
   }
+}
+/* Siswa kembali ke halaman ini saat tesnya masih berjalan (reload, tab
+   ditutup lalu dibuka lagi, pindah menu) -> langsung lanjutkan tes yang sama
+   dengan sisa waktunya. */
+async function resumeOpenAttempt(){
+  try{
+    const {data}=await window.supabaseClient.rpc("my_open_test_attempt");
+    const open=data&&data[0];if(!open)return;
+    activeAssignmentId=open.assignment_id;
+    mockPackage=open.test_kind==="paket"?open.test_ref:"";
+    if(open.test_kind==="bab")rangeStart=Number(open.test_ref);
+    await startTest();
+    if(testRunning())$("saveStatus").textContent="↻ Melanjutkan tes - waktu terus berjalan sejak tes dibuka";
+  }catch(e){}
 }
 initAccessControl();
 }

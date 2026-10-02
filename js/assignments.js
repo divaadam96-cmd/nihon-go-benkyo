@@ -51,6 +51,12 @@ if (studyReminderEnableBtn) {
 async function loadSiswaAssignments() {
   if (!assignmentsCard || !window.currentProfile || window.currentProfile.role !== "siswa") return;
   assignmentsList.innerHTML = '<p class="muted">Memuat…</p>';
+  // Akses tes yang waktunya habis (tes ditinggal) ditutup & dinilai dulu.
+  try {
+    await window.supabaseClient.rpc("finalize_my_expired_tests");
+  } catch {
+    // Tidak fatal.
+  }
   const { data, error } = await window.supabaseClient
     .from("assignments")
     .select("id, title, due_date, completed, test_kind, test_ref")
