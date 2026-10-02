@@ -2678,7 +2678,7 @@ const MATERI_BOOK2_LESSONS = [
           },
           {
             text: "Misalnya, ① menyatakan bahwa kaca jendela pecah pada suatu titik, kemudian saat ini pun akibatnya tetap berlangsung (= keadaan kaca jendela pecah).",
-            figure: { src: "assets/images/materi/p29-mado.png", alt: "Garis waktu: 窓が 割れました (jendela pecah pada suatu titik), lalu 窓が 割れて います (keadaan pecah berlangsung sampai sekarang)" },
+            figure: { src: "assets/images/materi/p29-mado.webp", alt: "Garis waktu: 窓が 割れました (jendela pecah pada suatu titik), lalu 窓が 割れて います (keadaan pecah berlangsung sampai sekarang)" },
           },
           {
             text: "Kata Kerja yang digunakan dengan cara penggunaan ini adalah Kata Kerja yang mengalami perubahan sebelum dan sesudah terjadi aksi tersebut, seperti あきます, しまります, つきます, きえます, こわれます, われます.<br>Dengan catatan bahwa jika menggambarkan keadaan di depan mata secara langsung, seperti ① atau ②, subjek dinyatakan dengan が.<br>Jika subjek dianggap sebagai topik, digunakan Kata Bantu は seperti ③.",
@@ -3768,13 +3768,13 @@ const MATERI_BOOK2_LESSONS = [
           {
             label: "1) <span class=\"grammar-pola-box\">Kata Benda<sub>1</sub>（orang）に Kata Benda<sub>2</sub> を いただきます</span>",
             text: "Jika pembicara menerima barang (Kata Benda<sub>2</sub>) dari orang yang berpangkat lebih tinggi (Kata Benda<sub>1</sub>) daripada diri sendiri, menggunakan いただきます, tetapi tidak menggunakan もらいます.",
-            figure: { src: "assets/images/materi/p41-itadakimasu.png", alt: "Diagram: ［わたしは］ menerima dari ［部長に］ dengan いただきます, dari ［友達に］ dan ［子どもに］ dengan もらいます" },
+            figure: { src: "assets/images/materi/p41-itadakimasu.webp", alt: "Diagram: ［わたしは］ menerima dari ［部長に］ dengan いただきます, dari ［友達に］ dan ［子どもに］ dengan もらいます" },
             examples: [["① わたしは 社長に お土産を いただきました。", "Saya menerima oleh-oleh dari direktur."]],
           },
           {
             label: "2) <span class=\"grammar-pola-box\">［わたしに］ Kata Benda を くださいます</span>",
             text: "Jika orang yang berpangkat tinggi yang memberi barang kepada lawan bicaranya, menggunakan くださいます, tetapi tidak menggunakan くれます.",
-            figure: { src: "assets/images/materi/p41-kudasaimasu.png", alt: "Diagram: ［部長が］ memberi ［わたしに］ dengan くださいます, ［友達が］ dan ［子どもが］ dengan くれます" },
+            figure: { src: "assets/images/materi/p41-kudasaimasu.webp", alt: "Diagram: ［部長が］ memberi ［わたしに］ dengan くださいます, ［友達が］ dan ［子どもが］ dengan くれます" },
             examples: [["② 社長が わたしに お土産を くださいました。", "Direktur memberikan saya oleh-oleh."]],
             note: "[Perhatian] Adakalanya いただきます, dan くださいます digunakan jika penerimanya anggota keluarga dari pembicara.",
           },
@@ -3787,7 +3787,7 @@ const MATERI_BOOK2_LESSONS = [
           {
             label: "3) <span class=\"grammar-pola-box\">Kata Benda<sub>1</sub> に Kata Benda<sub>2</sub> を やります</span>",
             text: "Jika pembicara memberi barang (Kata Benda<sub>2</sub>) terhadap tumbuhan dan fauna (Kata Benda<sub>1</sub>), sesungguhnya menggunakan やります. Tetapi, akhir-akhir ini banyak orang menggunkan あげます karena merasa lebih sopan daripada やります.",
-            figure: { src: "assets/images/materi/p41-yarimasu.png", alt: "Diagram: ［わたしは］ memberi ［部長に］ dengan さしあげます, ［友達に］ dengan あげます, ［子どもに］［犬／花に］ dengan やります（あげます）" },
+            figure: { src: "assets/images/materi/p41-yarimasu.webp", alt: "Diagram: ［わたしは］ memberi ［部長に］ dengan さしあげます, ［友達に］ dengan あげます, ［子どもに］［犬／花に］ dengan やります（あげます）" },
             examples: [
               ["⑤ わたしは 息子に お菓子を やりました（あげました）。", "Saya memberikan anak laki-laki saya kue."],
               ["⑥ わたしは 犬に えさを やりました。", "Saya memberi umpan pada anjing."],
@@ -3956,7 +3956,7 @@ const MATERI_BOOK2_LESSONS = [
           },
           {
             text: "⑧ menyatakan tiga aksi, yakni (1) pergi ke tempat menjual rokok, (2) membeli rokok di situ, dan (3) kembali ke tempat semula.",
-            figure: { src: "assets/images/materi/p43-tekimasu.png", alt: "Ilustrasi: (1) pergi ke mesin penjual rokok, (2) membeli rokok, (3) kembali ke tempat semula" },
+            figure: { src: "assets/images/materi/p43-tekimasu.webp", alt: "Ilustrasi: (1) pergi ke mesin penjual rokok, (2) membeli rokok, (3) kembali ke tempat semula" },
           },
           {
             text: "Seperti ⑨, tempat beraksi yang dinyatakan dengan Kata Kerja Bentuk て ditunjuk dengan で, sedangkan seperti ⑩, jika dianggap sebagai asal usul barang yang ditunjuk dengan を (titik awal untuk keluar barang), digunakan から. Selain とって きます, Kata Kerja yang menggunakan から terdapat もって きます, はこんで きます dan lain-lainnya.",

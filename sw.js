@@ -1,67 +1,100 @@
-// Satu-satunya angka yang perlu dinaikkan setiap kali ada file di ASSETS
-// yang isinya berubah (JS/CSS/data/gambar). Tanpa ini, service worker
-// akan terus menyajikan versi lama dari cache ke user yang sudah install.
-const CACHE_NAME = 'nihon-go-benkyo-v223';
-const ASSETS = [
+// Naikkan CACHE_NAME setiap kali ada file di APP_FILES yang isinya berubah
+// (HTML/CSS/JS/data). Tanpa ini, service worker terus menyajikan versi lama
+// dari cache ke user yang sudah install. Saat versi naik, file yang TIDAK
+// berubah tidak diunduh ulang penuh: install memakai cache: 'no-cache'
+// (revalidasi ETag -> cukup 304 kalau isinya sama).
+const CACHE_NAME = 'nihon-go-benkyo-v224';
+// Gambar soal, ilustrasi materi & aset CDN (URL berversi) di-cache saat
+// pertama kali dipakai - tidak ikut di-precache dan tidak dihapus saat
+// CACHE_NAME naik, karena isinya praktis tidak pernah berubah.
+const RUNTIME_CACHE = 'nihon-go-benkyo-runtime-v1';
+const APP_FILES = [
   'index.html',
   'css/base.css', 'css/shell.css', 'css/auth.css',
   'js/app-shell.js', 'js/app-sidebar.js', 'js/app-effects.js', 'js/quiz-results.js', 'js/srs.js', 'js/auth.js', 'js/assignments.js', 'js/pwa.js',
-  'js/pages/dashboard.js',
+  'js/pages/dashboard.js', 'css/pages/dashboard.css',
   'nihon-go-benkyo.webmanifest',
   'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png',
-  'css/pages/dashboard.css',
+  'assets/images/japan-paper-background.webp', 'assets/images/logo.webp',
+  'assets/fonts/dm-sans-latin-v17.woff2', 'assets/fonts/dm-sans-latin-ext-v17.woff2',
   'pages/materi.html', 'css/pages/materi.css', 'data/materi-grammar-data.js', 'js/pages/materi.js',
-  'pages/hafalan.html', 'css/pages/hafalan.css', 'js/pages/hafalan.js',
-  'pages/kanji.html', 'css/pages/kanji.css', 'js/pages/kanji.js',
+  'pages/hafalan.html', 'css/pages/hafalan.css', 'js/pages/hafalan.js', 'data/kana-data.js', 'data/bab-data.js',
+  'pages/kanji.html', 'css/pages/kanji.css', 'js/pages/kanji.js', 'data/kanji-data.js', 'data/kanji-stroke-data.js',
   'pages/latihan.html', 'css/pages/latihan.css', 'js/pages/latihan.js',
   'pages/pantau.html', 'css/pages/pantau.css', 'js/pages/pantau.js',
   'pages/admin.html', 'css/pages/admin.css', 'js/pages/admin.js',
-  'assets/images/jlpt-n5/vocab-q6.png', 'assets/images/jlpt-n5/listen-p1-q1.png', 'assets/images/jlpt-n5/listen-p1-q2.png', 'assets/images/jlpt-n5/listen-p2-q1.png', 'assets/images/jlpt-n5/listen-p2-q2.png', 'assets/images/jlpt-n5/listen-p3-q1.png', 'assets/images/jlpt-n5/listen-p3-q2.png',
-  'assets/images/jlpt-n5/tp2-listen-p1-q1.png', 'assets/images/jlpt-n5/tp2-listen-p1-q2.png', 'assets/images/jlpt-n5/tp2-listen-p2-q1.png', 'assets/images/jlpt-n5/tp2-listen-p2-q2.png', 'assets/images/jlpt-n5/tp2-listen-p3-q1.png', 'assets/images/jlpt-n5/tp2-listen-p3-q2.png',
-  'assets/images/jlpt-n5/tp3-listen-p1-q1.png', 'assets/images/jlpt-n5/tp3-listen-p1-q2.png', 'assets/images/jlpt-n5/tp3-listen-p2-q1.png', 'assets/images/jlpt-n5/tp3-listen-p2-q2.png', 'assets/images/jlpt-n5/tp3-listen-p3-q1.png', 'assets/images/jlpt-n5/tp3-listen-p3-q2.png',
-  'assets/images/jlpt-n5/tp4-listen-p1-q1.png', 'assets/images/jlpt-n5/tp4-listen-p1-q2.png', 'assets/images/jlpt-n5/tp4-listen-p2-q1.png', 'assets/images/jlpt-n5/tp4-listen-p2-q2.png', 'assets/images/jlpt-n5/tp4-listen-p3-q1.png', 'assets/images/jlpt-n5/tp4-listen-p3-q2.png',
-  'assets/images/jlpt-n5/tp5-listen-p1-q1.png', 'assets/images/jlpt-n5/tp5-listen-p1-q2.png', 'assets/images/jlpt-n5/tp5-listen-p2-q1.png', 'assets/images/jlpt-n5/tp5-listen-p2-q2.png', 'assets/images/jlpt-n5/tp5-listen-p3-q1.png', 'assets/images/jlpt-n5/tp5-listen-p3-q2.png',
-  'assets/images/jlpt-n5/tp6-listen-p1-q1.png', 'assets/images/jlpt-n5/tp6-listen-p1-q2.png', 'assets/images/jlpt-n5/tp6-listen-p2-q1.png', 'assets/images/jlpt-n5/tp6-listen-p2-q2.png', 'assets/images/jlpt-n5/tp6-listen-p3-q1.png', 'assets/images/jlpt-n5/tp6-listen-p3-q2.png',
-  'assets/images/jlpt-n4/listen-p1-q1.png', 'assets/images/jlpt-n4/listen-p1-q2.png', 'assets/images/jlpt-n4/listen-p2-q1.png', 'assets/images/jlpt-n4/listen-p2-q2.png', 'assets/images/jlpt-n4/listen-p3-q1.png', 'assets/images/jlpt-n4/listen-p3-q2.png',
-  'assets/images/jlpt-n4/tp2-listen-p1-q1.png', 'assets/images/jlpt-n4/tp2-listen-p1-q2.png', 'assets/images/jlpt-n4/tp2-listen-p2-q1.png', 'assets/images/jlpt-n4/tp2-listen-p2-q2.png', 'assets/images/jlpt-n4/tp2-listen-p3-q1.png', 'assets/images/jlpt-n4/tp2-listen-p3-q2.png',
-  'data/kanji-data.js', 'data/kanji-stroke-data.js', 'data/kana-data.js', 'data/bab-data.js',
-  'assets/images/japan-paper-background.webp', 'assets/images/logo.webp', 'assets/images/materi/p29-mado.png', 'assets/images/materi/p41-itadakimasu.png', 'assets/images/materi/p41-kudasaimasu.png', 'assets/images/materi/p41-yarimasu.png', 'assets/images/materi/p43-tekimasu.png',
-  'assets/fonts/dm-sans-latin-v17.woff2', 'assets/fonts/dm-sans-latin-ext-v17.woff2',
-  // Catatan: assets/audio/n5-tp1..tp6-listening.mp3 & n4-tp1/tp2-listening.mp3
-  // SENGAJA tidak di-precache di sini supaya install PWA tetap ringan untuk
-  // semua user - file ini di-stream langsung dari network saat siswa
-  // membuka soal mendengarkan JLPT N5, bukan didownload paksa di awal.
 ];
+// Aset CDN yang di-cache saat dipakai (supabase-js berversi, font Google).
+const CDN_HOSTS = ['cdn.jsdelivr.net', 'fonts.googleapis.com', 'fonts.gstatic.com'];
+
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache =>
-      // cache: 'reload' memaksa fetch lewat network, bukan HTTP cache browser,
-      // supaya bump CACHE_NAME di atas cukup untuk membawa file terbaru.
-      Promise.all(ASSETS.map(url => fetch(url, { cache: 'reload' }).then(res => cache.put(url, res))))
+      Promise.all(APP_FILES.map(url =>
+        fetch(url, { cache: 'no-cache' }).then(res => {
+          if (!res.ok) throw new Error(`${url}: ${res.status}`);
+          return cache.put(url, res);
+        })
+      ))
     )
   );
 });
+
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
-      .then(names => Promise.all(names.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))))
+      .then(names => Promise.all(names
+        .filter(name => name !== CACHE_NAME && name !== RUNTIME_CACHE)
+        .map(name => caches.delete(name))))
       .then(() => self.clients.claim())
   );
 });
+
+function cacheFirst(request, cacheName) {
+  return caches.match(request).then(hit => hit || fetch(request).then(response => {
+    // Respons parsial (206), opaque & error tidak disimpan.
+    if (response.status === 200) {
+      const copy = response.clone();
+      caches.open(cacheName).then(cache => cache.put(request, copy));
+    }
+    return response;
+  }));
+}
+
 self.addEventListener('fetch', event => {
-  const isPage = event.request.mode === 'navigate' || event.request.destination === 'document';
-  if (isPage) {
+  const { request } = event;
+  if (request.method !== 'GET') return;
+  const url = new URL(request.url);
+
+  // Halaman: selalu coba network dulu (konten terbaru), cache cuma cadangan offline.
+  if (request.mode === 'navigate' || request.destination === 'document') {
     event.respondWith(
-      fetch(event.request)
+      fetch(request)
         .then(response => {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
           return response;
         })
-        .catch(() => caches.match(event.request))
+        .catch(() => caches.match(request))
     );
     return;
   }
-  event.respondWith(caches.match(event.request).then(hit => hit || fetch(event.request)));
+
+  if (url.origin === self.location.origin) {
+    // Rekaman mendengarkan (puluhan MB, diputar dengan Range request)
+    // langsung dari network.
+    if (url.pathname.startsWith('/assets/audio/')) return;
+    if (url.pathname.startsWith('/assets/images/')) {
+      event.respondWith(cacheFirst(request, RUNTIME_CACHE));
+      return;
+    }
+    event.respondWith(caches.match(request).then(hit => hit || fetch(request)));
+    return;
+  }
+
+  if (CDN_HOSTS.includes(url.hostname)) {
+    event.respondWith(cacheFirst(request, RUNTIME_CACHE));
+  }
+  // Selain itu (Supabase API, KanjiVG, dst.) tidak disentuh service worker.
 });
