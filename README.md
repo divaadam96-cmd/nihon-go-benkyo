@@ -231,6 +231,16 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   yang sama. Tes yang ditinggal sampai waktu habis ditutup & dinilai dari
   jawaban tersimpan saat siswa membuka dashboard/Tes Kemampuan atau Sensei
   membuka Pantau Siswa (ditandai "⏱ Waktu habis").
+- **Riwayat & versi soal** (`supabase/fix-6-riwayat-perubahan-soal.sql`).
+  Trigger mencatat setiap perubahan `quiz_questions`, `package_questions`,
+  dan `test_packages` ke `content_audit_log` (siapa, kapan, isi sebelum &
+  sesudah; hanya Operator yang bisa membaca, tidak bisa diubah/dihapus).
+  Isi soal disimpan ke `content_versions` sebelum diterbitkan/dipulihkan;
+  `list_content_versions()` & `restore_test_content()` untuk Operator.
+  Penerbitan/pemulihan ditolak saat ada siswa yang sedang mengerjakan tes
+  itu (jawaban disimpan per id soal). Cek peran di SQL wajib memakai
+  `coalesce(...)` / `require_operator()` - `NULL <> 'operator'` bukan true,
+  jadi pemanggil tanpa login lolos dari pengecekan `<>` biasa.
 - **Hasil tes: skor + pembahasan soal yang salah saja**
   (`supabase/fix-4-pembahasan-soal-salah.sql`). Untuk soal yang dijawab
   benar, `grade_test()` tidak mengirim kunci & pembahasan ke siswa
