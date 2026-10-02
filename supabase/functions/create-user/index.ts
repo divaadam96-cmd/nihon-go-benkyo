@@ -5,6 +5,7 @@
 // supaya "cuma Operator yang bisa bikin akun" benar-benar dipaksakan.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isStrongPassword, PASSWORD_RULE_MESSAGE, tokenAal } from "../_shared/security.ts";
 
 // Hanya domain situs sendiri yang boleh memanggil function ini lewat
 // browser (bukan "*") - membatasi permukaan serang kalau token seseorang
@@ -60,6 +61,11 @@ Deno.serve(async (req) => {
     if (!callerProfile || callerProfile.role !== "operator") {
       return json(corsHeaders, { error: "Hanya Operator yang boleh membuat akun." }, 403);
     }
+    // Operator wajib sudah lolos verifikasi dua langkah (token aal2) - sama
+    // dengan aturan current_user_role() di database (fix-1-operator-mfa.sql).
+    if (tokenAal(jwt) !== "aal2") {
+      return json(corsHeaders, { error: "Operator wajib menyelesaikan verifikasi dua langkah (MFA)." }, 403);
+    }
 
     const body = await req.json();
     const { email, password, full_name, role } = body || {};
@@ -71,8 +77,8 @@ Deno.serve(async (req) => {
         400,
       );
     }
-    if (password.length < 6) {
-      return json(corsHeaders, { error: "Password minimal 6 karakter." }, 400);
+    if (!isStrongPassword(password)) {
+      return json(corsHeaders, { error: PASSWORD_RULE_MESSAGE }, 400);
     }
 
     const { data: created, error: createError } = await admin.auth.admin.createUser({

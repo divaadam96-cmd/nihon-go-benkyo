@@ -26,7 +26,7 @@
         <form id="adminCreateForm">
           <label>Nama lengkap<input type="text" id="adminFullName" required autocomplete="off"></label>
           <label>ID login<small class="field-hint">Bebas, mis. "budi.siswa". Bisa juga isi email asli kalau ada.</small><input type="text" id="adminEmail" required autocomplete="off"></label>
-          <label>Password sementara<input type="text" id="adminPassword" required minlength="6" autocomplete="off"></label>
+          <label>Password sementara <small>(min. 10 karakter, huruf + angka)</small><input type="text" id="adminPassword" required minlength="10" autocomplete="off"></label>
           <label>Peran<select id="adminRole"><option value="siswa">Siswa</option><option value="sensei">Sensei</option></select></label>
           <p id="adminFormError" class="login-error" hidden></p>
           <p id="adminFormSuccess" class="form-success" hidden></p>

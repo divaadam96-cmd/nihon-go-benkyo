@@ -213,6 +213,17 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   `quiz_results`, dan menandai akses tes selesai. Siswa tidak bisa
   menulis `quiz_results` langsung. Lihat
   `supabase/secure-test-grading.sql`.
+- **Akun Operator wajib verifikasi dua langkah (MFA/TOTP).** Setelah
+  password, Operator memasukkan kode 6 digit dari aplikasi authenticator
+  (pendaftaran pertama lewat QR code di layar login - `js/auth.js`).
+  Penegakannya di database: `current_user_role()` hanya mengakui peran
+  operator kalau token login sudah `aal2`
+  (`supabase/fix-1-operator-mfa.sql`); Edge Function `create-user` /
+  `delete-user` memeriksa hal yang sama. Operator kehilangan HP: pemilik
+  proyek Supabase menghapus faktornya lewat SQL Editor (perintahnya ada di
+  komentar file SQL tersebut), lalu Operator mendaftar ulang.
+- **Password minimal 10 karakter, huruf + angka** - dicek di form, di
+  Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket
   (label, kode singkat, deskripsi, batas waktu, tampilan satu halaman,
   urutan, aktif) ada di tabel `test_packages`; soalnya di

@@ -175,3 +175,30 @@ body.auth-checking .login-card {
   line-height: 1.5;
   text-align: left;
 }
+/* Verifikasi dua langkah Operator (js/auth.js requireOperatorMfa) */
+.mfa-enroll {
+  text-align: center;
+  margin-bottom: 12px;
+}
+.mfa-enroll img {
+  display: block;
+  margin: 0 auto 8px;
+  padding: 8px;
+  border-radius: 8px;
+  background: #fff;
+}
+.mfa-enroll p {
+  font-size: 12px;
+}
+.mfa-enroll code {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  word-break: break-all;
+  user-select: all;
+}
+#mfaCode {
+  letter-spacing: 0.4em;
+  text-align: center;
+  font-size: 20px;
+}
