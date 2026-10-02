@@ -37,6 +37,7 @@ pages/                   halaman lain, masing-masing dokumen HTML sendiri
   latihan.html             simulasi Tes Kemampuan (JLPT/JFT)
   pantau.html              panel Sensei/Operator: pantau progres siswa
   admin.html               panel Operator: kelola akun
+  kelola-soal.html         panel Operator: editor soal Tes Kemampuan
 
 css/
   base.css                 variabel warna (:root), @font-face DM Sans
@@ -205,7 +206,7 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   ulang** (file itu dikunci ke LF lewat `.gitattributes` supaya hash
   stabil). Domain eksternal baru (CDN, API) juga harus ditambahkan ke CSP.
 - **supabase-js** dimuat dengan atribut `integrity` (SRI) - kalau versi
-  di URL dinaikkan, hash `sha384-…` di ketujuh file HTML ikut diganti.
+  di URL dinaikkan, hash `sha384-…` di kedelapan file HTML ikut diganti.
 - **Tes Kemampuan dinilai di server.** Soal + kunci jawaban ada di
   database (`quiz_questions` per-5-Bab, `package_questions` paket
   ujian); browser hanya menerima soal tanpa kunci lewat
@@ -262,9 +263,19 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   urutan, aktif) ada di tabel `test_packages`; soalnya di
   `package_questions`. Pantau Siswa dan Tes Kemampuan membacanya lewat
   `list_test_packages()`, jadi paket baru yang sudah punya soal langsung
-  bisa ditugaskan Sensei. Cara menambah paket: salin
-  `supabase/contoh-tambah-paket.sql`, ganti isinya, jalankan di SQL
-  Editor. Menyembunyikan paket: `active = false`.
+  bisa ditugaskan Sensei. Menyembunyikan paket: `active = false`.
+- **Editor soal untuk Operator: halaman Kelola Soal**
+  (`pages/kelola-soal.html`, menu "Kelola Soal"; database:
+  `supabase/add-editor-soal.sql`). Mengedit semua soal per-5-Bab dan
+  semua paket, membuat paket baru, draft -> terbitkan, dan riwayat versi
+  dengan tombol pulihkan. Semua lewat fungsi `editor_*`: draft di
+  `content_drafts` (menolak menimpa simpanan Operator lain),
+  `editor_publish` memvalidasi ulang SEMUA isi di server
+  (`validate_test_content` + `is_safe_question_html` - allowlist tag HTML
+  yang sama dengan `js/soal-html.js`), menahan penerbitan saat ada siswa
+  yang sedang tes, dan menyimpan versi lama. Operator tidak bisa menulis
+  tabel soal/paket langsung. Impor massal lewat SQL Editor tetap bisa
+  (contoh: `supabase/contoh-tambah-paket.sql`).
 
 ## Testing
 

@@ -1,3 +1,8 @@
+-- CARA UTAMA menambah/mengedit paket sekarang lewat website: menu
+-- "Kelola Soal" (Operator) -> "+ Paket ujian baru". File ini hanya untuk
+-- IMPOR MASSAL lewat SQL Editor (melewati validasi editor - pastikan
+-- isinya benar; HTML soal tetap disaring saat ditampilkan ke siswa).
+--
 -- CONTOH menambah paket ujian baru. Salin file ini, ganti isinya, lalu
 -- jalankan di Supabase SQL Editor. Tidak perlu mengubah kode atau deploy:
 -- begitu paket punya minimal 1 soal, paket langsung muncul di Pantau Siswa
