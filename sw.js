@@ -3,14 +3,14 @@
 // dari cache ke user yang sudah install. Saat versi naik, file yang TIDAK
 // berubah tidak diunduh ulang penuh: install memakai cache: 'no-cache'
 // (revalidasi ETag -> cukup 304 kalau isinya sama).
-const CACHE_NAME = 'nihon-go-benkyo-v232';
+const CACHE_NAME = 'nihon-go-benkyo-v233';
 // Gambar soal, ilustrasi materi & aset CDN (URL berversi) di-cache saat
 // pertama kali dipakai - tidak ikut di-precache dan tidak dihapus saat
 // CACHE_NAME naik, karena isinya praktis tidak pernah berubah.
 const RUNTIME_CACHE = 'nihon-go-benkyo-runtime-v1';
 const APP_FILES = [
   'index.html',
-  'css/base.css', 'css/shell.css', 'css/auth.css',
+  'css/base.css', 'css/shell.css', 'css/auth.css', 'css/shell-akhir.css',
   'js/app-shell.js', 'js/app-sidebar.js', 'js/app-effects.js', 'js/soal-html.js', 'js/quiz-results.js', 'js/srs.js', 'js/auth.js', 'js/assignments.js', 'js/pwa.js',
   'js/pages/dashboard.js', 'css/pages/dashboard.css',
   'nihon-go-benkyo.webmanifest',
@@ -18,7 +18,7 @@ const APP_FILES = [
   'assets/images/japan-paper-background.webp', 'assets/images/logo.webp',
   'assets/fonts/dm-sans-latin-v17.woff2', 'assets/fonts/dm-sans-latin-ext-v17.woff2',
   'pages/materi.html', 'css/pages/materi.css', 'data/materi-grammar-data.js', 'js/pages/materi.js',
-  'pages/hafalan.html', 'css/pages/hafalan.css', 'js/pages/hafalan.js', 'data/kana-data.js', 'data/bab-data.js',
+  'pages/hafalan.html', 'css/pages/hafalan.css', 'css/pages/hafalan-kana.css', 'js/pages/hafalan.js', 'data/kana-data.js', 'data/bab-data.js',
   'pages/kanji.html', 'css/pages/kanji.css', 'js/pages/kanji.js', 'data/kanji-data.js', 'data/kanji-stroke-data.js',
   'pages/latihan.html', 'css/pages/latihan.css', 'js/pages/latihan.js',
   'pages/pantau.html', 'css/pages/pantau.css', 'js/pages/pantau.js',

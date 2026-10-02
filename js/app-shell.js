@@ -227,25 +227,6 @@
     (button) => (button.onclick = () => open(button.dataset.mobileView)),
   );
 
-  const shellStyle = document.createElement("style");
-  shellStyle.textContent = `
-      .mobile-nav{display:none}
-      @media(max-width:700px){.top{height:58px;padding:0 18px;gap:10px;position:sticky;top:0;z-index:30}.brand{font-size:16px;min-width:0}.brand span{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.brand small,.topnav,.identity{display:none}.account-box{margin-left:0;padding-left:0;border-left:0;gap:6px}.account-box span{max-width:88px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.account-box small,.account-box .install-app-btn{display:none}.layout{display:block}.main{padding:20px 15px 92px;background-attachment:scroll}.head h1{font-size:25px}.overview{grid-template-columns:1fr 1fr;gap:10px}.overview .metric:first-child{grid-column:span 2}.metric b{font-size:23px}.card{padding:16px}.dashboard-grid,.flash-layout,.kana-grid,.memory-routes,.course-nav,.exam-grid{grid-template-columns:1fr}.mobile-nav{position:fixed;z-index:50;left:10px;right:10px;bottom:10px;height:64px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:#142945f5;border:1px solid #caa45d55;border-radius:17px;box-shadow:0 12px 28px #0b162b55;padding:4px}.mobile-nav button{border:0;background:transparent;color:#cbd4df;font:600 10px "DM Sans";display:grid;gap:3px;place-items:center;padding:6px 1px}.mobile-nav button span{font:700 18px "Zen Kaku Gothic New"}.mobile-nav button.active{color:#f7dfad}.flashcard{height:270px}.face .kana{font-size:58px}}
-      @media (prefers-reduced-motion: no-preference){
-        .sakura-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1}
-        .sakura-layer .petal{position:absolute;top:-40px;line-height:1;opacity:0;animation:sakura-fall linear infinite;will-change:transform,opacity}
-        @keyframes sakura-fall{0%{transform:translate(0,0) rotate(0deg);opacity:0}8%{opacity:.28}92%{opacity:.22}100%{transform:translate(var(--drift,40px),112vh) rotate(340deg);opacity:0}}
-        .topnav{position:relative}
-        .topnav button.active{border-bottom:2px solid transparent}
-        .nav-indicator{position:absolute;bottom:0;height:2px;background:var(--gold);border-radius:2px;left:0;width:0;transition:left .32s cubic-bezier(.22,.75,.25,1),width .32s cubic-bezier(.22,.75,.25,1)}
-        .kanji-tile-grid .kanji-tile,.kana-table .kana-cell{opacity:0;transform:translateY(8px);animation:stagger-in .38s ease forwards}
-        ${Array.from({ length: 24 }, (_, i) => `.kanji-tile-grid .kanji-tile:nth-child(${i + 1}){animation-delay:${i * 28}ms}`).join("")}
-        .kanji-tile-grid .kanji-tile:nth-child(n+25){animation-delay:672ms}
-        ${Array.from({ length: 5 }, (_, i) => `.kana-table .kana-cell:nth-child(${i + 1}){animation-delay:${i * 45}ms}`).join("")}
-        @keyframes stagger-in{to{opacity:1;transform:none}}
-      }
-    `;
-  document.head.appendChild(shellStyle);
 
   if (typeof window.initSakuraPetals === "function") window.initSakuraPetals();
 
