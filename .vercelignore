@@ -1,0 +1,20 @@
+# File yang TIDAK ikut diunggah saat `vercel deploy` - situs ini statis,
+# yang dibutuhkan cuma index.html, pages/, css/, js/, data/, assets/,
+# sw.js, manifest, dan vercel.json.
+
+# Rahasia & konfigurasi lokal
+.env*
+.vercel
+
+# Catatan/alat kerja lokal (bukan bagian situs)
+.claude
+.gstack
+.remember
+
+# Skema & Edge Functions Supabase - dideploy ke Supabase, bukan Vercel
+supabase
+
+# Dokumentasi
+docs
+README.md
+QA_CHECKLIST.md
