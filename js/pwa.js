@@ -7,9 +7,14 @@
 // men-precache seluruh APP_FILES di sw.js (~1 MB) - kalau mulai lebih awal,
 // unduhan itu berebut bandwidth dengan CSS/font/script halaman ini sendiri
 // pada kunjungan pertama.
+// sw.js ada di akar situs. Path-nya dihitung dari lokasi skrip ini
+// (js/pwa.js -> ../sw.js), bukan dari halaman yang membuka: dulu "sw.js"
+// relatif sehingga dari pages/*.html menjadi pages/sw.js (404) dan service
+// worker tidak terpasang kalau siswa langsung membuka sub-halaman.
+const swScriptUrl = new URL("../sw.js", document.currentScript ? document.currentScript.src : location.href);
 if ("serviceWorker" in navigator && location.protocol !== "file:") {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+    navigator.serviceWorker.register(swScriptUrl.href).catch(() => {});
   });
 
   // sw.js menyajikan CSS/JS cache-first, jadi kunjungan pertama setelah
