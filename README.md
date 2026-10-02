@@ -231,6 +231,12 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   yang sama. Tes yang ditinggal sampai waktu habis ditutup & dinilai dari
   jawaban tersimpan saat siswa membuka dashboard/Tes Kemampuan atau Sensei
   membuka Pantau Siswa (ditandai "⏱ Waktu habis").
+- **Hasil tes: skor + pembahasan soal yang salah saja**
+  (`supabase/fix-4-pembahasan-soal-salah.sql`). Untuk soal yang dijawab
+  benar, `grade_test()` tidak mengirim kunci & pembahasan ke siswa
+  (Sensei/Operator tetap menerima lengkap). Siswa yang sengaja mencatat
+  jawabannya tetap bisa menyusun kunci - untuk ujian penting, beri paket
+  berbeda ke siswa berbeda.
 - **XP, streak, dan progres hafalan dihitung server**
   (`supabase/fix-3-xp-streak-server.sql`). Siswa hanya bisa membaca
   `srs_progress`/`activity_log`; setiap ulasan lewat `srs_review()` yang
