@@ -3,7 +3,7 @@
 // dari cache ke user yang sudah install. Saat versi naik, file yang TIDAK
 // berubah tidak diunduh ulang penuh: install memakai cache: 'no-cache'
 // (revalidasi ETag -> cukup 304 kalau isinya sama).
-const CACHE_NAME = 'nihon-go-benkyo-v230';
+const CACHE_NAME = 'nihon-go-benkyo-v231';
 // Gambar soal, ilustrasi materi & aset CDN (URL berversi) di-cache saat
 // pertama kali dipakai - tidak ikut di-precache dan tidak dihapus saat
 // CACHE_NAME naik, karena isinya praktis tidak pernah berubah.
@@ -11,7 +11,7 @@ const RUNTIME_CACHE = 'nihon-go-benkyo-runtime-v1';
 const APP_FILES = [
   'index.html',
   'css/base.css', 'css/shell.css', 'css/auth.css',
-  'js/app-shell.js', 'js/app-sidebar.js', 'js/app-effects.js', 'js/quiz-results.js', 'js/srs.js', 'js/auth.js', 'js/assignments.js', 'js/pwa.js',
+  'js/app-shell.js', 'js/app-sidebar.js', 'js/app-effects.js', 'js/soal-html.js', 'js/quiz-results.js', 'js/srs.js', 'js/auth.js', 'js/assignments.js', 'js/pwa.js',
   'js/pages/dashboard.js', 'css/pages/dashboard.css',
   'nihon-go-benkyo.webmanifest',
   'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png',
@@ -23,6 +23,7 @@ const APP_FILES = [
   'pages/latihan.html', 'css/pages/latihan.css', 'js/pages/latihan.js',
   'pages/pantau.html', 'css/pages/pantau.css', 'js/pages/pantau.js',
   'pages/admin.html', 'css/pages/admin.css', 'js/pages/admin.js',
+  'pages/kelola-soal.html', 'css/pages/kelola-soal.css', 'js/pages/kelola-soal.js',
 ];
 // Aset CDN yang di-cache saat dipakai (supabase-js berversi, font Google).
 const CDN_HOSTS = ['cdn.jsdelivr.net', 'fonts.googleapis.com', 'fonts.gstatic.com'];

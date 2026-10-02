@@ -5,11 +5,11 @@ terhubung** — untuk gambaran ringkas isi tiap folder, lihat
 [README](../README.md#struktur-project). Ditulis untuk pemula yang belum
 familiar dengan kode ini.
 
-## Gambaran besar: 7 halaman, 1 "shell" bersama
+## Gambaran besar: 8 halaman, 1 "shell" bersama
 
 Aplikasi ini adalah **situs multi-halaman** (bukan single-page app) — tiap
 menu (Materi, Hafalan, Kanji, dst.) adalah file `.html` sungguhan, bukan
-bagian yang disembunyikan/ditampilkan di satu dokumen. Ada 7 halaman:
+bagian yang disembunyikan/ditampilkan di satu dokumen. Ada 8 halaman:
 
 | Halaman | Berkas | Isinya |
 |---|---|---|
@@ -20,9 +20,10 @@ bagian yang disembunyikan/ditampilkan di satu dokumen. Ada 7 halaman:
 | Tes Kemampuan | `pages/latihan.html` | Simulasi ujian JLPT/JFT |
 | Pantau Siswa | `pages/pantau.html` | Khusus Sensei/Operator |
 | Panel Admin | `pages/admin.html` | Khusus Operator |
+| Kelola Soal | `pages/kelola-soal.html` | Khusus Operator: editor soal Tes Kemampuan |
 
 Login, header (logo + XP + info akun), dan sidebar (ikon menu) terlihat
-**identik** di ke-7 halaman itu. Supaya tidak perlu menyalin HTML yang
+**identik** di ke-8 halaman itu. Supaya tidak perlu menyalin HTML yang
 sama ke 7 file berbeda (dan berisiko satu file lupa diperbarui saat
 sidebar diubah nanti), bagian itu dibangun oleh **satu file JavaScript**:
 `js/app-shell.js`.
@@ -60,7 +61,7 @@ Ambil contoh membuka `pages/materi.html`:
    `installMateriGrammarContent()` di `materi.js`) — kalau mau edit teks
    pelajaran, di situ tempatnya, bukan di `materi.js`.
 
-Pola `initPage()` ini SAMA untuk ketujuh halaman — kalau ingin tahu apa
+Pola `initPage()` ini SAMA untuk kedelapan halaman — kalau ingin tahu apa
 yang terjadi saat sebuah halaman dibuka, cari `function initPage()` di
 file `js/pages/<nama-halaman>.js`-nya.
 
@@ -78,6 +79,7 @@ const PAGE_FOR_VIEW = {
   test: "pages/latihan.html",
   monitor: "pages/pantau.html",
   admin: "pages/admin.html",
+  "question-bank": "pages/kelola-soal.html",
 };
 ```
 

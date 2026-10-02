@@ -105,6 +105,25 @@ Tersedia untuk Sensei dan Operator:
 - pemberian akses ke Tes Kemampuan dengan batas waktu;
 - reset progres SRS seorang Siswa setelah konfirmasi.
 
+## Kelola Soal
+
+Lokasi: `pages/kelola-soal.html` dan `js/pages/kelola-soal.js` (database:
+`supabase/add-editor-soal.sql`).
+
+Tersedia hanya untuk Operator (dengan verifikasi dua langkah):
+
+- daftar semua tes Kemampuan (10 rentang per-5-Bab dan semua paket) beserta
+  status draft, jumlah soal terbit, dan siswa yang sedang mengerjakan;
+- edit soal: kategori, instruksi, teks soal (HTML terbatas), 2-6 pilihan
+  dengan kunci jawaban, pembahasan, label materi, gambar/audio, id hafalan;
+  tambah, duplikat, hapus, dan ubah urutan soal, dengan pratinjau tampilan
+  siswa dan pengecekan kesalahan per soal;
+- pengaturan paket (nama, kode singkat, deskripsi, batas waktu, tampilan satu
+  halaman, urutan, aktif) dan pembuatan paket baru;
+- simpan draft, terbitkan (divalidasi ulang di server, ditahan saat ada siswa
+  yang sedang tes), buang draft;
+- riwayat versi dengan tombol pulihkan.
+
 ## Panel Admin
 
 Lokasi: `pages/admin.html` dan `js/pages/admin.js`.

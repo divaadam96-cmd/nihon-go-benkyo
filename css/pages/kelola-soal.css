@@ -1,0 +1,470 @@
+/* Kelola Soal (Operator): daftar tes di kiri, editor di kanan. */
+.ks-layout {
+  display: grid;
+  /* minmax(0, 1fr): tanpa ini kolom editor tidak mau menyusut di bawah
+     lebar isi terlebarnya dan meluber ke kanan. */
+  grid-template-columns: minmax(230px, 280px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+@media (max-width: 960px) {
+  .ks-layout {
+    grid-template-columns: 1fr;
+  }
+}
+.ks-editor,
+.ks-sidebar {
+  min-width: 0;
+}
+.ks-sidebar {
+  position: sticky;
+  top: 14px;
+  max-height: calc(100vh - 28px);
+  overflow: auto;
+}
+@media (max-width: 960px) {
+  .ks-sidebar {
+    position: static;
+    max-height: none;
+  }
+}
+.ks-group + .ks-group {
+  margin-top: 14px;
+}
+.ks-group-title {
+  margin: 10px 0 6px;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ks-test {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.ks-test:hover {
+  border-color: var(--gold);
+}
+.ks-test.active {
+  border-color: var(--navy);
+  box-shadow: inset 3px 0 0 var(--navy);
+}
+.ks-test b {
+  font-size: 13px;
+}
+.ks-test small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.ks-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ks-badge {
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.ks-badge.draft { background: #fbf1dd; color: #8a6225; }
+.ks-badge.new { background: #e8eef8; color: var(--blue); }
+.ks-badge.off { background: var(--wash); color: var(--muted); }
+.ks-badge.live { background: var(--rose-soft); color: var(--red); }
+
+.ks-new-package {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.ks-new-package summary {
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ks-new-package form {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+.ks-new-package label,
+.ks-field {
+  display: grid;
+  gap: 4px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+.ks-new-package small,
+.ks-field small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+.ks-new-package input,
+.ks-field input,
+.ks-field textarea,
+.ks-option input:not([type="radio"]),
+.ks-toolbar input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border: 1px solid #d6cab7;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--navy);
+  font: 500 13px/1.5 "Zen Kaku Gothic New", system-ui, sans-serif;
+}
+.ks-field textarea {
+  resize: vertical;
+}
+
+.ks-editor-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ks-editor-head h2 {
+  margin: 4px 0 2px;
+  color: var(--navy);
+}
+.ks-status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.ks-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.ks-dirty {
+  color: #8a6225;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ks-link {
+  padding: 4px 6px;
+  border: 0;
+  background: none;
+  color: var(--blue);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ks-link:disabled {
+  color: var(--muted);
+  cursor: default;
+}
+.ks-link.danger {
+  color: var(--red);
+}
+.ks-warning,
+.ks-feedback {
+  margin: 12px 0 0;
+  padding: 10px 13px;
+  border-left: 3px solid var(--gold);
+  border-radius: 6px;
+  background: #fbf1dd;
+  color: #6d5a34;
+  font-size: 13px;
+}
+.ks-feedback.error {
+  border-color: var(--red);
+  background: var(--rose-soft);
+  color: #7a2a20;
+}
+.ks-feedback.success {
+  border-color: var(--green);
+  background: #e3f3ec;
+  color: #23594a;
+}
+.ks-feedback ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.ks-jump {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.ks-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 16px 0 12px;
+  border-bottom: 1px solid var(--line);
+}
+.ks-tabs button {
+  padding: 8px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ks-tabs button.active {
+  border-bottom-color: var(--navy);
+  color: var(--navy);
+}
+.ks-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ks-hint {
+  margin: 8px 0 12px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.ks-hint code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--wash);
+  font-size: 11px;
+}
+.ks-questions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+.ks-q {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+}
+.ks-q.has-error {
+  border-color: #e3b7ab;
+}
+.ks-q-head {
+  display: flex;
+  align-items: center;
+}
+.ks-q-toggle {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ks-q-num {
+  min-width: 22px;
+  color: var(--navy);
+  font-weight: 800;
+}
+.ks-q-cat {
+  flex: none;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 800;
+}
+.ks-q-sum {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ks-q-err {
+  margin-left: auto;
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 800;
+}
+.ks-q-tools {
+  display: flex;
+  gap: 2px;
+  padding-right: 8px;
+}
+.ks-q-tools button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ks-q-tools button:hover {
+  border-color: var(--line);
+  background: var(--wash);
+}
+.ks-q-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: 4px 14px 14px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 1100px) {
+  .ks-q-body {
+    grid-template-columns: 1fr;
+  }
+}
+.ks-q-form {
+  display: grid;
+  gap: 10px;
+  padding-top: 10px;
+}
+.ks-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+.ks-options {
+  display: grid;
+  gap: 6px;
+}
+.ks-options-title {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+.ks-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ks-option input[type="radio"] {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  accent-color: var(--green);
+}
+.ks-option button {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--red);
+  cursor: pointer;
+}
+.ks-option button:disabled {
+  color: #ccc;
+  cursor: default;
+}
+.ks-q-side {
+  padding-top: 10px;
+}
+.ks-q-errors {
+  margin: 0 0 10px;
+  padding-left: 18px;
+  color: var(--red);
+  font-size: 12px;
+}
+.ks-q-errors:empty {
+  display: none;
+}
+.ks-preview-title {
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ks-preview {
+  overflow-wrap: anywhere;
+  padding: 12px 14px;
+  border: 1px dashed #d6cab7;
+  border-radius: 9px;
+  background: #fff;
+  font-family: "Zen Kaku Gothic New", system-ui, sans-serif;
+  line-height: 1.8;
+}
+.ks-pv-instruction {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.ks-pv-question {
+  color: var(--navy);
+  font-size: 16px;
+}
+.ks-pv-image {
+  display: block;
+  max-width: 100%;
+  margin: 6px 0;
+  border-radius: 6px;
+}
+.ks-pv-options {
+  margin: 10px 0 0;
+  padding-left: 22px;
+  font-size: 14px;
+}
+.ks-pv-options li.correct {
+  color: var(--green);
+  font-weight: 700;
+}
+.ks-pv-options li.correct::after {
+  content: " ✓";
+}
+.ks-add {
+  margin-top: 12px;
+}
+.ks-package {
+  display: grid;
+  gap: 12px;
+  max-width: 720px;
+}
+.ks-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 13px;
+}
+.ks-versions {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ks-versions li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+}
+.ks-versions b {
+  display: block;
+  color: var(--navy);
+  font-size: 13px;
+}
+.ks-versions small {
+  color: var(--muted);
+  font-size: 12px;
+}

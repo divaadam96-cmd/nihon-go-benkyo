@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Kelola Soal — Nihon GO Benkyo</title>
+  <meta name="description" content="Editor soal Tes Kemampuan Nihon GO Benkyo untuk Operator: soal per 5 Bab dan paket ujian.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap"></noscript>
+  <meta name="theme-color" content="#142945">
+  <link rel="manifest" href="../nihon-go-benkyo.webmanifest">
+  <link rel="icon" type="image/png" href="../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/shell.css">
+  <link rel="stylesheet" href="../css/auth.css">
+  <link rel="stylesheet" href="../css/pages/kelola-soal.css">
+</head>
+<body class="auth-checking">
+<main class="main" id="pageMain">
+  <div data-role-only="operator" hidden>
+    <div class="head"><div><div class="eyebrow">Mode operator</div><h1>Kelola Soal.</h1><p>Edit soal Tes Kemampuan per 5 Bab dan semua paket ujian. Perubahan tersimpan sebagai draft dan baru tampil ke siswa setelah diterbitkan.</p></div></div>
+    <div class="ks-layout">
+      <aside class="card ks-sidebar">
+        <h3>Daftar tes</h3>
+        <div id="ksTestList" class="ks-test-list"><p class="muted">Memuat…</p></div>
+        <details class="ks-new-package" id="ksNewPackage">
+          <summary>+ Paket ujian baru</summary>
+          <form id="ksNewPackageForm">
+            <label>Kode paket<small>huruf kecil, angka, tanda minus — tidak bisa diubah setelah terbit</small><input id="ksNewKey" required pattern="[a-z0-9][a-z0-9\-]{1,40}" placeholder="mis. jlpt-n5-tp7" autocomplete="off"></label>
+            <label>Nama paket<input id="ksNewLabel" required maxlength="120" placeholder="mis. JLPT N5 · Paket G (Latihan)" autocomplete="off"></label>
+            <p class="login-error" id="ksNewError" hidden></p>
+            <button type="submit" class="secondary">Buat draft paket</button>
+          </form>
+        </details>
+      </aside>
+      <section class="card ks-editor" id="ksEditor">
+        <p class="muted">Pilih tes di sebelah kiri untuk mulai mengedit.</p>
+      </section>
+    </div>
+  </div>
+</main>
+<script defer src="../js/pwa.js"></script>
+<script defer src="../js/soal-html.js"></script>
+<script defer src="../js/srs.js"></script>
+<script defer src="../js/app-effects.js"></script>
+<script defer src="../js/app-sidebar.js"></script>
+<script defer src="../js/app-shell.js"></script>
+<script defer src="../js/pages/kelola-soal.js"></script>
+<script defer fetchpriority="low" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
+<script defer src="../js/auth.js"></script>
+</body></html>

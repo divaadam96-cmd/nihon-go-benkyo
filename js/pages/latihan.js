@@ -17,27 +17,9 @@ async function loadTestPackages(){
   try{const{data,error}=await window.supabaseClient.rpc("list_test_packages");if(!error&&data)testPackages=data}catch(e){}
 }
 function packageInfo(key){return testPackages.find(p=>p.key===key)||{key,label:key,mark:"SET",description:"",time_limit_minutes:60,one_page:false}}
-/* HTML soal berasal dari database (bisa diedit Operator) - disaring dulu
-   dengan allowlist tag & atribut class saja sebelum masuk innerHTML,
-   supaya akun Operator yang bocor pun tidak bisa menyisipkan skrip. */
-const SAFE_TAGS=new Set(["B","STRONG","I","EM","U","BR","SMALL","SPAN","DIV","P","RUBY","RT","RP","SUB","SUP","BLOCKQUOTE","TABLE","CAPTION","THEAD","TBODY","TR","TH","TD","UL","OL","LI"]);
-const DROP_TAGS=new Set(["SCRIPT","STYLE","IFRAME","OBJECT","EMBED","TEMPLATE","NOSCRIPT","SVG","MATH","LINK","META","BASE","FORM"]);
-function sanitizeHtml(html){
-  const template=document.createElement("template");
-  template.innerHTML=html==null?"":String(html);
-  const clean=(node)=>{
-    Array.from(node.childNodes).forEach(child=>{
-      if(child.nodeType===Node.COMMENT_NODE){child.remove();return}
-      if(child.nodeType!==Node.ELEMENT_NODE)return;
-      if(DROP_TAGS.has(child.tagName)){child.remove();return}
-      clean(child);
-      if(!SAFE_TAGS.has(child.tagName)){child.replaceWith(...child.childNodes);return}
-      Array.from(child.attributes).forEach(attr=>{if(attr.name!=="class")child.removeAttribute(attr.name)});
-    });
-  };
-  clean(template.content);
-  return template.innerHTML;
-}
+/* HTML soal dari database disaring dulu (js/soal-html.js - aturan sama
+   dengan is_safe_question_html() di server). */
+const sanitizeHtml=window.sanitizeQuestionHtml;
 const $=id=>document.getElementById(id);
 let questions=[],rangeStart=1,mockPackage="",current=0,answers=[],checked=[],flags=[],graded=false,furigana=true,timerId=null,seconds=720,reviewOnly=false,reviewIndexes=[],onePageExamRendered=false;
 /* Kontrol akses tes kemampuan: siswa cuma boleh mulai tes lewat akses yang
@@ -85,21 +67,6 @@ async function buildSelectedQuestions(){
   answers=questions.map(q=>{const orig=saved[q.id];return orig==null?null:q.order.indexOf(Number(orig))});
   $("heroQuestionTotal").textContent=questions.length;
   $("heroPackage").textContent=mockPackage?packageInfo(mockPackage).label:`Bab ${rangeStart}–${rangeStart+4}`;
-}
-/* Bab soal per rentang untuk layar Kelola Soal (Operator) - baca langsung
-   tabel quiz_questions (RLS hanya mengizinkan Operator/Sensei). */
-function questionRowToObject(row){
-  const q={category:row.category,instruction:row.instruction,html:row.html,options:row.options,answer:row.answer,explanation:row.explanation,material:row.material};
-  if(row.srs_id)q.srsId=row.srs_id;
-  return q;
-}
-async function fetchQuizQuestions(babRange,status){
-  if(!window.supabaseClient)return null;
-  try{
-    const{data,error}=await window.supabaseClient.from("quiz_questions").select("*").eq("bab_range",babRange).eq("status",status).order("position",{ascending:true});
-    if(error||!data||!data.length)return null;
-    return data.map(questionRowToObject);
-  }catch(e){return null}
 }
 /* Batas waktu wajib (tidak bisa dimatikan siswa): latihan per 5 bab
    maksimal 45 menit, simulasi paket maksimal 60 menit. */
@@ -422,113 +389,6 @@ $("accessList").addEventListener("click",(event)=>{
 window.refreshTestAccess=function(){
   if(restrictedMode&&$("testScreen").hidden)loadAccessAssignments();
 };
-/* Mode operator: review + edit soal satu rentang bab sekaligus (tanpa
-   perlu mengerjakan satu-satu), termasuk tambah/hapus soal. Perubahan
-   cuma di memori tab ini (operatorDraft) sampai Operator klik "Simpan
-   draft" (quiz_questions status 'draft') atau "Terbitkan". */
-let operatorDraft=[];
-function blankOperatorQuestion(){
-  return {category:"Kosakata",instruction:"（　）に なにを いれますか。1・2・3・4から いちばん いい ものを ひとつ えらんでください。",html:"",options:["","","",""],answer:0,explanation:"",material:`Bab ${rangeStart}–${rangeStart+4} · Soal baru`};
-}
-/* Draft Operator diambil dari baris status 'draft' dulu (kalau Operator
-   pernah klik "Simpan draft"); kalau belum ada, mulai dari soal yang
-   sedang terbit - belum tersimpan sebagai draft sampai Operator klik
-   "Simpan draft"/"Terbitkan". */
-async function loadOperatorDraft(){
-  $("operatorQuestionList").innerHTML='<p class="operator-empty">Memuat…</p>';
-  setOperatorStatus("");
-  const draftRows=await fetchQuizQuestions(rangeStart,"draft");
-  const publishedRows=draftRows?null:await fetchQuizQuestions(rangeStart,"published");
-  operatorDraft=draftRows||publishedRows||[];
-  if(!draftRows&&publishedRows)setOperatorStatus('Menampilkan soal yang sedang terbit - belum ada draft tersimpan untuk rentang ini. Perubahan baru tersimpan setelah klik "Simpan draft".');
-  paintOperatorEditor();
-}
-function paintOperatorEditor(){
-  $("operatorRangeLabel").textContent=`Bab ${rangeStart}–${rangeStart+4}`;
-  $("operatorQuestionList").innerHTML=operatorDraft.length?operatorDraft.map((q,i)=>`
-    <article class="operator-card" data-index="${i}">
-      <header><b>Soal ${i+1} · ${escapeHtmlTes(q.category)}</b><button type="button" class="operator-remove">🗑 Hapus</button></header>
-      <label>Kategori<input class="op-field" data-field="category" value="${escapeHtmlTes(q.category)}"></label>
-      <label>Instruksi<input class="op-field" data-field="instruction" value="${escapeHtmlTes(q.instruction)}"></label>
-      <label>Teks soal (HTML diperbolehkan, mis. &lt;ruby&gt;)<textarea class="op-field" data-field="html" rows="2">${escapeHtmlTes(q.html)}</textarea></label>
-      <label>Pilihan jawaban (bulatan = jawaban benar)</label>
-      <div class="operator-options">${q.options.map((opt,oi)=>`<label class="operator-option"><input type="radio" name="op-answer-${i}" class="op-answer-radio" data-oi="${oi}" ${q.answer===oi?"checked":""}><input class="op-option-field" data-oi="${oi}" value="${escapeHtmlTes(opt)}"></label>`).join("")}</div>
-      <label>Pembahasan<textarea class="op-field" data-field="explanation" rows="2">${escapeHtmlTes(q.explanation)}</textarea></label>
-      <label>Label materi<input class="op-field" data-field="material" value="${escapeHtmlTes(q.material)}"></label>
-    </article>
-  `).join(""):'<p class="operator-empty">Rentang ini belum punya paket soal manual. Klik "+ Tambah soal baru" untuk mulai membuatnya.</p>';
-}
-function operatorCardIndex(el){const card=el.closest(".operator-card");return card?Number(card.dataset.index):NaN}
-function setOperatorStatus(text,kind){
-  const el=$("operatorStatus");el.textContent=text;el.classList.toggle("is-success",kind==="success");el.classList.toggle("is-error",kind==="error");
-}
-/* Simpan seluruh operatorDraft sebagai baris status='draft' di Supabase:
-   hapus draft lama rentang ini lalu tulis ulang dari awal (bukan diff
-   satu-satu) - paling sederhana dan aman karena RLS hanya mengizinkan
-   Operator menulis baris draft (lihat supabase/add-quiz-questions.sql). */
-async function saveOperatorDraft(){
-  if(!window.supabaseClient){setOperatorStatus("Supabase tidak tersedia - tidak bisa menyimpan ke database.","error");return false}
-  const button=$("saveOperatorDraft");button.disabled=true;const original=button.textContent;button.textContent="Menyimpan…";
-  setOperatorStatus("");
-  try{
-    const del=await window.supabaseClient.from("quiz_questions").delete().eq("bab_range",rangeStart).eq("status","draft");
-    if(del.error)throw del.error;
-    if(operatorDraft.length){
-      const rows=operatorDraft.map((q,i)=>({bab_range:rangeStart,status:"draft",position:i,category:q.category,instruction:q.instruction,html:q.html,options:q.options,answer:q.answer,explanation:q.explanation,material:q.material,srs_id:q.srsId||null}));
-      const ins=await window.supabaseClient.from("quiz_questions").insert(rows);
-      if(ins.error)throw ins.error;
-    }
-    setOperatorStatus("Draft tersimpan ke database.","success");
-    return true;
-  }catch(e){
-    setOperatorStatus("Gagal menyimpan draft: "+(e&&e.message?e.message:e),"error");
-    return false;
-  }finally{
-    button.disabled=false;button.textContent=original;
-  }
-}
-/* Terbitkan = simpan draft dulu (supaya yang diterbitkan pasti versi
-   terbaru di layar ini) lalu panggil publish_quiz_range() - fungsi
-   SECURITY DEFINER di database yang memindahkan draft -> published
-   dalam satu transaksi, jadi siswa tidak pernah melihat soal setengah-edit. */
-async function publishOperatorDraft(){
-  const saved=await saveOperatorDraft();
-  if(!saved)return;
-  if(!window.supabaseClient)return;
-  const button=$("publishOperatorDraft");button.disabled=true;const original=button.textContent;button.textContent="Menerbitkan…";
-  try{
-    const{error}=await window.supabaseClient.rpc("publish_quiz_range",{p_bab_range:rangeStart});
-    if(error)throw error;
-    setOperatorStatus(`Berhasil diterbitkan - siswa sekarang melihat versi terbaru Bab ${rangeStart}–${rangeStart+4}.`,"success");
-  }catch(e){
-    setOperatorStatus("Gagal menerbitkan: "+(e&&e.message?e.message:e),"error");
-  }finally{
-    button.disabled=false;button.textContent=original;
-  }
-}
-$("openOperatorEditor").onclick=async()=>{$("startScreen").hidden=true;$("operatorEditorScreen").hidden=false;window.scrollTo({top:0,behavior:"smooth"});await loadOperatorDraft()};
-$("closeOperatorEditor").onclick=()=>{$("operatorEditorScreen").hidden=true;$("startScreen").hidden=false};
-$("addOperatorQuestion").onclick=()=>{operatorDraft.push(blankOperatorQuestion());paintOperatorEditor()};
-$("saveOperatorDraft").onclick=saveOperatorDraft;
-$("publishOperatorDraft").onclick=publishOperatorDraft;
-$("operatorQuestionList").addEventListener("input",(event)=>{
-  const i=operatorCardIndex(event.target);
-  if(Number.isNaN(i))return;
-  if(event.target.classList.contains("op-field")){operatorDraft[i][event.target.dataset.field]=event.target.value}
-  else if(event.target.classList.contains("op-option-field")){operatorDraft[i].options[Number(event.target.dataset.oi)]=event.target.value}
-});
-$("operatorQuestionList").addEventListener("change",(event)=>{
-  const i=operatorCardIndex(event.target);
-  if(Number.isNaN(i))return;
-  if(event.target.classList.contains("op-answer-radio"))operatorDraft[i].answer=Number(event.target.dataset.oi);
-});
-$("operatorQuestionList").addEventListener("click",(event)=>{
-  if(!event.target.classList.contains("operator-remove"))return;
-  const i=operatorCardIndex(event.target);
-  if(Number.isNaN(i))return;
-  operatorDraft.splice(i,1);
-  paintOperatorEditor();
-});
 async function initAccessControl(){
   const role=await resolveRole();
   await loadTestPackages();
