@@ -295,7 +295,9 @@ async function finishTest(){
     const {data,error}=await window.supabaseClient.rpc("grade_test",{p_attempt_id:attempt.attempt_id,p_answers:submitted});
     if(error)throw error;
     const byId=new Map((data||[]).map(row=>[String(row.question_id),row]));
-    questions.forEach(q=>{const row=byId.get(String(q.id));if(row){q.answer=q.order.indexOf(row.answer);q.explanation=sanitizeHtml(row.explanation)}});
+    /* Untuk soal yang dijawab benar server tidak mengirim kunci/pembahasan
+       (fix-4-pembahasan-soal-salah.sql) - kuncinya = pilihan siswa sendiri. */
+    questions.forEach((q,i)=>{const row=byId.get(String(q.id));if(!row)return;if(row.is_correct&&row.answer==null){q.answer=answers[i];q.explanation=""}else{q.answer=q.order.indexOf(row.answer);q.explanation=sanitizeHtml(row.explanation)}});
     graded=true;activeAssignmentId=null;pendingSave={};
   }catch(e){
     $("finalScore").textContent="!";$("resultTitle").textContent="Jawaban belum terkirim.";$("resultSummary").textContent=`Gagal menghubungi server (${e&&e.message?e.message:e}). Jawabanmu masih tersimpan di halaman ini - periksa koneksi lalu kirim ulang.`;$("retryGrading").hidden=false;
