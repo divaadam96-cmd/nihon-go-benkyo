@@ -68,6 +68,122 @@ async function fetchProfile(userId) {
 
 const ROLE_LABELS = { operator: "Operator", sensei: "Sensei", siswa: "Siswa" };
 
+/* Aturan password (sama dengan create-user & pengaturan Supabase Auth):
+   minimal 10 karakter, ada huruf DAN angka. */
+const PASSWORD_RULE_MESSAGE = "Password minimal 10 karakter dan harus berisi huruf serta angka.";
+function isStrongPassword(password) {
+  return password.length >= 10 && /[A-Za-z]/.test(password) && /\d/.test(password);
+}
+
+/* Verifikasi dua langkah (MFA/TOTP) WAJIB untuk Operator. Ini hanya
+   "pintu"-nya: pengaman sebenarnya ada di database - current_user_role()
+   baru mengakui peran operator kalau token login sudah aal2 (lihat
+   supabase/fix-1-operator-mfa.sql) - jadi password Operator yang bocor
+   saja tidak cukup walaupun API Supabase dipanggil langsung.
+   Resolve true begitu sesi sudah aal2 (langsung, atau setelah Operator
+   memasukkan kode 6 digit). Operator yang belum punya aplikasi
+   authenticator terdaftar dipandu mendaftar lewat QR code dulu. */
+let mfaFormEl = null;
+function buildMfaForm() {
+  if (mfaFormEl) return mfaFormEl;
+  mfaFormEl = document.createElement("form");
+  mfaFormEl.className = "login-card mfa-card";
+  mfaFormEl.id = "mfaForm";
+  mfaFormEl.hidden = true;
+  mfaFormEl.innerHTML =
+    '<h1>Verifikasi dua langkah</h1><p id="mfaIntro"></p>' +
+    '<div class="mfa-enroll" id="mfaEnroll" hidden><img id="mfaQr" alt="QR code untuk aplikasi authenticator" width="180" height="180"><p>Tidak bisa memindai? Masukkan kode ini secara manual:<code id="mfaSecret"></code></p></div>' +
+    '<label>Kode 6 digit<input type="text" id="mfaCode" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label>' +
+    '<p class="login-error" id="mfaError" hidden></p>' +
+    '<button type="submit" class="primary" id="mfaSubmit">Verifikasi</button>' +
+    '<button type="button" class="link-btn" id="mfaCancel">Batal &amp; keluar</button>';
+  resetPasswordFormEl.after(mfaFormEl);
+  mfaFormEl.querySelector("#mfaCancel").addEventListener("click", async () => {
+    await window.supabaseClient.auth.signOut();
+    location.reload();
+  });
+  return mfaFormEl;
+}
+
+async function requireOperatorMfa() {
+  const mfa = window.supabaseClient.auth.mfa;
+  const { data: level, error: levelError } = await mfa.getAuthenticatorAssuranceLevel();
+  if (levelError) throw levelError;
+  if (level.currentLevel === "aal2") return true;
+
+  const { data: factors, error: factorsError } = await mfa.listFactors();
+  if (factorsError) throw factorsError;
+  let factorId = factors.totp.find((factor) => factor.status === "verified")?.id;
+
+  const form = buildMfaForm();
+  const intro = form.querySelector("#mfaIntro");
+  if (factorId) {
+    intro.textContent = "Buka aplikasi authenticator di HP Anda, lalu masukkan kode 6 digit untuk Nihon GO Benkyo.";
+  } else {
+    // Pendaftaran sebelumnya yang belum selesai (QR sudah dibuat tapi kode
+    // belum pernah diverifikasi) dibersihkan dulu supaya bisa daftar ulang.
+    for (const factor of factors.all.filter((f) => f.factor_type === "totp" && f.status !== "verified")) {
+      await mfa.unenroll({ factorId: factor.id });
+    }
+    const { data: enrolled, error: enrollError } = await mfa.enroll({
+      factorType: "totp",
+      friendlyName: `Nihon GO Benkyo ${new Date().toISOString().slice(0, 16)}`,
+    });
+    if (enrollError) throw enrollError;
+    factorId = enrolled.id;
+    form.querySelector("#mfaQr").src = enrolled.totp.qr_code;
+    form.querySelector("#mfaSecret").textContent = enrolled.totp.secret;
+    form.querySelector("#mfaEnroll").hidden = false;
+    intro.textContent =
+      "Akun Operator wajib memakai verifikasi dua langkah. Pasang aplikasi authenticator (Google Authenticator, Microsoft Authenticator, dsb.) di HP, pindai QR code di bawah, lalu masukkan kode 6 digit yang muncul.";
+  }
+
+  loginFormEl.hidden = true;
+  forgotFormEl.hidden = true;
+  resetPasswordFormEl.hidden = true;
+  form.hidden = false;
+  document.body.classList.remove("auth-checking");
+  const codeEl = form.querySelector("#mfaCode");
+  const errorEl = form.querySelector("#mfaError");
+  const submitEl = form.querySelector("#mfaSubmit");
+  codeEl.value = "";
+  codeEl.focus();
+
+  return new Promise((resolve) => {
+    form.onsubmit = async (event) => {
+      event.preventDefault();
+      errorEl.hidden = true;
+      submitEl.disabled = true;
+      submitEl.textContent = "Memeriksa…";
+      const { error } = await mfa.challengeAndVerify({ factorId, code: codeEl.value.trim() });
+      submitEl.disabled = false;
+      submitEl.textContent = "Verifikasi";
+      if (error) {
+        errorEl.textContent = "Kode salah atau sudah kedaluwarsa. Masukkan kode terbaru dari aplikasi authenticator.";
+        errorEl.hidden = false;
+        codeEl.select();
+        return;
+      }
+      form.hidden = true;
+      resolve(true);
+    };
+  });
+}
+
+/* Satu pintu setelah password diterima: ambil profil, minta MFA kalau
+   Operator, lalu buka aplikasi. Mengembalikan false kalau gagal. */
+async function continueAfterPassword(userId) {
+  const profile = await fetchProfile(userId);
+  if (!profile) {
+    showLoginError("Akun ini belum punya profil peran. Hubungi Operator.");
+    await window.supabaseClient.auth.signOut();
+    return false;
+  }
+  if (profile.role === "operator") await requireOperatorMfa();
+  await revealApp(profile);
+  return true;
+}
+
 function applyRoleVisibility(role) {
   document.body.dataset.role = role;
   document.querySelectorAll("[data-role-only]").forEach((el) => {
@@ -114,14 +230,7 @@ async function trySession() {
       document.body.classList.remove("auth-checking");
       return;
     }
-    const profile = await fetchProfile(session.user.id);
-    if (!profile) {
-      showLoginError("Akun ini belum punya profil peran. Hubungi Operator.");
-      await window.supabaseClient.auth.signOut();
-      document.body.classList.remove("auth-checking");
-      return;
-    }
-    await revealApp(profile);
+    if (!(await continueAfterPassword(session.user.id))) document.body.classList.remove("auth-checking");
   } catch (error) {
     console.error("Gagal memeriksa sesi:", error);
     showLoginError("Sesi belum dapat diperiksa. Periksa koneksi lalu muat ulang halaman.");
@@ -146,15 +255,16 @@ loginFormEl.addEventListener("submit", async (event) => {
     loginSubmitEl.textContent = "Masuk";
     return;
   }
-  const profile = await fetchProfile(data.user.id);
-  if (!profile) {
-    showLoginError("Akun ini belum punya profil peran. Hubungi Operator.");
-    await window.supabaseClient.auth.signOut();
-    loginSubmitEl.disabled = false;
-    loginSubmitEl.textContent = "Masuk";
-    return;
+  try {
+    if (await continueAfterPassword(data.user.id)) return;
+  } catch (mfaError) {
+    console.error("Verifikasi dua langkah gagal dimulai:", mfaError);
+    showLoginError("Verifikasi dua langkah belum dapat dimulai. Periksa koneksi lalu coba lagi.");
+    loginFormEl.hidden = false;
+    if (mfaFormEl) mfaFormEl.hidden = true;
   }
-  await revealApp(profile);
+  loginSubmitEl.disabled = false;
+  loginSubmitEl.textContent = "Masuk";
 });
 
 forgotPasswordLinkEl.addEventListener("click", () => {
@@ -195,6 +305,11 @@ resetPasswordFormEl.addEventListener("submit", async (event) => {
   resetErrorEl.hidden = true;
   if (newPasswordEl.value !== newPasswordConfirmEl.value) {
     resetErrorEl.textContent = "Password baru dan pengulangannya tidak sama.";
+    resetErrorEl.hidden = false;
+    return;
+  }
+  if (!isStrongPassword(newPasswordEl.value)) {
+    resetErrorEl.textContent = PASSWORD_RULE_MESSAGE;
     resetErrorEl.hidden = false;
     return;
   }

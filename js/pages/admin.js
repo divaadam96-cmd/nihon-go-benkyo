@@ -80,6 +80,12 @@ if (adminForm) {
     const role = document.getElementById("adminRole").value;
 
     try {
+      // Aturan sama dengan create-user (supabase/functions/_shared/security.ts) -
+      // dicek di sini juga supaya pesan salahnya langsung muncul.
+      if (password.length < 10 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+        showAdminError("Password minimal 10 karakter dan harus berisi huruf serta angka.");
+        return;
+      }
       const accessToken = await getAccessToken();
       if (!accessToken) {
         showAdminError("Sesi login tidak ditemukan. Coba masuk ulang.");

@@ -5,6 +5,7 @@
 // "on delete cascade" di skema, jadi tidak perlu dihapus manual di sini.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { tokenAal } from "../_shared/security.ts";
 
 // Hanya domain situs sendiri yang boleh memanggil function ini lewat
 // browser (bukan "*") - membatasi permukaan serang kalau token seseorang
@@ -58,6 +59,11 @@ Deno.serve(async (req) => {
 
     if (!callerProfile || callerProfile.role !== "operator") {
       return json(corsHeaders, { error: "Hanya Operator yang boleh menghapus akun." }, 403);
+    }
+    // Operator wajib sudah lolos verifikasi dua langkah (token aal2) - sama
+    // dengan aturan current_user_role() di database (fix-1-operator-mfa.sql).
+    if (tokenAal(jwt) !== "aal2") {
+      return json(corsHeaders, { error: "Operator wajib menyelesaikan verifikasi dua langkah (MFA)." }, 403);
     }
 
     const body = await req.json();
