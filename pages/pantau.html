@@ -47,11 +47,11 @@
                   <div class="assignment-type-choice"><label><input type="radio" name="assignmentType" value="umum" checked><span>Tugas umum</span></label><label><input type="radio" name="assignmentType" value="bab"><span>Akses latihan per 5 Bab</span></label><label><input type="radio" name="assignmentType" value="paket"><span>Akses simulasi paket</span></label></div>
                   <input type="text" id="monitorAssignmentTitle" placeholder="Judul tugas, mis. Selesaikan Pelajaran 3" required autocomplete="off">
                   <select id="monitorAssignmentBab" hidden><option value="1">Bab 1–5</option><option value="6">Bab 6–10</option><option value="11">Bab 11–15</option><option value="16">Bab 16–20</option><option value="21">Bab 21–25</option><option value="26">Bab 26–30</option><option value="31">Bab 31–35</option><option value="36">Bab 36–40</option><option value="41">Bab 41–45</option><option value="46">Bab 46–50</option></select>
-                  <select id="monitorAssignmentPaket" hidden><option value="d03">Paket Ujian · Kosakata &amp; Kanji (Set 03)</option></select>
+                  <select id="monitorAssignmentPaket" hidden><option value="" disabled selected>Memuat paket…</option></select>
                   <input type="date" id="monitorAssignmentDue">
                   <button type="submit" class="secondary">Beri tugas</button>
                 </form>
-                <p id="monitorAssignmentHint" class="muted">Akses tes: latihan per 5 Bab dibatasi 45 menit dan simulasi paket 60 menit. Tes selesai otomatis saat waktu habis.</p>
+                <p id="monitorAssignmentHint" class="muted">Akses tes: latihan per 5 Bab dibatasi 45 menit; simulasi paket mengikuti batas waktu masing-masing paket. Tes selesai otomatis saat waktu habis.</p>
                 <p id="monitorAssignmentError" class="login-error" hidden></p>
               </div>
             </details>

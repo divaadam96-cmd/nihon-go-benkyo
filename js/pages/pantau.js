@@ -47,9 +47,29 @@ const monitorAssignmentPaket = document.getElementById("monitorAssignmentPaket")
 let monitorStudents = [];
 let monitorSelectedId = null;
 
-/* Label paket harus sinkron dengan TEST_PACKAGE_LABELS di js/pages/latihan.js
-   (halaman itu tidak dimuat di sini, jadi labelnya diduplikasi manual). */
-const TEST_PAKET_LABELS = { d03: "Paket Ujian · Kosakata & Kanji (Set 03)" };
+/* Paket ujian siap pakai dibaca dari database (list_test_packages) - paket
+   baru yang ditambahkan Operator di tabel test_packages + package_questions
+   (lihat supabase/contoh-tambah-paket.sql) langsung muncul di pilihan akses
+   tanpa mengubah kode. Paket yang belum punya soal / dinonaktifkan tidak
+   ditawarkan, tapi labelnya tetap dipakai untuk menampilkan akses lama. */
+let testPackages = [];
+function packageInfo(key) {
+  return testPackages.find((p) => p.key === key) || { key, label: key, mark: "Paket", time_limit_minutes: 60 };
+}
+async function loadTestPackages() {
+  try {
+    const { data, error } = await window.supabaseClient.rpc("list_test_packages");
+    if (!error && data) testPackages = data;
+  } catch {
+    // Gagal memuat (offline dsb.) - pilihan paket kosong, form menjelaskannya.
+  }
+  const assignable = testPackages.filter((p) => p.active && p.question_count > 0);
+  monitorAssignmentPaket.innerHTML = assignable.length
+    ? assignable
+        .map((p) => `<option value="${escapeHtml(p.key)}">${escapeHtml(p.label)} · ${p.question_count} soal · ${p.time_limit_minutes} menit</option>`)
+        .join("")
+    : '<option value="" disabled selected>Belum ada paket yang siap</option>';
+}
 
 function currentAssignmentType() {
   const checked = monitorAssignmentForm.querySelector('input[name="assignmentType"]:checked');
@@ -307,7 +327,8 @@ function renderMonitorDetail(student) {
 
 function describeTestAccess(task) {
   if (task.test_kind === "paket") {
-    return { tag: "Akses tes · Paket", limitText: "Batas waktu 60 menit" };
+    const pkg = packageInfo(task.test_ref);
+    return { tag: `Akses tes · ${escapeHtml(pkg.mark)}`, limitText: `Batas waktu ${pkg.time_limit_minutes} menit` };
   }
   if (task.test_kind === "bab") {
     const start = Number(task.test_ref);
@@ -419,7 +440,12 @@ monitorAssignmentForm.addEventListener("submit", async (event) => {
   } else if (type === "paket") {
     testKind = "paket";
     testRef = monitorAssignmentPaket.value;
-    title = `Simulasi Paket · ${TEST_PAKET_LABELS[testRef] || testRef}`;
+    if (!testRef) {
+      monitorAssignmentError.textContent = "Pilih paket ujian terlebih dahulu.";
+      monitorAssignmentError.hidden = false;
+      return;
+    }
+    title = `Simulasi Paket · ${packageInfo(testRef).label}`;
   } else {
     testKind = null;
     testRef = null;
@@ -463,6 +489,7 @@ monitorAssignmentList.addEventListener("click", async (event) => {
 
 window.loadMonitorPanel = loadMonitorPanel;
 
+loadTestPackages();
 loadMonitorPanel();
 }
 window.initPage = initPage;

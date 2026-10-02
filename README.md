@@ -212,9 +212,15 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   `get_test_questions()`, lalu `grade_test()` yang menilai, menyimpan
   `quiz_results`, dan menandai akses tes selesai. Siswa tidak bisa
   menulis `quiz_results` langsung. Lihat
-  `supabase/secure-test-grading.sql`. Paket ujian baru ditambahkan ke
-  `package_questions` (contoh: `supabase/seed-package-questions.sql`)
-  dan labelnya ke `TEST_PACKAGE_LABELS` di `js/pages/latihan.js`.
+  `supabase/secure-test-grading.sql`.
+- **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket
+  (label, kode singkat, deskripsi, batas waktu, tampilan satu halaman,
+  urutan, aktif) ada di tabel `test_packages`; soalnya di
+  `package_questions`. Pantau Siswa dan Tes Kemampuan membacanya lewat
+  `list_test_packages()`, jadi paket baru yang sudah punya soal langsung
+  bisa ditugaskan Sensei. Cara menambah paket: salin
+  `supabase/contoh-tambah-paket.sql`, ganti isinya, jalankan di SQL
+  Editor. Menyembunyikan paket: `active = false`.
 
 ## Testing
 

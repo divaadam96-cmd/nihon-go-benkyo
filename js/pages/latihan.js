@@ -9,18 +9,14 @@ document.body.classList.toggle("embed-mode",examEmbedMode);
    database (package_questions / quiz_questions) - browser hanya menerima
    soal TANPA kunci lewat get_test_questions(), dan penilaian + penyimpanan
    nilai dilakukan server lewat grade_test(). Lihat
-   supabase/secure-test-grading.sql. Di sini cuma label paketnya. */
-const TEST_PACKAGE_LABELS={
-  "d03":"Paket Ujian · Kosakata & Kanji (Set 03)",
-  "jlpt-n5-tp1":"JLPT N5 · Contoh Resmi + Latihan",
-  "jlpt-n5-tp2":"JLPT N5 · Paket B (Latihan)",
-  "jlpt-n5-tp3":"JLPT N5 · Paket C (Latihan)",
-  "jlpt-n5-tp4":"JLPT N5 · Paket D (Latihan)",
-  "jlpt-n5-tp5":"JLPT N5 · Paket E (Latihan)",
-  "jlpt-n5-tp6":"JLPT N5 · Paket F (Latihan)",
-  "jlpt-n4-tp1":"JLPT N4 · Contoh Resmi + Latihan",
-  "jlpt-n4-tp2":"JLPT N4 · Paket B (Latihan)",
-};
+   supabase/secure-test-grading.sql. Daftar paket (label, batas waktu,
+   tampilan) juga dari database lewat list_test_packages() - paket baru
+   cukup ditambahkan di tabel (supabase/contoh-tambah-paket.sql). */
+let testPackages=[];
+async function loadTestPackages(){
+  try{const{data,error}=await window.supabaseClient.rpc("list_test_packages");if(!error&&data)testPackages=data}catch(e){}
+}
+function packageInfo(key){return testPackages.find(p=>p.key===key)||{key,label:key,mark:"SET",description:"",time_limit_minutes:60,one_page:false}}
 /* HTML soal berasal dari database (bisa diedit Operator) - disaring dulu
    dengan allowlist tag & atribut class saja sebelum masuk innerHTML,
    supaya akun Operator yang bocor pun tidak bisa menyisipkan skrip. */
@@ -74,7 +70,7 @@ async function buildSelectedQuestions(){
   const list=data.map(rowToQuestion);
   questions=mockPackage?list:shuffled(list);
   $("heroQuestionTotal").textContent=questions.length;
-  $("heroPackage").textContent=mockPackage?TEST_PACKAGE_LABELS[mockPackage]||mockPackage:`Bab ${rangeStart}–${rangeStart+4}`;
+  $("heroPackage").textContent=mockPackage?packageInfo(mockPackage).label:`Bab ${rangeStart}–${rangeStart+4}`;
 }
 /* Bab soal per rentang untuk layar Kelola Soal (Operator) - baca langsung
    tabel quiz_questions (RLS hanya mengizinkan Operator/Sensei). */
@@ -93,14 +89,14 @@ async function fetchQuizQuestions(babRange,status){
 }
 /* Batas waktu wajib (tidak bisa dimatikan siswa): latihan per 5 bab
    maksimal 45 menit, simulasi paket maksimal 60 menit. */
-function timeLimitSeconds(){return mockPackage.startsWith("jlpt-n4")?5400:mockPackage?3600:2700}
+function timeLimitSeconds(){return mockPackage?packageInfo(mockPackage).time_limit_minutes*60:2700}
 function updateTimerInfo(){
   const minutes=timeLimitSeconds()/60;
   $("timerInfo").querySelector("b").textContent=`Timer ${minutes} menit`;
 }
 function updatePackagePreview(){
   updateTimerInfo();
-  if(mockPackage){const label=TEST_PACKAGE_LABELS[mockPackage]||mockPackage;$("selectedTestName").textContent=label;$("selectedRangeText").textContent="Paket soal siap pakai dengan format ujian resmi (4 bagian), untuk latihan mandiri.";$("heroExamType").textContent="Paket Siap Pakai";$("heroPackage").textContent=label;return}
+  if(mockPackage){const pkg=packageInfo(mockPackage),label=pkg.label;$("selectedTestName").textContent=label;$("selectedRangeText").textContent=pkg.description||"Paket soal siap pakai.";$("heroExamType").textContent="Paket Siap Pakai";$("heroPackage").textContent=label;return}
   $("selectedTestName").textContent=`Ujian per 5 Bab · Bab ${rangeStart}–${rangeStart+4}`;$("selectedRangeText").textContent=`Soal disusun manual dari kosakata, kanji, dan pola kalimat Bab ${rangeStart}–${rangeStart+4}.`;$("heroExamType").textContent="Per 5 Bab";$("heroPackage").textContent=`Bab ${rangeStart}–${rangeStart+4}`}
 function speak(text){if(!("speechSynthesis" in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="ja-JP";u.rate=.82;speechSynthesis.speak(u)}
 function activeQuestionIndex(){return reviewOnly?reviewIndexes[current]:current}
@@ -115,7 +111,7 @@ function renderNavigator(){
   $("finishEarly").disabled=!allAnswered;
   $("finishHint").hidden=allAnswered;
 }
-/* Paket simulasi JLPT (jlpt-n5-tp*, jlpt-n4-tp*) ditampilkan sebagai SATU
+/* Paket dengan one_page=true (simulasi JLPT) ditampilkan sebagai SATU
    HALAMAN UTUH berisi semua soal sekaligus (dikelompokkan per kategori lalu per もんだい), meniru
    cara dokumen contoh resmi (N5/N4-mondai.pdf) menyajikan soal - bukan satu
    soal per layar seperti paket lain. questions[]/answers[]/checked[] TETAP
@@ -129,7 +125,7 @@ function renderNavigator(){
    siswa mengisi lewat halaman ini lalu menekan "Selesaikan tes" di panel
    navigasi (tombol itu sudah generik, aktif begitu answers[] terisi semua). */
 function isListeningQuestion(q){return q.category==="Mendengarkan"}
-function isOnePageExam(){return /^jlpt-n\d-tp/.test(mockPackage)}
+function isOnePageExam(){return !!mockPackage&&packageInfo(mockPackage).one_page}
 /* Mengelompokkan index-index satu kategori jadi beberapa もんだい: soal
    Mendengarkan sudah punya field subcategory eksplisit (sudah diverifikasi
    manual terhadap PDF); kategori lain belum punya label eksplisit, jadi
@@ -164,7 +160,7 @@ function bindExamAnswerButtons(container){
   });
 }
 function renderExamOnePage(forceRebuild){
-  $("categoryBadge").textContent=`SIMULASI JLPT ${mockPackage.split("-")[1].toUpperCase()}`;
+  $("categoryBadge").textContent=`SIMULASI · ${packageInfo(mockPackage).mark}`;
   $("questionCounter").textContent=`${questions.length} soal · isi semua lalu klik "Selesaikan tes"`;
   $("testProgress").style.width=`${answers.filter(v=>v!==null).length/questions.length*100}%`;
   $("instruction").textContent="";
@@ -286,7 +282,20 @@ async function startTest(){
   button.disabled=false;button.innerHTML=originalLabel;$("startError").hidden=true;
   current=0;graded=false;answers=Array(questions.length).fill(null);checked=Array(questions.length).fill(false);flags=Array(questions.length).fill(false);reviewOnly=false;onePageExamRendered=false;$("startScreen").hidden=true;$("resultScreen").hidden=true;$("testScreen").hidden=false;startTimer();renderQuestion();window.scrollTo({top:0,behavior:"smooth"})
 }
-document.querySelectorAll("#sourceChoice button").forEach(button=>button.onclick=()=>{
+/* Tombol paket dibangun dari database (renderPackageChoices) - jadi klik
+   ditangani lewat delegasi di #sourceChoice, bukan per tombol. */
+function renderPackageChoices(){
+  const box=$("sourceChoice");
+  box.querySelectorAll('button[data-package]:not([data-package=""])').forEach(b=>b.remove());
+  testPackages.filter(p=>p.active&&p.question_count>0).forEach(p=>{
+    const b=document.createElement("button");b.dataset.package=p.key;
+    b.innerHTML=`<span class="exam-mark">${escapeHtmlTes(p.mark)}</span><div><b>${escapeHtmlTes(p.label)}</b><small>${escapeHtmlTes(p.description)}</small></div>`;
+    box.append(b);
+  });
+}
+$("sourceChoice").addEventListener("click",event=>{
+  const button=event.target.closest("button[data-package]");
+  if(!button)return;
   mockPackage=button.dataset.package||"";
   document.querySelectorAll("#sourceChoice button").forEach(item=>item.classList.toggle("active",item===button));
   $("chapterRange").disabled=!!mockPackage;
@@ -314,9 +323,10 @@ function renderAccessGate(){
   $("accessList").innerHTML=accessAssignments.map(a=>{
     const isPaket=a.test_kind==="paket";
     const start=Number(a.test_ref);
-    const limitMinutes=isPaket?60:45;
+    const pkg=isPaket?packageInfo(a.test_ref):null;
+    const limitMinutes=isPaket?pkg.time_limit_minutes:45;
     const dueText=a.due_date?`Tenggat ${a.due_date}`:"Tanpa tenggat";
-    return `<button type="button" class="access-card" data-id="${a.id}"><span class="access-mark">${isPaket?"SET":"BAB"}</span><div><b>${escapeHtmlTes(a.title)}</b><small>${dueText} · Batas waktu ${limitMinutes} menit</small></div><span class="access-go">Mulai →</span></button>`;
+    return `<button type="button" class="access-card" data-id="${a.id}"><span class="access-mark">${isPaket?escapeHtmlTes(pkg.mark):"BAB"}</span><div><b>${escapeHtmlTes(a.title)}</b><small>${dueText} · Batas waktu ${limitMinutes} menit</small></div><span class="access-go">Mulai →</span></button>`;
   }).join("");
 }
 async function loadAccessAssignments(){
@@ -461,9 +471,11 @@ $("operatorQuestionList").addEventListener("click",(event)=>{
 });
 async function initAccessControl(){
   const role=await resolveRole();
+  await loadTestPackages();
   restrictedMode=role==="siswa";
   $("accessGate").hidden=!restrictedMode;
   $("manualConfig").hidden=restrictedMode;
+  if(!restrictedMode){renderPackageChoices();updatePackagePreview()}
   if(restrictedMode){
     $("heroExamType").textContent="Akses dari Sensei";$("heroPackage").textContent="Pilih dari daftar";$("heroQuestionTotal").textContent="—";
     await loadAccessAssignments();
