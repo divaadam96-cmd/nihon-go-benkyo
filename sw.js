@@ -3,7 +3,7 @@
 // dari cache ke user yang sudah install. Saat versi naik, file yang TIDAK
 // berubah tidak diunduh ulang penuh: install memakai cache: 'no-cache'
 // (revalidasi ETag -> cukup 304 kalau isinya sama).
-const CACHE_NAME = 'nihon-go-benkyo-v229';
+const CACHE_NAME = 'nihon-go-benkyo-v230';
 // Gambar soal, ilustrasi materi & aset CDN (URL berversi) di-cache saat
 // pertama kali dipakai - tidak ikut di-precache dan tidak dihapus saat
 // CACHE_NAME naik, karena isinya praktis tidak pernah berubah.

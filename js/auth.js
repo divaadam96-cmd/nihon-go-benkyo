@@ -68,6 +68,36 @@ async function fetchProfile(userId) {
 
 const ROLE_LABELS = { operator: "Operator", sensei: "Sensei", siswa: "Siswa" };
 
+/* Perangkat bisa dipakai bergantian (komputer sekolah, warnet). Data
+   pribadi di penyimpanan browser (progres, kesalahan latihan, posisi
+   terakhir) dihapus saat logout - dan juga saat akun LAIN login di
+   perangkat yang sama tanpa logout sebelumnya. Memakai daftar yang BOLEH
+   disimpan (bukan daftar yang harus dihapus), supaya kunci pribadi baru di
+   masa depan otomatis ikut terhapus. Sesi login Supabase (sb-*) diurus
+   signOut(). */
+const LAST_USER_KEY = "nihonBenkyoLastUser";
+function isSharedDeviceKey(key) {
+  return key === "sidebarCollapsed" || key.startsWith("kanjiStrokeCacheV1:") || key.startsWith("sb-");
+}
+function clearPersonalData() {
+  try {
+    Object.keys(localStorage)
+      .filter((key) => !isSharedDeviceKey(key))
+      .forEach((key) => localStorage.removeItem(key));
+    sessionStorage.clear();
+  } catch {
+    // Penyimpanan tidak tersedia - tidak ada yang perlu dibersihkan.
+  }
+}
+function rememberUser(userId) {
+  try {
+    if (localStorage.getItem(LAST_USER_KEY) !== userId) clearPersonalData();
+    localStorage.setItem(LAST_USER_KEY, userId);
+  } catch {
+    // Tidak fatal.
+  }
+}
+
 /* Aturan password (sama dengan create-user & pengaturan Supabase Auth):
    minimal 10 karakter, ada huruf DAN angka. */
 const PASSWORD_RULE_MESSAGE = "Password minimal 10 karakter dan harus berisi huruf serta angka.";
@@ -100,6 +130,7 @@ function buildMfaForm() {
   resetPasswordFormEl.after(mfaFormEl);
   mfaFormEl.querySelector("#mfaCancel").addEventListener("click", async () => {
     await window.supabaseClient.auth.signOut();
+    clearPersonalData();
     location.reload();
   });
   return mfaFormEl;
@@ -193,6 +224,7 @@ function applyRoleVisibility(role) {
 }
 
 async function revealApp(profile) {
+  rememberUser(profile.id);
   window.currentProfile = profile;
   document.getElementById("accountName").textContent = profile.full_name;
   document.getElementById("accountRole").textContent = ROLE_LABELS[profile.role] || profile.role;
@@ -341,11 +373,7 @@ window.supabaseClient.auth.onAuthStateChange((event) => {
 
 document.getElementById("logoutButton").addEventListener("click", async () => {
   await window.supabaseClient.auth.signOut();
-  // Perangkat ini mungkin dipakai bergantian (komputer sekolah, dsb.) -
-  // bersihkan progres user sebelumnya dari localStorage supaya tidak
-  // bocor ke akun berikutnya yang login di perangkat yang sama.
-  localStorage.removeItem("nihonBenkyoSRS_v1");
-  localStorage.removeItem("nihonBenkyoActivityLog_v1");
+  clearPersonalData();
   location.reload();
 });
 
