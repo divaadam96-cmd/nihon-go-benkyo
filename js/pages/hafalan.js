@@ -48,42 +48,6 @@ function initPage() {
   document.getElementById("again").onclick = () => nextCard(false);
   document.getElementById("known").onclick = () => nextCard(true);
 
-  const hafalanStyle = document.createElement("style");
-  hafalanStyle.textContent = `
-      .study-section-label{width:100%;font-size:10px;font-weight:700;letter-spacing:1.3px;color:#a37d42;text-transform:uppercase;margin:4px 0 -2px}
-      .memory-routes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 18px}.memory-route{border:1px solid #dfd7cb;background:#fffdf9e8;border-radius:10px;padding:18px;text-align:left;color:var(--ink);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.memory-route:hover{transform:translateY(-2px);border-color:#b99152;box-shadow:0 9px 20px #4d351510}.memory-route b{display:block;color:var(--navy);font-size:16px;margin:4px 0 6px}.memory-route small{color:var(--muted);line-height:1.55}.route-icon{font:600 23px "Zen Kaku Gothic New";color:#a27637}@media(max-width:780px){.memory-routes{grid-template-columns:1fr}}
-      .kana-curriculum{margin-top:22px}.kana-curriculum h2{color:var(--navy);margin:0 0 7px}.kana-curriculum>p{color:var(--muted);line-height:1.6;margin:0 0 15px}.kana-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.kana-panel{overflow:hidden}.kana-panel h3{margin:0 0 5px}.kana-panel>p{margin:0 0 13px;color:var(--muted);font-size:12px;line-height:1.5}.kana-table{width:100%;border-collapse:separate;border-spacing:5px}.kana-table td{width:20%;text-align:center;background:#f7f3eb;border:1px solid #e7dfd1;border-radius:6px;padding:7px 3px;color:#687182;font-size:10px}.kana-table td b{display:block;font:600 22px "Zen Kaku Gothic New";color:var(--navy);margin-bottom:2px}.kana-table td.empty{background:transparent;border-color:transparent}.kana-section-title{font-size:10px;font-weight:800;letter-spacing:1.2px;color:#a37d42;margin:18px 0 5px;text-transform:uppercase}.kana-reading{margin-top:14px;padding:14px 15px;background:#f8f2e9;border-left:3px solid #b98546;color:#4b5667;line-height:1.7}.kana-reading b{color:var(--navy)}.kana-reading .jp-read{display:block;font:600 16px "Zen Kaku Gothic New";color:var(--navy);margin:6px 0}.kana-tips{margin-top:14px}.kana-tips li{color:#667184;line-height:1.65;margin:5px 0}@media(max-width:760px){.kana-grid{grid-template-columns:1fr}.kana-table td b{font-size:20px}}
-      .kana-cell{cursor:pointer;transition:transform .12s,box-shadow .12s}.kana-cell:hover,.kana-cell:focus-visible{transform:translateY(-2px);box-shadow:0 6px 14px #1d2a3d1c;outline:none;background:#f3ecdb!important}
-      .kana-modal-backdrop{position:fixed;inset:0;background:#13243ecc;display:none;align-items:center;justify-content:center;z-index:80;padding:20px}
-      .kana-modal-backdrop.open{display:flex}
-      .kana-modal-card{background:var(--paper);border-radius:14px;max-width:420px;width:100%;padding:26px;position:relative;box-shadow:0 30px 70px #0b142c40;text-align:center}
-      .kana-modal-close{position:absolute;top:12px;right:12px;border:0;background:#f0ebe1;color:#586477;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;line-height:1}
-      .kana-modal-close:hover{background:#e4ddcd}
-      .kana-modal-boards{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin:8px 0 18px}
-      .kana-board{position:relative;background:linear-gradient(145deg,#fffefb,#f7f1e7);border:1px solid #decdb4;border-radius:10px;box-shadow:inset 0 0 0 6px #ffffff80,0 10px 22px #40210d10;overflow:hidden}
-      .kana-board:before,.kana-board:after{content:'';position:absolute;background:#c9bda966}
-      .kana-board:before{width:1px;top:0;bottom:0;left:50%}
-      .kana-board:after{height:1px;left:0;right:0;top:50%}
-      .kana-board-main{width:190px;height:190px}
-      .kana-board-small{width:104px;height:104px;margin-bottom:6px}
-      .kana-board-char{position:absolute;inset:0;display:grid;place-items:center;font:400 62% "Zen Kaku Gothic New";color:#1b304d;opacity:.13;z-index:1}
-      .kana-board-badge{position:absolute;top:6px;right:6px;background:#fffdf9e8;color:#805f2c;border:1px solid #d5c49f;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:700;z-index:3}
-      .kana-stroke-svg{position:absolute;inset:0;width:100%;height:100%;z-index:2}
-      .kana-stroke-svg path{fill:none;stroke:#9f1c14;stroke-width:7.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset .62s cubic-bezier(.22,.75,.25,1),opacity .16s ease-out;filter:drop-shadow(.25px .45px .15px #65100b55)}
-      .kana-stroke-svg path.shown{opacity:1;stroke-dashoffset:0}
-      .kana-stroke-svg path.reset{transition:none}
-      .kana-modal-romaji{font:700 22px "DM Sans";color:var(--navy);margin-bottom:6px}
-      .kana-modal-hint{color:var(--muted);font-size:12px;line-height:1.6;margin:0}
-      @media(max-width:480px){.kana-board-main{width:150px;height:150px}.kana-board-small{width:84px;height:84px}}
-      .bab-filter-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:2px}
-      .bab-select{border:1px solid #ded9d0;background:#fffdf9;color:#3a4252;border-radius:20px;padding:8px 13px;font:600 12px "DM Sans";cursor:pointer}
-      .bab-note{color:var(--muted);font-size:11px;margin:8px 0 10px}
-      .bab-total-info{color:#7a6a3f;background:#f8f2e3;border:1px solid #e7d9b8;border-radius:7px;padding:8px 11px;font-size:11px;line-height:1.5;margin:2px 0 16px}
-      .hafalan-hidden{display:none!important}
-      .memory-route.active{border-color:#142945;background:#f0ebe1;box-shadow:0 9px 20px #4d351522}
-      .hafalan-panel-hint{color:var(--muted);font-size:12px;margin:0 0 18px;text-align:center;padding:14px;border:1px dashed #d8cfba;border-radius:10px}
-    `;
-  document.head.appendChild(hafalanStyle);
 
   /* Hafalan per Bab (Minna no Nihongo), lengkap Bab 1-50. Kosakata = SEMUA
      kata di bab itu (baik ada kanji maupun tidak). Kanji = subset kata yang

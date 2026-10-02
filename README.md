@@ -205,6 +205,17 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   `index.html` diubah, hash `sha256-…` di `vercel.json` wajib dihitung
   ulang** (file itu dikunci ke LF lewat `.gitattributes` supaya hash
   stabil). Domain eksternal baru (CDN, API) juga harus ditambahkan ke CSP.
+  **Blok `<style>` inline dilarang** (`style-src-elem` tanpa
+  `'unsafe-inline'`); atribut `style="…"` masih boleh (`style-src-attr`),
+  dan `style-src` lama tetap ada sebagai cadangan untuk browser yang belum
+  mengenal kedua direktif itu. Jangan menyisipkan `<style>` lewat JS - taruh
+  CSS di file. CSS yang dulu disisipkan JS kini di `css/shell-akhir.css`
+  (dimuat PALING AKHIR di setiap HTML) dan `css/pages/hafalan-kana.css`.
+- **HSTS** (`max-age` 2 tahun, bawaan Vercel) berlaku untuk domain utama &
+  `www`. `includeSubDomains` SENGAJA tidak dipakai: `mail.` dan `ftp.`
+  (dari hosting cPanel) belum punya HTTPS yang sah, dan HSTS akan membuat
+  keduanya tidak bisa dibuka dari browser selama 2 tahun tanpa bisa ditarik
+  kembali. Aktifkan hanya setelah semua subdomain punya HTTPS.
 - **supabase-js** dimuat dengan atribut `integrity` (SRI) - kalau versi
   di URL dinaikkan, hash `sha384-…` di kedelapan file HTML ikut diganti.
 - **Tes Kemampuan dinilai di server.** Soal + kunci jawaban ada di
