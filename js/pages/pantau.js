@@ -47,7 +47,7 @@ const monitorAssignmentPaket = document.getElementById("monitorAssignmentPaket")
 let monitorStudents = [];
 let monitorSelectedId = null;
 
-/* Label paket harus sinkron dengan mockTestPackages di js/pages/latihan.js
+/* Label paket harus sinkron dengan TEST_PACKAGE_LABELS di js/pages/latihan.js
    (halaman itu tidak dimuat di sini, jadi labelnya diduplikasi manual). */
 const TEST_PAKET_LABELS = { d03: "Paket Ujian · Kosakata & Kanji (Set 03)" };
 

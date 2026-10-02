@@ -31,6 +31,7 @@
       <div class="access-empty" id="accessEmpty"><b>Belum ada akses tes dari Sensei</b><span>Tes kemampuan hanya bisa dikerjakan setelah Sensei/Operator memberikan akses lewat menu Tugas. Hubungi Sensei kalau kamu siap mengerjakan tes berikutnya.</span></div>
       <div class="access-list" id="accessList"></div>
     </div>
+    <p class="start-error" id="startError" role="alert" hidden></p>
     <div id="manualConfig">
       <div class="exam-choice" id="sourceChoice"><button class="active" data-package=""><span class="exam-mark">BAB</span><div><b>Ujian per 5 Bab</b><small>Kosakata, kanji, tata bahasa, susunan kalimat, bacaan, dan audio dari rentang bab pilihan.</small></div></button><button data-package="d03"><span class="exam-mark">SET</span><div><b>Paket Ujian Siap Pakai</b><small>35 soal format 4 bagian: cara baca kanji, penulisan kanji, kosakata, dan parafrasa.</small></div></button><button data-package="jlpt-n5-tp1"><span class="exam-mark">N5</span><div><b>JLPT N5 · Contoh Resmi + Latihan</b><small>67 soal: kosakata (contoh resmi JLPT + soal tambahan), tata bahasa &amp; bacaan, dan mendengarkan (dengan audio &amp; gambar).</small></div></button><button data-package="jlpt-n5-tp2"><span class="exam-mark">N5·B</span><div><b>JLPT N5 · Paket B (Latihan)</b><small>67 soal, struktur sama persis dengan paket JLPT N5 di atas tapi kosakata &amp; soal semuanya berbeda - untuk latihan tambahan.</small></div></button><button data-package="jlpt-n5-tp3"><span class="exam-mark">N5·C</span><div><b>JLPT N5 · Paket C (Latihan)</b><small>67 soal, struktur sama persis dengan paket JLPT N5 lainnya, kosakata &amp; soal berbeda dari Paket A dan B.</small></div></button><button data-package="jlpt-n5-tp4"><span class="exam-mark">N5·D</span><div><b>JLPT N5 · Paket D (Latihan)</b><small>67 soal, struktur sama persis dengan paket JLPT N5 lainnya, kosakata &amp; soal berbeda dari Paket A, B, dan C.</small></div></button><button data-package="jlpt-n5-tp5"><span class="exam-mark">N5·E</span><div><b>JLPT N5 · Paket E (Latihan)</b><small>67 soal, struktur sama persis dengan paket JLPT N5 lainnya, kosakata &amp; soal berbeda dari Paket A sampai D.</small></div></button><button data-package="jlpt-n5-tp6"><span class="exam-mark">N5·F</span><div><b>JLPT N5 · Paket F (Latihan)</b><small>67 soal, struktur sama persis dengan paket JLPT N5 lainnya, kosakata &amp; soal berbeda dari Paket A sampai E.</small></div></button><button data-package="jlpt-n4-tp1"><span class="exam-mark">N4</span><div><b>JLPT N4 · Contoh Resmi + Latihan</b><small>75 soal: kosakata (contoh resmi JLPT N4 + soal tambahan), tata bahasa &amp; bacaan, dan mendengarkan (rekaman &amp; gambar resmi). Waktu 90 menit.</small></div></button><button data-package="jlpt-n4-tp2"><span class="exam-mark">N4·B</span><div><b>JLPT N4 · Paket B (Latihan)</b><small>75 soal, struktur sama persis dengan paket JLPT N4 Contoh Resmi, kosakata &amp; soal semuanya berbeda. Waktu 90 menit.</small></div></button></div>
       <div class="config-grid">
@@ -38,8 +39,8 @@
         <div class="config-block"><label>Format pengerjaan</label><div class="simulation-format"><b>Simulasi ujian</b><small>Jawaban dan pembahasan ditampilkan setelah tes selesai.</small></div></div>
         <div class="config-block"><label>Batas waktu</label><div class="simulation-format" id="timerInfo"><b>Timer 45 menit</b><small>Wajib aktif. Tes selesai otomatis saat waktu habis.</small></div></div>
       </div>
-      <div class="coverage"><span>PAKET TERPILIH</span><div class="package-preview"><b id="selectedTestName">Ujian per 5 Bab · Bab 1–5</b><small id="selectedRangeText">Materi gabungan diambil dari Bab 1, 2, 3, 4, dan 5.</small></div></div>
-      <div class="question-waiting"><b>Bank soal siap digunakan</b><span>Soal latihan dibuat dari data kosakata, kanji, tata bahasa, bacaan, dan audio lokal.</span></div>
+      <div class="coverage"><span>PAKET TERPILIH</span><div class="package-preview"><b id="selectedTestName">Ujian per 5 Bab · Bab 1–5</b><small id="selectedRangeText">Soal disusun manual dari kosakata, kanji, dan pola kalimat Bab 1–5.</small></div></div>
+      <div class="question-waiting"><b>Bank soal siap digunakan</b><span>Soal diambil dari server saat tes dimulai; kunci jawaban dan pembahasan muncul setelah jawaban dinilai.</span></div>
       <button class="start-button" id="startTest">Mulai simulasi <span>→</span></button>
       <button class="operator-button" id="openOperatorEditor" data-role-only="operator" hidden>🛠 Kelola soal rentang ini (Operator)</button>
     </div>
@@ -50,8 +51,7 @@
     <p class="operator-hint">Ubah teks soal, pilihan jawaban (klik bulatan untuk menandai jawaban benar), atau tambah/hapus soal di bawah. <b>Simpan draft</b> menyimpan perubahan ke database (belum tampil ke siswa). <b>Terbitkan</b> menyimpan lalu langsung menayangkan draft ini ke semua siswa. "Salin kode" tetap tersedia sebagai cadangan manual untuk rentang yang belum memakai database.</p>
     <p class="operator-status" id="operatorStatus"></p>
     <div class="operator-list" id="operatorQuestionList"></div>
-    <div class="operator-actions"><button class="ghost" id="addOperatorQuestion">+ Tambah soal baru</button><button class="ghost" id="saveOperatorDraft">💾 Simpan draft</button><button class="primary" id="publishOperatorDraft">🚀 Simpan &amp; Terbitkan</button><button class="ghost" id="copyOperatorCode">Salin kode</button></div>
-    <textarea class="operator-export" id="operatorExportOutput" readonly hidden></textarea>
+    <div class="operator-actions"><button class="ghost" id="addOperatorQuestion">+ Tambah soal baru</button><button class="ghost" id="saveOperatorDraft">💾 Simpan draft</button><button class="primary" id="publishOperatorDraft">🚀 Simpan &amp; Terbitkan</button></div>
   </section>
 
   <section class="test-shell" id="testScreen" hidden>
@@ -79,7 +79,7 @@
   </section>
 
   <section class="result-card" id="resultScreen" hidden>
-    <div class="result-hero"><div class="score-ring"><b id="finalScore">0</b><span>/ 100</span></div><div><span class="eyebrow">HASIL LATIHAN</span><h2 id="resultTitle">Fondasi sudah terbentuk.</h2><p id="resultSummary"></p><div class="result-actions"><button id="reviewMistakes">Tinjau jawaban salah</button><button id="restartTest">Ulangi tes</button></div></div></div>
+    <div class="result-hero"><div class="score-ring"><b id="finalScore">0</b><span>/ 100</span></div><div><span class="eyebrow">HASIL LATIHAN</span><h2 id="resultTitle">Fondasi sudah terbentuk.</h2><p id="resultSummary"></p><div class="result-actions"><button id="reviewMistakes">Tinjau jawaban salah</button><button id="retryGrading" hidden>Kirim ulang jawaban</button><button id="restartTest">Ulangi tes</button></div></div></div>
     <div class="result-grid">
       <article><span class="eyebrow">PETA KEMAMPUAN</span><h3>Akurasi per kategori</h3><div id="categoryResults" class="category-results"></div></article>
       <article><span class="eyebrow">REKOMENDASI BELAJAR</span><h3>Langkah berikutnya</h3><div id="recommendations" class="recommendations"></div></article>
@@ -89,13 +89,12 @@
   </section>
 </main>
 <script defer src="../js/pwa.js"></script>
-<script defer src="../data/bab-data.js"></script>
 <script defer src="../js/srs.js"></script>
 <script defer src="../js/app-effects.js"></script>
 <script defer src="../js/app-sidebar.js"></script>
 <script defer src="../js/app-shell.js"></script>
 <script defer src="../js/pages/latihan.js"></script>
-<script defer fetchpriority="low" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+<script defer fetchpriority="low" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
 <script defer src="../js/auth.js"></script>
 </body>
 </html>

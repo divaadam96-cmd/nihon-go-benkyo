@@ -178,17 +178,43 @@ diblokir CORS saat diakses dari domain baru tersebut.
 
 File statis dimuat tanpa query string versi — URL-nya apa adanya
 (`dashboard.js`, `srs.js`, dst.) baik di `index.html`/`pages/*.html`
-maupun di `ASSETS` pada `sw.js`. Satu-satunya sumber kebenaran versi
-adalah **`CACHE_NAME` di baris pertama `sw.js`**. Saat `install`,
-service worker mengambil semua file di `ASSETS` dengan `{cache:
-'reload'}` (bypass HTTP cache browser, langsung ke network), jadi
-tidak perlu query string per file lagi.
+maupun di `APP_FILES` pada `sw.js`. Satu-satunya sumber kebenaran versi
+adalah **`CACHE_NAME` di awal `sw.js`**. Saat `install`, service worker
+mengambil semua file di `APP_FILES` dengan `{cache: 'no-cache'}`
+(revalidasi ke server - file yang tidak berubah cukup dijawab 304), jadi
+tidak perlu query string per file.
 
-**Setiap kali ada file di `ASSETS` yang isinya diubah, naikkan
+**Setiap kali ada file di `APP_FILES` yang isinya diubah, naikkan
 `CACHE_NAME` di `sw.js` (satu tempat saja)** — kalau tidak, pengguna
 yang sudah meng-install PWA bisa tetap memakai versi lama dari cache.
-Kalau menambah file baru yang perlu bisa diakses offline, tambahkan
-juga path-nya ke `ASSETS`.
+Kalau menambah file HTML/CSS/JS/data baru, tambahkan juga path-nya ke
+`APP_FILES`.
+
+Gambar di `assets/images/` (gambar soal, ilustrasi materi) dan aset CDN
+**tidak** di-precache: di-cache saat pertama dipakai ke cache runtime
+yang tidak ikut dibersihkan saat versi naik. Karena itu **gambar yang
+isinya diganti wajib diberi nama file baru**. Rekaman audio
+(`assets/audio/`) selalu langsung dari network.
+
+## Keamanan
+
+- **Header** (CSP, X-Frame-Options, nosniff, Referrer-Policy,
+  Permissions-Policy) diatur di `vercel.json`. CSP mengizinkan skrip
+  inline `index.html` lewat hash-nya - **kalau isi `<script>` inline di
+  `index.html` diubah, hash `sha256-…` di `vercel.json` wajib dihitung
+  ulang** (file itu dikunci ke LF lewat `.gitattributes` supaya hash
+  stabil). Domain eksternal baru (CDN, API) juga harus ditambahkan ke CSP.
+- **supabase-js** dimuat dengan atribut `integrity` (SRI) - kalau versi
+  di URL dinaikkan, hash `sha384-…` di ketujuh file HTML ikut diganti.
+- **Tes Kemampuan dinilai di server.** Soal + kunci jawaban ada di
+  database (`quiz_questions` per-5-Bab, `package_questions` paket
+  ujian); browser hanya menerima soal tanpa kunci lewat
+  `get_test_questions()`, lalu `grade_test()` yang menilai, menyimpan
+  `quiz_results`, dan menandai akses tes selesai. Siswa tidak bisa
+  menulis `quiz_results` langsung. Lihat
+  `supabase/secure-test-grading.sql`. Paket ujian baru ditambahkan ke
+  `package_questions` (contoh: `supabase/seed-package-questions.sql`)
+  dan labelnya ke `TEST_PACKAGE_LABELS` di `js/pages/latihan.js`.
 
 ## Testing
 

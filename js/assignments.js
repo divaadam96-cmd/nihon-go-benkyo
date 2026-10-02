@@ -70,9 +70,9 @@ async function loadSiswaAssignments() {
       const dueText = task.due_date ? `Tenggat ${task.due_date}` : "Tanpa tenggat";
       const isTestAccess = !!task.test_kind;
       // Akses tes kemampuan tidak boleh ditandai selesai secara manual -
-      // status "selesai"-nya hanya diisi otomatis oleh js/pages/latihan.js
-      // setelah siswa benar-benar mengerjakan tesnya (lihat mark_assignment_done
-      // di finishTest()), supaya siswa tidak bisa curang lewat tombol ini.
+      // status "selesai"-nya hanya diisi otomatis oleh grade_test() di
+      // server saat tesnya dinilai (supabase/secure-test-grading.sql),
+      // supaya siswa tidak bisa curang lewat tombol ini.
       const actionButton = task.completed
         ? '<span class="assignment-done-label">Selesai</span>'
         : isTestAccess
