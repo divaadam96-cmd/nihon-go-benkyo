@@ -89,6 +89,40 @@ function clearPersonalData() {
     // Penyimpanan tidak tersedia - tidak ada yang perlu dibersihkan.
   }
 }
+/* Logout otomatis karena tidak aktif >= 1 jam (js/sesi-idle.js). Hanya
+   sesi di BROWSER INI yang diakhiri (scope "local") - tombol Keluar biasa
+   tetap mengakhiri sesi di semua perangkat. Pesan untuk layar login
+   disimpan SETELAH data pribadi dibersihkan, jadi bertahan satu kali muat. */
+const IDLE_LOGOUT_FLAG = "nihonBenkyoIdleLogout";
+const IDLE_LOGOUT_MESSAGE = "Sesi berakhir karena tidak aktif lebih dari 1 jam. Silakan masuk lagi.";
+/* true selama tab INI sendiri yang sedang logout - supaya event SIGNED_OUT
+   (yang juga muncul di tab ini) tidak memuat ulang halaman sebelum data
+   pribadi selesai dibersihkan. */
+let signingOutHere = false;
+async function endIdleSession() {
+  signingOutHere = true;
+  try {
+    await window.supabaseClient.auth.signOut({ scope: "local" });
+  } catch {
+    // Offline - sesi lokal tetap dibersihkan di bawah.
+  }
+  clearPersonalData();
+  try {
+    localStorage.setItem(IDLE_LOGOUT_FLAG, "1");
+  } catch {
+    // Tidak fatal.
+  }
+}
+function showIdleLogoutMessageOnce() {
+  try {
+    if (localStorage.getItem(IDLE_LOGOUT_FLAG)) {
+      localStorage.removeItem(IDLE_LOGOUT_FLAG);
+      showLoginError(IDLE_LOGOUT_MESSAGE);
+    }
+  } catch {
+    // Tidak fatal.
+  }
+}
 function rememberUser(userId) {
   try {
     if (localStorage.getItem(LAST_USER_KEY) !== userId) clearPersonalData();
@@ -245,9 +279,18 @@ async function revealApp(profile) {
   // sini, SETELAH .app benar-benar terlihat, supaya indikator aktif sidebar
   // (pil terang) tidak hilang.
   if (typeof window.refreshShellNav === "function") window.refreshShellNav();
+  if (window.IdleSession) {
+    window.IdleSession.start({
+      logout: async () => {
+        await endIdleSession();
+        location.reload();
+      },
+    });
+  }
 }
 
 async function trySession() {
+  showIdleLogoutMessageOnce();
   if (isPasswordRecoveryLink) {
     loginFormEl.hidden = true;
     forgotFormEl.hidden = true;
@@ -259,6 +302,12 @@ async function trySession() {
     const { data, error } = await window.supabaseClient.auth.getSession();
     const session = data?.session;
     if (error || !session) {
+      document.body.classList.remove("auth-checking");
+      return;
+    }
+    if (window.IdleSession && window.IdleSession.isExpired()) {
+      await endIdleSession();
+      showIdleLogoutMessageOnce();
       document.body.classList.remove("auth-checking");
       return;
     }
@@ -364,6 +413,12 @@ resetPasswordFormEl.addEventListener("submit", async (event) => {
 });
 
 window.supabaseClient.auth.onAuthStateChange((event) => {
+  // Logout di tab lain (tombol Keluar atau logout otomatis) -> tab ini ikut
+  // kembali ke layar login.
+  if (event === "SIGNED_OUT" && !signingOutHere && document.body.classList.contains("authed")) {
+    location.reload();
+    return;
+  }
   if (event === "PASSWORD_RECOVERY") {
     loginFormEl.hidden = true;
     forgotFormEl.hidden = true;
@@ -372,6 +427,7 @@ window.supabaseClient.auth.onAuthStateChange((event) => {
 });
 
 document.getElementById("logoutButton").addEventListener("click", async () => {
+  signingOutHere = true;
   await window.supabaseClient.auth.signOut();
   clearPersonalData();
   location.reload();

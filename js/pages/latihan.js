@@ -330,6 +330,10 @@ window.addEventListener("beforeunload",event=>{
   event.preventDefault();event.returnValue="";
 });
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")flushAnswerSave()});
+/* Logout otomatis karena tidak aktif (js/sesi-idle.js) tidak berlaku selama
+   tes berjalan - bagian mendengarkan bisa lama tanpa sentuhan, dan tes N4
+   berlangsung 90 menit. */
+if(window.IdleSession)window.IdleSession.keepAlive(()=>testRunning());
 
 /* --- Akses tes kemampuan: gating khusus siswa --- */
 async function resolveRole(){
