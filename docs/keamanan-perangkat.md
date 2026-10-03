@@ -69,9 +69,10 @@ mencakup itu) - periksa langsung di halaman GitHub di atas.
 |---|---|
 | Rahasia (service role key, private key, token) di repo & seluruh riwayat git | ✅ tidak ada (kunci di `js/auth.js` adalah anon key yang memang publik) |
 | `.env.local` diabaikan git & Vercel | ✅ ya (`.gitignore`, `.vercelignore`) |
-| Branch `main` dilindungi | ❌ **belum** - push langsung & force-push ke `main` masih bisa, padahal `main` langsung ter-deploy ke production |
+| Branch `main` dilindungi | ✅ sejak 3 Oktober 2026 - ruleset **"Lindungi main (production)"**: wajib lewat Pull Request, force push & hapus branch dilarang (diuji: push langsung ditolak GitHub) |
 
-**Melindungi `main`** (GitHub → repo → Settings → Rules → Rulesets → New
-branch ruleset, target `main`): wajib lewat Pull Request, larang force push,
-larang hapus branch. Dengan pengembang tunggal, jumlah approval boleh 0 -
-tujuannya mencegah push tidak sengaja langsung ke production.
+**Perlindungan `main`** diatur di GitHub → repo → Settings → Rules →
+Rulesets → *Lindungi main (production)*. Akibatnya semua perubahan harus
+lewat branch + Pull Request lalu di-merge (`gh pr merge <nomor> --merge`);
+`git push origin main` langsung akan ditolak. Jumlah approval 0 karena
+pengembang tunggal - tujuannya mencegah push tidak sengaja ke production.
