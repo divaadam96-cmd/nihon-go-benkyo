@@ -153,6 +153,9 @@ button.danger:disabled {
   display: block;
   color: var(--navy);
   font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 .monitor-assignment-row small {
   color: var(--muted);
@@ -179,14 +182,19 @@ button.danger:disabled {
   flex-wrap: wrap;
   gap: 8px;
 }
-#monitorAssignmentForm input[type="text"] {
-  flex: 1 1 160px;
-  padding: 9px 11px;
+#monitorAssignmentTitle {
+  flex: 1 1 100%;
+  min-height: 140px;
+  padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  font: 13px "DM Sans", sans-serif;
+  font: 14px/1.5 "DM Sans", sans-serif;
   color: var(--ink);
   background: #fff;
+  resize: vertical;
+}
+#monitorAssignmentTitle[hidden] {
+  display: none;
 }
 #monitorAssignmentForm input[type="date"] {
   padding: 9px 8px;
@@ -738,6 +746,7 @@ body.monitor-modal-open {
 }
 
 #monitorAssignmentForm input,
+#monitorAssignmentForm textarea,
 #monitorAssignmentForm select,
 #monitorAssignmentForm button {
   min-width: 0;
@@ -865,7 +874,6 @@ body.monitor-modal-open {
     text-align: left;
   }
 
-  #monitorAssignmentForm input[type="text"],
   #monitorAssignmentForm input[type="date"],
   #monitorAssignmentForm select,
   #monitorAssignmentForm button {

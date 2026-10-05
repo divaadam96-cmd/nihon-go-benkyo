@@ -220,6 +220,9 @@
   display: block;
   color: var(--navy);
   font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 .assignment-row small {
   display: block;
