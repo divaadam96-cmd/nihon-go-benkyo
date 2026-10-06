@@ -7,6 +7,19 @@ const SUPABASE_URL = "https://twoerfizembbpuvlzzmt.supabase.co";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3b2VyZml6ZW1iYnB1dmx6em10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MTQ0MDMsImV4cCI6MjEwMzM5MDQwM30._-pgaQ2NIkWj7UQ-osm8PpnRg3xW4axvMn_AAJXkrzc";
 
+/* Tombol mata di kolom password: tampilkan/sembunyikan isi supaya user bisa
+   mengecek ketikannya. Dipasang sebelum createClient supaya tetap jalan
+   walau supabase-js gagal dimuat. */
+document.addEventListener("click", (event) => {
+  const toggle = event.target.closest(".pw-toggle");
+  if (!toggle) return;
+  const input = toggle.parentElement.querySelector("input");
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  toggle.setAttribute("aria-pressed", String(show));
+  toggle.setAttribute("aria-label", show ? "Sembunyikan password" : "Tampilkan password");
+});
+
 window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 window.SUPABASE_URL = SUPABASE_URL;
 window.currentProfile = null;
