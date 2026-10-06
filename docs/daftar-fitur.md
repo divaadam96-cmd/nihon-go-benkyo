@@ -11,8 +11,10 @@ situs multi-halaman. Untuk hubungan teknis antar-file, lihat
 |---|:---:|:---:|:---:|
 | Dashboard dan fitur belajar | Ya | Ya | Ya |
 | Melihat tugas dari Sensei | Ya | Tidak | Tidak |
+| Mengirim tugas (teks/file) | Ya | Tidak | Tidak |
 | Pantau progres siswa | Tidak | Ya | Ya |
 | Memberi/menghapus tugas dan akses tes | Tidak | Ya | Ya |
+| Menilai kiriman tugas | Tidak | Ya | Ya |
 | Reset progres siswa | Tidak | Ya | Ya |
 | Membuat dan menghapus akun | Tidak | Tidak | Ya |
 
@@ -34,7 +36,10 @@ Lokasi: `index.html` dan `js/pages/dashboard.js`.
 
 - Ringkasan aktivitas hari ini, total XP, target JLPT, dan jumlah Kanji.
 - “Rencana hari ini” untuk Hafalan, Materi, Kanji, dan Tes.
-- Tugas dari Sensei untuk akun Siswa.
+- Tugas dari Sensei untuk akun Siswa. Tugas umum dikirim lewat tombol
+  “Kirim tugas” (jawaban teks dan/atau satu file foto/PDF/audio, maks 5 MB);
+  kiriman bisa diubah sampai dinilai, lalu nilai & komentar Sensei tampil di
+  kartu yang sama.
 - Pengingat belajar dan permintaan izin notifikasi browser.
 - Grafik aktivitas enam minggu terakhir.
 - Ringkasan progres materi Buku 1 dan Buku 2.
@@ -102,6 +107,8 @@ Tersedia untuk Sensei dan Operator:
 - detail progres Kanji, Materi, Hafalan, dan riwayat Tes;
 - indikator bagian yang perlu perhatian;
 - pemberian serta penghapusan tugas;
+- membaca kiriman tugas (teks + lampiran) dan memberi nilai 0–100 serta
+  komentar; kartu siswa menandai “N tugas perlu dinilai”;
 - pemberian akses ke Tes Kemampuan dengan batas waktu;
 - reset progres SRS seorang Siswa setelah konfirmasi.
 

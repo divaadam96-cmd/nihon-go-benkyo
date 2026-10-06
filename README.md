@@ -284,6 +284,15 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   (tombol Keluar atau otomatis) membuat tab lain ikut kembali ke layar
   login. `signOut` juga mencabut sesi itu di server Supabase (kalau
   sedang online).
+- **Pengumpulan tugas** (`supabase/add-assignment-submissions.sql`).
+  Siswa mengirim tugas umum lewat `submit_assignment()` (tabel
+  `assignment_submissions`, satu kiriman per tugas, bisa diubah sampai
+  dinilai); Sensei/Operator menilai lewat `grade_submission()`. Siswa tidak
+  punya policy insert/update langsung, jadi nilai tidak bisa diisi sendiri.
+  Lampiran diunggah langsung dari browser ke bucket Storage private
+  `assignment-files` (folder `{siswa_id}/{assignment_id}/`, maks 5 MB,
+  foto/PDF/audio) dan dibuka lewat signed URL 1 jam. Menggantikan
+  `mark_assignment_done()` (fungsi itu dihapus oleh migrasi ini).
 - **Password minimal 10 karakter, huruf + angka** - dicek di form, di
   Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket

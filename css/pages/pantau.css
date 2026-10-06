@@ -140,6 +140,7 @@ button.danger:disabled {
 }
 .monitor-assignment-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -163,6 +164,80 @@ button.danger:disabled {
 }
 .monitor-assignment-row.assignment-done {
   opacity: 0.65;
+}
+.monitor-assignment-row.assignment-needs-grading {
+  border-color: #e4c17d;
+  background: #fff8e8;
+}
+.monitor-assignment-row > div:first-child {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.monitor-card-stats .monitor-card-ungraded {
+  background: #f6e3b4;
+  color: #7a5310;
+}
+/* Kiriman siswa + form nilai di dalam baris tugas. */
+.monitor-submission {
+  flex: 1 1 100%;
+  display: grid;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+}
+.monitor-submission-answer {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.monitor-submission-file {
+  justify-self: start;
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.monitor-grade-form {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  align-items: end;
+  gap: 8px;
+}
+.monitor-grade-form label {
+  display: grid;
+  gap: 3px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+.monitor-grade-form input,
+.monitor-grade-form textarea {
+  min-width: 0;
+  padding: 7px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font: 12px/1.4 "DM Sans", sans-serif;
+}
+.monitor-grade-form textarea {
+  resize: vertical;
+}
+.monitor-grade-form .login-error {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+@media (max-width: 520px) {
+  .monitor-grade-form {
+    grid-template-columns: 1fr;
+  }
 }
 .monitor-assignment-delete {
   flex-shrink: 0;

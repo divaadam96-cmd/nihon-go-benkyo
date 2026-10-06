@@ -46,6 +46,8 @@ const monitorAssignmentPaket = document.getElementById("monitorAssignmentPaket")
 
 let monitorStudents = [];
 let monitorSelectedId = null;
+// Jumlah kiriman tugas yang belum dinilai per siswa (siswa_id -> jumlah).
+let ungradedBySiswa = {};
 
 /* Paket ujian siap pakai dibaca dari database (list_test_packages) - paket
    baru yang ditambahkan Operator di tabel test_packages + package_questions
@@ -251,12 +253,21 @@ async function loadMonitorPanel() {
   } catch {
     // Gagal tidak fatal - nilai muncul saat siswa/Sensei membuka berikutnya.
   }
-  const [remoteData, quizData] = await Promise.all([
+  const ungradedRequest = window.supabaseClient
+    .from("assignment_submissions")
+    .select("siswa_id")
+    .is("graded_at", null);
+  const [remoteData, quizData, ungradedResult] = await Promise.all([
     Promise.all(students.map((s) => srsFetchRemoteFor(s.id))),
     Promise.all(
       students.map((s) => (typeof window.quizFetchRemoteFor === "function" ? window.quizFetchRemoteFor(s.id) : [])),
     ),
+    ungradedRequest,
   ]);
+  ungradedBySiswa = {};
+  (ungradedResult.data || []).forEach((row) => {
+    ungradedBySiswa[row.siswa_id] = (ungradedBySiswa[row.siswa_id] || 0) + 1;
+  });
   monitorStudents = students.map((student, i) => ({
     ...student,
     remote: remoteData[i],
@@ -272,7 +283,9 @@ async function loadMonitorPanel() {
       const streak = remoteStreak(student.remote.activity);
       const lastActive = remoteLastActive(student.remote.activity);
       const xp = remoteXp(student.remote.activity, student.quiz);
-      return `<button type="button" class="monitor-card" data-id="${student.id}"><b>${escapeHtml(student.full_name)}</b><small>${escapeHtml(displayLoginId(student.email))}</small><div class="monitor-card-stats"><span>${streak} hari streak</span><span>${due} due</span><span>${xp.toLocaleString("id-ID")} XP</span><span>${lastActive ? "Terakhir " + lastActive : "Belum pernah belajar"}</span></div></button>`;
+      const ungraded = ungradedBySiswa[student.id] || 0;
+      const ungradedHtml = ungraded ? `<span class="monitor-card-ungraded">${ungraded} tugas perlu dinilai</span>` : "";
+      return `<button type="button" class="monitor-card" data-id="${student.id}"><b>${escapeHtml(student.full_name)}</b><small>${escapeHtml(displayLoginId(student.email))}</small><div class="monitor-card-stats">${ungradedHtml}<span>${streak} hari streak</span><span>${due} due</span><span>${xp.toLocaleString("id-ID")} XP</span><span>${lastActive ? "Terakhir " + lastActive : "Belum pernah belajar"}</span></div></button>`;
     })
     .join("");
 }
@@ -347,12 +360,43 @@ function describeTestAccess(task) {
   return null;
 }
 
+// Relasi 1-1 assignments -> assignment_submissions bisa datang sebagai
+// objek atau array tergantung versi PostgREST - samakan jadi objek/null.
+function firstSubmission(task) {
+  const sub = task.assignment_submissions;
+  return Array.isArray(sub) ? sub[0] || null : sub || null;
+}
+
+async function signedFileUrls(paths) {
+  if (!paths.length) return {};
+  const { data, error } = await window.supabaseClient.storage.from("assignment-files").createSignedUrls(paths, 3600);
+  if (error || !data) return {};
+  return Object.fromEntries(data.filter((row) => row.signedUrl).map((row) => [row.path, row.signedUrl]));
+}
+
+/* Kiriman siswa untuk satu tugas umum + form nilai (0-100) & komentar.
+   Nilai bisa diubah lagi setelah disimpan. */
+function submissionHtml(sub, urls) {
+  const url = sub.file_path && urls[sub.file_path];
+  const fileName = escapeHtml(sub.file_name || "Lampiran");
+  const fileHtml = sub.file_path
+    ? url
+      ? `<a class="monitor-submission-file" href="${escapeHtml(url)}" target="_blank" rel="noopener">📎 ${fileName}</a>`
+      : `<span class="monitor-submission-file">📎 ${fileName} (gagal memuat tautan)</span>`
+    : "";
+  const status = sub.graded_at ? `Dinilai ${formatQuizDate(sub.graded_at)}` : "Belum dinilai";
+  const scoreValue = sub.score == null ? "" : sub.score;
+  return `<div class="monitor-submission"><small>Dikirim ${formatQuizDate(sub.submitted_at)} · ${status}</small>${sub.answer_text ? `<p class="monitor-submission-answer">${escapeHtml(sub.answer_text)}</p>` : ""}${fileHtml}<form class="monitor-grade-form" data-id="${sub.id}"${sub.graded_at ? "" : " data-ungraded"}><label>Nilai<input type="number" name="score" min="0" max="100" step="1" required value="${scoreValue}"></label><label>Komentar<textarea name="feedback" rows="2" maxlength="2000" placeholder="Masukan untuk siswa (opsional)">${escapeHtml(sub.feedback || "")}</textarea></label><button type="submit" class="secondary">${sub.graded_at ? "Ubah nilai" : "Simpan nilai"}</button><p class="login-error" hidden></p></form></div>`;
+}
+
 async function loadStudentAssignments(siswaId) {
   monitorAssignmentList.innerHTML = '<p class="muted">Memuat tugas…</p>';
   monitorAssignmentCount.textContent = "Memuat…";
   const { data, error } = await window.supabaseClient
     .from("assignments")
-    .select("id, title, due_date, completed, test_kind, test_ref")
+    .select(
+      "id, title, due_date, completed, test_kind, test_ref, assignment_submissions(id, answer_text, file_path, file_name, submitted_at, score, feedback, graded_at)",
+    )
     .eq("siswa_id", siswaId)
     .order("completed", { ascending: true })
     .order("due_date", { ascending: true, nullsFirst: false });
@@ -367,17 +411,33 @@ async function loadStudentAssignments(siswaId) {
     return;
   }
   const activeCount = data.filter((task) => !task.completed).length;
-  monitorAssignmentCount.textContent = `${activeCount} aktif · ${data.length} total`;
+  const ungradedCount = data.filter((task) => {
+    const sub = firstSubmission(task);
+    return sub && !sub.graded_at;
+  }).length;
+  monitorAssignmentCount.textContent = `${activeCount} aktif · ${data.length} total${ungradedCount ? ` · ${ungradedCount} perlu dinilai` : ""}`;
+  const urls = await signedFileUrls(
+    data.map(firstSubmission).filter((sub) => sub && sub.file_path).map((sub) => sub.file_path),
+  );
   monitorAssignmentList.innerHTML = data
     .map((task) => {
       const dueText = task.due_date ? `Tenggat ${task.due_date}` : "Tanpa tenggat";
       const statusClass = task.completed ? "assignment-done" : "assignment-pending";
       const access = describeTestAccess(task);
       const tagHtml = access ? `<span class="assignment-type-tag">${access.tag}</span>` : "";
+      const sub = firstSubmission(task);
+      const generalStatus = sub
+        ? sub.graded_at
+          ? `Nilai ${sub.score}`
+          : "Sudah dikirim, perlu dinilai"
+        : task.completed
+          ? "Selesai"
+          : "Belum dikirim";
       const detailText = access
         ? `${dueText} · ${access.limitText} · ${task.completed ? "Selesai" : "Belum dikerjakan"}`
-        : `${dueText} · ${task.completed ? "Selesai" : "Belum selesai"}`;
-      return `<div class="monitor-assignment-row ${statusClass}"><div><b>${escapeHtml(task.title)}</b>${tagHtml}<small>${detailText}</small></div><button type="button" class="monitor-assignment-delete" data-id="${task.id}">Hapus</button></div>`;
+        : `${dueText} · ${generalStatus}`;
+      const rowClass = sub && !sub.graded_at ? "assignment-needs-grading" : statusClass;
+      return `<div class="monitor-assignment-row ${rowClass}"><div><b>${escapeHtml(task.title)}</b>${tagHtml}<small>${detailText}</small></div><button type="button" class="monitor-assignment-delete" data-id="${task.id}"${sub && sub.file_path ? ` data-file="${escapeHtml(sub.file_path)}"` : ""}>Hapus</button>${sub ? submissionHtml(sub, urls) : ""}</div>`;
     })
     .join("");
 }
@@ -480,7 +540,7 @@ monitorAssignmentForm.addEventListener("submit", async (event) => {
 monitorAssignmentList.addEventListener("click", async (event) => {
   const button = event.target.closest(".monitor-assignment-delete");
   if (!button) return;
-  const confirmed = confirm("Hapus tugas ini?");
+  const confirmed = confirm("Hapus tugas ini? Kiriman siswa untuk tugas ini (kalau ada) ikut terhapus.");
   if (!confirmed) return;
   const { error } = await window.supabaseClient
     .from("assignments")
@@ -490,8 +550,44 @@ monitorAssignmentList.addEventListener("click", async (event) => {
     alert(`Gagal menghapus tugas: ${error.message}`);
     return;
   }
+  // Kiriman ikut terhapus (on delete cascade); lampirannya dibersihkan dari
+  // Storage di sini - gagal tidak fatal, cuma menyisakan file.
+  if (button.dataset.file) window.supabaseClient.storage.from("assignment-files").remove([button.dataset.file]);
   const student = monitorStudents.find((s) => s.id === monitorSelectedId);
   if (student) loadStudentAssignments(student.id);
+});
+
+monitorAssignmentList.addEventListener("submit", async (event) => {
+  const form = event.target.closest(".monitor-grade-form");
+  if (!form) return;
+  event.preventDefault();
+  const errorEl = form.querySelector(".login-error");
+  const button = form.querySelector('button[type="submit"]');
+  errorEl.hidden = true;
+  button.disabled = true;
+  button.textContent = "Menyimpan…";
+  const { error } = await window.supabaseClient.rpc("grade_submission", {
+    p_submission_id: Number(form.dataset.id),
+    p_score: Number(form.elements.score.value),
+    p_feedback: form.elements.feedback.value,
+  });
+  if (error) {
+    errorEl.textContent = `Gagal menyimpan nilai: ${error.message}`;
+    errorEl.hidden = false;
+    button.disabled = false;
+    button.textContent = "Simpan nilai";
+    return;
+  }
+  if (!monitorSelectedId) return;
+  // Perbarui label "perlu dinilai" di kartu siswa tanpa memuat ulang semua.
+  if (form.hasAttribute("data-ungraded")) {
+    const remaining = Math.max(0, (ungradedBySiswa[monitorSelectedId] || 0) - 1);
+    ungradedBySiswa[monitorSelectedId] = remaining;
+    const badge = monitorListEl.querySelector(`.monitor-card[data-id="${monitorSelectedId}"] .monitor-card-ungraded`);
+    if (badge && remaining) badge.textContent = `${remaining} tugas perlu dinilai`;
+    else if (badge) badge.remove();
+  }
+  loadStudentAssignments(monitorSelectedId);
 });
 
 window.loadMonitorPanel = loadMonitorPanel;
