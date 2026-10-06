@@ -118,6 +118,39 @@ body.auth-checking .login-card {
   outline: 2px solid var(--gold);
   outline-offset: 1px;
 }
+.pw-field {
+  position: relative;
+  display: grid;
+}
+.pw-field input {
+  padding-right: 44px;
+}
+.login-card .pw-toggle {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--muted);
+}
+.login-card .pw-toggle:hover {
+  color: var(--ink);
+}
+.login-card .pw-toggle:focus-visible {
+  outline: 2px solid var(--gold);
+}
+.pw-toggle .pw-slash {
+  display: none;
+}
+.pw-toggle[aria-pressed="true"] .pw-slash {
+  display: inline;
+}
 .login-error {
   margin: 0;
   padding: 9px 11px;
