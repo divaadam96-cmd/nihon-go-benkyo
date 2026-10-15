@@ -103,14 +103,22 @@ Lokasi: `pages/pantau.html` dan `js/pages/pantau.js`.
 
 Tersedia untuk Sensei dan Operator:
 
-- daftar Siswa beserta streak, item jatuh tempo, dan XP;
-- detail progres Kanji, Materi, Hafalan, dan riwayat Tes;
-- indikator bagian yang perlu perhatian;
+- ringkasan tes se-kelas 30 hari terakhir: rata-rata dan bagian soal yang
+  paling banyak salah;
+- daftar Siswa beserta streak, item jatuh tempo, dan XP, dengan penanda
+  "perlu perhatian" (tugas perlu dinilai, tidak aktif ≥3 hari, tes terakhir
+  <60%, ≥30 item perlu diulang), saringan, dan pilihan urutan;
+- unduh rapor semua Siswa sebagai CSV (Excel/Google Sheets);
+- detail progres Kanji, Materi, Hafalan, grafik aktivitas 6 minggu, peta
+  progres per pelajaran Materi & per bab Hafalan, riwayat Tes dengan tren
+  nilai per bagian;
+- indikator item yang perlu perhatian;
 - pemberian serta penghapusan tugas;
 - membaca kiriman tugas (teks + lampiran) dan memberi nilai 0–100 serta
   komentar; kartu siswa menandai “N tugas perlu dinilai”;
 - pemberian akses ke Tes Kemampuan dengan batas waktu;
-- reset progres SRS seorang Siswa setelah konfirmasi.
+- reset progres SRS seorang Siswa setelah konfirmasi; setiap reset tercatat
+  (siapa & kapan) dan bisa dipulihkan dari cadangannya.
 
 ## Kelola Soal
 

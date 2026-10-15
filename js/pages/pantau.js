@@ -1,15 +1,10 @@
 /* Halaman Pantau Siswa (pages/pantau.html, khusus Sensei & Operator):
-   daftar semua Siswa + ringkasan progres SRS mereka (dibaca langsung dari
-   Supabase, bukan localStorage - ini progres milik user LAIN), dan opsi
-   reset progres per siswa serta pemberian tugas. Dulu monitor.js (dimuat
-   setelah admin.js untuk pakai escapeHtml-nya) - escapeHtml sekarang
-   fungsi bersama (window.escapeHtml, lihat js/app-shell.js) karena
-   dashboard (assignments.js) juga memakainya. displayLoginId tetap
-   disalin di sini karena cuma dipakai halaman Sensei/Operator (di sini
-   dan admin.js). Dibungkus initPage(), dijalankan auth.js setelah login -
-   loadMonitorPanel() langsung dipanggil di akhir karena seluruh halaman
-   ini memang panel itu (tidak perlu menunggu trigger "view aktif" seperti
-   dulu). */
+   ringkasan progres semua Siswa (dihitung server lewat pantau_ringkasan,
+   pantau_detail & pantau_kelas - supabase/add-pantau-siswa.sql), reset &
+   pulihkan progres, pemberian/penilaian tugas, dan unduh rapor CSV.
+   escapeHtml bersama dari js/app-shell.js; displayLoginId disalin di sini
+   karena cuma dipakai halaman Sensei/Operator (di sini dan admin.js).
+   Dibungkus initPage(), dijalankan auth.js setelah login. */
 function initPage() {
 const escapeHtml = window.escapeHtml;
 /* Akun Sensei/Siswa disimpan pakai email sintetis (lihat toLoginEmail di

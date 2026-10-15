@@ -26,7 +26,13 @@ sekali penuh sebelum merilis perubahan besar.
 - [ ] Buka detail satu siswa → statistik Kanji/Materi/Hafalan + XP + jumlah sesi quiz tampil benar.
 - [ ] Beri tugas baru ke siswa → siswa melihatnya di dashboard ("Tugas dari Sensei").
 - [ ] Hapus tugas → hilang dari kedua sisi (Sensei & Siswa).
-- [ ] Reset progres siswa → status SRS siswa itu kembali ke nol, due/mastered ikut turun.
+- [ ] Siswa dengan >1000 item (mis. Yocky) → jumlah "item tersimpan" sama dengan di database, tidak berkurang.
+- [ ] Saringan (Semua / Perlu perhatian / Tidak aktif / Tugas perlu dinilai) & urutan menampilkan siswa yang tepat; angka di tombol saringan cocok.
+- [ ] Ringkasan kelas menampilkan jumlah tes 30 hari terakhir & bagian yang paling banyak salah.
+- [ ] Detail siswa: grafik aktivitas 6 minggu, peta progres per pelajaran/bab, dan tren nilai per bagian tampil masuk akal.
+- [ ] Unduh rapor (CSV) → terbuka rapi di Excel/Google Sheets, satu baris per siswa.
+- [ ] Reset progres siswa → status SRS siswa itu kembali ke nol, due/mastered ikut turun, riwayat reset mencatat nama Anda.
+- [ ] Pulihkan dari riwayat reset → progres kembali; tombol Pulihkan berganti keterangan "Dipulihkan …".
 
 ## 4. Dashboard Siswa
 
