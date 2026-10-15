@@ -29,6 +29,7 @@ const monitorDetailName = document.getElementById("monitorDetailName");
 const monitorDetailId = document.getElementById("monitorDetailId");
 const monitorDetailAvatar = document.getElementById("monitorDetailAvatar");
 const monitorDetailStats = document.getElementById("monitorDetailStats");
+const monitorActivity = document.getElementById("monitorActivity");
 const monitorAttentionSlot = document.getElementById("monitorAttentionSlot");
 const monitorQuizSection = document.getElementById("monitorQuizSection");
 const monitorQuizCount = document.getElementById("monitorQuizCount");
@@ -307,6 +308,7 @@ function renderMonitorDetail(student) {
   }).join("");
 
   monitorDetailStats.innerHTML = `<div class="monitor-summary-grid"><article><span>XP</span><b>${student.xp.toLocaleString("id-ID")}</b><small>Total pengalaman</small></article><article><span>STREAK</span><b>${student.streak} hari</b><small>Konsistensi belajar</small></article><article><span>TES</span><b>${student.quiz_count} sesi</b><small>${student.quiz_avg === null ? "Tes diselesaikan" : `Rata-rata nilai ${student.quiz_avg}%`}</small></article><article><span>AKTIF</span><b>${formatActivityDate(student.last_active)}</b><small>${student.review_count.toLocaleString("id-ID")} aktivitas tercatat</small></article></div><section class="monitor-progress-overview"><header><div><span>PROGRES BELAJAR</span><h4>Penguasaan per kategori</h4></div><small>${studiedTotal.toLocaleString("id-ID")} item tersimpan</small></header><div class="monitor-progress-grid">${categoryCards}</div></section>`;
+  monitorActivity.innerHTML = "";
   monitorAttentionSlot.innerHTML = '<p class="muted">Memuat…</p>';
   monitorQuizCount.textContent = `${student.quiz_count} sesi`;
   monitorQuizList.innerHTML = '<p class="muted">Memuat…</p>';
@@ -338,9 +340,26 @@ async function loadStudentDetail(siswaId) {
     monitorResetHistory.innerHTML = message;
     return;
   }
+  monitorActivity.innerHTML = activityHtml(data.weekly);
   monitorAttentionSlot.innerHTML = attentionHtml(data.weak_items);
   monitorQuizList.innerHTML = quizHistoryHtml(data.quizzes);
   monitorResetHistory.innerHTML = resetHistoryHtml(data.resets);
+}
+
+/* Grafik batang ulasan per minggu (6 minggu, minggu ini paling kanan) -
+   kelihatan apakah siswa belajar rutin atau hanya sesekali. */
+function activityHtml(weekly) {
+  const max = Math.max(1, ...weekly.map((w) => w.reviews));
+  const total = weekly.reduce((sum, w) => sum + w.reviews, 0);
+  const activeDays = weekly.reduce((sum, w) => sum + w.days, 0);
+  const bars = weekly
+    .map((w, i) => {
+      const label = i === weekly.length - 1 ? "Minggu ini" : `${weekly.length - 1 - i} mgg lalu`;
+      const height = Math.round((w.reviews / max) * 100);
+      return `<div class="monitor-activity-bar" title="${label}: ${w.reviews} ulasan, ${w.days} hari aktif"><b>${w.reviews}</b><span><i style="height:${height}%"></i></span><small>${label}</small><small>${w.days}/7 hari</small></div>`;
+    })
+    .join("");
+  return `<header><div><span>AKTIVITAS</span><h4>6 minggu terakhir</h4></div><small>${total.toLocaleString("id-ID")} ulasan · ${activeDays} dari 42 hari aktif</small></header><div class="monitor-activity-chart">${bars}</div>`;
 }
 
 /* Riwayat reset (siapa & kapan) + tombol pulihkan dari cadangan. */

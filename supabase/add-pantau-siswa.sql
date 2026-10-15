@@ -221,9 +221,24 @@ drop function if exists public.pantau_detail(uuid);
 create function public.pantau_detail(p_siswa uuid)
 returns jsonb
 language plpgsql stable security definer set search_path = public as $$
+declare
+  v_today date := (now() at time zone 'utc')::date;
 begin
   perform public.require_staff();
   return jsonb_build_object(
+    -- 6 minggu terakhir, minggu ini paling akhir (sama dengan
+    -- srsWeeklyActivity() di js/srs.js): jumlah ulasan & hari aktif.
+    'weekly', (
+      select jsonb_agg(jsonb_build_object('reviews', coalesce(t.reviews, 0), 'days', coalesce(t.days, 0)) order by w)
+      from generate_series(0, 5) w
+      left join (
+        select 5 - (v_today - a.activity_date) / 7 as week, sum(a.count)::int as reviews,
+               count(*) filter (where a.count > 0)::int as days
+        from public.activity_log a
+        where a.user_id = p_siswa and a.activity_date between v_today - 41 and v_today
+        group by 1
+      ) t on t.week = w
+    ),
     -- Sudah pernah diulas tapi box masih rendah: box naik, lalu paling
     -- sering dicoba duluan (paling perlu dibantu Sensei).
     'weak_items', coalesce((
