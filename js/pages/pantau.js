@@ -31,6 +31,9 @@ const monitorDetailAvatar = document.getElementById("monitorDetailAvatar");
 const monitorDetailStats = document.getElementById("monitorDetailStats");
 const monitorActivity = document.getElementById("monitorActivity");
 const monitorAttentionSlot = document.getElementById("monitorAttentionSlot");
+const monitorLessonSection = document.getElementById("monitorLessonSection");
+const monitorLessonCount = document.getElementById("monitorLessonCount");
+const monitorLessons = document.getElementById("monitorLessons");
 const monitorQuizSection = document.getElementById("monitorQuizSection");
 const monitorQuizCount = document.getElementById("monitorQuizCount");
 const monitorQuizList = document.getElementById("monitorQuizList");
@@ -310,6 +313,8 @@ function renderMonitorDetail(student) {
   monitorDetailStats.innerHTML = `<div class="monitor-summary-grid"><article><span>XP</span><b>${student.xp.toLocaleString("id-ID")}</b><small>Total pengalaman</small></article><article><span>STREAK</span><b>${student.streak} hari</b><small>Konsistensi belajar</small></article><article><span>TES</span><b>${student.quiz_count} sesi</b><small>${student.quiz_avg === null ? "Tes diselesaikan" : `Rata-rata nilai ${student.quiz_avg}%`}</small></article><article><span>AKTIF</span><b>${formatActivityDate(student.last_active)}</b><small>${student.review_count.toLocaleString("id-ID")} aktivitas tercatat</small></article></div><section class="monitor-progress-overview"><header><div><span>PROGRES BELAJAR</span><h4>Penguasaan per kategori</h4></div><small>${studiedTotal.toLocaleString("id-ID")} item tersimpan</small></header><div class="monitor-progress-grid">${categoryCards}</div></section>`;
   monitorActivity.innerHTML = "";
   monitorAttentionSlot.innerHTML = '<p class="muted">Memuat…</p>';
+  monitorLessonCount.textContent = "Memuat…";
+  monitorLessons.innerHTML = "";
   monitorQuizCount.textContent = `${student.quiz_count} sesi`;
   monitorQuizList.innerHTML = '<p class="muted">Memuat…</p>';
   monitorResetHistory.innerHTML = "";
@@ -319,6 +324,7 @@ function renderMonitorDetail(student) {
   monitorAssignmentError.hidden = true;
   monitorAssignmentForm.reset();
   updateAssignmentFormMode();
+  monitorLessonSection.open = false;
   monitorQuizSection.open = false;
   monitorAssignmentSection.open = false;
   monitorDangerSection.open = false;
@@ -336,12 +342,16 @@ async function loadStudentDetail(siswaId) {
   if (error) {
     const message = `<p class="muted">Gagal memuat detail: ${escapeHtml(error.message)}</p>`;
     monitorAttentionSlot.innerHTML = message;
+    monitorLessons.innerHTML = message;
+    monitorLessonCount.textContent = "Gagal dimuat";
     monitorQuizList.innerHTML = message;
     monitorResetHistory.innerHTML = message;
     return;
   }
   monitorActivity.innerHTML = activityHtml(data.weekly);
   monitorAttentionSlot.innerHTML = attentionHtml(data.weak_items);
+  monitorLessons.innerHTML = lessonsHtml(data.lessons);
+  monitorLessonCount.textContent = `${data.lessons.length} dari 100 dipelajari`;
   monitorQuizList.innerHTML = quizHistoryHtml(data.quizzes);
   monitorResetHistory.innerHTML = resetHistoryHtml(data.resets);
 }
@@ -360,6 +370,47 @@ function activityHtml(weekly) {
     })
     .join("");
   return `<header><div><span>AKTIVITAS</span><h4>6 minggu terakhir</h4></div><small>${total.toLocaleString("id-ID")} ulasan · ${activeDays} dari 42 hari aktif</small></header><div class="monitor-activity-chart">${bars}</div>`;
+}
+
+const LESSON_GROUPS = [
+  { kind: "materi", title: "Materi", unit: "Pel." },
+  { kind: "hafalan", title: "Hafalan", unit: "Bab" },
+];
+
+function lessonLevel(lesson) {
+  if (!lesson) return "none";
+  const ratio = lesson.mastered / lesson.studied;
+  return ratio >= 0.8 ? "high" : ratio >= 0.5 ? "mid" : "low";
+}
+
+/* Peta 50 pelajaran/bab: warna = porsi item yang dikuasai, abu-abu =
+   belum dipelajari. Di bawahnya 3 yang paling lemah (minimal 3 item
+   dipelajari supaya tidak menyorot yang baru dimulai). */
+function lessonsHtml(lessons) {
+  const groups = LESSON_GROUPS.map((group) => {
+    const byNo = {};
+    lessons.filter((l) => l.kind === group.kind).forEach((l) => (byNo[l.no] = l));
+    const cells = Array.from({ length: 50 }, (_, i) => {
+      const no = i + 1;
+      const l = byNo[no];
+      const title = l
+        ? `${group.unit} ${no}: ${l.mastered} dari ${l.studied} dikuasai${l.due ? ` · ${l.due} perlu diulang` : ""}`
+        : `${group.unit} ${no}: belum dipelajari`;
+      return `<span class="monitor-lesson-cell level-${lessonLevel(l)}" title="${title}">${no}</span>`;
+    }).join("");
+    return `<div class="monitor-lesson-group"><b>${group.title}</b><div class="monitor-lesson-grid">${cells}</div></div>`;
+  }).join("");
+  const unitOf = (kind) => LESSON_GROUPS.find((g) => g.kind === kind).unit;
+  const weakest = lessons
+    .filter((l) => l.studied >= 3 && lessonLevel(l) !== "high")
+    .sort((a, b) => a.mastered / a.studied - b.mastered / b.studied || b.due - a.due)
+    .slice(0, 3);
+  const weakHtml = weakest.length
+    ? `<p class="monitor-lesson-weak">Paling lemah: ${weakest
+        .map((l) => `<b>${unitOf(l.kind)} ${l.no}</b> (${Math.round((l.mastered / l.studied) * 100)}% dikuasai)`)
+        .join(", ")}</p>`
+    : "";
+  return `${groups}<p class="monitor-lesson-legend"><span class="monitor-lesson-cell level-high"></span>≥80% dikuasai <span class="monitor-lesson-cell level-mid"></span>50–79% <span class="monitor-lesson-cell level-low"></span>&lt;50% <span class="monitor-lesson-cell level-none"></span>belum dipelajari</p>${weakHtml}`;
 }
 
 /* Riwayat reset (siapa & kapan) + tombol pulihkan dari cadangan. */

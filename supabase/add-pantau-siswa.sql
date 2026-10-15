@@ -8,6 +8,12 @@
 -- Jalankan di SQL Editor SETELAH fix-3-xp-streak-server.sql. Aman
 -- dijalankan ulang.
 
+-- Bersihkan item hafalan format lama "hafalan:bab<N>:<kata>" (sebelum
+-- dipisah jadi -kosakata/-kanji): srs_review() sudah menolak format ini,
+-- jadi item-item itu tidak bisa diulas lagi tapi tetap terhitung
+-- "dipelajari"/"perlu diulang". Per Okt 2026 hanya 10 baris di akun uji.
+delete from public.srs_progress where item_id ~ '^hafalan:bab[0-9]+:';
+
 -- Batas "dikuasai" = SRS_MASTERED_BOX di js/srs.js.
 create or replace function public.srs_mastered_box()
 returns int language sql immutable as $$ select 3 $$;
@@ -239,6 +245,29 @@ begin
         group by 1
       ) t on t.week = w
     ),
+    -- Per pelajaran Materi (Buku 1 = Pel. 1-25, Buku 2 = Pel. 26-50, sama
+    -- dengan describeItemId di pantau.js) dan per bab Hafalan.
+    'lessons', coalesce((
+      select jsonb_agg(l order by l.kind, l.no)
+      from (
+        select g.kind, g.no, count(*)::int as studied,
+               count(*) filter (where g.box >= public.srs_mastered_box())::int as mastered,
+               count(*) filter (where g.reviews > 0 and (g.due is null or g.due <= v_today))::int as due
+        from (
+          select 'materi' as kind,
+                 split_part(s.item_id, ':', 3)::int
+                   + case split_part(s.item_id, ':', 2) when 'book1' then 1 else 26 end as no,
+                 s.box, s.reviews, s.due
+          from public.srs_progress s
+          where s.user_id = p_siswa and s.item_id ~ '^materi:book[12]:[0-9]+:'
+          union all
+          select 'hafalan', substring(s.item_id from '^hafalan:bab([0-9]+)-')::int, s.box, s.reviews, s.due
+          from public.srs_progress s
+          where s.user_id = p_siswa and s.item_id ~ '^hafalan:bab[0-9]+-'
+        ) g
+        group by g.kind, g.no
+      ) l
+    ), '[]'::jsonb),
     -- Sudah pernah diulas tapi box masih rendah: box naik, lalu paling
     -- sering dicoba duluan (paling perlu dibantu Sensei).
     'weak_items', coalesce((

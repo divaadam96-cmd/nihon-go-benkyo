@@ -593,6 +593,75 @@ body.monitor-modal-open {
   line-height: 1.3;
 }
 
+.monitor-lessons {
+  display: grid;
+  gap: 12px;
+  padding: 0 14px 14px;
+  font-size: 12px;
+}
+
+.monitor-lesson-group > b {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--navy);
+}
+
+.monitor-lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.monitor-lesson-cell {
+  display: grid;
+  place-items: center;
+  min-height: 24px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.monitor-lesson-cell.level-none {
+  background: var(--wash);
+  color: #b2ab9f;
+}
+
+.monitor-lesson-cell.level-low {
+  background: var(--rose-soft);
+  color: #92382a;
+}
+
+.monitor-lesson-cell.level-mid {
+  background: #f6e3b4;
+  color: #7a5310;
+}
+
+.monitor-lesson-cell.level-high {
+  background: #dcefe0;
+  color: #2f6b2a;
+}
+
+.monitor-lesson-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.monitor-lesson-legend .monitor-lesson-cell {
+  width: 12px;
+  min-height: 12px;
+  margin-left: 6px;
+}
+
+.monitor-lesson-weak {
+  margin: 0;
+  color: var(--ink);
+}
+
 .monitor-progress-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
