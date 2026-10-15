@@ -25,6 +25,7 @@ const monitorListEl = document.getElementById("monitorList");
 const monitorClassEl = document.getElementById("monitorClass");
 const monitorFiltersEl = document.getElementById("monitorFilters");
 const monitorSortEl = document.getElementById("monitorSort");
+const monitorExportBtn = document.getElementById("monitorExport");
 const monitorDetailEl = document.getElementById("monitorDetail");
 const monitorDetailName = document.getElementById("monitorDetailName");
 const monitorDetailId = document.getElementById("monitorDetailId");
@@ -290,6 +291,43 @@ monitorFiltersEl.addEventListener("click", (event) => {
   renderMonitorList();
 });
 monitorSortEl.addEventListener("change", renderMonitorList);
+
+/* Rapor semua siswa (bukan hanya yang sedang disaring) sebagai CSV:
+   pemisah ";" + BOM supaya langsung rapi di Excel berbahasa Indonesia. */
+function csvCell(value) {
+  let text = value == null ? "" : String(value);
+  // Cegah formula injection saat dibuka di spreadsheet.
+  if (/^[=+\-@]/.test(text)) text = `'${text}`;
+  return /[";\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+}
+
+function reportCsv() {
+  const header = [
+    "Nama", "ID login", "XP", "Streak (hari)", "Terakhir aktif", "Total ulasan",
+    ...CATEGORIES.flatMap((cat) => [`${cat.label} dipelajari`, `${cat.label} dikuasai`, `${cat.label} perlu diulang`]),
+    "Jumlah tes", "Rata-rata tes (%)", "Tes terakhir (%)", "Tugas perlu dinilai", "Perlu perhatian",
+  ];
+  const rows = monitorStudents
+    .slice()
+    .sort(SORTS.name)
+    .map((student) => [
+      student.full_name, displayLoginId(student.email), student.xp, student.streak, student.last_active || "", student.review_count,
+      ...CATEGORIES.flatMap((cat) => [student[`${cat.key}_studied`], student[`${cat.key}_mastered`], student[`${cat.key}_due`]]),
+      student.quiz_count, student.quiz_avg ?? "", student.last_quiz_pct ?? "", student.ungraded,
+      studentFlags(student).map((f) => f.label).join(", "),
+    ]);
+  return [header, ...rows].map((row) => row.map(csvCell).join(";")).join("\r\n");
+}
+
+monitorExportBtn.addEventListener("click", () => {
+  if (!monitorStudents.length) return;
+  const blob = new Blob(["\ufeff" + reportCsv()], { type: "text/csv;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `rapor-siswa-${srsToday()}.csv`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+});
 
 const CLASS_SUMMARY_DAYS = 30;
 
