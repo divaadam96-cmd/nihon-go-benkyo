@@ -72,7 +72,7 @@ returns table (
   materi_studied int, materi_mastered int, materi_due int,
   hafalan_studied int, hafalan_mastered int, hafalan_due int,
   review_count int, last_active date, streak int, xp int,
-  quiz_count int, quiz_avg int, ungraded int
+  quiz_count int, quiz_avg int, last_quiz_pct int, ungraded int
 )
 language plpgsql stable security definer set search_path = public as $$
 declare
@@ -95,7 +95,8 @@ begin
   quiz as (
     select q.user_id, count(*)::int as n,
            sum(public.quiz_xp(q.correct_count, q.total_count))::int as xp,
-           round(avg(public.quiz_percent(q.correct_count, q.total_count)))::int as avg_pct
+           round(avg(public.quiz_percent(q.correct_count, q.total_count)))::int as avg_pct,
+           (array_agg(public.quiz_percent(q.correct_count, q.total_count) order by q.created_at desc))[1] as last_pct
     from public.quiz_results q group by 1
   ),
   ungraded as (
@@ -108,7 +109,7 @@ begin
     coalesce(h.studied, 0), coalesce(h.mastered, 0), coalesce(h.due, 0),
     coalesce(act.reviews, 0), act.last_active, public.activity_streak(p.id),
     coalesce(act.reviews, 0) * 5 + coalesce(quiz.xp, 0),
-    coalesce(quiz.n, 0), quiz.avg_pct, coalesce(ungraded.n, 0)
+    coalesce(quiz.n, 0), quiz.avg_pct, quiz.last_pct, coalesce(ungraded.n, 0)
   from public.profiles p
   left join srs k on k.user_id = p.id and k.ns = 'kanji'
   left join srs m on m.user_id = p.id and m.ns = 'materi'

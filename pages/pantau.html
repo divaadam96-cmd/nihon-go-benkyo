@@ -21,6 +21,22 @@
 <main class="main" id="pageMain">
   <div data-role-only="sensei,operator" hidden>
     <div class="head"><div><div class="eyebrow">Pantau perkembangan</div><h1>Progres siswa.</h1><p>Lihat progres belajar setiap siswa. Klik satu siswa untuk detail, tugas, dan pengaturan progres.</p></div></div>
+    <div class="monitor-toolbar">
+      <div class="monitor-filters" id="monitorFilters" role="group" aria-label="Saring siswa">
+        <button type="button" data-filter="all" aria-pressed="true">Semua</button>
+        <button type="button" data-filter="attention" aria-pressed="false">Perlu perhatian</button>
+        <button type="button" data-filter="inactive" aria-pressed="false">Tidak aktif</button>
+        <button type="button" data-filter="ungraded" aria-pressed="false">Tugas perlu dinilai</button>
+      </div>
+      <label class="monitor-sort">Urutkan
+        <select id="monitorSort">
+          <option value="attention">Perlu perhatian dulu</option>
+          <option value="name">Nama (A–Z)</option>
+          <option value="active">Terakhir aktif</option>
+          <option value="xp">XP tertinggi</option>
+        </select>
+      </label>
+    </div>
     <div id="monitorList" class="monitor-list"><p class="muted">Memuat…</p></div>
     <div id="monitorDetail" class="monitor-detail-overlay" hidden>
       <div class="monitor-detail-card" role="dialog" aria-modal="true" aria-labelledby="monitorDetailName">

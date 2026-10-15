@@ -22,6 +22,8 @@ function displayLoginId(email) {
 }
 
 const monitorListEl = document.getElementById("monitorList");
+const monitorFiltersEl = document.getElementById("monitorFilters");
+const monitorSortEl = document.getElementById("monitorSort");
 const monitorDetailEl = document.getElementById("monitorDetail");
 const monitorDetailName = document.getElementById("monitorDetailName");
 const monitorDetailId = document.getElementById("monitorDetailId");
@@ -47,6 +49,7 @@ const monitorAssignmentPaket = document.getElementById("monitorAssignmentPaket")
 
 let monitorStudents = [];
 let monitorSelectedId = null;
+let monitorFilter = "all";
 
 /* Paket ujian siap pakai dibaca dari database (list_test_packages) - paket
    baru yang ditambahkan Operator di tabel test_packages + package_questions
@@ -179,6 +182,76 @@ function totalDue(student) {
   return CATEGORIES.reduce((sum, cat) => sum + student[`${cat.key}_due`], 0);
 }
 
+// Ambang penanda "perlu perhatian" di kartu siswa.
+const INACTIVE_DAYS = 3;
+const MANY_DUE = 30;
+const LOW_QUIZ_PERCENT = 60;
+
+function daysSince(dateStr) {
+  if (!dateStr) return null;
+  return Math.round((new Date(`${srsToday()}T00:00:00Z`) - new Date(`${dateStr}T00:00:00Z`)) / 86400000);
+}
+
+/* Alasan siswa perlu dihubungi Sensei, dari yang paling mendesak. */
+function studentFlags(student) {
+  const flags = [];
+  if (student.ungraded) flags.push({ key: "ungraded", label: `${student.ungraded} tugas perlu dinilai` });
+  const idle = daysSince(student.last_active);
+  if (idle === null) flags.push({ key: "inactive", label: "Belum pernah belajar" });
+  else if (idle >= INACTIVE_DAYS) flags.push({ key: "inactive", label: `Tidak aktif ${idle} hari` });
+  if (student.last_quiz_pct !== null && student.last_quiz_pct < LOW_QUIZ_PERCENT) {
+    flags.push({ key: "lowquiz", label: `Tes terakhir ${student.last_quiz_pct}%` });
+  }
+  const due = totalDue(student);
+  if (due >= MANY_DUE) flags.push({ key: "due", label: `${due} item perlu diulang` });
+  return flags;
+}
+
+const FILTERS = {
+  all: () => true,
+  attention: (student) => studentFlags(student).length > 0,
+  inactive: (student) => studentFlags(student).some((f) => f.key === "inactive"),
+  ungraded: (student) => student.ungraded > 0,
+};
+
+const SORTS = {
+  attention: (a, b) => studentFlags(b).length - studentFlags(a).length || a.full_name.localeCompare(b.full_name, "id"),
+  name: (a, b) => a.full_name.localeCompare(b.full_name, "id"),
+  active: (a, b) => (b.last_active || "").localeCompare(a.last_active || ""),
+  xp: (a, b) => b.xp - a.xp,
+};
+
+function renderMonitorList() {
+  monitorFiltersEl.querySelectorAll("button").forEach((button) => {
+    const key = button.dataset.filter;
+    const count = monitorStudents.filter(FILTERS[key]).length;
+    button.setAttribute("aria-pressed", String(key === monitorFilter));
+    button.textContent = `${button.textContent.replace(/ \(\d+\)$/, "")} (${count})`;
+  });
+  const shown = monitorStudents.filter(FILTERS[monitorFilter]).sort(SORTS[monitorSortEl.value]);
+  if (!shown.length) {
+    monitorListEl.innerHTML = '<p class="muted">Tidak ada siswa untuk saringan ini.</p>';
+    return;
+  }
+  monitorListEl.innerHTML = shown
+    .map((student) => {
+      const flags = studentFlags(student);
+      const flagsHtml = flags.length
+        ? `<div class="monitor-card-flags">${flags.map((f) => `<span class="monitor-flag monitor-flag-${f.key}">${f.label}</span>`).join("")}</div>`
+        : "";
+      return `<button type="button" class="monitor-card${flags.length ? " needs-attention" : ""}" data-id="${student.id}"><b>${escapeHtml(student.full_name)}</b><small>${escapeHtml(displayLoginId(student.email))}</small>${flagsHtml}<div class="monitor-card-stats"><span>${student.streak} hari streak</span><span>${totalDue(student)} due</span><span>${student.xp.toLocaleString("id-ID")} XP</span>${student.last_active ? `<span>Terakhir ${student.last_active}</span>` : ""}</div></button>`;
+    })
+    .join("");
+}
+
+monitorFiltersEl.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-filter]");
+  if (!button) return;
+  monitorFilter = button.dataset.filter;
+  renderMonitorList();
+});
+monitorSortEl.addEventListener("change", renderMonitorList);
+
 /* Ringkasan semua siswa dihitung di server (pantau_ringkasan, lihat
    supabase/add-pantau-siswa.sql) - tidak lagi mengunduh seluruh baris
    progres tiap siswa ke browser. */
@@ -202,14 +275,7 @@ async function loadMonitorPanel() {
     monitorListEl.innerHTML = '<p class="muted">Belum ada siswa terdaftar.</p>';
     return;
   }
-  monitorListEl.innerHTML = monitorStudents
-    .map((student) => {
-      const ungradedHtml = student.ungraded
-        ? `<span class="monitor-card-ungraded">${student.ungraded} tugas perlu dinilai</span>`
-        : "";
-      return `<button type="button" class="monitor-card" data-id="${student.id}"><b>${escapeHtml(student.full_name)}</b><small>${escapeHtml(displayLoginId(student.email))}</small><div class="monitor-card-stats">${ungradedHtml}<span>${student.streak} hari streak</span><span>${totalDue(student)} due</span><span>${student.xp.toLocaleString("id-ID")} XP</span><span>${student.last_active ? "Terakhir " + student.last_active : "Belum pernah belajar"}</span></div></button>`;
-    })
-    .join("");
+  renderMonitorList();
 }
 
 function attentionHtml(weakItems) {
@@ -557,11 +623,8 @@ monitorAssignmentList.addEventListener("submit", async (event) => {
   // Perbarui label "perlu dinilai" di kartu siswa tanpa memuat ulang semua.
   const student = monitorStudents.find((s) => s.id === monitorSelectedId);
   if (student && form.hasAttribute("data-ungraded")) {
-    const remaining = Math.max(0, student.ungraded - 1);
-    student.ungraded = remaining;
-    const badge = monitorListEl.querySelector(`.monitor-card[data-id="${monitorSelectedId}"] .monitor-card-ungraded`);
-    if (badge && remaining) badge.textContent = `${remaining} tugas perlu dinilai`;
-    else if (badge) badge.remove();
+    student.ungraded = Math.max(0, student.ungraded - 1);
+    renderMonitorList();
   }
   loadStudentAssignments(monitorSelectedId);
 });
