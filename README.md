@@ -293,6 +293,17 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   `assignment-files` (folder `{siswa_id}/{assignment_id}/`, maks 5 MB,
   foto/PDF/audio) dan dibuka lewat signed URL 1 jam. Menggantikan
   `mark_assignment_done()` (fungsi itu dihapus oleh migrasi ini).
+- **Pantau Siswa dihitung di server** (`supabase/add-pantau-siswa.sql`).
+  `pantau_ringkasan()` (kartu semua siswa), `pantau_detail()` (aktivitas
+  6 minggu, progres per pelajaran/bab, item lemah, riwayat tes & reset) dan
+  `pantau_kelas()` (ringkasan tes se-kelas) khusus Sensei/Operator - browser
+  tidak lagi mengunduh seluruh `srs_progress` tiap siswa (dulu terpotong di
+  1000 baris sehingga progres tampak ter-reset). Rumus XP/dikuasai di sana
+  (`quiz_xp`, `srs_mastered_box`) harus sama dengan `js/quiz-results.js` &
+  `js/srs.js`. Reset progres hanya lewat `reset_student_progress()`: tercatat
+  siapa & kapan di `progress_resets`, item lama dicadangkan di
+  `progress_reset_items` dan bisa dikembalikan lewat
+  `restore_student_progress()`; staf tidak punya hak DELETE langsung.
 - **Password minimal 10 karakter, huruf + angka** - dicek di form, di
   Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket

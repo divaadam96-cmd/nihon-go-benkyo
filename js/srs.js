@@ -7,6 +7,7 @@
 const SRS_STORAGE_KEY = "nihonBenkyoSRS_v1";
 const SRS_ACTIVITY_KEY = "nihonBenkyoActivityLog_v1";
 const SRS_INTERVAL_DAYS = [1, 2, 4, 7, 14, 30, 60];
+// Sama dengan srs_mastered_box() di supabase/add-pantau-siswa.sql.
 const SRS_MASTERED_BOX = 3;
 // Maksimal ulasan yang dihitung XP per hari (sama dengan srs_daily_review_cap()
 // di supabase/fix-3-xp-streak-server.sql).
@@ -90,14 +91,36 @@ function srsSyncReview(itemId, outcome) {
     });
 }
 
+/* Ambil SEMUA baris milik userId. Supabase membatasi satu permintaan
+   maksimal 1000 baris (setelan "Max rows" API) - tanpa paginasi, siswa
+   yang sudah mempelajari >1000 item kehilangan sisa progresnya di layar
+   (tampak seperti ter-reset sendiri, padahal data di server utuh).
+   Diurutkan per kolom unik supaya halaman tidak tumpang-tindih; berhenti
+   saat halaman kosong supaya tetap benar walau batas Max rows diubah. */
+async function srsSelectAll(table, userId, orderColumn) {
+  const pageSize = 1000;
+  const rows = [];
+  for (;;) {
+    const { data, error } = await window.supabaseClient
+      .from(table)
+      .select("*")
+      .eq("user_id", userId)
+      .order(orderColumn)
+      .range(rows.length, rows.length + pageSize - 1);
+    if (error) return { data: null, error };
+    if (!data || data.length === 0) return { data: rows, error: null };
+    rows.push(...data);
+  }
+}
+
 /* Dipanggil auth.js sekali setelah login: tarik data milik user yang
    login dari Supabase, timpa localStorage supaya perangkat ini langsung
    sinkron dengan progres yang mungkin dibuat dari perangkat lain. */
 async function srsHydrateFromRemote(userId) {
   if (!window.supabaseClient || !userId) return;
   const [progressRes, activityRes] = await Promise.all([
-    window.supabaseClient.from("srs_progress").select("*").eq("user_id", userId),
-    window.supabaseClient.from("activity_log").select("*").eq("user_id", userId),
+    srsSelectAll("srs_progress", userId, "item_id"),
+    srsSelectAll("activity_log", userId, "activity_date"),
   ]);
   if (!progressRes.error && progressRes.data) {
     const data = {};
@@ -123,20 +146,6 @@ async function srsHydrateFromRemote(userId) {
       // Tidak fatal - lihat catatan di srsSave.
     }
   }
-}
-
-/* Untuk panel Sensei/Operator: baca progres user LAIN langsung dari
-   Supabase (bukan localStorage perangkat ini, yang isinya cuma progres
-   pengguna yang sedang login). */
-async function srsFetchRemoteFor(userId) {
-  const [progressRes, activityRes] = await Promise.all([
-    window.supabaseClient.from("srs_progress").select("*").eq("user_id", userId),
-    window.supabaseClient.from("activity_log").select("*").eq("user_id", userId),
-  ]);
-  return {
-    progress: progressRes.data || [],
-    activity: activityRes.data || [],
-  };
 }
 
 function srsGet(itemId) {

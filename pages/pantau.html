@@ -20,7 +20,25 @@
 <body class="auth-checking">
 <main class="main" id="pageMain">
   <div data-role-only="sensei,operator" hidden>
-    <div class="head"><div><div class="eyebrow">Pantau perkembangan</div><h1>Progres siswa.</h1><p>Lihat progres belajar setiap siswa. Klik satu siswa untuk detail dan opsi reset.</p></div></div>
+    <div class="head"><div><div class="eyebrow">Pantau perkembangan</div><h1>Progres siswa.</h1><p>Lihat progres belajar setiap siswa. Klik satu siswa untuk detail, tugas, dan pengaturan progres.</p></div></div>
+    <section class="monitor-class" id="monitorClass" aria-label="Ringkasan tes seluruh kelas"></section>
+    <div class="monitor-toolbar">
+      <div class="monitor-filters" id="monitorFilters" role="group" aria-label="Saring siswa">
+        <button type="button" data-filter="all" aria-pressed="true">Semua</button>
+        <button type="button" data-filter="attention" aria-pressed="false">Perlu perhatian</button>
+        <button type="button" data-filter="inactive" aria-pressed="false">Tidak aktif</button>
+        <button type="button" data-filter="ungraded" aria-pressed="false">Tugas perlu dinilai</button>
+      </div>
+      <button type="button" class="secondary monitor-export" id="monitorExport">Unduh rapor (CSV)</button>
+      <label class="monitor-sort">Urutkan
+        <select id="monitorSort">
+          <option value="attention">Perlu perhatian dulu</option>
+          <option value="name">Nama (A–Z)</option>
+          <option value="active">Terakhir aktif</option>
+          <option value="xp">XP tertinggi</option>
+        </select>
+      </label>
+    </div>
     <div id="monitorList" class="monitor-list"><p class="muted">Memuat…</p></div>
     <div id="monitorDetail" class="monitor-detail-overlay" hidden>
       <div class="monitor-detail-card" role="dialog" aria-modal="true" aria-labelledby="monitorDetailName">
@@ -31,9 +49,15 @@
         </header>
         <div class="monitor-detail-body">
           <div class="monitor-detail-stats" id="monitorDetailStats"></div>
+          <section class="monitor-activity" id="monitorActivity" aria-label="Aktivitas 6 minggu terakhir"></section>
 
           <div class="monitor-secondary-list">
             <div id="monitorAttentionSlot"></div>
+
+            <details class="monitor-disclosure" id="monitorLessonSection">
+              <summary><span><b>Progres per pelajaran</b><small>Penguasaan Materi per pelajaran dan Hafalan per bab.</small></span><strong id="monitorLessonCount">Memuat…</strong></summary>
+              <div class="monitor-lessons" id="monitorLessons"></div>
+            </details>
 
             <details class="monitor-disclosure" id="monitorQuizSection">
               <summary><span><b>Riwayat tes</b><small>Nilai dan bagian yang masih salah tiap sesi.</small></span><strong id="monitorQuizCount">Memuat…</strong></summary>
@@ -59,7 +83,7 @@
 
             <details class="monitor-disclosure monitor-danger-zone" id="monitorDangerSection">
               <summary><span><b>Pengaturan progres</b><small>Tindakan khusus untuk data belajar siswa.</small></span></summary>
-              <div><p id="monitorResetError" class="login-error" hidden></p><button type="button" class="danger" id="monitorResetBtn">Reset seluruh progres siswa</button></div>
+              <div><p class="muted">Progres yang direset disimpan sebagai cadangan dan bisa dipulihkan dari riwayat di bawah.</p><p id="monitorResetError" class="login-error" hidden></p><button type="button" class="danger" id="monitorResetBtn">Reset progres siswa ini</button><div class="monitor-reset-history" id="monitorResetHistory"></div></div>
             </details>
           </div>
         </div>
