@@ -20,7 +20,7 @@
 <body class="auth-checking">
 <main class="main" id="pageMain">
   <div data-role-only="sensei,operator" hidden>
-    <div class="head"><div><div class="eyebrow">Pantau perkembangan</div><h1>Progres siswa.</h1><p>Lihat progres belajar setiap siswa. Klik satu siswa untuk detail dan opsi reset.</p></div></div>
+    <div class="head"><div><div class="eyebrow">Pantau perkembangan</div><h1>Progres siswa.</h1><p>Lihat progres belajar setiap siswa. Klik satu siswa untuk detail, tugas, dan pengaturan progres.</p></div></div>
     <div id="monitorList" class="monitor-list"><p class="muted">Memuat…</p></div>
     <div id="monitorDetail" class="monitor-detail-overlay" hidden>
       <div class="monitor-detail-card" role="dialog" aria-modal="true" aria-labelledby="monitorDetailName">
@@ -59,7 +59,7 @@
 
             <details class="monitor-disclosure monitor-danger-zone" id="monitorDangerSection">
               <summary><span><b>Pengaturan progres</b><small>Tindakan khusus untuk data belajar siswa.</small></span></summary>
-              <div><p id="monitorResetError" class="login-error" hidden></p><button type="button" class="danger" id="monitorResetBtn">Reset seluruh progres siswa</button></div>
+              <div><p class="muted">Progres yang direset disimpan sebagai cadangan dan bisa dipulihkan dari riwayat di bawah.</p><p id="monitorResetError" class="login-error" hidden></p><button type="button" class="danger" id="monitorResetBtn">Reset progres siswa ini</button><div class="monitor-reset-history" id="monitorResetHistory"></div></div>
             </details>
           </div>
         </div>

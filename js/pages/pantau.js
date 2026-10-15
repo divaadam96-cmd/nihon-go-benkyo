@@ -33,6 +33,7 @@ const monitorQuizCount = document.getElementById("monitorQuizCount");
 const monitorQuizList = document.getElementById("monitorQuizList");
 const monitorResetBtn = document.getElementById("monitorResetBtn");
 const monitorResetError = document.getElementById("monitorResetError");
+const monitorResetHistory = document.getElementById("monitorResetHistory");
 const monitorDetailClose = document.getElementById("monitorDetailClose");
 const monitorAssignmentSection = document.getElementById("monitorAssignmentSection");
 const monitorDangerSection = document.getElementById("monitorDangerSection");
@@ -243,6 +244,7 @@ function renderMonitorDetail(student) {
   monitorAttentionSlot.innerHTML = '<p class="muted">Memuat…</p>';
   monitorQuizCount.textContent = `${student.quiz_count} sesi`;
   monitorQuizList.innerHTML = '<p class="muted">Memuat…</p>';
+  monitorResetHistory.innerHTML = "";
   monitorResetError.hidden = true;
   monitorResetBtn.disabled = false;
   monitorResetBtn.textContent = "Reset progres siswa ini";
@@ -267,10 +269,26 @@ async function loadStudentDetail(siswaId) {
     const message = `<p class="muted">Gagal memuat detail: ${escapeHtml(error.message)}</p>`;
     monitorAttentionSlot.innerHTML = message;
     monitorQuizList.innerHTML = message;
+    monitorResetHistory.innerHTML = message;
     return;
   }
   monitorAttentionSlot.innerHTML = attentionHtml(data.weak_items);
   monitorQuizList.innerHTML = quizHistoryHtml(data.quizzes);
+  monitorResetHistory.innerHTML = resetHistoryHtml(data.resets);
+}
+
+/* Riwayat reset (siapa & kapan) + tombol pulihkan dari cadangan. */
+function resetHistoryHtml(resets) {
+  if (!resets.length) return '<p class="muted">Belum pernah direset.</p>';
+  return `<b>Riwayat reset</b>${resets
+    .map((r) => {
+      const who = escapeHtml(r.reset_by_name || "akun yang sudah dihapus");
+      const status = r.restored_at
+        ? `<small>Dipulihkan ${formatQuizDate(r.restored_at)} oleh ${escapeHtml(r.restored_by_name || "akun yang sudah dihapus")}</small>`
+        : `<button type="button" class="secondary monitor-restore-btn" data-reset-id="${r.id}">Pulihkan</button>`;
+      return `<div class="monitor-reset-row"><div><span>${formatQuizDate(r.reset_at)} · oleh ${who}</span><small>${r.item_count.toLocaleString("id-ID")} item dicadangkan</small></div>${status}</div>`;
+    })
+    .join("")}`;
 }
 
 function describeTestAccess(task) {
@@ -398,14 +416,14 @@ monitorResetBtn.addEventListener("click", async () => {
   const student = monitorStudents.find((s) => s.id === monitorSelectedId);
   if (!student) return;
   const confirmed = confirm(
-    `Reset seluruh progres belajar "${student.full_name}"? Semua status kuasa kanji/materi/hafalan akan kembali ke nol. Aksi ini tidak bisa dibatalkan.`,
+    `Reset seluruh progres belajar "${student.full_name}"? Status kanji/materi/hafalan kembali ke nol. Progres lama disimpan sebagai cadangan dan bisa dipulihkan dari riwayat reset.`,
   );
   if (!confirmed) return;
 
   monitorResetError.hidden = true;
   monitorResetBtn.disabled = true;
   monitorResetBtn.textContent = "Mereset…";
-  const { error } = await window.supabaseClient.from("srs_progress").delete().eq("user_id", student.id);
+  const { error } = await window.supabaseClient.rpc("reset_student_progress", { p_siswa: student.id });
   if (error) {
     monitorResetError.textContent = `Gagal reset: ${error.message}`;
     monitorResetError.hidden = false;
@@ -413,11 +431,39 @@ monitorResetBtn.addEventListener("click", async () => {
     monitorResetBtn.textContent = "Reset progres siswa ini";
     return;
   }
-  await loadMonitorPanel();
-  const refreshed = monitorStudents.find((s) => s.id === student.id);
-  if (refreshed) renderMonitorDetail(refreshed);
-  else closeMonitorDetail();
+  await refreshSelectedStudent(student.id);
 });
+
+monitorResetHistory.addEventListener("click", async (event) => {
+  const button = event.target.closest(".monitor-restore-btn");
+  if (!button) return;
+  const studentId = monitorSelectedId;
+  if (!confirm("Pulihkan progres dari cadangan ini? Item yang sudah dipelajari lagi setelah reset tetap memakai progres terbarunya.")) return;
+  button.disabled = true;
+  button.textContent = "Memulihkan…";
+  const { error } = await window.supabaseClient.rpc("restore_student_progress", { p_reset_id: Number(button.dataset.resetId) });
+  if (error) {
+    monitorResetError.textContent = `Gagal memulihkan: ${error.message}`;
+    monitorResetError.hidden = false;
+    button.disabled = false;
+    button.textContent = "Pulihkan";
+    return;
+  }
+  await refreshSelectedStudent(studentId);
+});
+
+// Muat ulang ringkasan semua siswa, lalu buka lagi detail siswa yang sama.
+async function refreshSelectedStudent(studentId) {
+  await loadMonitorPanel();
+  const refreshed = monitorStudents.find((s) => s.id === studentId);
+  if (refreshed) {
+    monitorSelectedId = studentId;
+    renderMonitorDetail(refreshed);
+    monitorDangerSection.open = true;
+  } else {
+    closeMonitorDetail();
+  }
+}
 
 monitorAssignmentForm.addEventListener("submit", async (event) => {
   event.preventDefault();

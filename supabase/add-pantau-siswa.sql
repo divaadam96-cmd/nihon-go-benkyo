@@ -123,8 +123,99 @@ $$;
 revoke execute on function public.pantau_ringkasan() from public, anon;
 grant execute on function public.pantau_ringkasan() to authenticated;
 
--- Detail satu siswa (dibuka saat kartunya diklik): item paling lemah dan
--- riwayat tes. Angka ringkasnya tetap dari pantau_ringkasan().
+-- ============================================================
+-- Riwayat reset progres + cadangan supaya reset bisa dipulihkan.
+-- Reset hanya lewat reset_student_progress() (tercatat siapa & kapan);
+-- hak DELETE langsung staf ke srs_progress/activity_log dicabut.
+-- ============================================================
+create table if not exists public.progress_resets (
+  id bigserial primary key,
+  siswa_id uuid not null references auth.users (id) on delete cascade,
+  reset_by uuid references auth.users (id) on delete set null,
+  reset_at timestamptz not null default now(),
+  item_count int not null,
+  restored_at timestamptz,
+  restored_by uuid references auth.users (id) on delete set null
+);
+create index if not exists progress_resets_siswa_idx on public.progress_resets (siswa_id, reset_at desc);
+
+create table if not exists public.progress_reset_items (
+  reset_id bigint not null references public.progress_resets (id) on delete cascade,
+  item_id text not null,
+  box int not null,
+  due date,
+  reviews int not null,
+  last_result text,
+  last_reviewed_at date,
+  primary key (reset_id, item_id)
+);
+
+-- Tanpa policy: hanya bisa diakses lewat fungsi di bawah.
+alter table public.progress_resets enable row level security;
+alter table public.progress_reset_items enable row level security;
+
+drop policy if exists "srs_progress_staff_delete" on public.srs_progress;
+drop policy if exists "activity_log_staff_delete" on public.activity_log;
+
+create or replace function public.reset_student_progress(p_siswa uuid)
+returns bigint
+language plpgsql security definer set search_path = public as $$
+declare
+  v_reset_id bigint;
+  v_count int;
+begin
+  perform public.require_staff();
+  if not exists (select 1 from public.profiles where id = p_siswa and role = 'siswa') then
+    raise exception 'Siswa tidak ditemukan.' using errcode = '22023';
+  end if;
+  select count(*) into v_count from public.srs_progress where user_id = p_siswa;
+  insert into public.progress_resets (siswa_id, reset_by, item_count)
+    values (p_siswa, auth.uid(), v_count)
+    returning id into v_reset_id;
+  insert into public.progress_reset_items (reset_id, item_id, box, due, reviews, last_result, last_reviewed_at)
+    select v_reset_id, item_id, box, due, reviews, last_result, last_reviewed_at
+    from public.srs_progress where user_id = p_siswa;
+  delete from public.srs_progress where user_id = p_siswa;
+  return v_reset_id;
+end;
+$$;
+revoke execute on function public.reset_student_progress(uuid) from public, anon;
+grant execute on function public.reset_student_progress(uuid) to authenticated;
+
+-- Item yang sudah dipelajari lagi setelah reset tetap memakai progres
+-- terbarunya; sisanya dikembalikan dari cadangan. Mengembalikan jumlah
+-- item yang dipulihkan.
+create or replace function public.restore_student_progress(p_reset_id bigint)
+returns int
+language plpgsql security definer set search_path = public as $$
+declare
+  v_reset public.progress_resets;
+  v_count int;
+begin
+  perform public.require_staff();
+  select * into v_reset from public.progress_resets where id = p_reset_id for update;
+  if not found then
+    raise exception 'Riwayat reset tidak ditemukan.' using errcode = '22023';
+  end if;
+  if v_reset.restored_at is not null then
+    raise exception 'Reset ini sudah dipulihkan.' using errcode = '22023';
+  end if;
+  insert into public.srs_progress (user_id, item_id, box, due, reviews, last_result, last_reviewed_at)
+    select v_reset.siswa_id, item_id, box, due, reviews, last_result, last_reviewed_at
+    from public.progress_reset_items where reset_id = p_reset_id
+    on conflict (user_id, item_id) do nothing;
+  get diagnostics v_count = row_count;
+  update public.progress_resets set restored_at = now(), restored_by = auth.uid() where id = p_reset_id;
+  return v_count;
+end;
+$$;
+revoke execute on function public.restore_student_progress(bigint) from public, anon;
+grant execute on function public.restore_student_progress(bigint) to authenticated;
+
+-- ============================================================
+-- Detail satu siswa (dibuka saat kartunya diklik). Angka ringkasnya tetap
+-- dari pantau_ringkasan().
+-- ============================================================
 drop function if exists public.pantau_detail(uuid);
 create function public.pantau_detail(p_siswa uuid)
 returns jsonb
@@ -149,6 +240,15 @@ begin
         select r.id, r.correct_count, r.total_count, r.category_scores, r.created_at, r.finish_reason
         from public.quiz_results r where r.user_id = p_siswa
       ) q
+    ), '[]'::jsonb),
+    'resets', coalesce((
+      select jsonb_agg(x order by x.reset_at desc)
+      from (
+        select r.id, r.reset_at, r.item_count, r.restored_at,
+               (select full_name from public.profiles where id = r.reset_by) as reset_by_name,
+               (select full_name from public.profiles where id = r.restored_by) as restored_by_name
+        from public.progress_resets r where r.siswa_id = p_siswa
+      ) x
     ), '[]'::jsonb)
   );
 end;

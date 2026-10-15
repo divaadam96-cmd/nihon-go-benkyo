@@ -839,6 +839,41 @@ body.monitor-modal-open {
   width: auto;
 }
 
+.monitor-danger-zone > div > .muted {
+  margin: 0 0 10px;
+  font-size: 12px;
+}
+
+.monitor-reset-history {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 12px;
+}
+
+.monitor-reset-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--wash);
+}
+
+.monitor-reset-row small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.monitor-reset-row button {
+  width: auto;
+  flex: 0 0 auto;
+}
+
 @media (max-width: 760px) {
   .monitor-detail-overlay {
     align-items: stretch;
