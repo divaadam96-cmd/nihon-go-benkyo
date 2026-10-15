@@ -49,7 +49,8 @@ async function quizFetchRemoteFor(userId) {
     .from("quiz_results")
     .select("id, correct_count, total_count, category_scores, created_at, finish_reason")
     .eq("user_id", userId);
-  return error || !data ? [] : data;
+  if (error) throw error; // lihat srsFetchRemoteFor: gagal != tidak ada tes
+  return data || [];
 }
 
 function quizXpFromRows(rows) {

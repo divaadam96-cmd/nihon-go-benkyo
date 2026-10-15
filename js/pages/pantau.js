@@ -257,13 +257,20 @@ async function loadMonitorPanel() {
     .from("assignment_submissions")
     .select("siswa_id")
     .is("graded_at", null);
-  const [remoteData, quizData, ungradedResult] = await Promise.all([
-    Promise.all(students.map((s) => srsFetchRemoteFor(s.id))),
-    Promise.all(
-      students.map((s) => (typeof window.quizFetchRemoteFor === "function" ? window.quizFetchRemoteFor(s.id) : [])),
-    ),
-    ungradedRequest,
-  ]);
+  let remoteData, quizData, ungradedResult;
+  try {
+    [remoteData, quizData, ungradedResult] = await Promise.all([
+      Promise.all(students.map((s) => srsFetchRemoteFor(s.id))),
+      Promise.all(
+        students.map((s) => (typeof window.quizFetchRemoteFor === "function" ? window.quizFetchRemoteFor(s.id) : [])),
+      ),
+      ungradedRequest,
+    ]);
+  } catch (fetchError) {
+    // Jangan tampilkan angka nol - Sensei akan mengira progres siswa ter-reset.
+    monitorListEl.innerHTML = `<p class="muted">Gagal memuat progres siswa: ${escapeHtml(fetchError.message || String(fetchError))}. Muat ulang halaman untuk mencoba lagi.</p>`;
+    return;
+  }
   ungradedBySiswa = {};
   (ungradedResult.data || []).forEach((row) => {
     ungradedBySiswa[row.siswa_id] = (ungradedBySiswa[row.siswa_id] || 0) + 1;
@@ -485,8 +492,12 @@ monitorResetBtn.addEventListener("click", async () => {
     monitorResetBtn.textContent = "Reset progres siswa ini";
     return;
   }
-  student.remote = await srsFetchRemoteFor(student.id);
-  renderMonitorDetail(student);
+  try {
+    student.remote = await srsFetchRemoteFor(student.id);
+    renderMonitorDetail(student);
+  } catch {
+    closeMonitorDetail();
+  }
   await loadMonitorPanel();
 });
 

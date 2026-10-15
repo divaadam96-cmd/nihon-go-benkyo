@@ -90,14 +90,36 @@ function srsSyncReview(itemId, outcome) {
     });
 }
 
+/* Ambil SEMUA baris milik userId. Supabase membatasi satu permintaan
+   maksimal 1000 baris (setelan "Max rows" API) - tanpa paginasi, siswa
+   yang sudah mempelajari >1000 item kehilangan sisa progresnya di layar
+   (tampak seperti ter-reset sendiri, padahal data di server utuh).
+   Diurutkan per kolom unik supaya halaman tidak tumpang-tindih; berhenti
+   saat halaman kosong supaya tetap benar walau batas Max rows diubah. */
+async function srsSelectAll(table, userId, orderColumn) {
+  const pageSize = 1000;
+  const rows = [];
+  for (;;) {
+    const { data, error } = await window.supabaseClient
+      .from(table)
+      .select("*")
+      .eq("user_id", userId)
+      .order(orderColumn)
+      .range(rows.length, rows.length + pageSize - 1);
+    if (error) return { data: null, error };
+    if (!data || data.length === 0) return { data: rows, error: null };
+    rows.push(...data);
+  }
+}
+
 /* Dipanggil auth.js sekali setelah login: tarik data milik user yang
    login dari Supabase, timpa localStorage supaya perangkat ini langsung
    sinkron dengan progres yang mungkin dibuat dari perangkat lain. */
 async function srsHydrateFromRemote(userId) {
   if (!window.supabaseClient || !userId) return;
   const [progressRes, activityRes] = await Promise.all([
-    window.supabaseClient.from("srs_progress").select("*").eq("user_id", userId),
-    window.supabaseClient.from("activity_log").select("*").eq("user_id", userId),
+    srsSelectAll("srs_progress", userId, "item_id"),
+    srsSelectAll("activity_log", userId, "activity_date"),
   ]);
   if (!progressRes.error && progressRes.data) {
     const data = {};
@@ -127,15 +149,18 @@ async function srsHydrateFromRemote(userId) {
 
 /* Untuk panel Sensei/Operator: baca progres user LAIN langsung dari
    Supabase (bukan localStorage perangkat ini, yang isinya cuma progres
-   pengguna yang sedang login). */
+   pengguna yang sedang login). Gagal dilempar sebagai error - jangan
+   dianggap "progres kosong", karena di Pantau itu tampak seperti reset. */
 async function srsFetchRemoteFor(userId) {
   const [progressRes, activityRes] = await Promise.all([
-    window.supabaseClient.from("srs_progress").select("*").eq("user_id", userId),
-    window.supabaseClient.from("activity_log").select("*").eq("user_id", userId),
+    srsSelectAll("srs_progress", userId, "item_id"),
+    srsSelectAll("activity_log", userId, "activity_date"),
   ]);
+  const error = progressRes.error || activityRes.error;
+  if (error) throw error;
   return {
-    progress: progressRes.data || [],
-    activity: activityRes.data || [],
+    progress: progressRes.data,
+    activity: activityRes.data,
   };
 }
 
