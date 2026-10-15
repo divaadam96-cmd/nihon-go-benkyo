@@ -22,6 +22,7 @@ function displayLoginId(email) {
 }
 
 const monitorListEl = document.getElementById("monitorList");
+const monitorClassEl = document.getElementById("monitorClass");
 const monitorFiltersEl = document.getElementById("monitorFilters");
 const monitorSortEl = document.getElementById("monitorSort");
 const monitorDetailEl = document.getElementById("monitorDetail");
@@ -123,6 +124,40 @@ function formatQuizDate(value) {
 
 function quizScorePercent(row) {
   return row.total_count ? Math.round((row.correct_count / row.total_count) * 100) : 0;
+}
+
+/* Tren nilai tiap bagian soal dari sesi pertama ke terakhir: garis kecil
+   + selisih, supaya terlihat bagian mana yang membaik / memburuk. */
+function quizTrendHtml(quizRows) {
+  const series = {};
+  quizRows
+    .slice()
+    .reverse() // pantau_detail mengirim terbaru dulu; tren dibaca dari yang terlama.
+    .forEach((row) => {
+      Object.entries(row.category_scores || {}).forEach(([label, score]) => {
+        if (!score || !score.total) return;
+        (series[label] = series[label] || []).push(Math.round((score.correct / score.total) * 100));
+      });
+    });
+  const labels = Object.keys(series);
+  if (!labels.length) return "";
+  const rows = labels
+    .map((label) => {
+      const values = series[label];
+      const first = values[0];
+      const last = values[values.length - 1];
+      const delta = last - first;
+      const points = values
+        .map((v, i) => `${values.length === 1 ? 40 : (i / (values.length - 1)) * 80},${(22 - (v / 100) * 20).toFixed(1)}`)
+        .join(" ");
+      const deltaHtml =
+        values.length < 2
+          ? '<small class="monitor-trend-delta">1 sesi</small>'
+          : `<small class="monitor-trend-delta ${delta > 0 ? "up" : delta < 0 ? "down" : ""}">${delta > 0 ? "▲" : delta < 0 ? "▼" : "="} ${Math.abs(delta)} poin</small>`;
+      return `<div class="monitor-trend-row"><span>${escapeHtml(label)}</span><svg viewBox="0 0 80 24" aria-hidden="true"><polyline points="${points}"></polyline></svg><b>${last}%</b>${deltaHtml}</div>`;
+    })
+    .join("");
+  return `<div class="monitor-trend"><b>Tren per bagian</b>${rows}</div>`;
 }
 
 /* Rincian nilai per sesi tes untuk Sensei/Operator: skor keseluruhan lalu
@@ -256,6 +291,27 @@ monitorFiltersEl.addEventListener("click", (event) => {
 });
 monitorSortEl.addEventListener("change", renderMonitorList);
 
+const CLASS_SUMMARY_DAYS = 30;
+
+function scoreLevel(percent) {
+  return percent >= 80 ? "high" : percent >= 60 ? "mid" : "low";
+}
+
+/* Ringkasan tes seluruh siswa: bagian soal diurutkan dari yang paling
+   banyak salah se-kelas (pantau_kelas). */
+function classSummaryHtml(summary) {
+  if (!summary.quiz_count) {
+    return `<p class="muted">Belum ada tes yang dikerjakan siswa dalam ${summary.days} hari terakhir.</p>`;
+  }
+  const rows = summary.categories
+    .map((c) => {
+      const percent = Math.round((c.correct / c.total) * 100);
+      return `<div class="monitor-class-row"><span>${escapeHtml(c.label)}</span><span class="monitor-class-track"><i class="level-${scoreLevel(percent)}" style="width:${percent}%"></i></span><b>${percent}%</b><small>${c.correct}/${c.total} benar</small></div>`;
+    })
+    .join("");
+  return `<header><div><span>RINGKASAN KELAS</span><h4>${summary.days} hari terakhir</h4></div><small>${summary.quiz_count} tes oleh ${summary.student_count} siswa · rata-rata ${summary.avg_pct}%</small></header>${rows ? `<p class="monitor-class-note">Bagian soal, dari yang paling banyak salah:</p>${rows}` : ""}`;
+}
+
 /* Ringkasan semua siswa dihitung di server (pantau_ringkasan, lihat
    supabase/add-pantau-siswa.sql) - tidak lagi mengunduh seluruh baris
    progres tiap siswa ke browser. */
@@ -268,7 +324,11 @@ async function loadMonitorPanel() {
   } catch {
     // Gagal tidak fatal - nilai muncul saat siswa/Sensei membuka berikutnya.
   }
-  const { data, error } = await window.supabaseClient.rpc("pantau_ringkasan");
+  const [{ data, error }, classResult] = await Promise.all([
+    window.supabaseClient.rpc("pantau_ringkasan"),
+    window.supabaseClient.rpc("pantau_kelas", { p_days: CLASS_SUMMARY_DAYS }),
+  ]);
+  monitorClassEl.innerHTML = classResult.error ? "" : classSummaryHtml(classResult.data);
   if (error) {
     // Jangan tampilkan angka nol - Sensei akan mengira progres siswa ter-reset.
     monitorListEl.innerHTML = `<p class="muted">Gagal memuat progres siswa: ${escapeHtml(error.message)}. Muat ulang halaman untuk mencoba lagi.</p>`;
@@ -352,7 +412,7 @@ async function loadStudentDetail(siswaId) {
   monitorAttentionSlot.innerHTML = attentionHtml(data.weak_items);
   monitorLessons.innerHTML = lessonsHtml(data.lessons);
   monitorLessonCount.textContent = `${data.lessons.length} dari 100 dipelajari`;
-  monitorQuizList.innerHTML = quizHistoryHtml(data.quizzes);
+  monitorQuizList.innerHTML = quizTrendHtml(data.quizzes) + quizHistoryHtml(data.quizzes);
   monitorResetHistory.innerHTML = resetHistoryHtml(data.resets);
 }
 

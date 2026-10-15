@@ -130,6 +130,43 @@ $$;
 revoke execute on function public.pantau_ringkasan() from public, anon;
 grant execute on function public.pantau_ringkasan() to authenticated;
 
+-- Ringkasan tes seluruh siswa N hari terakhir: rata-rata nilai dan
+-- benar/total per bagian soal (category_scores dari grade_test), untuk
+-- melihat bagian mana yang paling banyak salah se-kelas.
+create or replace function public.pantau_kelas(p_days int default 30)
+returns jsonb
+language plpgsql stable security definer set search_path = public as $$
+begin
+  perform public.require_staff();
+  return (
+    with recent as (
+      select q.* from public.quiz_results q
+      join public.profiles p on p.id = q.user_id and p.role = 'siswa'
+      where q.created_at >= now() - make_interval(days => greatest(p_days, 1))
+    )
+    select jsonb_build_object(
+      'days', greatest(p_days, 1),
+      'quiz_count', (select count(*) from recent),
+      'student_count', (select count(distinct user_id) from recent),
+      'avg_pct', (select round(avg(public.quiz_percent(correct_count, total_count))) from recent),
+      'categories', coalesce((
+        select jsonb_agg(c order by c.correct::float8 / nullif(c.total, 0), c.label)
+        from (
+          select e.key as label,
+                 sum(coalesce((e.value ->> 'correct')::int, 0))::int as correct,
+                 sum(coalesce((e.value ->> 'total')::int, 0))::int as total
+          from recent r, jsonb_each(coalesce(r.category_scores, '{}'::jsonb)) e
+          group by e.key
+          having sum(coalesce((e.value ->> 'total')::int, 0)) > 0
+        ) c
+      ), '[]'::jsonb)
+    )
+  );
+end;
+$$;
+revoke execute on function public.pantau_kelas(int) from public, anon;
+grant execute on function public.pantau_kelas(int) to authenticated;
+
 -- ============================================================
 -- Riwayat reset progres + cadangan supaya reset bisa dipulihkan.
 -- Reset hanya lewat reset_student_progress() (tercatat siapa & kapan);

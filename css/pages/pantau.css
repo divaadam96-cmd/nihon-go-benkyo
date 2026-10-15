@@ -1,5 +1,145 @@
 /* --- Dipindah dari legacy-part-4.css (reorganisasi CSS) --- */
 /* Panel Pantau Siswa (Sensei & Operator). */
+.monitor-class {
+  margin-top: 16px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+}
+
+.monitor-class:empty {
+  display: none;
+}
+
+.monitor-class > .muted {
+  margin: 0;
+}
+
+.monitor-class > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+
+.monitor-class > header span {
+  display: block;
+  color: #9b712e;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.monitor-class h4 {
+  margin: 3px 0 0;
+  color: var(--navy);
+  font-size: 14px;
+}
+
+.monitor-class > header > small,
+.monitor-class-note {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.monitor-class-note {
+  margin: 10px 0 6px;
+}
+
+.monitor-class-row,
+.monitor-trend-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 2fr) 40px minmax(0, 0.9fr);
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+  font-size: 12px;
+}
+
+.monitor-class-row > span:first-child,
+.monitor-trend-row > span {
+  overflow-wrap: anywhere;
+}
+
+.monitor-class-row b,
+.monitor-trend-row b {
+  color: var(--navy);
+  text-align: right;
+}
+
+.monitor-class-row small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.monitor-class-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--wash);
+  overflow: hidden;
+}
+
+.monitor-class-track i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
+
+.monitor-class-track .level-high {
+  background: #6fae6a;
+}
+
+.monitor-class-track .level-mid {
+  background: #d9a441;
+}
+
+.monitor-class-track .level-low {
+  background: var(--rose);
+}
+
+.monitor-trend {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.monitor-trend > b {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--navy);
+  font-size: 12px;
+}
+
+.monitor-trend-row svg {
+  width: 80px;
+  height: 24px;
+}
+
+.monitor-trend-row polyline {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.monitor-trend-delta {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.monitor-trend-delta.up {
+  color: #2f6b2a;
+}
+
+.monitor-trend-delta.down {
+  color: #92382a;
+}
+
 .monitor-toolbar {
   display: flex;
   flex-wrap: wrap;
