@@ -7,6 +7,7 @@
 const SRS_STORAGE_KEY = "nihonBenkyoSRS_v1";
 const SRS_ACTIVITY_KEY = "nihonBenkyoActivityLog_v1";
 const SRS_INTERVAL_DAYS = [1, 2, 4, 7, 14, 30, 60];
+// Sama dengan srs_mastered_box() di supabase/add-pantau-siswa.sql.
 const SRS_MASTERED_BOX = 3;
 // Maksimal ulasan yang dihitung XP per hari (sama dengan srs_daily_review_cap()
 // di supabase/fix-3-xp-streak-server.sql).
@@ -145,23 +146,6 @@ async function srsHydrateFromRemote(userId) {
       // Tidak fatal - lihat catatan di srsSave.
     }
   }
-}
-
-/* Untuk panel Sensei/Operator: baca progres user LAIN langsung dari
-   Supabase (bukan localStorage perangkat ini, yang isinya cuma progres
-   pengguna yang sedang login). Gagal dilempar sebagai error - jangan
-   dianggap "progres kosong", karena di Pantau itu tampak seperti reset. */
-async function srsFetchRemoteFor(userId) {
-  const [progressRes, activityRes] = await Promise.all([
-    srsSelectAll("srs_progress", userId, "item_id"),
-    srsSelectAll("activity_log", userId, "activity_date"),
-  ]);
-  const error = progressRes.error || activityRes.error;
-  if (error) throw error;
-  return {
-    progress: progressRes.data,
-    activity: activityRes.data,
-  };
 }
 
 function srsGet(itemId) {

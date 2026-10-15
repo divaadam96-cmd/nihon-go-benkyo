@@ -46,8 +46,6 @@ const monitorAssignmentPaket = document.getElementById("monitorAssignmentPaket")
 
 let monitorStudents = [];
 let monitorSelectedId = null;
-// Jumlah kiriman tugas yang belum dinilai per siswa (siswa_id -> jumlah).
-let ungradedBySiswa = {};
 
 /* Paket ujian siap pakai dibaca dari database (list_test_packages) - paket
    baru yang ditambahkan Operator di tabel test_packages + package_questions
@@ -92,38 +90,6 @@ monitorAssignmentForm.querySelectorAll('input[name="assignmentType"]').forEach((
 });
 updateAssignmentFormMode();
 
-function remoteDueCount(progressRows, prefix) {
-  const today = srsToday();
-  return progressRows.filter(
-    (row) => row.item_id.startsWith(prefix) && row.reviews && (!row.due || row.due <= today),
-  ).length;
-}
-
-function remoteMasteredCount(progressRows, prefix) {
-  return progressRows.filter((row) => row.item_id.startsWith(prefix) && row.box >= SRS_MASTERED_BOX)
-    .length;
-}
-
-function remoteStreak(activityRows) {
-  const log = {};
-  activityRows.forEach((row) => {
-    log[row.activity_date] = row.count;
-  });
-  let streak = 0;
-  const cursor = new Date();
-  if (!log[cursor.toISOString().slice(0, 10)]) cursor.setDate(cursor.getDate() - 1);
-  while (log[cursor.toISOString().slice(0, 10)]) {
-    streak++;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-  return streak;
-}
-
-function remoteLastActive(activityRows) {
-  if (!activityRows.length) return null;
-  return activityRows.map((row) => row.activity_date).sort().pop();
-}
-
 function formatActivityDate(value) {
   if (!value) return "Belum pernah";
   const date = new Date(`${value}T00:00:00`);
@@ -151,21 +117,15 @@ function quizScorePercent(row) {
   return row.total_count ? Math.round((row.correct_count / row.total_count) * 100) : 0;
 }
 
-function quizAveragePercent(quizRows) {
-  if (!quizRows.length) return null;
-  const sum = quizRows.reduce((total, row) => total + quizScorePercent(row), 0);
-  return Math.round(sum / quizRows.length);
-}
-
 /* Rincian nilai per sesi tes untuk Sensei/Operator: skor keseluruhan lalu
    bagian (kategori soal, lihat categoryScores() di js/pages/latihan.js)
-   yang masih banyak salah, diurutkan dari sesi terbaru. */
+   yang masih banyak salah. Baris sudah terurut dari sesi terbaru
+   (pantau_detail). */
 function quizHistoryHtml(quizRows) {
   if (!quizRows.length) {
     return '<p class="muted">Belum ada tes yang dikerjakan.</p>';
   }
-  const sorted = quizRows.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  return sorted
+  return quizRows
     .map((row) => {
       const percent = quizScorePercent(row);
       const categories = Object.entries(row.category_scores || {});
@@ -183,16 +143,6 @@ function quizHistoryHtml(quizRows) {
       return `<div class="monitor-quiz-row${percent < 60 ? " due" : ""}"><div class="monitor-quiz-row-head"><b>${percent}%</b><span>${row.correct_count}/${row.total_count} benar</span><small>${formatQuizDate(row.created_at)}</small>${row.finish_reason === "timeout" ? '<span class="monitor-quiz-tag wrong" title="Dinilai dari jawaban yang tersimpan sebelum batas waktu">⏱ Waktu habis</span>' : ""}</div><div class="monitor-quiz-breakdown">${tagsHtml}</div></div>`;
     })
     .join("");
-}
-
-/* XP siswa dihitung dengan formula sama seperti totalXp() di app.js:
-   5 XP per aksi review SRS (semua kategori, activity_log) + XP dari
-   riwayat quiz_results - dibaca langsung dari Supabase (bukan
-   localStorage perangkat ini), supaya Sensei/Operator bisa memantau. */
-function remoteXp(activityRows, quizRows) {
-  const reviewXp = activityRows.reduce((sum, row) => sum + (row.count || 0), 0) * 5;
-  const quizXp = typeof window.quizXpFromRows === "function" ? window.quizXpFromRows(quizRows) : 0;
-  return reviewXp + quizXp;
 }
 
 /* Uraikan item_id jadi label yang bisa dibaca Sensei - bukan cuma
@@ -218,34 +168,21 @@ function describeItemId(itemId) {
   return itemId;
 }
 
-/* Item yang paling lemah: sudah pernah direview tapi box-nya masih
-   rendah (sering salah/perlu diulang) - diurutkan box naik lalu jumlah
-   review turun (paling sering dicoba tapi belum maju, paling perlu
-   dibantu Sensei duluan). */
-function weakestItems(progressRows, limit = 6) {
-  return progressRows
-    .filter((row) => row.reviews > 0)
-    .slice()
-    .sort((a, b) => a.box - b.box || b.reviews - a.reviews)
-    .slice(0, limit);
+const CATEGORIES = [
+  { key: "kanji", label: "Kanji", icon: "漢" },
+  { key: "materi", label: "Materi", icon: "文" },
+  { key: "hafalan", label: "Hafalan", icon: "語" },
+];
+
+function totalDue(student) {
+  return CATEGORIES.reduce((sum, cat) => sum + student[`${cat.key}_due`], 0);
 }
 
+/* Ringkasan semua siswa dihitung di server (pantau_ringkasan, lihat
+   supabase/add-pantau-siswa.sql) - tidak lagi mengunduh seluruh baris
+   progres tiap siswa ke browser. */
 async function loadMonitorPanel() {
   monitorListEl.innerHTML = '<p class="muted">Memuat…</p>';
-  const { data: students, error } = await window.supabaseClient
-    .from("profiles")
-    .select("id, full_name, email")
-    .eq("role", "siswa")
-    .order("full_name", { ascending: true });
-  if (error) {
-    monitorListEl.innerHTML = `<p class="muted">Gagal memuat daftar siswa: ${error.message}</p>`;
-    return;
-  }
-  if (!students || students.length === 0) {
-    monitorListEl.innerHTML = '<p class="muted">Belum ada siswa terdaftar.</p>';
-    return;
-  }
-
   // Tes yang ditinggal siswa sampai waktunya habis ditutup & dinilai dulu
   // (dari jawaban yang tersimpan sebelum tenggat), supaya nilainya tampil.
   try {
@@ -253,89 +190,59 @@ async function loadMonitorPanel() {
   } catch {
     // Gagal tidak fatal - nilai muncul saat siswa/Sensei membuka berikutnya.
   }
-  const ungradedRequest = window.supabaseClient
-    .from("assignment_submissions")
-    .select("siswa_id")
-    .is("graded_at", null);
-  let remoteData, quizData, ungradedResult;
-  try {
-    [remoteData, quizData, ungradedResult] = await Promise.all([
-      Promise.all(students.map((s) => srsFetchRemoteFor(s.id))),
-      Promise.all(
-        students.map((s) => (typeof window.quizFetchRemoteFor === "function" ? window.quizFetchRemoteFor(s.id) : [])),
-      ),
-      ungradedRequest,
-    ]);
-  } catch (fetchError) {
+  const { data, error } = await window.supabaseClient.rpc("pantau_ringkasan");
+  if (error) {
     // Jangan tampilkan angka nol - Sensei akan mengira progres siswa ter-reset.
-    monitorListEl.innerHTML = `<p class="muted">Gagal memuat progres siswa: ${escapeHtml(fetchError.message || String(fetchError))}. Muat ulang halaman untuk mencoba lagi.</p>`;
+    monitorListEl.innerHTML = `<p class="muted">Gagal memuat progres siswa: ${escapeHtml(error.message)}. Muat ulang halaman untuk mencoba lagi.</p>`;
     return;
   }
-  ungradedBySiswa = {};
-  (ungradedResult.data || []).forEach((row) => {
-    ungradedBySiswa[row.siswa_id] = (ungradedBySiswa[row.siswa_id] || 0) + 1;
-  });
-  monitorStudents = students.map((student, i) => ({
-    ...student,
-    remote: remoteData[i],
-    quiz: quizData[i],
-  }));
-
+  monitorStudents = data || [];
+  if (monitorStudents.length === 0) {
+    monitorListEl.innerHTML = '<p class="muted">Belum ada siswa terdaftar.</p>';
+    return;
+  }
   monitorListEl.innerHTML = monitorStudents
     .map((student) => {
-      const due =
-        remoteDueCount(student.remote.progress, "kanji:") +
-        remoteDueCount(student.remote.progress, "materi:") +
-        remoteDueCount(student.remote.progress, "hafalan:");
-      const streak = remoteStreak(student.remote.activity);
-      const lastActive = remoteLastActive(student.remote.activity);
-      const xp = remoteXp(student.remote.activity, student.quiz);
-      const ungraded = ungradedBySiswa[student.id] || 0;
-      const ungradedHtml = ungraded ? `<span class="monitor-card-ungraded">${ungraded} tugas perlu dinilai</span>` : "";
-      return `<button type="button" class="monitor-card" data-id="${student.id}"><b>${escapeHtml(student.full_name)}</b><small>${escapeHtml(displayLoginId(student.email))}</small><div class="monitor-card-stats">${ungradedHtml}<span>${streak} hari streak</span><span>${due} due</span><span>${xp.toLocaleString("id-ID")} XP</span><span>${lastActive ? "Terakhir " + lastActive : "Belum pernah belajar"}</span></div></button>`;
+      const ungradedHtml = student.ungraded
+        ? `<span class="monitor-card-ungraded">${student.ungraded} tugas perlu dinilai</span>`
+        : "";
+      return `<button type="button" class="monitor-card" data-id="${student.id}"><b>${escapeHtml(student.full_name)}</b><small>${escapeHtml(displayLoginId(student.email))}</small><div class="monitor-card-stats">${ungradedHtml}<span>${student.streak} hari streak</span><span>${totalDue(student)} due</span><span>${student.xp.toLocaleString("id-ID")} XP</span><span>${student.last_active ? "Terakhir " + student.last_active : "Belum pernah belajar"}</span></div></button>`;
     })
     .join("");
 }
 
+function attentionHtml(weakItems) {
+  if (!weakItems.length) {
+    return '<div class="monitor-all-clear"><span>✓</span><div><b>Tidak ada item yang perlu perhatian</b><small>Progres yang sudah direkam berada dalam kondisi baik.</small></div></div>';
+  }
+  const today = srsToday();
+  return `<details class="monitor-attention"><summary><span><b>Perlu perhatian</b><small>Item yang sering diulang atau masih berada di box rendah.</small></span><strong>${weakItems.length} item</strong></summary><div class="monitor-weak-items">${weakItems
+    .map((row) => {
+      const due = !row.due || row.due <= today;
+      return `<div class="monitor-weak-row${due ? " due" : ""}"><span>${escapeHtml(describeItemId(row.item_id))}</span><small>Box ${row.box} · ${row.reviews}× direview${due ? " · perlu diulang" : ""}</small></div>`;
+    })
+    .join("")}</div></details>`;
+}
+
+/* Angka ringkas dari pantau_ringkasan (sudah dimuat untuk kartu); item
+   lemah & riwayat tes diambil terpisah lewat pantau_detail. */
 function renderMonitorDetail(student) {
   monitorDetailName.textContent = student.full_name;
   monitorDetailId.textContent = displayLoginId(student.email);
   monitorDetailAvatar.textContent = (student.full_name || "S").trim().charAt(0).toUpperCase();
-  const categories = [
-    { prefix: "kanji:", label: "Kanji", icon: "漢" },
-    { prefix: "materi:", label: "Materi", icon: "文" },
-    { prefix: "hafalan:", label: "Hafalan", icon: "語" },
-  ];
-  const xp = remoteXp(student.remote.activity, student.quiz);
-  const quizCount = student.quiz.length;
-  const quizAvg = quizAveragePercent(student.quiz);
-  const streak = remoteStreak(student.remote.activity);
-  const lastActive = remoteLastActive(student.remote.activity);
-  const reviewCount = student.remote.activity.reduce((sum, row) => sum + (row.count || 0), 0);
-  const categoryCards = categories
-    .map((cat) => {
-      const due = remoteDueCount(student.remote.progress, cat.prefix);
-      const mastered = remoteMasteredCount(student.remote.progress, cat.prefix);
-      const total = student.remote.progress.filter((row) => row.item_id.startsWith(cat.prefix)).length;
-      const percentage = total ? Math.round((mastered / total) * 100) : 0;
-      return `<article class="monitor-progress-card"><header><span class="monitor-progress-icon">${cat.icon}</span><div><b>${cat.label}</b><small>${mastered} dari ${total} dikuasai</small></div><strong>${percentage}%</strong></header><div class="monitor-progress-track"><i style="width:${percentage}%"></i></div><footer><span>${total} dipelajari</span><span class="${due ? "is-due" : ""}">${due ? `${due} perlu diulang` : "Tidak ada yang jatuh tempo"}</span></footer></article>`;
-    })
-    .join("");
-  const today = srsToday();
-  const weakRows = weakestItems(student.remote.progress);
-  const attentionHtml = weakRows.length
-    ? `<details class="monitor-attention"><summary><span><b>Perlu perhatian</b><small>Item yang sering diulang atau masih berada di box rendah.</small></span><strong>${weakRows.length} item</strong></summary><div class="monitor-weak-items">${weakRows
-        .map((row) => {
-          const due = !row.due || row.due <= today;
-          return `<div class="monitor-weak-row${due ? " due" : ""}"><span>${escapeHtml(describeItemId(row.item_id))}</span><small>Box ${row.box} · ${row.reviews}× direview${due ? " · perlu diulang" : ""}</small></div>`;
-        })
-        .join("")}</div></details>`
-    : '<div class="monitor-all-clear"><span>✓</span><div><b>Tidak ada item yang perlu perhatian</b><small>Progres yang sudah direkam berada dalam kondisi baik.</small></div></div>';
+  const studiedTotal = CATEGORIES.reduce((sum, cat) => sum + student[`${cat.key}_studied`], 0);
+  const categoryCards = CATEGORIES.map((cat) => {
+    const due = student[`${cat.key}_due`];
+    const mastered = student[`${cat.key}_mastered`];
+    const total = student[`${cat.key}_studied`];
+    const percentage = total ? Math.round((mastered / total) * 100) : 0;
+    return `<article class="monitor-progress-card"><header><span class="monitor-progress-icon">${cat.icon}</span><div><b>${cat.label}</b><small>${mastered} dari ${total} dikuasai</small></div><strong>${percentage}%</strong></header><div class="monitor-progress-track"><i style="width:${percentage}%"></i></div><footer><span>${total} dipelajari</span><span class="${due ? "is-due" : ""}">${due ? `${due} perlu diulang` : "Tidak ada yang jatuh tempo"}</span></footer></article>`;
+  }).join("");
 
-  monitorDetailStats.innerHTML = `<div class="monitor-summary-grid"><article><span>XP</span><b>${xp.toLocaleString("id-ID")}</b><small>Total pengalaman</small></article><article><span>STREAK</span><b>${streak} hari</b><small>Konsistensi belajar</small></article><article><span>TES</span><b>${quizCount} sesi</b><small>${quizAvg === null ? "Tes diselesaikan" : `Rata-rata nilai ${quizAvg}%`}</small></article><article><span>AKTIF</span><b>${formatActivityDate(lastActive)}</b><small>${reviewCount.toLocaleString("id-ID")} aktivitas tercatat</small></article></div><section class="monitor-progress-overview"><header><div><span>PROGRES BELAJAR</span><h4>Penguasaan per kategori</h4></div><small>${student.remote.progress.length} item tersimpan</small></header><div class="monitor-progress-grid">${categoryCards}</div></section>`;
-  monitorAttentionSlot.innerHTML = attentionHtml;
-  monitorQuizCount.textContent = `${quizCount} sesi`;
-  monitorQuizList.innerHTML = quizHistoryHtml(student.quiz);
+  monitorDetailStats.innerHTML = `<div class="monitor-summary-grid"><article><span>XP</span><b>${student.xp.toLocaleString("id-ID")}</b><small>Total pengalaman</small></article><article><span>STREAK</span><b>${student.streak} hari</b><small>Konsistensi belajar</small></article><article><span>TES</span><b>${student.quiz_count} sesi</b><small>${student.quiz_avg === null ? "Tes diselesaikan" : `Rata-rata nilai ${student.quiz_avg}%`}</small></article><article><span>AKTIF</span><b>${formatActivityDate(student.last_active)}</b><small>${student.review_count.toLocaleString("id-ID")} aktivitas tercatat</small></article></div><section class="monitor-progress-overview"><header><div><span>PROGRES BELAJAR</span><h4>Penguasaan per kategori</h4></div><small>${studiedTotal.toLocaleString("id-ID")} item tersimpan</small></header><div class="monitor-progress-grid">${categoryCards}</div></section>`;
+  monitorAttentionSlot.innerHTML = '<p class="muted">Memuat…</p>';
+  monitorQuizCount.textContent = `${student.quiz_count} sesi`;
+  monitorQuizList.innerHTML = '<p class="muted">Memuat…</p>';
   monitorResetError.hidden = true;
   monitorResetBtn.disabled = false;
   monitorResetBtn.textContent = "Reset progres siswa ini";
@@ -349,7 +256,21 @@ function renderMonitorDetail(student) {
   monitorDetailEl.hidden = false;
   document.body.classList.add("monitor-modal-open");
   monitorDetailClose.focus();
+  loadStudentDetail(student.id);
   loadStudentAssignments(student.id);
+}
+
+async function loadStudentDetail(siswaId) {
+  const { data, error } = await window.supabaseClient.rpc("pantau_detail", { p_siswa: siswaId });
+  if (monitorSelectedId !== siswaId) return; // Sensei sudah membuka siswa lain.
+  if (error) {
+    const message = `<p class="muted">Gagal memuat detail: ${escapeHtml(error.message)}</p>`;
+    monitorAttentionSlot.innerHTML = message;
+    monitorQuizList.innerHTML = message;
+    return;
+  }
+  monitorAttentionSlot.innerHTML = attentionHtml(data.weak_items);
+  monitorQuizList.innerHTML = quizHistoryHtml(data.quizzes);
 }
 
 function describeTestAccess(task) {
@@ -492,13 +413,10 @@ monitorResetBtn.addEventListener("click", async () => {
     monitorResetBtn.textContent = "Reset progres siswa ini";
     return;
   }
-  try {
-    student.remote = await srsFetchRemoteFor(student.id);
-    renderMonitorDetail(student);
-  } catch {
-    closeMonitorDetail();
-  }
   await loadMonitorPanel();
+  const refreshed = monitorStudents.find((s) => s.id === student.id);
+  if (refreshed) renderMonitorDetail(refreshed);
+  else closeMonitorDetail();
 });
 
 monitorAssignmentForm.addEventListener("submit", async (event) => {
@@ -591,9 +509,10 @@ monitorAssignmentList.addEventListener("submit", async (event) => {
   }
   if (!monitorSelectedId) return;
   // Perbarui label "perlu dinilai" di kartu siswa tanpa memuat ulang semua.
-  if (form.hasAttribute("data-ungraded")) {
-    const remaining = Math.max(0, (ungradedBySiswa[monitorSelectedId] || 0) - 1);
-    ungradedBySiswa[monitorSelectedId] = remaining;
+  const student = monitorStudents.find((s) => s.id === monitorSelectedId);
+  if (student && form.hasAttribute("data-ungraded")) {
+    const remaining = Math.max(0, student.ungraded - 1);
+    student.ungraded = remaining;
     const badge = monitorListEl.querySelector(`.monitor-card[data-id="${monitorSelectedId}"] .monitor-card-ungraded`);
     if (badge && remaining) badge.textContent = `${remaining} tugas perlu dinilai`;
     else if (badge) badge.remove();
