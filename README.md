@@ -141,12 +141,23 @@ CLI):
    dulu usernya lewat **Authentication → Users → Add user** di dashboard,
    salin UID-nya, lalu isi ke file ini sebelum dijalankan.
 
-Lalu deploy 2 Edge Function (butuh Supabase CLI ter-link ke project):
+Lalu deploy 2 Edge Function (butuh Supabase CLI ter-link ke project;
+`--use-api` membundel di server, tanpa Docker):
 
 ```
-supabase functions deploy create-user
-supabase functions deploy delete-user
+supabase functions deploy create-user delete-user --use-api
 ```
+
+Library di Edge Function dikunci ke versi pasti lewat `npm:` (bukan
+esm.sh) dan dicatat di `deno.lock` tiap fungsi (`deno.json`: lock
+`frozen`). Server Supabase tidak ikut mengunggah `deno.lock`, jadi
+pengecekan hash-nya berlaku saat `deno check` lokal; di server yang
+terkunci adalah `@supabase/supabase-js` & sub-paketnya (versi npm pasti).
+Untuk menaikkan versi: ubah nomornya di kedua `index.ts`, jalankan
+`npx deno install --frozen=false --entrypoint index.ts` di folder fungsi,
+lalu deploy ulang. Setelah deploy, pastikan kode yang aktif sama dengan
+repo (`supabase functions download <nama> --use-api`) - delete-user
+pernah tertinggal versi lama tanpa cek MFA selama dua minggu.
 
 ## Jalan lokal
 
@@ -164,12 +175,12 @@ langsung dites dari lokal.
 
 ## Deploy & CORS
 
-Aplikasi ini live di **dua** domain sekaligus:
+Aplikasi ini live di Vercel: `https://www.nihongobenkyo.my.id/` (dan
+`https://nihon-go-benkyo-web.vercel.app/`). GitHub Pages sengaja tidak
+dipakai lagi - tidak bisa memasang header keamanan (CSP, X-Frame-Options)
+sehingga salinan di sana lebih lemah dari situs utama.
 
-- GitHub Pages: `https://divaadam96-cmd.github.io/nihon-go-benkyo/`
-- Vercel: `https://nihon-go-benkyo-web.vercel.app/`
-
-Kedua domain ini terdaftar di `ALLOWED_ORIGINS` pada
+Domain-domain ini terdaftar di `ALLOWED_ORIGINS` pada
 `supabase/functions/create-user/index.ts` dan `delete-user/index.ts`.
 **Kalau menambah domain produksi baru (custom domain, dsb.), domain itu
 wajib ditambahkan ke `ALLOWED_ORIGINS` di kedua file itu, lalu kedua Edge
@@ -304,6 +315,12 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   siapa & kapan di `progress_resets`, item lama dicadangkan di
   `progress_reset_items` dan bisa dikembalikan lewat
   `restore_student_progress()`; staf tidak punya hak DELETE langsung.
+- **Penilaian tugas hanya staf, aman terhadap peran NULL**
+  (`supabase/fix-11-penilaian-tugas-staf.sql`). `grade_submission()` dulu
+  memakai `current_user_role() not in (...)` - peran NULL (sesi tanpa
+  profil) membuat cek itu lolos. Kini `require_staff()`. Pola aman untuk
+  cek peran di fungsi: `require_staff()`/`require_operator()` atau
+  `coalesce(...)`, jangan `not in`/`<>` langsung.
 - **Password minimal 10 karakter, huruf + angka** - dicek di form, di
   Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket

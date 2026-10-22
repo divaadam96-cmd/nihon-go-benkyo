@@ -4,7 +4,7 @@
 // sini pakai service-role client (tidak percaya begitu saja pada client),
 // supaya "cuma Operator yang bisa bikin akun" benar-benar dipaksakan.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2.117.2";
 import { isStrongPassword, PASSWORD_RULE_MESSAGE, tokenAal } from "../_shared/security.ts";
 
 // Hanya domain situs sendiri yang boleh memanggil function ini lewat
@@ -12,7 +12,6 @@ import { isStrongPassword, PASSWORD_RULE_MESSAGE, tokenAal } from "../_shared/se
 // bocor, request dari domain lain tetap diblokir oleh browser sebelum
 // sampai ke sini.
 const ALLOWED_ORIGINS = [
-  "https://divaadam96-cmd.github.io",
   "https://nihon-go-benkyo-web.vercel.app",
   "https://nihongobenkyo.my.id",
   "https://www.nihongobenkyo.my.id",

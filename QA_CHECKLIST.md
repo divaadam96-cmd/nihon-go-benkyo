@@ -61,11 +61,12 @@ sekali penuh sebelum merilis perubahan besar.
 - [ ] Setelah install, buka app dalam mode standalone — service worker aktif (cek tab Application → Service Workers di DevTools).
 - [ ] Matikan koneksi internet setelah app pernah dibuka sekali → halaman masih bisa dibuka (cache offline).
 
-## 8. Dua domain produksi + CORS
+## 8. Domain produksi + CORS
 
-- [ ] Buka app dari **GitHub Pages** (`https://divaadam96-cmd.github.io/nihon-go-benkyo/`) → login sebagai Operator, buat/hapus satu akun test → tidak ada error CORS di console.
-- [ ] Ulangi langkah yang sama dari **Vercel** (`https://nihon-go-benkyo-web.vercel.app/`).
-- [ ] Kalau menambah domain produksi baru di kemudian hari, tambahkan ke `ALLOWED_ORIGINS` di **kedua** Edge Function (`supabase/functions/create-user/index.ts` dan `delete-user/index.ts`) lalu redeploy (`supabase functions deploy <nama>`), baru jalankan ulang dua langkah di atas.
+- [ ] Buka app dari **`https://www.nihongobenkyo.my.id/`** → login sebagai Operator (dengan MFA), buat/hapus satu akun test → tidak ada error CORS di console.
+- [ ] Login Operator **tanpa** menyelesaikan MFA → membuat maupun menghapus akun ditolak ("wajib menyelesaikan verifikasi dua langkah").
+- [ ] `https://divaadam96-cmd.github.io/nihon-go-benkyo/` → 404 (GitHub Pages dimatikan).
+- [ ] Kalau menambah domain produksi baru di kemudian hari, tambahkan ke `ALLOWED_ORIGINS` di **kedua** Edge Function (`supabase/functions/create-user/index.ts` dan `delete-user/index.ts`) lalu redeploy (`supabase functions deploy create-user delete-user --use-api`), baru jalankan ulang langkah di atas.
 
 ## Ke depan: automated testing
 
