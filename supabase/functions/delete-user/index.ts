@@ -4,7 +4,7 @@
 // srs_progress, dan activity_log ikut terhapus otomatis lewat
 // "on delete cascade" di skema, jadi tidak perlu dihapus manual di sini.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2.117.2";
 import { tokenAal } from "../_shared/security.ts";
 
 // Hanya domain situs sendiri yang boleh memanggil function ini lewat
@@ -12,7 +12,6 @@ import { tokenAal } from "../_shared/security.ts";
 // bocor, request dari domain lain tetap diblokir oleh browser sebelum
 // sampai ke sini.
 const ALLOWED_ORIGINS = [
-  "https://divaadam96-cmd.github.io",
   "https://nihon-go-benkyo-web.vercel.app",
   "https://nihongobenkyo.my.id",
   "https://www.nihongobenkyo.my.id",

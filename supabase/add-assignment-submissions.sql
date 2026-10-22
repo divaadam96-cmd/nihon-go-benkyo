@@ -185,7 +185,9 @@ security definer
 set search_path = public
 as $$
 begin
-  if public.current_user_role() not in ('sensei', 'operator') then
+  -- coalesce: peran NULL (tanpa profil) harus ditolak, bukan lolos
+  -- (lihat fix-11-penilaian-tugas-staf.sql).
+  if coalesce(public.current_user_role(), '') not in ('sensei', 'operator') then
     raise exception 'Hanya Sensei/Operator yang bisa menilai.';
   end if;
   if p_score is null or p_score < 0 or p_score > 100 then
