@@ -86,6 +86,8 @@ data/                     dataset murni (tanpa kode render), dimuat halaman
   kanji-stroke-data.js    jalur goresan kanji (Kanji)
   materi-grammar-data.js  Keterangan Tata Bahasa Pelajaran 1-50 (Materi)
   tugas-kalimat-data.js   soal susun/pilih kalimat per Bab (Materi - Tugas)
+  tugas-kategori-data.js  kelompok makna kosakata (pengecoh pilihan ganda)
+  kanji-mirip-data.js     kanji mirip bentuk (pengecoh Hiragana → Kanji)
 assets/
   icons/                  ikon PWA
   images/                 logo & gambar latar
@@ -334,6 +336,8 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   `target_bab_kkm()` di SQL; satu tugas boleh di bawah 80). Pengecoh
   pilihan ganda diambil dari kelompok makna yang sama
   (`data/tugas-kategori-data.js`) dan tidak berulang dalam satu tugas.
+  Soal Hiragana → Kanji memakai pengecoh kanji mirip bentuk
+  (`data/kanji-mirip-data.js`, mis. 先生 / 失生 / 先主).
   Sensei/Operator tidak dikunci. Hasil dicatat lewat `catat_target_bab()` (skor terbaik,
   lulus tidak pernah dicabut) ke tabel `bab_targets`; siswa tidak punya hak
   tulis langsung. Penilaian tugas terjadi di browser (bahannya kosakata

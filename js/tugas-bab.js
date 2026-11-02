@@ -350,6 +350,31 @@
     catatPemakaian([answer, ...picked]);
     return picked;
   }
+  /* Pengecoh "kanji mirip" untuk Hiragana -> Kanji: ganti SATU huruf
+     kanji jawaban dengan kanji yang bentuknya mirip (data/kanji-mirip-
+     data.js). Posisi huruf yang diganti diusahakan berbeda-beda supaya
+     ketiga pengecoh tidak seragam. Kurang dari 3 -> ditambah pengecoh
+     biasa oleh pemanggil. */
+  function kanjiMirip(bab, item) {
+    const mirip = typeof kanjiMiripData !== "undefined" ? kanjiMiripData : {};
+    const chars = [...item.kanji];
+    const posisi = shuffle(chars.map((ch, i) => i).filter((i) => mirip[chars[i]]));
+    // Bentuk lain yang SAMA cara bacanya (kalau ada) tidak boleh jadi pengecoh.
+    const sahBaca = new Set(kanjiItems(bab).filter((x) => norm(x.kana) === norm(item.kana)).map((x) => x.kanji));
+    const perPosisi = posisi.map((i) => shuffle(mirip[chars[i]]).map((ganti) => {
+      const baru = chars.slice();
+      baru[i] = ganti;
+      return baru.join("");
+    }));
+    const hasil = [];
+    for (let putaran = 0; hasil.length < 3 && perPosisi.some((daftar) => daftar.length); putaran++) {
+      perPosisi.forEach((daftar) => {
+        const calon = daftar.shift();
+        if (calon && hasil.length < 3 && !hasil.includes(calon) && !sahBaca.has(calon)) hasil.push(calon);
+      });
+    }
+    return hasil;
+  }
   function mcQuestion(prompt, promptJp, answer, wrong, instruction) {
     return { type: "pilih", prompt, promptJp, answer, choices: shuffle([answer, ...wrong]), instruction };
   }
@@ -373,9 +398,16 @@
           case "kanji-kanji-kana":
             return mcQuestion(item.kanji, true, item.kana,
               distractors(bab, kanjiItems, item, (x) => x.kana, (x) => x.kanji === item.kanji), "Bagaimana cara baca kanji ini?");
-          case "kanji-kana-kanji":
-            return mcQuestion(item.kana, true, item.kanji,
-              distractors(bab, kanjiItems, item, (x) => x.kanji, (x) => norm(x.kana) === norm(item.kana)), "Mana tulisan kanjinya?");
+          case "kanji-kana-kanji": {
+            const wrong = kanjiMirip(bab, item);
+            if (wrong.length < 3) {
+              const biasa = distractors(bab, kanjiItems, item, (x) => x.kanji, (x) => norm(x.kana) === norm(item.kana) || wrong.includes(x.kanji));
+              wrong.push(...biasa.slice(0, 3 - wrong.length));
+            } else {
+              catatPemakaian([item.kanji, ...wrong]);
+            }
+            return mcQuestion(item.kana, true, item.kanji, wrong, "Mana tulisan kanji yang benar?");
+          }
           case "kanji-kanji-id":
             return mcQuestion(item.kanji, true, item.id,
               distractors(bab, kanjiItems, item, (x) => x.id, (x) => x.kanji === item.kanji), "Apa arti kanji ini?");
