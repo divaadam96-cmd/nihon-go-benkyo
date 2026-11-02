@@ -239,26 +239,75 @@
     return babDataPromise;
   }
   function kotobaItems(bab) {
-    return (babKosakataData[bab] || []).map(([jp, id]) => ({ jp, id }));
+    return (babKosakataData[bab] || []).map(([jp, id]) => ({ jp, kana: jp, id }));
   }
   function kanjiItems(bab) {
     return (babKanjiData[bab] || []).map(([kanji, kana, id]) => ({ kanji, kana, id }));
   }
-  /* Pengecoh dari bab yang sama dulu; kalau kurang, dari bab terdekat. */
+
+  /* Kelompok makna (data/tugas-kategori-data.js), dicari lewat cara baca. */
+  let kategoriIndex = null;
+  function kategoriOf(kana) {
+    if (!kategoriIndex) {
+      kategoriIndex = {};
+      const data = typeof tugasKategoriKata !== "undefined" ? tugasKategoriKata : {};
+      Object.entries(data).forEach(([nama, kata]) => kata.forEach((k) => (kategoriIndex[norm(k)] = nama)));
+    }
+    return kategoriIndex[norm(kana)] || null;
+  }
+  /* Seberapa mirip bentuk dua pilihan - dipakai untuk kata yang belum
+     dikelompokkan, supaya pengecoh tidak gampang dicoret (jenis huruf
+     sama, sama-sama berawalan/berakhiran ～, panjang mirip, banyak huruf
+     yang sama seperti かいしゃ/かいしゃいん). */
+  function scriptOf(text) {
+    if (/[一-鿿]/.test(text)) return "kanji";
+    if (/^[゠-ヿ～]+$/.test(text)) return "kata";
+    if (/[぀-ゟ]/.test(text)) return "hira";
+    return "latin";
+  }
+  function similarity(a, b) {
+    const script = scriptOf(a);
+    let score = script === scriptOf(b) ? 3 : 0;
+    score += /^～|～$/.test(a) === /^～|～$/.test(b) ? 2 : -4;
+    score += /[?？]/.test(a) === /[?？]/.test(b) ? 1 : -1;
+    score -= Math.abs([...a].length - [...b].length) * (script === "latin" ? 0.15 : 0.6);
+    const charsA = new Set(a);
+    let shared = 0;
+    new Set(b).forEach((ch) => {
+      if (charsA.has(ch) && !/[\s,.()～…]/.test(ch)) shared++;
+    });
+    return score + Math.min(shared, 4) * (script === "latin" ? 0.25 : 1);
+  }
+  /* Urutan sumber pengecoh:
+     1. kelompok makna sama, bab yang sama
+     2. kelompok makna sama, bab lain (terdekat dulu, bab sebelumnya didahulukan)
+     3. bentuk paling mirip, bab yang sama lalu bab terdekat
+     Ada unsur acak di tiap langkah supaya pengecoh berganti saat diulang. */
   function distractors(bab, itemsOf, correct, valueOf, conflicts) {
     const picked = [];
-    const seen = new Set([norm(valueOf(correct))]);
-    for (let d = 0; d <= MAX_BAB && picked.length < 3; d++) {
-      const babs = d === 0 ? [bab] : [bab - d, bab + d].filter((b) => b >= 1 && b <= MAX_BAB);
-      for (const b of babs) {
-        for (const item of shuffle(itemsOf(b))) {
-          if (picked.length >= 3) break;
-          const value = valueOf(item);
-          if (seen.has(norm(value)) || conflicts(item)) continue;
-          seen.add(norm(value));
-          picked.push(value);
-        }
+    const answer = valueOf(correct);
+    const seen = new Set([norm(answer)]);
+    const take = (item) => {
+      if (picked.length >= 3) return;
+      const value = valueOf(item);
+      if (seen.has(norm(value)) || conflicts(item)) return;
+      seen.add(norm(value));
+      picked.push(value);
+    };
+    const babsAt = (d) => (d === 0 ? [bab] : [bab - d, bab + d].filter((b) => b >= 1 && b <= MAX_BAB));
+    const kategori = kategoriOf(correct.kana);
+    if (kategori) {
+      for (let d = 0; d <= MAX_BAB && picked.length < 3; d++) {
+        babsAt(d).forEach((b) => shuffle(itemsOf(b)).filter((item) => kategoriOf(item.kana) === kategori).forEach(take));
       }
+    }
+    for (let d = 0; d <= MAX_BAB && picked.length < 3; d++) {
+      babsAt(d).forEach((b) => {
+        itemsOf(b)
+          .map((item) => ({ item, score: similarity(answer, valueOf(item)) + Math.random() * 1.5 }))
+          .sort((x, y) => y.score - x.score)
+          .forEach(({ item }) => take(item));
+      });
     }
     return picked;
   }
