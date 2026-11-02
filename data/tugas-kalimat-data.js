@@ -4,10 +4,12 @@
 
    tugasKalimatData[bab] = {
      susun: [{ arti, potongan: [...] }]   potongan ditulis dalam URUTAN
-            BENAR; saat tugas dibuat, urutannya diacak & diberi nomor, lalu
-            siswa menuliskan urutan nomor yang benar. Partikel sengaja
-            ditempel ke kata sebelumnya bila memisahkannya bisa membuat
-            lebih dari satu susunan yang benar.
+            BENAR, SATU nomor = SATU kata atau SATU partikel (は, も, の,
+            か, じゃ ...; nama+さん dan negara+じん dihitung satu kata).
+            Saat tugas dibuat, urutannya diacak & diberi nomor, lalu siswa
+            menuliskan urutan nomor. Jawaban dinilai dari KALIMAT yang
+            tersusun, jadi urutan nomor lain yang menghasilkan kalimat sama
+            persis tetap benar.
      pilih: [{ arti, benar, salah: [3 pengecoh] }]   soal berbahasa
             Indonesia, siswa memilih kalimat Jepang yang benar.
    }
@@ -17,18 +19,18 @@
 const tugasKalimatData = {
   1: {
     susun: [
-      { arti: "Saya Mike Miller.", potongan: ["わたしは", "マイク・ミラー", "です"] },
-      { arti: "Sdr. Santos bukan mahasiswa.", potongan: ["サントスさんは", "がくせい", "じゃ", "ありません"] },
-      { arti: "Apakah Sdr. Miller orang Amerika?", potongan: ["ミラーさんは", "アメリカ", "じん", "ですか"] },
-      { arti: "Sdr. Miller pegawai perusahaan IMC.", potongan: ["ミラーさんは", "IMC", "の", "しゃいん", "です"] },
-      { arti: "Siapakah beliau? (sopan)", potongan: ["あの", "かたは", "どなた", "ですか"] },
+      { arti: "Saya Mike Miller.", potongan: ["わたし", "は", "マイク・ミラー", "です"] },
+      { arti: "Sdr. Santos bukan mahasiswa.", potongan: ["サントスさん", "は", "がくせい", "じゃ", "ありません"] },
+      { arti: "Apakah Sdr. Miller orang Amerika?", potongan: ["ミラーさん", "は", "アメリカじん", "です", "か"] },
+      { arti: "Sdr. Miller pegawai perusahaan IMC.", potongan: ["ミラーさん", "は", "IMC", "の", "しゃいん", "です"] },
+      { arti: "Siapakah beliau? (sopan)", potongan: ["あの", "かた", "は", "どなた", "です", "か"] },
       { arti: "Sdr. Gupta juga pegawai perusahaan.", potongan: ["グプタさん", "も", "かいしゃいん", "です"] },
-      { arti: "Saya bukan guru.", potongan: ["わたしは", "せんせい", "じゃ", "ありません"] },
-      { arti: "Sdr. Wang dokter Rumah Sakit Kobe.", potongan: ["ワンさんは", "こうべびょういん", "の", "いしゃ", "です"] },
-      { arti: "Teresa umur berapa?", potongan: ["テレサちゃんは", "なん", "さい", "ですか"] },
-      { arti: "Sdri. Karina mahasiswi Universitas Fuji.", potongan: ["カリナさんは", "ふじだいがく", "の", "がくせい", "です"] },
-      { arti: "Siapakah orang itu? (biasa)", potongan: ["あの", "ひとは", "だれ", "ですか"] },
-      { arti: "Sdr. Lee juga orang Korea.", potongan: ["リーさん", "も", "かんこく", "じん", "です"] },
+      { arti: "Saya bukan guru.", potongan: ["わたし", "は", "せんせい", "じゃ", "ありません"] },
+      { arti: "Sdr. Wang dokter Rumah Sakit Kobe.", potongan: ["ワンさん", "は", "こうべびょういん", "の", "いしゃ", "です"] },
+      { arti: "Teresa umur berapa?", potongan: ["テレサちゃん", "は", "なんさい", "です", "か"] },
+      { arti: "Sdri. Karina mahasiswi Universitas Fuji.", potongan: ["カリナさん", "は", "ふじだいがく", "の", "がくせい", "です"] },
+      { arti: "Siapakah orang itu? (biasa)", potongan: ["あの", "ひと", "は", "だれ", "です", "か"] },
+      { arti: "Sdr. Lee juga orang Korea.", potongan: ["リーさん", "も", "かんこくじん", "です"] },
     ],
     pilih: [
       {

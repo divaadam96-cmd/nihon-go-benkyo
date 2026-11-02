@@ -384,8 +384,10 @@
     if (target === "kalimat-susun") {
       return shuffle(data.susun).slice(0, TUGAS_KALIMAT_JUMLAH).map((item) => {
         const indexes = item.potongan.map((_, i) => i);
+        const kalimat = item.potongan.join("");
         let order = shuffle(indexes);
-        while (order.length > 1 && order.every((v, i) => v === i)) order = shuffle(indexes);
+        // Jangan tampilkan potongan yang kebetulan sudah tersusun benar.
+        while (order.length > 1 && order.map((i) => item.potongan[i]).join("") === kalimat) order = shuffle(indexes);
         // order[k] = potongan ke-berapa yang tampil sebagai nomor k+1
         const answer = indexes.map((i) => order.indexOf(i) + 1);
         return {
@@ -393,7 +395,8 @@
           prompt: item.arti,
           pieces: order.map((i) => item.potongan[i]),
           answer,
-          sentence: item.potongan.join("") + "。",
+          kalimat,
+          sentence: kalimat + "。",
         };
       });
     }
@@ -535,7 +538,13 @@
             container.querySelector(".tugas-feedback").innerHTML = `<p class="tugas-feedback-info">Tuliskan ${q.pieces.length} nomor, misalnya "${q.pieces.map((_, i) => i + 1).join(" ")}".</p>`;
             return;
           }
-          const ok = given.every((n, i) => n === q.answer[i]);
+          const valid = given.every((n) => n >= 1 && n <= q.pieces.length) && new Set(given).size === given.length;
+          if (!valid) {
+            container.querySelector(".tugas-feedback").innerHTML = `<p class="tugas-feedback-info">Pakai setiap nomor 1-${q.pieces.length} tepat satu kali.</p>`;
+            return;
+          }
+          // Dinilai dari kalimat yang tersusun (urutan nomor lain yang hasilnya sama tetap benar).
+          const ok = given.map((n) => q.pieces[n - 1]).join("") === q.kalimat;
           input.disabled = true;
           form.querySelector("button").disabled = true;
           answered(ok, given.join(" "), `${q.answer.join(" ")} → ${q.sentence}`);
