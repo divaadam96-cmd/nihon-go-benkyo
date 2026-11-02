@@ -98,8 +98,13 @@
   // === Status target & kunci ===
   function targetsFor(bab) {
     const list = ["materi", "kotoba-jp-id", "kotoba-id-jp", "kanji-kanji-kana", "kanji-kana-kanji", "kanji-kanji-id", "kanji-id-kanji"];
-    if (typeof tugasKalimatData !== "undefined" && tugasKalimatData[bab]) list.push("kalimat-susun", "kalimat-pilih");
+    if (tugasLengkap(bab)) list.push("kalimat-susun", "kalimat-pilih");
     return list;
+  }
+  /* Bab dengan tugas lengkap (termasuk soal kalimat) - tahap latihan lama
+     di Materi disembunyikan untuk bab ini. */
+  function tugasLengkap(bab) {
+    return typeof tugasKalimatData !== "undefined" && !!tugasKalimatData[bab];
   }
   function rowFor(bab, target) {
     return rows[`${bab}:${target}`] || null;
@@ -460,7 +465,7 @@
     if (serverOk === false) html += `<p class="tugas-warning">Server sedang tidak terjangkau - hasil disimpan di perangkat ini dulu dan dikirim otomatis saat halaman dibuka lagi.</p>`;
 
     const materiStatus = materiDone ? `<span class="tugas-status lulus">✓ Sudah dipahami</span>` : `<span class="tugas-status baru">Belum ditandai</span>`;
-    html += `<section class="tugas-group"><h4>Langkah 1 · Baca materi</h4><div class="tugas-card${materiDone ? " lulus" : ""}"><div><b>Baca & pahami semua pola</b><p>Pelajari tahap 1–3, lalu tekan <b>Sudah paham ✓</b> di bawah materi. Tugas terbuka setelah langkah ini.</p>${materiStatus}</div><div class="tugas-card-actions"><button type="button" class="secondary" data-tugas-materi-buka>Buka materi</button>${materiDone ? "" : `<button type="button" class="primary" data-tugas-materi-paham>Sudah paham ✓</button>`}</div></div></section>`;
+    html += `<section class="tugas-group"><h4>Langkah 1 · Baca materi</h4><div class="tugas-card${materiDone ? " lulus" : ""}"><div><b>Baca & pahami semua pola</b><p>Pelajari tahap-tahap sebelumnya, lalu tekan <b>Sudah paham ✓</b> di bawah materi. Tugas terbuka setelah langkah ini.</p>${materiStatus}</div><div class="tugas-card-actions"><button type="button" class="secondary" data-tugas-materi-buka>Buka materi</button>${materiDone ? "" : `<button type="button" class="primary" data-tugas-materi-paham>Sudah paham ✓</button>`}</div></div></section>`;
 
     GRUP.forEach((grup) => {
       const targets = targetsFor(bab).filter((t) => TARGET_INFO[t].grup === grup.key);
@@ -604,6 +609,7 @@
     progress,
     isComplete,
     kekurangan,
+    tugasLengkap,
     isLocked,
     frontierBab,
     recordMateri,

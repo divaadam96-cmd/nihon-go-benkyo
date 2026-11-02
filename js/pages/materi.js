@@ -388,6 +388,8 @@ function initMaterialLessonPicker({
   const practiceStudy = reader.querySelector(".material-practice-study");
   const tugasStudy = reader.querySelector(".material-tugas-study");
   const lockNotice = reader.querySelector(".material-lock-notice");
+  const practiceStepButton = reader.querySelector('[data-material-step="practice"]');
+  const tugasStepButton = reader.querySelector('[data-material-step="tugas"]');
   function materiSrsId(index, patternIndex) {
     return `materi:book${bookNumber}:${index}:${patternIndex}`;
   }
@@ -1409,7 +1411,15 @@ function initMaterialLessonPicker({
     readerTitle.textContent = summaryText;
     readerBody.replaceChildren(activeContent);
     buildExampleStudy(activeContent);
-    buildPracticeTest(activeContent);
+    /* Bab yang tugasnya sudah lengkap (punya soal kalimat) tidak memakai
+       tahap "Kerjakan latihan" lagi - diganti tahap "Tugas & target". Bab
+       lain tetap memakai latihan lama sampai tugasnya dibuat. */
+    const tugasLengkap = TugasBab.tugasLengkap(currentNumber);
+    practiceStepButton.hidden = tugasLengkap;
+    reader.querySelector(".material-learning-steps").classList.toggle("tanpa-latihan", tugasLengkap);
+    tugasStepButton.querySelector("b").textContent = tugasLengkap ? "3" : "4";
+    if (tugasLengkap) practiceStudy.replaceChildren();
+    else buildPracticeTest(activeContent);
     /* directTextOnly (true) HANYA memindai text node ANAK LANGSUNG elemen
        - cocok untuk struktur lama tempat teks Jepang langsung jadi anak
        .grammar-example. Sejak .grammar-example dipecah jadi

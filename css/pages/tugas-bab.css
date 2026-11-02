@@ -4,6 +4,9 @@
 .material-learning-steps {
   grid-template-columns: repeat(4, 1fr);
 }
+.material-learning-steps.tanpa-latihan {
+  grid-template-columns: repeat(3, 1fr);
+}
 
 /* === Pelajaran terkunci === */
 .material-choice.locked {
