@@ -42,3 +42,24 @@ const kanjiMiripData = {
   日: ["目", "白", "旧"],
   本: ["木", "体", "末"],
 };
+
+/* Bacaan keliru khas untuk tugas "Kanji → Hiragana" (js/tugas-bab.js).
+   Pengecoh utama dibuat otomatis (bunyi panjang, tenten, huruf kecil,
+   tsu kecil); daftar ini menambah jebakan yang tidak bisa dibuat aturan,
+   terutama bacaan ON/KUN lain dari kanji yang sama (来 -> こ/く,
+   歳 -> せい, 名前 -> めいぜん). Kunci = tulisan kanji persis seperti di
+   data/bab-data.js. JANGAN isi bacaan yang sebenarnya juga benar
+   (mis. 日本 にっぽん, あの方 あのほう). */
+const bacaanKeliruData = {
+  // Bab 1
+  私: ["し"],
+  あの方: ["あのほお", "あのがだ"],
+  お名前は: ["おめいぜんは", "おなまいは", "おみょうまえは"],
+  日本: ["にちほん", "にぽん"],
+  "～から来ました": ["～からこました", "～からくました", "～かららいました"],
+  "～人": ["～じゅん", "～ぢん"],
+  どうぞよろしくお願いします: ["どうぞよろしくおがんいします", "どうぞよろしくおねがします"],
+  何歳: ["なにさい", "なんせい"],
+  "～歳": ["～せい", "～さえ"],
+  失礼ですが: ["しつらいですが", "しちれいですが"],
+};

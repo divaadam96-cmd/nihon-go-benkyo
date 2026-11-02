@@ -367,14 +367,121 @@
       return baru.join("");
     }));
     const hasil = [];
-    for (let putaran = 0; hasil.length < 3 && perPosisi.some((daftar) => daftar.length); putaran++) {
+    while (perPosisi.some((daftar) => daftar.length)) {
       perPosisi.forEach((daftar) => {
         const calon = daftar.shift();
-        if (calon && hasil.length < 3 && !hasil.includes(calon) && !sahBaca.has(calon)) hasil.push(calon);
+        if (calon && !hasil.includes(calon) && !sahBaca.has(calon)) hasil.push(calon);
       });
     }
     return hasil;
   }
+  /* Pengecoh "cara baca mirip" untuk Kanji -> Hiragana: hanya bacaan
+     bagian KANJI yang diubah (kana yang sudah tertulis di soal, mis.
+     から…ました pada ～から来ました, dibiarkan), dengan jebakan khas soal
+     JLPT: bunyi panjang (せんせい/せんせ), huruf kecil (しゃ/しや), tenten
+     (が/か), tsu kecil (っ), dan ゃ/ゅ/ょ tertukar. Satu pengecoh = satu
+     perubahan; jenis perubahan diusahakan berbeda-beda. */
+  const BACA_TENTEN = Object.fromEntries(
+    ["かが", "きぎ", "くぐ", "けげ", "こご", "さざ", "しじ", "すず", "せぜ", "そぞ", "ただ", "ちぢ", "てで", "とど",
+      "はば", "ひび", "ふぶ", "へべ", "ほぼ"].flatMap(([a, b]) => [[a, b], [b, a]]),
+  );
+  Object.assign(BACA_TENTEN, { ぱ: "ば", ぴ: "び", ぷ: "ぶ", ぺ: "べ", ぽ: "ぼ" });
+  const BACA_KECIL = { ゃ: "や", ゅ: "ゆ", ょ: "よ" };
+  const BACA_YOON = { ゃ: ["ゅ", "ょ"], ゅ: ["ゃ", "ょ"], ょ: ["ゃ", "ゅ"] };
+  const BARIS_O = "おこごそぞとどのほぼぽもよろを", BARIS_U = "うくぐすずつづぬふぶぷむゆる", BARIS_E = "えけげせぜてでねへべぺめれ";
+  const AWAL_SOKUON = "かきくけこさしすせそたちつてとぱぴぷぺぽ";
+  function moraOf(text) {
+    const mora = [];
+    for (const ch of text) {
+      if (/[ゃゅょぁぃぅぇぉ]/.test(ch) && mora.length) mora[mora.length - 1] += ch;
+      else mora.push(ch);
+    }
+    return mora;
+  }
+  let indeksBacaan = null; // tulisan kanji -> semua bacaannya di data
+  function bacaanMirip(bab, item) {
+    // Pisahkan kana yang sama di depan/belakang (sudah tertulis di soal).
+    // Catatan dalam kurung di akhir bacaan (mis. なおります（が）) tidak diubah.
+    const catatan = (item.kana.match(/（[^）]*）$/) || [""])[0];
+    const kanji = [...item.kanji.replace(/（[^）]*）$/, "")], kana = [...item.kana.slice(0, item.kana.length - catatan.length)];
+    let depan = 0;
+    while (depan < kanji.length && depan < kana.length && kanji[depan] === kana[depan]) depan++;
+    let belakang = 0;
+    while (belakang < kanji.length - depan && belakang < kana.length - depan &&
+      kanji[kanji.length - 1 - belakang] === kana[kana.length - 1 - belakang]) belakang++;
+    const awal = kana.slice(0, depan).join(""), akhir = kana.slice(kana.length - belakang).join("") + catatan;
+    const inti = moraOf(kana.slice(depan, kana.length - belakang).join(""));
+    if (!inti.length) return [];
+
+    const calon = []; // { jenis, teks }
+    const tambah = (jenis, mora) => calon.push({ jenis, teks: awal + mora.join("") + akhir });
+    inti.forEach((m, i) => {
+      const kepala = m[0], ekor = m.slice(1), next = inti[i + 1];
+      if (BACA_TENTEN[kepala]) tambah("tenten", [...inti.slice(0, i), BACA_TENTEN[kepala] + ekor, ...inti.slice(i + 1)]);
+      if (BACA_KECIL[ekor]) tambah("kecil", [...inti.slice(0, i), kepala + BACA_KECIL[ekor], ...inti.slice(i + 1)]);
+      if (BACA_YOON[ekor]) BACA_YOON[ekor].forEach((y) => tambah("yoon", [...inti.slice(0, i), kepala + y, ...inti.slice(i + 1)]));
+      // Tsu kecil: っ -> つ, atau く/き/ち/つ sebelum bunyi k/s/t/p -> っ (がくせい -> がっせい).
+      if (m === "っ") tambah("tsu", [...inti.slice(0, i), "つ", ...inti.slice(i + 1)]);
+      else if (next && "くきちつ".includes(m) && AWAL_SOKUON.includes(next[0]))
+        tambah("tsu", [...inti.slice(0, i), "っ", ...inti.slice(i + 1)]);
+      // Bunyi panjang: hapus う/い pemanjang (せんせい -> せんせ), atau tambahkan
+      // う setelah baris o / ゅ / ょ dan い setelah baris e (きょし? -> きょうし).
+      const pemanjang = /^[うい]$/.test(m) && i > 0;
+      const panjangAda = next === "う" || next === "い";
+      const panjang = ekor === "ょ" || ekor === "ゅ" || (!ekor && BARIS_O.includes(kepala)) ? "う" : !ekor && BARIS_E.includes(kepala) ? "い" : null;
+      if (pemanjang) {
+        const sebelum = inti[i - 1];
+        const cocok = (m === "う" && (/[ょゅ]$/.test(sebelum) || BARIS_O.includes(sebelum) || BARIS_U.includes(sebelum))) || (m === "い" && BARIS_E.includes(sebelum));
+        if (cocok) tambah("panjang", [...inti.slice(0, i), ...inti.slice(i + 1)]);
+      } else if (panjang && !panjangAda && next !== "ん") {
+        tambah("panjang", [...inti.slice(0, i + 1), panjang, ...inti.slice(i + 1)]);
+      }
+    });
+    // Bacaan keliru khas yang ditulis manual (data/kanji-mirip-data.js), mis. 来 -> こ/く.
+    const manual = typeof bacaanKeliruData !== "undefined" ? bacaanKeliruData[item.kanji] || [] : [];
+    manual.forEach((teks) => calon.push({ jenis: "manual", teks }));
+
+    // Bacaan yang sah untuk kanji ini (dari data mana pun) tidak boleh jadi pengecoh.
+    if (!indeksBacaan) {
+      indeksBacaan = new Map();
+      for (let b = 1; b <= MAX_BAB; b++) kanjiItems(b).forEach((x) => {
+        if (!indeksBacaan.has(x.kanji)) indeksBacaan.set(x.kanji, new Set());
+        indeksBacaan.get(x.kanji).add(norm(x.kana));
+      });
+    }
+    const sah = new Set([norm(item.kana), ...(indeksBacaan.get(item.kanji) || [])]);
+    (BACAAN_SAH_LAIN[item.kanji] || []).forEach((k) => sah.add(norm(k)));
+
+    const perJenis = {};
+    shuffle(calon).forEach((c) => {
+      if (sah.has(norm(c.teks))) return;
+      (perJenis[c.jenis] = perJenis[c.jenis] || []).push(c.teks);
+    });
+    // Urutan: jenis perubahan bergiliran supaya ketiga pengecoh berbeda jenis.
+    const hasil = [];
+    const daftar = shuffle(Object.values(perJenis));
+    while (daftar.some((d) => d.length)) {
+      daftar.forEach((d) => {
+        const t = d.shift();
+        if (t && !hasil.includes(t)) hasil.push(t);
+      });
+    }
+    return hasil;
+  }
+  /* Ambil 3 pengecoh pertama dari daftar berurutan; kalau set pilihannya
+     kembar dengan soal sebelumnya (dua kanji dengan bacaan sama), ganti
+     pengecoh terakhir dengan calon berikutnya. */
+  function pilihTiga(answer, daftar) {
+    let picked = daftar.slice(0, 3);
+    const tanda = (values) => values.map(norm).sort().join("|");
+    for (let i = 3; picked.length === 3 && pemakaian.set.has(tanda([answer, ...picked])) && i < daftar.length; i++) {
+      picked = [picked[0], picked[1], daftar[i]];
+    }
+    return picked;
+  }
+  // Bacaan alternatif yang benar tapi tidak ada di data (jangan jadi pengecoh).
+  const BACAAN_SAH_LAIN = { 日本: ["にっぽん"], 私: ["わたくし"], "～人": ["～にん"] };
+
   function mcQuestion(prompt, promptJp, answer, wrong, instruction) {
     return { type: "pilih", prompt, promptJp, answer, choices: shuffle([answer, ...wrong]), instruction };
   }
@@ -395,11 +502,18 @@
       const items = kanjiItems(bab);
       return shuffle(items).map((item) => {
         switch (target) {
-          case "kanji-kanji-kana":
-            return mcQuestion(item.kanji, true, item.kana,
-              distractors(bab, kanjiItems, item, (x) => x.kana, (x) => x.kanji === item.kanji), "Bagaimana cara baca kanji ini?");
+          case "kanji-kanji-kana": {
+            const wrong = pilihTiga(item.kana, bacaanMirip(bab, item));
+            if (wrong.length < 3) {
+              const biasa = distractors(bab, kanjiItems, item, (x) => x.kana, (x) => x.kanji === item.kanji || wrong.includes(x.kana));
+              wrong.push(...biasa.slice(0, 3 - wrong.length));
+            } else {
+              catatPemakaian([item.kana, ...wrong]);
+            }
+            return mcQuestion(item.kanji, true, item.kana, wrong, "Bagaimana cara baca yang benar?");
+          }
           case "kanji-kana-kanji": {
-            const wrong = kanjiMirip(bab, item);
+            const wrong = pilihTiga(item.kanji, kanjiMirip(bab, item));
             if (wrong.length < 3) {
               const biasa = distractors(bab, kanjiItems, item, (x) => x.kanji, (x) => norm(x.kana) === norm(item.kana) || wrong.includes(x.kanji));
               wrong.push(...biasa.slice(0, 3 - wrong.length));
