@@ -3708,7 +3708,7 @@ const babKanjiData = {
       "Datang dari\u2026..",
     ],
     [
-      "\u3069\u3046\u305e\u3088\u308d\u3057\u304f\u304a\u9858\u3057\u307e\u3059",
+      "\u3069\u3046\u305e\u3088\u308d\u3057\u304f\u304a\u9858\u3044\u3057\u307e\u3059",
       "\u3069\u3046\u305e\u3088\u308d\u3057\u304f\u304a\u306d\u304c\u3044\u3057\u307e\u3059",
       "Terimalah perkenalan saya",
     ],

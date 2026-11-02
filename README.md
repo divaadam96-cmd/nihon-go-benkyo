@@ -69,6 +69,8 @@ js/
   srs.js                   mesin spaced-repetition bersama + sync Supabase
   quiz-results.js          cache + perhitungan XP dari riwayat quiz_results
   assignments.js           kartu "Tugas dari Sensei" + pengingat harian
+  tugas-bab.js             target & tugas per Bab + kunci bab berurutan
+                           (tahap 4 "Tugas & target" di Materi)
   pwa.js                   install prompt (service worker didaftarkan di sini,
                            setelah event load)
   pages/                   1 file JS per halaman di atas (dashboard.js,
@@ -83,6 +85,7 @@ data/                     dataset murni (tanpa kode render), dimuat halaman
   kanji-data.js           daftar kanji per pelajaran (Kanji)
   kanji-stroke-data.js    jalur goresan kanji (Kanji)
   materi-grammar-data.js  Keterangan Tata Bahasa Pelajaran 1-50 (Materi)
+  tugas-kalimat-data.js   soal susun/pilih kalimat per Bab (Materi - Tugas)
 assets/
   icons/                  ikon PWA
   images/                 logo & gambar latar
@@ -321,6 +324,17 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   profil) membuat cek itu lolos. Kini `require_staff()`. Pola aman untuk
   cek peran di fungsi: `require_staff()`/`require_operator()` atau
   `coalesce(...)`, jangan `not in`/`<>` langsung.
+- **Target per Bab & kunci bab** (`supabase/add-target-bab.sql`,
+  `js/tugas-bab.js`). Setiap Pelajaran punya target: tandai materi "Sudah
+  paham", lalu tugas pilihan ganda kotoba (2 arah), kanji (4 arah) dan
+  kalimat (susun + pilih; hanya bab yang punya data di
+  `data/tugas-kalimat-data.js`). Tugas lulus dengan skor >= 80
+  (`TUGAS_KKM` di JS = `target_bab_kkm()` di SQL). Pelajaran N+1 terbuka
+  untuk **siswa** setelah semua target Pelajaran N lulus; Sensei/Operator
+  tidak dikunci. Hasil dicatat lewat `catat_target_bab()` (skor terbaik,
+  lulus tidak pernah dicabut) ke tabel `bab_targets`; siswa tidak punya hak
+  tulis langsung. Penilaian tugas terjadi di browser (bahannya kosakata
+  publik), jadi kunci ini gerbang belajar, bukan pengamanan nilai.
 - **Password minimal 10 karakter, huruf + angka** - dicek di form, di
   Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket
