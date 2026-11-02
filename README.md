@@ -328,10 +328,13 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   `js/tugas-bab.js`). Setiap Pelajaran punya target: tandai materi "Sudah
   paham", lalu tugas pilihan ganda kotoba (2 arah), kanji (4 arah) dan
   kalimat (susun + pilih; hanya bab yang punya data di
-  `data/tugas-kalimat-data.js`). Tugas lulus dengan skor >= 80
-  (`TUGAS_KKM` di JS = `target_bab_kkm()` di SQL). Pelajaran N+1 terbuka
-  untuk **siswa** setelah semua target Pelajaran N lulus; Sensei/Operator
-  tidak dikunci. Hasil dicatat lewat `catat_target_bab()` (skor terbaik,
+  `data/tugas-kalimat-data.js`). Pelajaran N+1 terbuka untuk **siswa**
+  setelah materi Pelajaran N ditandai, semua tugasnya dikerjakan, dan
+  rata-rata skor terbaik semua tugas >= 80 (`TUGAS_KKM` di JS =
+  `target_bab_kkm()` di SQL; satu tugas boleh di bawah 80). Pengecoh
+  pilihan ganda diambil dari kelompok makna yang sama
+  (`data/tugas-kategori-data.js`) dan tidak berulang dalam satu tugas.
+  Sensei/Operator tidak dikunci. Hasil dicatat lewat `catat_target_bab()` (skor terbaik,
   lulus tidak pernah dicabut) ke tabel `bab_targets`; siswa tidak punya hak
   tulis langsung. Penilaian tugas terjadi di browser (bahannya kosakata
   publik), jadi kunci ini gerbang belajar, bukan pengamanan nilai.

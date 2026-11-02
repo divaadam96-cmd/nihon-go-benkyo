@@ -9,9 +9,12 @@
 --      tugas selesai dikirim lewat catat_target_bab(); tugas dianggap lulus
 --      kalau skornya >= target_bab_kkm() (80). Skor terbaik disimpan,
 --      status lulus tidak pernah dicabut oleh percobaan berikutnya.
---   3. Bab N+1 terbuka untuk siswa kalau SEMUA target Bab N lulus. Daftar
---      target per bab ditentukan di js/tugas-bab.js (bab yang belum punya
---      soal kalimat tidak mewajibkan target kalimat).
+--   3. Bab N+1 terbuka untuk siswa kalau materi Bab N sudah ditandai,
+--      semua tugasnya sudah dikerjakan, dan RATA-RATA skor_terbaik semua
+--      tugas >= 80 (dihitung di js/tugas-bab.js; kolom `lulus` per tugas
+--      hanya penanda skor >= 80, bukan syarat). Daftar target per bab
+--      ditentukan di js/tugas-bab.js (bab yang belum punya soal kalimat
+--      tidak mewajibkan target kalimat).
 -- Sensei/Operator tidak dikunci (aturan hanya untuk peran siswa), tapi
 -- boleh membaca target semua siswa (untuk Pantau Siswa nanti).
 --

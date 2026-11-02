@@ -509,7 +509,7 @@ function initMaterialLessonPicker({
     if (locked) {
       const prev = lessonNumber - 1;
       const p = TugasBab.progress(prev);
-      lockNotice.innerHTML = `<b>🔒 Pelajaran ${lessonNumber} masih terkunci.</b><p>Selesaikan semua target Pelajaran ${prev} dulu (${p.done} dari ${p.total} target selesai): baca materinya, lalu kerjakan tugas kotoba, kanji, dan kalimat dengan skor minimal ${TugasBab.KKM}.</p>${activeIndex > 0 ? `<button type="button" class="primary">Buka Pelajaran ${prev}</button>` : ""}`;
+      lockNotice.innerHTML = `<b>🔒 Pelajaran ${lessonNumber} masih terkunci.</b><p>Selesaikan target Pelajaran ${prev} dulu: tandai materinya sudah paham, kerjakan semua ${p.totalTugas} tugas, dan capai rata-rata nilai minimal ${TugasBab.KKM}. Saat ini: ${p.dikerjakan}/${p.totalTugas} tugas dikerjakan, rata-rata ${p.rataRata}.</p><p>Yang masih kurang: ${TugasBab.kekurangan(prev).join("; ")}.</p>${activeIndex > 0 ? `<button type="button" class="primary">Buka Pelajaran ${prev}</button>` : ""}`;
       const openPrev = lockNotice.querySelector("button");
       if (openPrev)
         openPrev.onclick = () => {

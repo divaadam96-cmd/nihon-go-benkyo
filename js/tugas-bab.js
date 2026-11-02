@@ -10,8 +10,10 @@
      4. kalimat (2)     - susun kalimat (tulis urutan nomor) & pilih kalimat
                           Jepang yang benar (data/tugas-kalimat-data.js;
                           bab tanpa data kalimat tidak mewajibkannya)
-   Tugas lulus kalau skornya >= TUGAS_KKM. Bab N+1 terbuka untuk SISWA kalau
-   semua target Bab N lulus; Sensei/Operator tidak pernah dikunci.
+   Bab N+1 terbuka untuk SISWA kalau materi Bab N sudah ditandai paham,
+   SEMUA tugas Bab N sudah dikerjakan, dan RATA-RATA skor terbaik semua
+   tugasnya >= TUGAS_KKM (satu tugas boleh di bawah KKM asal rata-ratanya
+   cukup). Sensei/Operator tidak pernah dikunci.
    Hasil disimpan di server (tabel bab_targets lewat RPC catat_target_bab,
    supabase/add-target-bab.sql) + cache localStorage per akun. Kalau
    server gagal, hasil tetap dipakai dari cache dan dikirim ulang saat
@@ -105,14 +107,28 @@
   function isPassed(bab, target) {
     return !!rowFor(bab, target)?.lulus;
   }
+  /* materi: sudah ditandai paham; tugas: jumlah tugas yang sudah
+     dikerjakan (minimal sekali) dari totalTugas; rataRata: rata-rata skor
+     terbaik SEMUA tugas (tugas yang belum dikerjakan dihitung 0). */
   function progress(bab) {
-    const list = targetsFor(bab);
-    const done = list.filter((t) => isPassed(bab, t)).length;
-    return { done, total: list.length };
+    const tugas = targetsFor(bab).filter((t) => t !== "materi");
+    const skor = tugas.map((t) => rowFor(bab, t)?.skor_terbaik ?? null);
+    const dikerjakan = skor.filter((v) => v !== null).length;
+    const rataRata = Math.floor(skor.reduce((sum, v) => sum + (v || 0), 0) / tugas.length);
+    return { materi: isPassed(bab, "materi"), dikerjakan, totalTugas: tugas.length, rataRata };
   }
   function isComplete(bab) {
     const p = progress(bab);
-    return p.done === p.total;
+    return p.materi && p.dikerjakan === p.totalTugas && p.rataRata >= TUGAS_KKM;
+  }
+  /* Kalimat singkat apa yang masih kurang, untuk pemberitahuan kunci. */
+  function kekurangan(bab) {
+    const p = progress(bab);
+    const kurang = [];
+    if (!p.materi) kurang.push("tandai materi sudah paham");
+    if (p.dikerjakan < p.totalTugas) kurang.push(`kerjakan ${p.totalTugas - p.dikerjakan} tugas lagi`);
+    if (p.rataRata < TUGAS_KKM) kurang.push(`naikkan rata-rata nilai tugas dari ${p.rataRata} ke minimal ${TUGAS_KKM}`);
+    return kurang;
   }
   function isLocked(bab) {
     if (isStaff() || bab <= 1) return false;
@@ -403,8 +419,8 @@
   function statusText(bab, target) {
     const row = rowFor(bab, target);
     if (!row) return { cls: "baru", text: "Belum dikerjakan" };
-    if (row.lulus) return { cls: "lulus", text: `✓ Lulus · skor terbaik ${row.skor_terbaik}` };
-    return { cls: "ulang", text: `Skor terbaik ${row.skor_terbaik} · belum mencapai ${TUGAS_KKM}` };
+    if (row.skor_terbaik >= TUGAS_KKM) return { cls: "lulus", text: `✓ Skor terbaik ${row.skor_terbaik}` };
+    return { cls: "ulang", text: `Skor terbaik ${row.skor_terbaik} · ulangi untuk menaikkan rata-rata` };
   }
 
   /* hooks: { onMateri(): tandai materi dipahami, onBukaMateri(): ke tahap 1 } */
@@ -428,15 +444,15 @@
     const tugasTerbuka = materiDone || staff;
     const complete = isComplete(bab);
     const next = bab < MAX_BAB ? bab + 1 : null;
-    const pct = Math.round((p.done / p.total) * 100);
+    const pct = Math.min(100, Math.round((p.rataRata / TUGAS_KKM) * 100));
 
     let html = `<div class="tugas-head"><div><div class="eyebrow">Target Pelajaran ${bab}</div><h3>${complete ? "Semua target selesai 🎉" : "Selesaikan semua target bab ini"}</h3><p>${
       next
         ? complete
           ? `Pelajaran ${next} sudah terbuka. Bab ini tetap bisa dipelajari dan dikerjakan ulang kapan saja.`
-          : `Pelajaran ${next} terbuka setelah semua target di bawah selesai. Setiap tugas lulus dengan skor minimal ${TUGAS_KKM}.`
-        : `Ini pelajaran terakhir. Setiap tugas lulus dengan skor minimal ${TUGAS_KKM}.`
-    }</p></div><div class="tugas-meter" style="--tugas-progress:${pct}%"><b>${p.done}/${p.total}</b><span>target</span></div></div>`;
+          : `Pelajaran ${next} terbuka setelah materi ditandai paham, semua ${p.totalTugas} tugas dikerjakan, dan rata-rata nilainya minimal ${TUGAS_KKM}. Tugas boleh diulang untuk menaikkan nilai.`
+        : `Ini pelajaran terakhir. Kerjakan semua tugas dengan rata-rata nilai minimal ${TUGAS_KKM}.`
+    }</p><p class="tugas-ringkas">${p.dikerjakan}/${p.totalTugas} tugas dikerjakan · materi ${p.materi ? "✓" : "belum ditandai"}</p></div><div class="tugas-meter${p.rataRata >= TUGAS_KKM ? " cukup" : ""}" style="--tugas-progress:${pct}%"><b>${p.rataRata}</b><span>rata-rata</span></div></div>`;
     if (staff) html += `<p class="tugas-staff-note">Anda masuk sebagai ${window.currentProfile?.role === "operator" ? "Operator" : "Sensei"}: semua bab dan tugas terbuka tanpa syarat. Kunci hanya berlaku untuk akun siswa.</p>`;
     if (serverOk === false) html += `<p class="tugas-warning">Server sedang tidak terjangkau - hasil disimpan di perangkat ini dulu dan dikirim otomatis saat halaman dibuka lagi.</p>`;
 
@@ -546,12 +562,15 @@
     async function finish() {
       const total = questions.length;
       const skor = Math.floor((100 * correct) / total);
-      const lulus = skor >= TUGAS_KKM;
+      const lulus = skor >= TUGAS_KKM; // skor tugas ini sendiri (penanda warna)
       container.innerHTML = `<div class="tugas-result"><p class="tugas-loading">Menyimpan hasil…</p></div>`;
       const { saved } = await record(bab, target, correct, total);
       const babSelesai = isComplete(bab);
-      let html = `<div class="tugas-result ${lulus ? "lulus" : "ulang"}"><div class="eyebrow">${esc(info.judul)} · Pelajaran ${bab}</div><div class="tugas-result-score"><b>${skor}</b><span>${correct} benar dari ${total} soal</span></div><h3>${lulus ? "Lulus! 🎉" : `Belum lulus - butuh skor minimal ${TUGAS_KKM}.`}</h3>`;
+      let html = `<div class="tugas-result ${lulus ? "lulus" : "ulang"}"><div class="eyebrow">${esc(info.judul)} · Pelajaran ${bab}</div><div class="tugas-result-score"><b>${skor}</b><span>${correct} benar dari ${total} soal</span></div><h3>${lulus ? "Bagus! 🎉" : `Skor di bawah ${TUGAS_KKM} - boleh diulang untuk menaikkan rata-rata.`}</h3>`;
+      const p = progress(bab);
+      html += `<p class="tugas-rata">Rata-rata nilai tugas Pelajaran ${bab}: <b>${p.rataRata}</b> (${p.dikerjakan}/${p.totalTugas} tugas dikerjakan, minimal ${TUGAS_KKM} untuk membuka pelajaran berikutnya).</p>`;
       if (babSelesai && bab < MAX_BAB) html += `<p class="tugas-unlock">🔓 Semua target Pelajaran ${bab} selesai - Pelajaran ${bab + 1} sekarang terbuka.</p>`;
+      else if (bab < MAX_BAB && !isStaff()) html += `<p class="tugas-masih">Untuk membuka Pelajaran ${bab + 1}: ${esc(kekurangan(bab).join("; "))}.</p>`;
       if (!saved) html += `<p class="tugas-warning">Hasil belum tersimpan di server - disimpan di perangkat ini dan dikirim ulang otomatis nanti.</p>`;
       if (mistakes.length) {
         html += `<details class="tugas-mistakes"${lulus ? "" : " open"}><summary>Soal yang salah (${mistakes.length})</summary><ul>${mistakes
@@ -575,12 +594,14 @@
     targetsFor,
     progress,
     isComplete,
+    kekurangan,
     isLocked,
     frontierBab,
     recordMateri,
     renderPanel,
     // untuk pengujian
     _buildQuestions: buildQuestions,
+    _record: record,
     _parseOrder: parseOrder,
     _ensureBabData: ensureBabData,
   };

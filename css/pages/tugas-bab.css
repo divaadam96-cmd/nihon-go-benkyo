@@ -91,6 +91,9 @@
     conic-gradient(#2e8068 var(--tugas-progress), #ddd3c2 0);
   text-align: center;
 }
+.tugas-meter.cukup b {
+  color: #2e8068;
+}
 .tugas-meter b {
   color: var(--navy);
   font-size: 17px;
@@ -445,6 +448,24 @@
   margin: 8px 0 10px;
   color: var(--navy);
   font-size: 17px;
+}
+.tugas-ringkas {
+  margin-top: 6px !important;
+  color: #8e7b5b !important;
+  font-weight: 700;
+}
+.tugas-rata,
+.tugas-masih {
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.tugas-masih {
+  padding: 10px 12px;
+  border-radius: 7px;
+  color: #864c31;
+  background: #fff5eb;
 }
 .tugas-unlock {
   margin: 0 0 12px;
