@@ -278,43 +278,62 @@
     });
     return score + Math.min(shared, 4) * (script === "latin" ? 0.25 : 1);
   }
-  /* Urutan sumber pengecoh:
-     1. kelompok makna sama, bab yang sama
-     2. kelompok makna sama, bab lain (terdekat dulu, bab sebelumnya didahulukan)
-     3. bentuk paling mirip, bab yang sama lalu bab terdekat
-     Ada unsur acak di tiap langkah supaya pengecoh berganti saat diulang. */
+  /* Pemilihan pengecoh. Kandidat dikumpulkan dari:
+     1. kelompok makna yang sama (bab sama dulu, lalu bab terdekat)
+     2. kata yang bentuknya paling mirip (cadangan untuk kata yang belum
+        dikelompokkan / kelompoknya kurang)
+     Dalam satu set soal, pilihan yang SUDAH sering muncul (sebagai
+     pengecoh maupun jawaban soal lain) dinomorbelakangkan, dan dua soal
+     tidak boleh punya set 4 pilihan yang persis sama - supaya pilihan
+     tidak itu-itu saja. `pemakaian` direset setiap buildQuestions(). */
+  let pemakaian = { kali: new Map(), set: new Set() };
+  function dipakai(value) {
+    return pemakaian.kali.get(norm(value)) || 0;
+  }
+  function catatPemakaian(values) {
+    values.forEach((v) => pemakaian.kali.set(norm(v), dipakai(v) + 1));
+    pemakaian.set.add(values.map(norm).sort().join("|"));
+  }
   function distractors(bab, itemsOf, correct, valueOf, conflicts) {
-    const picked = [];
     const answer = valueOf(correct);
     const seen = new Set([norm(answer)]);
-    const take = (item) => {
-      if (picked.length >= 3) return;
+    const kandidat = [];
+    const tambah = (item, kelompok, bobot) => {
       const value = valueOf(item);
       if (seen.has(norm(value)) || conflicts(item)) return;
       seen.add(norm(value));
-      picked.push(value);
+      kandidat.push({ value, kelompok, bobot });
     };
     const babsAt = (d) => (d === 0 ? [bab] : [bab - d, bab + d].filter((b) => b >= 1 && b <= MAX_BAB));
     const kategori = kategoriOf(correct.kana);
     if (kategori) {
-      for (let d = 0; d <= MAX_BAB && picked.length < 3; d++) {
-        babsAt(d).forEach((b) => shuffle(itemsOf(b)).filter((item) => kategoriOf(item.kana) === kategori).forEach(take));
+      for (let d = 0; d <= MAX_BAB; d++) {
+        babsAt(d).forEach((b) => itemsOf(b).forEach((item) => {
+          if (kategoriOf(item.kana) === kategori) tambah(item, 0, d * 0.3);
+        }));
       }
     }
-    for (let d = 0; d <= MAX_BAB && picked.length < 3; d++) {
-      babsAt(d).forEach((b) => {
-        itemsOf(b)
-          .map((item) => ({ item, score: similarity(answer, valueOf(item)) + Math.random() * 1.5 }))
-          .sort((x, y) => y.score - x.score)
-          .forEach(({ item }) => take(item));
-      });
+    // Cadangan "mirip bentuk": bab sama & 3 bab terdekat, lebih jauh hanya bila kurang.
+    for (let d = 0; d <= MAX_BAB && (d <= 3 || kandidat.length < 6); d++) {
+      babsAt(d).forEach((b) => itemsOf(b).forEach((item) => tambah(item, 1, d * 0.8 - similarity(answer, valueOf(item)))));
     }
+    kandidat.forEach((k) => (k.skor = k.kelompok * 1000 + dipakai(k.value) * (k.kelompok ? 3 : 2) + k.bobot + Math.random() * 1.2));
+    kandidat.sort((x, y) => x.skor - y.skor);
+
+    let picked = kandidat.slice(0, 3).map((k) => k.value);
+    const tanda = (values) => values.map(norm).sort().join("|");
+    // Set pilihan kembar dengan soal sebelumnya -> ganti pengecoh terakhir.
+    for (let i = 3; pemakaian.set.has(tanda([answer, ...picked])) && i < kandidat.length; i++) {
+      picked = [picked[0], picked[1], kandidat[i].value];
+    }
+    catatPemakaian([answer, ...picked]);
     return picked;
   }
   function mcQuestion(prompt, promptJp, answer, wrong, instruction) {
     return { type: "pilih", prompt, promptJp, answer, choices: shuffle([answer, ...wrong]), instruction };
   }
   function buildQuestions(bab, target) {
+    pemakaian = { kali: new Map(), set: new Set() };
     if (target.startsWith("kotoba-")) {
       const items = kotobaItems(bab);
       return shuffle(items).map((item) => {
