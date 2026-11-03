@@ -335,4 +335,98 @@ const tugasKalimatData = {
       },
     ],
   },
+  5: {
+    susun: [
+      { arti: "Pergi ke Kyoto.", potongan: ["きょうと", "へ", "いきます"] },
+      { arti: "(Saya) datang ke Jepang.", potongan: ["にほん", "へ", "きました"] },
+      { arti: "Pulang ke rumah.", potongan: ["うち", "へ", "かえります"] },
+      { arti: "Tidak pergi ke mana-mana.", potongan: ["どこ", "へ", "も", "いきません"] },
+      { arti: "Tidak makan apa-apa.", potongan: ["なに", "も", "たべません"] },
+      { arti: "Pergi dengan kereta listrik.", potongan: ["でんしゃ", "で", "いきます"] },
+      { arti: "Pulang jalan kaki dari stasiun.", potongan: ["えき", "から", "あるいて", "かえりました"] },
+      {
+        arti: "Datang ke Jepang bersama keluarga.",
+        potongan: ["かぞく", "と", "にほん", "へ", "きました"],
+        alt: ["にほんへかぞくときました"],
+      },
+      {
+        arti: "Pergi ke Tokyo sendirian.",
+        potongan: ["ひとりで", "とうきょう", "へ", "いきます"],
+        alt: ["とうきょうへひとりでいきます"],
+      },
+      {
+        arti: "Kapan (Anda) datang ke Jepang?",
+        potongan: ["いつ", "にほん", "へ", "きました", "か"],
+        alt: ["にほんへいつきましたか"],
+      },
+      {
+        arti: "Minggu depan (saya) pergi ke Hiroshima.",
+        potongan: ["らいしゅう", "ひろしま", "へ", "いきます"],
+        alt: ["ひろしまへらいしゅういきます"],
+      },
+      { arti: "Apakah kereta ini pergi ke Koshien?", potongan: ["この", "でんしゃ", "は", "こうしえん", "へ", "いきます", "か"] },
+    ],
+    pilih: [
+      {
+        arti: "Pergi ke Kyoto.",
+        benar: "きょうとへ いきます。",
+        salah: ["きょうとで いきます。", "きょうとを いきます。", "きょうとへ きます。"],
+      },
+      {
+        arti: "Tidak pergi ke mana-mana.",
+        benar: "どこへも いきません。",
+        salah: ["どこへも いきます。", "どこへ いきません。", "どこで いきません。"],
+      },
+      {
+        arti: "Tidak ada seorang pun yang datang.",
+        benar: "だれも きませんでした。",
+        salah: ["だれも きました。", "だれが きませんでした。", "だれも いきませんでした。"],
+      },
+      {
+        arti: "(Saya) datang dengan taksi.",
+        benar: "タクシーで きました。",
+        salah: ["タクシーへ きました。", "タクシーと きました。", "タクシーで いきました。"],
+      },
+      {
+        arti: "Pulang jalan kaki dari stasiun.",
+        benar: "えきから あるいて かえりました。",
+        salah: ["えきから あるいてで かえりました。", "えきまで あるいて かえりました。", "えきから あるいて きました。"],
+      },
+      {
+        arti: "Datang ke Jepang bersama keluarga.",
+        benar: "かぞくと にほんへ きました。",
+        salah: ["かぞくで にほんへ きました。", "かぞくへ にほんと きました。", "かぞくと にほんへ いきました。"],
+      },
+      {
+        arti: "Pergi ke Tokyo sendirian.",
+        benar: "ひとりで とうきょうへ いきます。",
+        salah: ["ひとりと とうきょうへ いきます。", "ひとりで とうきょうで いきます。", "ひとりで とうきょうへ きます。"],
+      },
+      {
+        arti: "Kapan datang ke Jepang? ... Datang tanggal 25 Maret.",
+        benar: "いつ にほんへ きましたか。……さんがつ にじゅうごにちに きました。",
+        salah: ["いつ にほんへ きましたか。……さんがつ にじゅうごにち きました。", "なんじ にほんへ きましたか。……さんがつ にじゅうごにちに きました。", "いつ にほんへ きますか。……さんがつ にじゅうごにちに きました。"],
+      },
+      {
+        arti: "Minggu depan (saya) pergi ke Hiroshima.",
+        benar: "らいしゅう ひろしまへ いきます。",
+        salah: ["らいしゅうに ひろしまへ いきます。", "せんしゅう ひろしまへ いきます。", "らいしゅう ひろしまへ いきました。"],
+      },
+      {
+        arti: "Tidak, tidak (ke sana). Yang \"Biasa\" berikutnya, lho.",
+        benar: "いいえ、いきません。つぎの「ふつう」ですよ。",
+        salah: ["いいえ、いきません。つぎの「ふつう」ですか。", "いいえ、いきます。つぎの「ふつう」ですよ。", "いいえ、いきません。つぎ「ふつう」ですよ。"],
+      },
+      {
+        arti: "Besok hari Minggu, ya. ... O, iya betul.",
+        benar: "あしたは にちようびですね。……あ、そうですね。",
+        salah: ["あしたは にちようびですね。……あ、そうですか。", "あしたは にちようびですね。……あ、ちがいますね。", "あしたは どようびですね。……あ、そうですね。"],
+      },
+      {
+        arti: "Ulang tahun saya tanggal 8 Juni.",
+        benar: "わたしの たんじょうびは ろくがつ ようかです。",
+        salah: ["わたしの たんじょうびは ろくがつ はちにちです。", "わたしの たんじょうびは しちがつ ようかです。", "わたしの たんじょうびは ろくがつ ようかに です。"],
+      },
+    ],
+  },
 };
