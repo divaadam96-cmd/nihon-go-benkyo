@@ -801,4 +801,90 @@ const tugasKalimatData = {
       },
     ],
   },
+  10: {
+    susun: [
+      { arti: "Ada komputer.", potongan: ["コンピューター", "が", "あります"] },
+      { arti: "Ada anjing.", potongan: ["いぬ", "が", "います"] },
+      { arti: "Di kamar saya ada meja.", potongan: ["わたし", "の", "へや", "に", "つくえ", "が", "あります"] },
+      { arti: "Di kantor ada Sdr. Miller.", potongan: ["じむしょ", "に", "ミラーさん", "が", "います"] },
+      { arti: "Di basement ada apa?", potongan: ["ちか", "に", "なに", "が", "あります", "か"] },
+      { arti: "Tokyo Disneyland ada di prefektur Chiba.", potongan: ["とうきょうディズニーランド", "は", "ちばけん", "に", "あります"] },
+      { arti: "Sdr. Miller ada di mana?", potongan: ["ミラーさん", "は", "どこ", "に", "います", "か"] },
+      { arti: "Di atas meja ada foto.", potongan: ["つくえ", "の", "うえ", "に", "しゃしん", "が", "あります"] },
+      { arti: "Kantor pos ada di sebelah bank.", potongan: ["ゆうびんきょく", "は", "ぎんこう", "の", "となり", "に", "あります"] },
+      {
+        arti: "Toko buku ada di antara toko bunga dan supermarket.",
+        potongan: ["ほんや", "は", "はなや", "と", "スーパー", "の", "あいだ", "に", "あります"],
+        alt: ["ほんやはスーパーとはなやのあいだにあります"],
+      },
+      {
+        arti: "Di dalam kotak ada surat, foto, dan lain-lain.",
+        potongan: ["はこ", "の", "なか", "に", "てがみ", "や", "しゃしん", "など", "が", "あります"],
+        alt: ["はこのなかにしゃしんやてがみなどがあります"],
+      },
+      { arti: "Di depan stasiun ada taman.", potongan: ["えき", "の", "まえ", "に", "こうえん", "が", "あります"] },
+    ],
+    pilih: [
+      {
+        arti: "Ada anjing.",
+        benar: "いぬが います。",
+        salah: ["いぬが あります。", "いぬを います。", "いぬに います。"],
+      },
+      {
+        arti: "Ada taman.",
+        benar: "こうえんが あります。",
+        salah: ["こうえんが います。", "こうえんに あります。", "こうえんを あります。"],
+      },
+      {
+        arti: "Di kamar saya ada meja.",
+        benar: "わたしの へやに つくえが あります。",
+        salah: ["わたしの へやで つくえが あります。", "わたしの へやに つくえが います。", "わたしの へやは つくえに あります。"],
+      },
+      {
+        arti: "Di resepsionis ada siapa? ... Ada Sdr. Kimura.",
+        benar: "うけつけに だれが いますか。……きむらさんが います。",
+        salah: ["うけつけに だれが ありますか。……きむらさんが あります。", "うけつけに なにが いますか。……きむらさんが います。", "うけつけに だれが いますか。……きむらさんが あります。"],
+      },
+      {
+        arti: "Tokyo Disneyland ada di prefektur Chiba.",
+        benar: "とうきょうディズニーランドは ちばけんに あります。",
+        salah: ["とうきょうディズニーランドは ちばけんで あります。", "とうきょうディズニーランドは ちばけんに います。", "とうきょうディズニーランドは ちばけんを あります。"],
+      },
+      {
+        arti: "Sdr. Miller ada di mana? ... Ada di kantor.",
+        benar: "ミラーさんは どこに いますか。……じむしょに います。",
+        salah: ["ミラーさんは どこに ありますか。……じむしょに あります。", "ミラーさんは どこに いますか。……じむしょで います。", "ミラーさんは なにに いますか。……じむしょに います。"],
+      },
+      {
+        arti: "Di atas meja ada foto.",
+        benar: "つくえの うえに しゃしんが あります。",
+        salah: ["つくえの したに しゃしんが あります。", "うえの つくえに しゃしんが あります。", "つくえの うえに しゃしんが います。"],
+      },
+      {
+        arti: "Kantor pos ada di sebelah bank.",
+        benar: "ゆうびんきょくは ぎんこうの となりに あります。",
+        salah: ["ゆうびんきょくは ぎんこうの まえに あります。", "ぎんこうは ゆうびんきょくの となりに あります。", "ゆうびんきょくは ぎんこうの となりに います。"],
+      },
+      {
+        arti: "Toko buku ada di antara toko bunga dan supermarket.",
+        benar: "ほんやは はなやと スーパーの あいだに あります。",
+        salah: ["ほんやは はなやと スーパーの となりに あります。", "ほんやは はなやや スーパーの あいだに あります。", "はなやは ほんやと スーパーの あいだに あります。"],
+      },
+      {
+        arti: "Di dalam kotak ada surat, foto, dan lain-lain.",
+        benar: "はこの なかに てがみや しゃしんなどが あります。",
+        salah: ["はこの そとに てがみや しゃしんなどが あります。", "はこの なかに てがみや しゃしんなどが います。", "はこの なかで てがみや しゃしんなどが あります。"],
+      },
+      {
+        arti: "Di dekat stasiun (saya) bertemu teman.",
+        benar: "えきの ちかくで ともだちに あいました。",
+        salah: ["えきの ちかくに ともだちに あいました。", "えきの ちかくで ともだちを あいました。", "えきの ちかくで ともだちに いました。"],
+      },
+      {
+        arti: "Permisi, Asia Store di mana? ... Asia Store? Di dalam gedung itu.",
+        benar: "すみません。アジアストアは どこですか。……アジアストアですか。あの ビルの なかです。",
+        salah: ["すみません。アジアストアは どれですか。……アジアストアですか。あの ビルの なかです。", "すみません。アジアストアは どこですか。……アジアストアですか。あの ビルの なかに います。", "すみません。アジアストアは どこですか。……アジアストアですね。あの ビルの なかです。"],
+      },
+    ],
+  },
 };
