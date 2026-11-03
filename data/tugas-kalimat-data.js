@@ -173,4 +173,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  3: {
+    susun: [
+      { arti: "Kamar kecil di sana.", potongan: ["おてあらい", "は", "あそこ", "です"] },
+      { arti: "Telepon di lantai dua.", potongan: ["でんわ", "は", "にかい", "です"] },
+      { arti: "Sdr. Yamada di kantor.", potongan: ["やまださん", "は", "じむしょ", "です"] },
+      { arti: "Di mana kamar kecil?", potongan: ["おてあらい", "は", "どこ", "です", "か"] },
+      { arti: "Lift di sebelah mana?", potongan: ["エレベーター", "は", "どちら", "です", "か"] },
+      { arti: "Ini komputer buatan mana?", potongan: ["これ", "は", "どこ", "の", "コンピューター", "です", "か"] },
+      { arti: "(Ini) komputer buatan Jepang.", potongan: ["にほん", "の", "コンピューター", "です"] },
+      { arti: "Anda berasal dari negara mana? (sopan)", potongan: ["おくに", "は", "どちら", "です", "か"] },
+      { arti: "Ruang rapat di lantai berapa?", potongan: ["かいぎしつ", "は", "なんがい", "です", "か"] },
+      { arti: "Berapa harga ini?", potongan: ["これ", "は", "いくら", "です", "か"] },
+      { arti: "Ini anggur (wine) Italia.", potongan: ["これ", "は", "イタリア", "の", "ワイン", "です"] },
+      { arti: "Kantin di lantai bawah tanah.", potongan: ["しょくどう", "は", "ちか", "です"] },
+    ],
+    pilih: [
+      {
+        arti: "Kamar kecil di sana.",
+        benar: "おてあらいは あそこです。",
+        salah: ["おてあらいは あそこですか。", "おてあらいの あそこです。", "あそこは おてあらいですか。"],
+      },
+      {
+        arti: "Di mana kamar kecil?",
+        benar: "おてあらいは どこですか。",
+        salah: ["おてあらいは どれですか。", "おてあらいは だれですか。", "どこは おてあらいですか。"],
+      },
+      {
+        arti: "Lift di sebelah mana?",
+        benar: "エレベーターは どちらですか。",
+        salah: ["エレベーターは どなたですか。", "エレベーターは どれですか。", "エレベーターは あちらですか。"],
+      },
+      {
+        arti: "Ini komputer buatan mana?",
+        benar: "これは どこの コンピューターですか。",
+        salah: ["これは どこ コンピューターですか。", "これは なんの コンピューターですか。", "これは だれの コンピューターですか。"],
+      },
+      {
+        arti: "(Ini) komputer buatan Jepang.",
+        benar: "にほんの コンピューターです。",
+        salah: ["にほん コンピューターです。", "コンピューターの にほんです。", "にほんじんの コンピューターです。"],
+      },
+      {
+        arti: "Anda berasal dari negara mana? (sopan)",
+        benar: "おくには どちらですか。",
+        salah: ["おくには どなたですか。", "おくには なんですか。", "おくには どれですか。"],
+      },
+      {
+        arti: "Sdr. Yamada di kantor.",
+        benar: "やまださんは じむしょです。",
+        salah: ["やまださんの じむしょです。", "やまださんは じむしょですか。", "やまださんも じむしょじゃ ありません。"],
+      },
+      {
+        arti: "Ruang rapat di lantai berapa?",
+        benar: "かいぎしつは なんがいですか。",
+        salah: ["かいぎしつは いくらですか。", "かいぎしつは どなたですか。", "かいぎしつは なんさいですか。"],
+      },
+      {
+        arti: "Berapa harga ini?",
+        benar: "これは いくらですか。",
+        salah: ["これは なんがいですか。", "これは どこですか。", "これは だれのですか。"],
+      },
+      {
+        arti: "Permisi, tolong perlihatkan anggur (wine) itu.",
+        benar: "すみません。その ワインを みせてください。",
+        salah: ["すみません。それ ワインを みせてください。", "すみません。その ワインは みせてください。", "すみません。その ワインを ください。"],
+      },
+      {
+        arti: "Kalau begitu, saya minta yang ini.",
+        benar: "じゃ、これを ください。",
+        salah: ["じゃ、これを みせてください。", "じゃ、この ください。", "じゃ、これは ください。"],
+      },
+      {
+        arti: "(Pelayan toko kepada pembeli) Selamat datang.",
+        benar: "いらっしゃいませ。",
+        salah: ["すみません。", "どうも。", "どうぞ。"],
+      },
+    ],
+  },
 };

@@ -268,21 +268,41 @@
   // Dibentuk sekali per bab lalu disimpan (dipindai berulang saat memilih pengecoh).
   const cacheItems = { kotoba: {}, kanji: {} };
   function kotobaItems(bab) {
-    return (cacheItems.kotoba[bab] ||= (babKosakataData[bab] || []).map(([jp, id]) => ({ jp, kana: jp, id })));
+    return (cacheItems.kotoba[bab] ||= (babKosakataData[bab] || []).map(([jp, id]) => ({ bab, jp, kana: jp, id })));
   }
   function kanjiItems(bab) {
-    return (cacheItems.kanji[bab] ||= (babKanjiData[bab] || []).map(([kanji, kana, id]) => ({ kanji, kana, id })));
+    return (cacheItems.kanji[bab] ||= (babKanjiData[bab] || []).map(([kanji, kana, id]) => ({ bab, kanji, kana, id })));
   }
 
-  /* Kelompok makna (data/tugas-kategori-data.js), dicari lewat cara baca. */
+  /* Kelompok makna (data/tugas-kategori-data.js), dicari lewat cara baca
+     item. Entri "kana@bab" hanya berlaku untuk kata di bab itu (homonim,
+     mis. せん@3 = "Seribu", bukan せん "Garis" di Bab 34). */
   let kategoriIndex = null;
-  function kategoriOf(kana) {
+  function kategoriOf(item) {
     if (!kategoriIndex) {
       kategoriIndex = {};
       const data = typeof tugasKategoriKata !== "undefined" ? tugasKategoriKata : {};
-      Object.entries(data).forEach(([nama, kata]) => kata.forEach((k) => (kategoriIndex[norm(k)] = nama)));
+      Object.entries(data).forEach(([nama, kata]) => kata.forEach((k) => {
+        const [kana, bab] = k.split("@");
+        kategoriIndex[bab ? `${norm(kana)}@${bab}` : norm(kana)] = nama;
+      }));
     }
-    return kategoriIndex[norm(kana)] || null;
+    const kana = norm(item.kana);
+    return kategoriIndex[`${kana}@${item.bab}`] || kategoriIndex[kana] || null;
+  }
+  /* Pasangan sinonim (artinya sama walau teksnya beda, mis. おてあらい &
+     トイレ) - tidak boleh saling jadi pengecoh. */
+  let sinonimIndex = null;
+  function sinonimOf(kana) {
+    if (!sinonimIndex) {
+      sinonimIndex = new Map();
+      (typeof tugasSinonim !== "undefined" ? tugasSinonim : []).forEach((grup) => grup.forEach((k) => {
+        const set = sinonimIndex.get(norm(k)) || new Set();
+        grup.forEach((lain) => set.add(norm(lain)));
+        sinonimIndex.set(norm(k), set);
+      }));
+    }
+    return sinonimIndex.get(norm(kana)) || null;
   }
   /* Seberapa mirip bentuk dua pilihan - dipakai untuk kata yang belum
      dikelompokkan, supaya pengecoh tidak gampang dicoret (jenis huruf
@@ -328,20 +348,24 @@
     const seen = new Set([norm(answer)]);
     // Pilihan yang di bab MANA PUN juga cocok dengan soal ditolak seluruhnya
     // (mis. こちら = "Disini" di Bab 3 tapi "Sebelah sini" di Bab 46).
-    for (let b = 1; b <= MAX_BAB; b++) itemsOf(b).forEach((item) => conflicts(item) && seen.add(norm(valueOf(item))));
+    const sinonim = sinonimOf(correct.kana);
+    const bentrok = (item) => conflicts(item) || (sinonim && sinonim.has(norm(item.kana)));
+    for (let b = 1; b <= MAX_BAB; b++) itemsOf(b).forEach((item) => bentrok(item) && seen.add(norm(valueOf(item))));
     const kandidat = [];
+    const kataDipakai = new Set([norm(correct.kana)]); // satu kata = satu pengecoh (walau terjemahannya beda per bab)
     const tambah = (item, kelompok, bobot) => {
       const value = valueOf(item);
-      if (seen.has(norm(value))) return;
+      if (seen.has(norm(value)) || kataDipakai.has(norm(item.kana))) return;
+      kataDipakai.add(norm(item.kana));
       seen.add(norm(value));
       kandidat.push({ value, kelompok, bobot });
     };
     const babsAt = (d) => (d === 0 ? [bab] : [bab - d, bab + d].filter((b) => b >= 1 && b <= MAX_BAB));
-    const kategori = kategoriOf(correct.kana);
+    const kategori = kategoriOf(correct);
     if (kategori) {
       for (let d = 0; d <= MAX_BAB; d++) {
         babsAt(d).forEach((b) => itemsOf(b).forEach((item) => {
-          if (kategoriOf(item.kana) === kategori) tambah(item, 0, d * 0.3);
+          if (kategoriOf(item) === kategori) tambah(item, 0, d * 0.3);
         }));
       }
     }
@@ -426,7 +450,11 @@
 
     const calon = []; // { jenis, teks }
     const tambah = (jenis, mora) => calon.push({ jenis, teks: awal + mora.join("") + akhir });
+    // Kana yang tertulis di tengah soal (の pada 子供の服, し pada 催し物)
+    // tidak diubah - pengecoh seperti こどものうふく gampang dicoret.
+    const kanaTerlihat = new Set([...item.kanji].filter((ch) => /[぀-ゟ]/.test(ch)));
     inti.forEach((m, i) => {
+      if (kanaTerlihat.has(m)) return;
       const kepala = m[0], ekor = m.slice(1), next = inti[i + 1];
       if (BACA_TENTEN[kepala]) tambah("tenten", [...inti.slice(0, i), BACA_TENTEN[kepala] + ekor, ...inti.slice(i + 1)]);
       if (BACA_KECIL[ekor]) tambah("kecil", [...inti.slice(0, i), kepala + BACA_KECIL[ekor], ...inti.slice(i + 1)]);
@@ -444,7 +472,7 @@
         const sebelum = inti[i - 1];
         const cocok = (m === "う" && (/[ょゅ]$/.test(sebelum) || BARIS_O.includes(sebelum) || BARIS_U.includes(sebelum))) || (m === "い" && BARIS_E.includes(sebelum));
         if (cocok) tambah("panjang", [...inti.slice(0, i), ...inti.slice(i + 1)]);
-      } else if (panjang && !panjangAda && next !== "ん") {
+      } else if (panjang && !panjangAda && next !== "ん" && !kanaTerlihat.has(next)) {
         tambah("panjang", [...inti.slice(0, i + 1), panjang, ...inti.slice(i + 1)]);
       }
     });
@@ -491,7 +519,10 @@
     return picked;
   }
   // Bacaan alternatif yang benar tapi tidak ada di data (jangan jadi pengecoh).
-  const BACAAN_SAH_LAIN = { 日本: ["にっぽん"], 私: ["わたくし"], "～人": ["～にん"] };
+  const BACAAN_SAH_LAIN = {
+    日本: ["にっぽん"], 私: ["わたくし"], "～人": ["～にん"],
+    家: ["いえ"], 何階: ["なんかい"], "～階": ["～がい"], 靴: ["ぐつ"],
+  };
 
   function mcQuestion(prompt, promptJp, answer, wrong, instruction) {
     return { type: "pilih", prompt, promptJp, answer, choices: shuffle([answer, ...wrong]), instruction };
