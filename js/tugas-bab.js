@@ -58,8 +58,14 @@
     }
     return copy;
   }
+  const cacheNorm = new Map(); // norm() dipanggil ribuan kali per set soal
   function norm(text) {
-    return String(text).toLowerCase().replace(/\s+/g, "");
+    let hasil = cacheNorm.get(text);
+    if (hasil === undefined) {
+      hasil = String(text).toLowerCase().replace(/\s+/g, "");
+      cacheNorm.set(text, hasil);
+    }
+    return hasil;
   }
   function uid() {
     return window.currentProfile?.id || "";
@@ -259,11 +265,13 @@
     });
     return babDataPromise;
   }
+  // Dibentuk sekali per bab lalu disimpan (dipindai berulang saat memilih pengecoh).
+  const cacheItems = { kotoba: {}, kanji: {} };
   function kotobaItems(bab) {
-    return (babKosakataData[bab] || []).map(([jp, id]) => ({ jp, kana: jp, id }));
+    return (cacheItems.kotoba[bab] ||= (babKosakataData[bab] || []).map(([jp, id]) => ({ jp, kana: jp, id })));
   }
   function kanjiItems(bab) {
-    return (babKanjiData[bab] || []).map(([kanji, kana, id]) => ({ kanji, kana, id }));
+    return (cacheItems.kanji[bab] ||= (babKanjiData[bab] || []).map(([kanji, kana, id]) => ({ kanji, kana, id })));
   }
 
   /* Kelompok makna (data/tugas-kategori-data.js), dicari lewat cara baca. */
@@ -318,10 +326,13 @@
   function distractors(bab, itemsOf, correct, valueOf, conflicts) {
     const answer = valueOf(correct);
     const seen = new Set([norm(answer)]);
+    // Pilihan yang di bab MANA PUN juga cocok dengan soal ditolak seluruhnya
+    // (mis. こちら = "Disini" di Bab 3 tapi "Sebelah sini" di Bab 46).
+    for (let b = 1; b <= MAX_BAB; b++) itemsOf(b).forEach((item) => conflicts(item) && seen.add(norm(valueOf(item))));
     const kandidat = [];
     const tambah = (item, kelompok, bobot) => {
       const value = valueOf(item);
-      if (seen.has(norm(value)) || conflicts(item)) return;
+      if (seen.has(norm(value))) return;
       seen.add(norm(value));
       kandidat.push({ value, kelompok, bobot });
     };
@@ -422,7 +433,7 @@
       if (BACA_YOON[ekor]) BACA_YOON[ekor].forEach((y) => tambah("yoon", [...inti.slice(0, i), kepala + y, ...inti.slice(i + 1)]));
       // Tsu kecil: っ -> つ, atau く/き/ち/つ sebelum bunyi k/s/t/p -> っ (がくせい -> がっせい).
       if (m === "っ") tambah("tsu", [...inti.slice(0, i), "つ", ...inti.slice(i + 1)]);
-      else if (next && "くきちつ".includes(m) && AWAL_SOKUON.includes(next[0]))
+      else if (i > 0 && next && "くきちつ".includes(m) && AWAL_SOKUON.includes(next[0]))
         tambah("tsu", [...inti.slice(0, i), "っ", ...inti.slice(i + 1)]);
       // Bunyi panjang: hapus う/い pemanjang (せんせい -> せんせ), atau tambahkan
       // う setelah baris o / ゅ / ょ dan い setelah baris e (きょし? -> きょうし).

@@ -95,4 +95,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  2: {
+    susun: [
+      { arti: "Apakah itu kamus?", potongan: ["それ", "は", "じしょ", "です", "か"] },
+      { arti: "Ini payung siapa?", potongan: ["これ", "は", "だれ", "の", "かさ", "です", "か"] },
+      { arti: "Buku ini kepunyaan saya.", potongan: ["この", "ほん", "は", "わたし", "の", "です"] },
+      { arti: "Ini buku (tentang) komputer.", potongan: ["これ", "は", "コンピューター", "の", "ほん", "です"] },
+      { arti: "Itu (jauh) tas siapa?", potongan: ["あれ", "は", "だれ", "の", "かばん", "です", "か"] },
+      { arti: "Tas ini bukan kepunyaan saya.", potongan: ["この", "かばん", "は", "わたし", "の", "じゃ", "ありません"] },
+      { arti: "Itu majalah (tentang) mobil.", potongan: ["それ", "は", "くるま", "の", "ざっし", "です"] },
+      { arti: "Payung itu (jauh) kepunyaan Sdr. Santos.", potongan: ["あの", "かさ", "は", "サントスさん", "の", "です"] },
+      { arti: "Apakah kunci ini kepunyaan Anda?", potongan: ["この", "かぎ", "は", "あなた", "の", "です", "か"] },
+      { arti: "Itu koran berbahasa Inggris.", potongan: ["それ", "は", "えいご", "の", "しんぶん", "です"] },
+      { arti: "Bukan, bukan kepunyaan saya.", potongan: ["いいえ", "わたし", "の", "じゃ", "ありません"] },
+      { arti: "Kartu nama itu kepunyaan siapa?", potongan: ["その", "めいし", "は", "だれ", "の", "です", "か"] },
+    ],
+    pilih: [
+      {
+        arti: "Apakah itu kamus?",
+        benar: "それは じしょですか。",
+        salah: ["それは じしょです。", "それの じしょですか。", "その じしょですか。"],
+      },
+      {
+        arti: "Ini payung siapa?",
+        benar: "これは だれの かさですか。",
+        salah: ["これは だれ かさですか。", "この だれの かさですか。", "これは だれの かさです。"],
+      },
+      {
+        arti: "Buku ini kepunyaan saya.",
+        benar: "この ほんは わたしのです。",
+        salah: ["これ ほんは わたしのです。", "この ほんは わたしです。", "この ほんの わたしのです。"],
+      },
+      {
+        arti: "(Apakah itu kamus?) Ya, betul.",
+        benar: "はい、そうです。",
+        salah: ["はい、そうですか。", "はい、ちがいます。", "いいえ、そうです。"],
+      },
+      {
+        arti: "(Apakah itu punya Sdr. Miller?) Bukan.",
+        benar: "いいえ、ちがいます。",
+        salah: ["いいえ、そうです。", "はい、ちがいます。", "いいえ、そうですか。"],
+      },
+      {
+        arti: "Apakah itu bolpoin atau pensil mekanik?",
+        benar: "それは ボールペンですか、シャープペンシルですか。",
+        salah: ["それは ボールペンですか、シャープペンシルです。", "それは ボールペンも シャープペンシルですか。", "それは ボールペンの シャープペンシルですか。"],
+      },
+      {
+        arti: "Ini buku (tentang) komputer.",
+        benar: "これは コンピューターの ほんです。",
+        salah: ["これは ほんの コンピューターです。", "これは コンピューター ほんです。", "この コンピューターの ほんです。"],
+      },
+      {
+        arti: "Itu (jauh) tas siapa?",
+        benar: "あれは だれの かばんですか。",
+        salah: ["あれは だれ かばんですか。", "あの だれの かばんですか。", "あれは だれの かばんです。"],
+      },
+      {
+        arti: "(Itu tas siapa?) Kepunyaan Sdr. Sato.",
+        benar: "さとうさんのです。",
+        salah: ["さとうさんです。", "さとうさんも です。", "さとうさんのじゃ ありません。"],
+      },
+      {
+        arti: "Tas ini bukan kepunyaan saya.",
+        benar: "この かばんは わたしのじゃ ありません。",
+        salah: ["この かばんは わたしじゃ ありません。", "これ かばんは わたしのじゃ ありません。", "この かばんは わたしのです。"],
+      },
+      {
+        arti: "(Mendapat informasi baru) O, begitu.",
+        benar: "そうですか。",
+        salah: ["そうです。", "ちがいます。", "どうぞ。"],
+      },
+      {
+        arti: "Ini oleh-oleh. Silakan.",
+        benar: "これは おみやげです。どうぞ。",
+        salah: ["これは おみやげですか。どうぞ。", "この おみやげです。どうぞ。", "これは おみやげです。どうも。"],
+      },
+    ],
+  },
 };
