@@ -446,13 +446,15 @@
       kanji[kanji.length - 1 - belakang] === kana[kana.length - 1 - belakang]) belakang++;
     const awal = kana.slice(0, depan).join(""), akhir = kana.slice(kana.length - belakang).join("") + catatan;
     const inti = moraOf(kana.slice(depan, kana.length - belakang).join(""));
-    if (!inti.length) return [];
+    if (!inti.length && !(typeof bacaanKeliruData !== "undefined" && bacaanKeliruData[item.kanji])) return [];
 
     const calon = []; // { jenis, teks }
+    // Bacaan ganda ("～ふん／ぶん") tidak diubah otomatis - hanya pengecoh manual.
+    if (item.kana.includes("／")) inti.length = 0;
     const tambah = (jenis, mora) => calon.push({ jenis, teks: awal + mora.join("") + akhir });
     // Kana yang tertulis di tengah soal (の pada 子供の服, し pada 催し物)
     // tidak diubah - pengecoh seperti こどものうふく gampang dicoret.
-    const kanaTerlihat = new Set([...item.kanji].filter((ch) => /[぀-ゟ]/.test(ch)));
+    const kanaTerlihat = new Set(kanji.slice(depan, kanji.length - belakang).filter((ch) => /[぀-ゟ]/.test(ch)));
     inti.forEach((m, i) => {
       if (kanaTerlihat.has(m)) return;
       const kepala = m[0], ekor = m.slice(1), next = inti[i + 1];
@@ -522,6 +524,8 @@
   const BACAAN_SAH_LAIN = {
     日本: ["にっぽん"], 私: ["わたくし"], "～人": ["～にん"],
     家: ["いえ"], 何階: ["なんかい"], "～階": ["～がい"], 靴: ["ぐつ"],
+    昨日: ["さくじつ"], 今日: ["こんにち"], 明日: ["あす", "みょうにち"], 明後日: ["みょうごにち"],
+    今朝: ["こんちょう"], 一昨日: ["いっさくじつ", "おとつい"], 何時: ["なんどき"], 何分: ["なんぶん"],
   };
 
   function mcQuestion(prompt, promptJp, answer, wrong, instruction) {
@@ -580,7 +584,8 @@
         const kalimat = item.potongan.join("");
         let order = shuffle(indexes);
         // Jangan tampilkan potongan yang kebetulan sudah tersusun benar.
-        while (order.length > 1 && order.map((i) => item.potongan[i]).join("") === kalimat) order = shuffle(indexes);
+        const sahSemua = [kalimat, ...(item.alt || []).map((a) => (Array.isArray(a) ? a.join("") : a).replace(/\s+/g, ""))];
+        while (order.length > 1 && sahSemua.includes(order.map((i) => item.potongan[i]).join(""))) order = shuffle(indexes);
         // order[k] = potongan ke-berapa yang tampil sebagai nomor k+1
         const answer = indexes.map((i) => order.indexOf(i) + 1);
         return {
@@ -589,6 +594,8 @@
           pieces: order.map((i) => item.potongan[i]),
           answer,
           kalimat,
+          // Susunan lain yang juga benar (data `alt`, mis. A と B ditukar).
+          kalimatSah: [kalimat, ...(item.alt || []).map((a) => (Array.isArray(a) ? a.join("") : a).replace(/\s+/g, ""))],
           sentence: kalimat + "。",
         };
       });
@@ -737,7 +744,7 @@
             return;
           }
           // Dinilai dari kalimat yang tersusun (urutan nomor lain yang hasilnya sama tetap benar).
-          const ok = given.map((n) => q.pieces[n - 1]).join("") === q.kalimat;
+          const ok = q.kalimatSah.includes(given.map((n) => q.pieces[n - 1]).join(""));
           input.disabled = true;
           form.querySelector("button").disabled = true;
           answered(ok, given.join(" "), `${q.answer.join(" ")} → ${q.sentence}`);

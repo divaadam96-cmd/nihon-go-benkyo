@@ -9,7 +9,9 @@
             Saat tugas dibuat, urutannya diacak & diberi nomor, lalu siswa
             menuliskan urutan nomor. Jawaban dinilai dari KALIMAT yang
             tersusun, jadi urutan nomor lain yang menghasilkan kalimat sama
-            persis tetap benar.
+            persis tetap benar. Opsional `alt: ["kalimat lain", ...]` untuk
+            susunan lain yang juga benar (mis. "A と B" ditukar), ditulis
+            dari potongan yang sama (spasi diabaikan).
      pilih: [{ arti, benar, salah: [3 pengecoh] }]   soal berbahasa
             Indonesia, siswa memilih kalimat Jepang yang benar.
    }
@@ -248,6 +250,88 @@ const tugasKalimatData = {
         arti: "(Pelayan toko kepada pembeli) Selamat datang.",
         benar: "いらっしゃいませ。",
         salah: ["すみません。", "どうも。", "どうぞ。"],
+      },
+    ],
+  },
+  4: {
+    susun: [
+      { arti: "Sekarang pukul berapa?", potongan: ["いま", "なんじ", "です", "か"] },
+      { arti: "Saya belajar setiap hari.", potongan: ["わたし", "は", "まいにち", "べんきょうします"] },
+      { arti: "Setiap pagi (saya) bangun pukul enam.", potongan: ["まいあさ", "ろくじ", "に", "おきます"] },
+      { arti: "Tadi pagi (saya) bangun pukul enam.", potongan: ["けさ", "ろくじ", "に", "おきました"] },
+      { arti: "Belajar dari pukul sembilan sampai pukul lima.", potongan: ["くじ", "から", "ごじ", "まで", "べんきょうします"] },
+      { arti: "Bank (buka) dari pukul sembilan sampai pukul tiga.", potongan: ["ぎんこう", "は", "くじ", "から", "さんじ", "まで", "です"] },
+      { arti: "Istirahat siang dari pukul dua belas.", potongan: ["ひるやすみ", "は", "じゅうにじ", "から", "です"] },
+      {
+        arti: "Hari libur bank adalah hari Sabtu dan hari Minggu.",
+        potongan: ["ぎんこう", "の", "やすみ", "は", "どようび", "と", "にちようび", "です"],
+        alt: ["ぎんこうのやすみはにちようびとどようびです"],
+      },
+      { arti: "Setiap pagi (Anda) bangun pukul berapa?", potongan: ["まいあさ", "なんじ", "に", "おきます", "か"] },
+      { arti: "Setiap malam (saya) tidur pukul sebelas.", potongan: ["まいばん", "じゅういちじ", "に", "ねます"] },
+      { arti: "Rapat selesai pukul empat.", potongan: ["かいぎ", "は", "よじ", "に", "おわります"] },
+      { arti: "Kemarin (saya) tidak bekerja.", potongan: ["きのう", "は", "はたらきませんでした"] },
+    ],
+    pilih: [
+      {
+        arti: "Sekarang pukul tujuh lewat sepuluh menit.",
+        benar: "いま しちじ じゅっぷんです。",
+        salah: ["いま しちじ じゅうふんです。", "いま じゅっぷん しちじです。", "いま しちじに じゅっぷんです。"],
+      },
+      {
+        arti: "Saya belajar setiap hari.",
+        benar: "わたしは まいにち べんきょうします。",
+        salah: ["わたしは まいにちに べんきょうします。", "わたしは まいにち べんきょうしました。", "わたしは まいにち べんきょうしません。"],
+      },
+      {
+        arti: "Besok (saya) bangun pukul enam.",
+        benar: "あした ろくじに おきます。",
+        salah: ["あした ろくじに おきました。", "あしたに ろくじに おきます。", "あした ろくじから おきます。"],
+      },
+      {
+        arti: "Kemarin (saya) tidak belajar.",
+        benar: "きのう べんきょうしませんでした。",
+        salah: ["きのう べんきょうしません。", "きのう べんきょうしました。", "きのうに べんきょうしませんでした。"],
+      },
+      {
+        arti: "Bank (buka) dari pukul sembilan sampai pukul tiga.",
+        benar: "ぎんこうは くじから さんじまでです。",
+        salah: ["ぎんこうは くじまで さんじからです。", "ぎんこうは くじと さんじまでです。", "ぎんこうは くじから さんじにです。"],
+      },
+      {
+        arti: "Hari libur bank adalah hari Sabtu dan hari Minggu.",
+        benar: "ぎんこうの やすみは どようびと にちようびです。",
+        salah: ["ぎんこうの やすみは どようびも にちようびです。", "ぎんこうの やすみは どようびの にちようびです。", "ぎんこうの やすみは どようびから にちようびです。"],
+      },
+      {
+        arti: "(Saya) bangun pukul setengah tujuh.",
+        benar: "ろくじはんに おきます。",
+        salah: ["しちじはんに おきます。", "ろくじはんに ねます。", "ろくじはんから おきます。"],
+      },
+      {
+        arti: "Setiap malam belajar sampai pukul sepuluh. ... Berat, ya.",
+        benar: "まいばん じゅうじまで べんきょうします。……たいへんですね。",
+        salah: ["まいばん じゅうじから べんきょうします。……たいへんですね。", "まいばん じゅうじまで べんきょうします。……たいへんですか。", "まいばんに じゅうじまで べんきょうします。……たいへんですね。"],
+      },
+      {
+        arti: "Kemarin (Anda) bekerja? ... Ya, bekerja.",
+        benar: "きのう はたらきましたか。……はい、はたらきました。",
+        salah: ["きのう はたらきましたか。……はい、そうです。", "きのう はたらきますか。……はい、はたらきました。", "きのう はたらきましたか。……はい、はたらきます。"],
+      },
+      {
+        arti: "Istirahat siang dari pukul dua belas.",
+        benar: "ひるやすみは じゅうにじからです。",
+        salah: ["ひるやすみは じゅうにじまでです。", "ひるやすみは じゅうにじにです。", "ひるやすみの じゅうにじからです。"],
+      },
+      {
+        arti: "Nomor telepon Sdr. Yamada 871-6813, ya.",
+        benar: "やまださんの でんわばんごうは 871の 6813ですね。",
+        salah: ["やまださんの でんわばんごうは 871の 6813ですか。", "やまださんは でんわばんごうの 871の 6813ですね。", "やまださんの でんわばんごうは 871と 6813ですね。"],
+      },
+      {
+        arti: "Ujiannya hari Rabu.",
+        benar: "しけんは すいようびです。",
+        salah: ["しけんは もくようびです。", "しけんは すいようびにです。", "しけんは かようびです。"],
       },
     ],
   },
