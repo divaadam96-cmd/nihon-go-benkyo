@@ -723,4 +723,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  9: {
+    susun: [
+      { arti: "Saya suka masakan Italia.", potongan: ["わたし", "は", "イタリア", "りょうり", "が", "すき", "です"] },
+      { arti: "Saya mengerti bahasa Jepang.", potongan: ["わたし", "は", "にほんご", "が", "わかります"] },
+      { arti: "Saya mempunyai mobil.", potongan: ["わたし", "は", "くるま", "が", "あります"] },
+      { arti: "(Anda) suka olahraga apa?", potongan: ["どんな", "スポーツ", "が", "すき", "です", "か"] },
+      { arti: "Mengerti bahasa Inggris dengan baik.", potongan: ["えいご", "が", "よく", "わかります"] },
+      { arti: "Uangnya ada banyak.", potongan: ["おかね", "が", "たくさん", "あります"] },
+      { arti: "Uang tidak ada sama sekali.", potongan: ["おかね", "が", "ぜんぜん", "ありません"] },
+      { arti: "Di sini sedikit dingin.", potongan: ["ここ", "は", "すこし", "さむい", "です"] },
+      { arti: "Karena tidak ada waktu, (saya) tidak membaca koran.", potongan: ["じかん", "が", "ありません", "から", "しんぶん", "を", "よみません"] },
+      { arti: "Mengapa pagi hari (Anda) tidak membaca koran?", potongan: ["どうして", "あさ", "しんぶん", "を", "よみません", "か"] },
+      { arti: "Sdri. Maria pandai berdansa.", potongan: ["マリアさん", "は", "ダンス", "が", "じょうず", "です"] },
+      { arti: "Saya tidak begitu mengerti kanji.", potongan: ["わたし", "は", "かんじ", "が", "あまり", "わかりません"] },
+    ],
+    pilih: [
+      {
+        arti: "Saya suka masakan Italia.",
+        benar: "わたしは イタリアりょうりが すきです。",
+        salah: ["わたしは イタリアりょうりを すきです。", "わたしは イタリアりょうりに すきです。", "わたしは イタリアりょうりが きらいです。"],
+      },
+      {
+        arti: "Saya mengerti bahasa Jepang.",
+        benar: "わたしは にほんごが わかります。",
+        salah: ["わたしは にほんごを わかります。", "わたしは にほんごで わかります。", "わたしは にほんごが わかりです。"],
+      },
+      {
+        arti: "Saya mempunyai mobil.",
+        benar: "わたしは くるまが あります。",
+        salah: ["わたしは くるまを あります。", "わたしは くるまに あります。", "わたしは くるまが ありません。"],
+      },
+      {
+        arti: "Suka olahraga apa? ... Suka sepak bola.",
+        benar: "どんな スポーツが すきですか。……サッカーが すきです。",
+        salah: ["どう スポーツが すきですか。……サッカーが すきです。", "どんな スポーツが すきですか。……はい、すきです。", "どんな スポーツを すきですか。……サッカーを すきです。"],
+      },
+      {
+        arti: "Mengerti bahasa Inggris sedikit.",
+        benar: "えいごが すこし わかります。",
+        salah: ["えいごが ぜんぜん わかります。", "えいごを すこし わかります。", "えいごが たくさん わかりません。"],
+      },
+      {
+        arti: "Tidak begitu mengerti bahasa Inggris.",
+        benar: "えいごが あまり わかりません。",
+        salah: ["えいごが あまり わかります。", "えいごが たくさん わかりません。", "えいごを あまり わかりません。"],
+      },
+      {
+        arti: "Uang tidak ada sama sekali.",
+        benar: "おかねが ぜんぜん ありません。",
+        salah: ["おかねが ぜんぜん あります。", "おかねが すこし ありません。", "おかねを ぜんぜん ありません。"],
+      },
+      {
+        arti: "Film itu sama sekali tidak menarik.",
+        benar: "あの えいがは ぜんぜん おもしろくないです。",
+        salah: ["あの えいがは ぜんぜん おもしろいです。", "あの えいがは とても おもしろくないです。", "あの えいがは ぜんぜん おもしろいじゃ ありません。"],
+      },
+      {
+        arti: "Karena tidak ada waktu, (saya) tidak membaca koran.",
+        benar: "じかんが ありませんから、しんぶんを よみません。",
+        salah: ["じかんが ありますから、しんぶんを よみません。", "じかんが ありませんが、しんぶんを よみません。", "しんぶんを よみませんから、じかんが ありません。"],
+      },
+      {
+        arti: "Mengapa pagi hari tidak membaca koran? ... Karena tidak ada waktu.",
+        benar: "どうして あさ しんぶんを よみませんか。……じかんが ありませんから。",
+        salah: ["どう あさ しんぶんを よみませんか。……じかんが ありませんから。", "どうして あさ しんぶんを よみませんか。……じかんが ありませんが。", "どうして あさ しんぶんを よみませんか。……はい、よみません。"],
+      },
+      {
+        arti: "Hari ini (saya) pulang cepat. ... Kenapa?",
+        benar: "きょうは はやく かえります。……どうしてですか。",
+        salah: ["きょうは はやく かえります。……どうですか。", "きょうは はやく かえります。……どんなですか。", "きょうは はやく かえりました。……どうしてですか。"],
+      },
+      {
+        arti: "(Menolak ajakan) Sayang sekali. Lain kali saja.",
+        benar: "ざんねんです。また こんど おねがいします。",
+        salah: ["いいですよ。また こんど おねがいします。", "ざんねんです。いっしょに いかがですか。", "ざんねんです。また きのう おねがいします。"],
+      },
+    ],
+  },
 };
