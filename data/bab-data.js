@@ -4195,7 +4195,7 @@ const babKanjiData = {
   ],
   8: [
     [
-      "\u9759\u9999\uff08\u306a\uff09",
+      "\u9759\u304b\uff08\u306a\uff09",
       "\u3057\u305a\u304b\uff08\u306a\uff09",
       "Sunyi / tenang",
     ],
@@ -4205,7 +4205,7 @@ const babKanjiData = {
       "Terkenal",
     ],
     [
-      "\u65b0\u8a2d\uff08\u306a\uff09",
+      "\u89aa\u5207\uff08\u306a\uff09",
       "\u3057\u3093\u305b\u3064\uff08\u306a\uff09",
       "Baik hati",
     ],

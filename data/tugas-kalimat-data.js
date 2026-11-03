@@ -645,4 +645,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  8: {
+    susun: [
+      { arti: "Pak Watt baik hati.", potongan: ["ワットせんせい", "は", "しんせつ", "です"] },
+      { arti: "Gunung Fuji tinggi.", potongan: ["ふじさん", "は", "たかい", "です"] },
+      { arti: "Di sana tidak sunyi.", potongan: ["あそこ", "は", "しずか", "じゃ", "ありません"] },
+      { arti: "Buku ini tidak menarik.", potongan: ["この", "ほん", "は", "おもしろくない", "です"] },
+      { arti: "Pak Watt adalah guru yang baik hati.", potongan: ["ワットせんせい", "は", "しんせつな", "せんせい", "です"] },
+      { arti: "Gunung Fuji adalah gunung yang tinggi.", potongan: ["ふじさん", "は", "たかい", "やま", "です"] },
+      { arti: "Makanan Jepang enak, tetapi mahal.", potongan: ["にほん", "の", "たべもの", "は", "おいしい", "です", "が", "たかい", "です"] },
+      { arti: "Beijing sangat dingin.", potongan: ["ペキン", "は", "とても", "さむい", "です"] },
+      { arti: "Shanghai tidak begitu dingin.", potongan: ["シャンハイ", "は", "あまり", "さむくない", "です"] },
+      { arti: "Bagaimana kehidupan di Jepang?", potongan: ["にほん", "の", "せいかつ", "は", "どう", "です", "か"] },
+      { arti: "Nara kota yang bagaimana?", potongan: ["なら", "は", "どんな", "まち", "です", "か"] },
+      { arti: "Ini film yang sangat terkenal.", potongan: ["これ", "は", "とても", "ゆうめいな", "えいが", "です"] },
+    ],
+    pilih: [
+      {
+        arti: "Pak Watt baik hati.",
+        benar: "ワットせんせいは しんせつです。",
+        salah: ["ワットせんせいは しんせつなです。", "ワットせんせいは しんせついです。", "ワットせんせいの しんせつです。"],
+      },
+      {
+        arti: "Di sana tidak sunyi.",
+        benar: "あそこは しずかじゃ ありません。",
+        salah: ["あそこは しずかくないです。", "あそこは しずかなじゃ ありません。", "あそこは しずかないです。"],
+      },
+      {
+        arti: "Buku ini tidak menarik.",
+        benar: "この ほんは おもしろくないです。",
+        salah: ["この ほんは おもしろいじゃ ありません。", "この ほんは おもしろくです。", "この ほんは おもしろないです。"],
+      },
+      {
+        arti: "Pak Watt adalah guru yang baik hati.",
+        benar: "ワットせんせいは しんせつな せんせいです。",
+        salah: ["ワットせんせいは しんせつ せんせいです。", "ワットせんせいは しんせつの せんせいです。", "ワットせんせいは しんせつい せんせいです。"],
+      },
+      {
+        arti: "Gunung Fuji adalah gunung yang tinggi.",
+        benar: "ふじさんは たかい やまです。",
+        salah: ["ふじさんは たかいな やまです。", "ふじさんは たかの やまです。", "ふじさんは たかく やまです。"],
+      },
+      {
+        arti: "Makanan Jepang enak, tetapi mahal.",
+        benar: "にほんの たべものは おいしいですが、たかいです。",
+        salah: ["にほんの たべものは おいしいですが、やすいです。", "にほんの たべものは おいしいですと、たかいです。", "にほんの たべものは おいしくですが、たかいです。"],
+      },
+      {
+        arti: "Beijing sangat dingin.",
+        benar: "ペキンは とても さむいです。",
+        salah: ["ペキンは あまり さむいです。", "ペキンは とても さむくないです。", "ペキンは とても つめたいです。"],
+      },
+      {
+        arti: "Shanghai tidak begitu dingin.",
+        benar: "シャンハイは あまり さむくないです。",
+        salah: ["シャンハイは あまり さむいです。", "シャンハイは とても さむくないです。", "シャンハイは あまり さむいじゃ ありません。"],
+      },
+      {
+        arti: "Bagaimana kehidupan di Jepang? ... Menyenangkan.",
+        benar: "にほんの せいかつは どうですか。……たのしいです。",
+        salah: ["にほんの せいかつは どんなですか。……たのしいです。", "にほんの せいかつは なんですか。……たのしいです。", "にほんの せいかつは どうですか。……たのしくです。"],
+      },
+      {
+        arti: "Nara kota yang bagaimana? ... Kota yang tua.",
+        benar: "ならは どんな まちですか。……ふるい まちです。",
+        salah: ["ならは どう まちですか。……ふるい まちです。", "ならは どんな まちですか。……ふるいな まちです。", "ならは どんな まちですか。……ふるく まちです。"],
+      },
+      {
+        arti: "Bagaimana pekerjaannya? ... Yah... sibuk, tetapi menarik.",
+        benar: "おしごとは どうですか。……そうですね。いそがしいですが、おもしろいです。",
+        salah: ["おしごとは どうですか。……そうですか。いそがしいですが、おもしろいです。", "おしごとは どうですか。……そうですね。いそがしくですが、おもしろいです。", "おしごとは どうですか。……そうですね。いそがしいですと、おもしろいです。"],
+      },
+      {
+        arti: "(Menolak tawaran) Tidak, cukup.",
+        benar: "いいえ、けっこうです。",
+        salah: ["いいえ、そうです。", "いいえ、どうぞ。", "いいえ、けっこうでした。"],
+      },
+    ],
+  },
 };
