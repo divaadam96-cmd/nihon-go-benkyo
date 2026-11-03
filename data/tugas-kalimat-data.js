@@ -429,4 +429,102 @@ const tugasKalimatData = {
       },
     ],
   },
+  6: {
+    susun: [
+      { arti: "Minum jus.", potongan: ["ジュース", "を", "のみます"] },
+      { arti: "Kemarin (Anda) melakukan apa?", potongan: ["きのう", "なに", "を", "しました", "か"] },
+      { arti: "Bermain sepak bola.", potongan: ["サッカー", "を", "します"] },
+      {
+        arti: "Membeli koran di stasiun.",
+        potongan: ["えき", "で", "しんぶん", "を", "かいます"],
+        alt: ["しんぶんをえきでかいます"],
+      },
+      {
+        arti: "Bagaimana kalau kita pergi ke Kyoto bersama-sama?",
+        potongan: ["いっしょに", "きょうと", "へ", "いきません", "か"],
+        alt: ["きょうとへいっしょにいきませんか"],
+      },
+      { arti: "Mari (kita) istirahat sebentar.", potongan: ["ちょっと", "やすみましょう"] },
+      {
+        arti: "Dengan apa (Anda) pergi ke Tokyo?",
+        potongan: ["なん", "で", "とうきょう", "へ", "いきます", "か"],
+        alt: ["とうきょうへなんでいきますか"],
+      },
+      { arti: "Mau membeli apa?", potongan: ["なに", "を", "かいます", "か"] },
+      { arti: "Setiap pagi (saya) minum kopi.", potongan: ["まいあさ", "コーヒー", "を", "のみます"] },
+      {
+        arti: "Saya kadang-kadang menonton film.",
+        potongan: ["わたし", "は", "ときどき", "えいが", "を", "みます"],
+        alt: ["ときどきわたしはえいがをみます"],
+      },
+      {
+        arti: "Makan siang di kantin.",
+        potongan: ["しょくどう", "で", "ひるごはん", "を", "たべます"],
+        alt: ["ひるごはんをしょくどうでたべます"],
+      },
+      { arti: "Setelah itu (saya) membaca buku.", potongan: ["それから", "ほん", "を", "よみます"] },
+    ],
+    pilih: [
+      {
+        arti: "Minum jus.",
+        benar: "ジュースを のみます。",
+        salah: ["ジュースで のみます。", "ジュースへ のみます。", "ジュースを たべます。"],
+      },
+      {
+        arti: "Membeli koran di stasiun.",
+        benar: "えきで しんぶんを かいます。",
+        salah: ["えきへ しんぶんを かいます。", "えきで しんぶんで かいます。", "えきを しんぶんで かいます。"],
+      },
+      {
+        arti: "Kemarin melakukan apa? ... Bermain sepak bola.",
+        benar: "きのう なにを しましたか。……サッカーを しました。",
+        salah: ["きのう なにを しましたか。……サッカーを します。", "きのう なにを しますか。……サッカーを しました。", "きのう なんを しましたか。……サッカーを しました。"],
+      },
+      {
+        arti: "Itu apa?",
+        benar: "それは なんですか。",
+        salah: ["それは なにですか。", "それは なにを ですか。", "それの なんですか。"],
+      },
+      {
+        arti: "Dengan apa pergi ke Tokyo? ... Dengan Shinkansen.",
+        benar: "なんで とうきょうへ いきますか。……しんかんせんで いきます。",
+        salah: ["なんで とうきょうへ いきますか。……しんかんせんへ いきます。", "なにを とうきょうへ いきますか。……しんかんせんで いきます。", "なんで とうきょうへ いきますか。……しんかんせんを いきます。"],
+      },
+      {
+        arti: "Bagaimana kalau pergi ke Kyoto bersama-sama? ... Ya, bagus ya.",
+        benar: "いっしょに きょうとへ いきませんか。……ええ、いいですね。",
+        salah: ["いっしょに きょうとへ いきますか。……ええ、いいですね。", "いっしょに きょうとへ いきませんか。……ええ、いきません。", "いっしょに きょうとへ いきましたか。……ええ、いいですね。"],
+      },
+      {
+        arti: "Mari (kita) istirahat sebentar.",
+        benar: "ちょっと やすみましょう。",
+        salah: ["ちょっと やすみませんでした。", "ちょっと やすみました。", "いつも やすみましょう。"],
+      },
+      {
+        arti: "Bagaimana kalau makan siang bersama? ... Ya, ayo kita makan.",
+        benar: "いっしょに ひるごはんを たべませんか。……ええ、たべましょう。",
+        salah: ["いっしょに ひるごはんを たべませんか。……ええ、たべません。", "いっしょに ひるごはんを たべませんか。……ええ、たべましたか。", "いっしょに ひるごはんで たべませんか。……ええ、たべましょう。"],
+      },
+      {
+        arti: "Hari Minggu (saya) pergi ke Kyoto. ... Kyoto? Bagus ya.",
+        benar: "にちようび きょうとへ いきました。……きょうとですか。いいですね。",
+        salah: ["にちようび きょうとへ いきました。……きょうとですね。いいですか。", "にちようび きょうとへ いきました。……きょうとですよ。いいですね。", "にちようび きょうとで いきました。……きょうとですか。いいですね。"],
+      },
+      {
+        arti: "Saya kadang-kadang menonton film.",
+        benar: "わたしは ときどき えいがを みます。",
+        salah: ["わたしは いつも えいがを みます。", "わたしは ときどき えいがを ききます。", "わたしは ときどき えいがで みます。"],
+      },
+      {
+        arti: "Hari Senin (Anda) melakukan apa? ... Pergi ke Kyoto.",
+        benar: "げつようび なにを しますか。……きょうとへ いきます。",
+        salah: ["げつようび なにを しますか。……きょうとを します。", "げつようび なにを しますか。……はい、します。", "げつようび なにを しますか。……きょうとで いきます。"],
+      },
+      {
+        arti: "Mari kita mengambil foto.",
+        benar: "しゃしんを とりましょう。",
+        salah: ["しゃしんを とりませんでした。", "しゃしんで とりましょう。", "しゃしんを みましょう。"],
+      },
+    ],
+  },
 };
