@@ -527,4 +527,122 @@ const tugasKalimatData = {
       },
     ],
   },
+  7: {
+    susun: [
+      { arti: "Makan dengan sumpit.", potongan: ["はし", "で", "たべます"] },
+      {
+        arti: "Menulis laporan dalam bahasa Jepang.",
+        potongan: ["にほんご", "で", "レポート", "を", "かきます"],
+        alt: ["レポートをにほんごでかきます"],
+      },
+      { arti: "Apa bahasa Inggrisnya \"Arigatou\"?", potongan: ["「ありがとう」", "は", "えいご", "で", "なん", "です", "か"] },
+      {
+        arti: "Saya memberikan bunga kepada Sdr. Kimura.",
+        potongan: ["わたし", "は", "きむらさん", "に", "はな", "を", "あげました"],
+        alt: ["わたしははなをきむらさんにあげました"],
+      },
+      {
+        arti: "Saya meminjamkan buku kepada Sdr. Lee.",
+        potongan: ["わたし", "は", "イーさん", "に", "ほん", "を", "かしました"],
+        alt: ["わたしはほんをイーさんにかしました"],
+      },
+      {
+        arti: "(Saya) mengajar bahasa Inggris kepada Sdr. Yamada.",
+        potongan: ["やまださん", "に", "えいご", "を", "おしえます"],
+        alt: ["えいごをやまださんにおしえます"],
+      },
+      {
+        arti: "(Saya) mendapat bunga dari Sdr. Yamada.",
+        potongan: ["やまださん", "に", "はな", "を", "もらいました"],
+        alt: ["はなをやまださんにもらいました"],
+      },
+      {
+        arti: "(Saya) meminjam uang dari bank.",
+        potongan: ["ぎんこう", "から", "おかね", "を", "かりました"],
+        alt: ["おかねをぎんこうからかりました"],
+      },
+      {
+        arti: "Apakah barangnya sudah (Anda) kirim?",
+        potongan: ["もう", "にもつ", "を", "おくりました", "か"],
+        alt: ["にもつをもうおくりましたか"],
+      },
+      {
+        arti: "(Saya) belajar bahasa Mandarin dari Sdr. Wang.",
+        potongan: ["ワンさん", "に", "ちゅうごくご", "を", "ならいます"],
+        alt: ["ちゅうごくごをワンさんにならいます"],
+      },
+      {
+        arti: "Memotong kertas dengan gunting.",
+        potongan: ["はさみ", "で", "かみ", "を", "きります"],
+        alt: ["かみをはさみできります"],
+      },
+      {
+        arti: "Mengirim email kepada teman.",
+        potongan: ["ともだち", "に", "メール", "を", "おくります"],
+        alt: ["メールをともだちにおくります"],
+      },
+    ],
+    pilih: [
+      {
+        arti: "Makan dengan sumpit.",
+        benar: "はしで たべます。",
+        salah: ["はしを たべます。", "はしに たべます。", "はしと たべます。"],
+      },
+      {
+        arti: "Apa bahasa Inggrisnya \"Arigatou\"? ... \"Thank you\".",
+        benar: "「ありがとう」は えいごで なんですか。……「Thank you」です。",
+        salah: ["「ありがとう」は えいごで なにですか。……「Thank you」です。", "「ありがとう」は えいごに なんですか。……「Thank you」です。", "「ありがとう」は えいごを なんですか。……「Thank you」です。"],
+      },
+      {
+        arti: "(Saya) memberikan bunga kepada Sdr. Kimura.",
+        benar: "きむらさんに はなを あげました。",
+        salah: ["きむらさんに はなを もらいました。", "きむらさんを はなに あげました。", "きむらさんで はなを あげました。"],
+      },
+      {
+        arti: "(Saya) mendapat bunga dari Sdr. Yamada.",
+        benar: "やまださんに はなを もらいました。",
+        salah: ["やまださんに はなを あげました。", "やまださんへ はなを もらいました。", "やまださんで はなを もらいました。"],
+      },
+      {
+        arti: "(Saya) meminjam CD dari Karina.",
+        benar: "カリナさんに CDを かりました。",
+        salah: ["カリナさんに CDを かしました。", "カリナさんを CDに かりました。", "カリナさんと CDを かりました。"],
+      },
+      {
+        arti: "(Saya) meminjam uang dari bank.",
+        benar: "ぎんこうから おかねを かりました。",
+        salah: ["ぎんこうから おかねを かしました。", "ぎんこうへ おかねを かりました。", "ぎんこうから おかねで かりました。"],
+      },
+      {
+        arti: "Apakah barangnya sudah dikirim? ... Ya, sudah dikirim.",
+        benar: "もう にもつを おくりましたか。……はい、もう おくりました。",
+        salah: ["もう にもつを おくりますか。……はい、もう おくりました。", "もう にもつを おくりましたか。……はい、まだです。", "もう にもつを おくりましたか。……はい、おくりませんでした。"],
+      },
+      {
+        arti: "(Apakah sudah dikirim?) Belum.",
+        benar: "いいえ、まだです。",
+        salah: ["いいえ、もうです。", "はい、まだです。", "いいえ、まだでした。"],
+      },
+      {
+        arti: "(Saya) mengajar bahasa Inggris kepada Sdr. Yamada.",
+        benar: "やまださんに えいごを おしえます。",
+        salah: ["やまださんに えいごを ならいます。", "やまださんを えいごに おしえます。", "やまださんと えいごを おしえます。"],
+      },
+      {
+        arti: "Sendok ini bagus, ya.",
+        benar: "この スプーン、すてきですね。",
+        salah: ["この スプーン、すてきですか。", "これ スプーン、すてきですね。", "この スプーンを、すてきですね。"],
+      },
+      {
+        arti: "(Selesai makan) Terima kasih atas hidangannya.",
+        benar: "ごちそうさまでした。",
+        salah: ["いただきます。", "いらっしゃい。", "しつれいします。"],
+      },
+      {
+        arti: "Bagaimana kalau kopi secangkir lagi? (menawarkan)",
+        benar: "コーヒー、もう いっぱい いかがですか。",
+        salah: ["コーヒー、まだ いっぱい いかがですか。", "コーヒー、もう いっぱい いかがでしたか。", "コーヒーで、もう いっぱい いかがですか。"],
+      },
+    ],
+  },
 };
