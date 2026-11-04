@@ -887,4 +887,94 @@ const tugasKalimatData = {
       },
     ],
   },
+  11: {
+    susun: [
+      { arti: "(Saya) membeli empat buah apel.", potongan: ["りんご", "を", "よっつ", "かいました"] },
+      { arti: "Ada dua orang mahasiswa asing.", potongan: ["がいこくじん", "の", "がくせい", "が", "ふたり", "います"] },
+      {
+        arti: "(Saya) belajar bahasa Jepang selama dua bulan.",
+        potongan: ["にかげつ", "にほんご", "を", "べんきょうしました"],
+        alt: ["にほんごをにかげつべんきょうしました"],
+      },
+      { arti: "(Anda) membeli jeruk berapa buah?", potongan: ["みかん", "を", "いくつ", "かいました", "か"] },
+      { arti: "Di perusahaan ini ada berapa orang asing?", potongan: ["この", "かいしゃ", "に", "がいこくじん", "が", "なんにん", "います", "か"] },
+      {
+        arti: "Setiap malam (Anda) belajar bahasa Jepang berapa jam?",
+        potongan: ["まいばん", "なんじかん", "にほんご", "を", "べんきょうします", "か"],
+        alt: ["まいばんにほんごをなんじかんべんきょうしますか"],
+      },
+      { arti: "Dari Osaka sampai Tokyo memerlukan waktu berapa lama?", potongan: ["おおさか", "から", "とうきょう", "まで", "どのくらい", "かかります", "か"] },
+      { arti: "Memerlukan waktu kira-kira 15 menit.", potongan: ["じゅうごふん", "ぐらい", "かかります"] },
+      {
+        arti: "Sebulan dua kali (saya) menonton film.",
+        potongan: ["いっかげつ", "に", "にかい", "えいが", "を", "みます"],
+        alt: ["えいがをいっかげつににかいみます"],
+      },
+      { arti: "Hari liburnya hanya hari Minggu.", potongan: ["やすみ", "は", "にちようび", "だけ", "です"] },
+      { arti: "Di sekolah ada kira-kira 30 orang guru.", potongan: ["がっこう", "に", "せんせい", "が", "さんじゅうにん", "ぐらい", "います"] },
+      { arti: "Tolong (berikan) perangko 80 yen tiga lembar.", potongan: ["はちじゅうえん", "の", "きって", "を", "さんまい", "ください"] },
+    ],
+    pilih: [
+      {
+        arti: "(Saya) membeli empat buah apel.",
+        benar: "りんごを よっつ かいました。",
+        salah: ["りんごを よんつ かいました。", "りんごを よにん かいました。", "りんごを よっつを かいました。"],
+      },
+      {
+        arti: "Ada dua orang mahasiswa asing.",
+        benar: "がいこくじんの がくせいが ふたり います。",
+        salah: ["がいこくじんの がくせいが ににん います。", "がいこくじんの がくせいが ふたつ います。", "がいこくじんの がくせいが ふたり あります。"],
+      },
+      {
+        arti: "Membeli jeruk berapa buah? ... Membeli delapan buah.",
+        benar: "みかんを いくつ かいましたか。……やっつ かいました。",
+        salah: ["みかんを いくつ かいましたか。……はちつ かいました。", "みかんを なんにん かいましたか。……やっつ かいました。", "みかんを いくら かいましたか。……やっつ かいました。"],
+      },
+      {
+        arti: "Berapa lama belajar bahasa Jepang? ... Belajar tiga tahun.",
+        benar: "どのくらい にほんごを べんきょうしましたか。……さんねん べんきょうしました。",
+        salah: ["どのくらい にほんごを べんきょうしましたか。……さんねんに べんきょうしました。", "いつ にほんごを べんきょうしましたか。……さんねん べんきょうしました。", "どのくらい にほんごを べんきょうしましたか。……さんがつ べんきょうしました。"],
+      },
+      {
+        arti: "Dengan Shinkansen memerlukan waktu dua setengah jam.",
+        benar: "しんかんせんで にじかんはん かかります。",
+        salah: ["しんかんせんで にじはん かかります。", "しんかんせんに にじかんはん かかります。", "しんかんせんで にじかんはん あります。"],
+      },
+      {
+        arti: "Memerlukan waktu kira-kira 15 menit.",
+        benar: "じゅうごふんぐらい かかります。",
+        salah: ["じゅうごふんだけ かかります。", "じゅうごふんぐらい います。", "じゅうごふんに かかります。"],
+      },
+      {
+        arti: "Sebulan dua kali (saya) menonton film.",
+        benar: "いっかげつに にかい えいがを みます。",
+        salah: ["いっかげつで にかい えいがを みます。", "にかげつに いっかい えいがを みます。", "いっかげつに にかい えいがを ききます。"],
+      },
+      {
+        arti: "Di Power Elektronik hanya ada seorang pegawai asing.",
+        benar: "パワーでんきに がいこくじんの しゃいんが ひとりだけ います。",
+        salah: ["パワーでんきに がいこくじんの しゃいんが ひとりだけ あります。", "パワーでんきに がいこくじんの しゃいんが ひとつだけ います。", "パワーでんきに がいこくじんの しゃいんが ひとりも います。"],
+      },
+      {
+        arti: "Hari liburnya hanya hari Minggu.",
+        benar: "やすみは にちようびだけです。",
+        salah: ["やすみは にちようびもです。", "やすみは にちようびぐらいです。", "やすみは どようびだけです。"],
+      },
+      {
+        arti: "Tolong (berikan) perangko 80 yen tiga lembar.",
+        benar: "はちじゅうえんの きってを さんまい ください。",
+        salah: ["はちじゅうえんの きってを さんだい ください。", "はちじゅうえんの きってを さんにん ください。", "はちじゅうえんの きってで さんまい ください。"],
+      },
+      {
+        arti: "Mau keluar? ... Ya, sebentar ke kantor pos.",
+        benar: "おでかけですか。……ええ、ちょっと ゆうびんきょくまで。",
+        salah: ["おでかけですか。……ええ、ちょっと ゆうびんきょくから。", "いってらっしゃい。……ええ、ちょっと ゆうびんきょくまで。", "おでかけですか。……ええ、ちょっと ゆうびんきょくだけ。"],
+      },
+      {
+        arti: "(Yang berangkat) Saya berangkat. ... (Yang ditinggal) Hati-hati.",
+        benar: "いってきます。……いってらっしゃい。",
+        salah: ["いってらっしゃい。……いってきます。", "いってきます。……いらっしゃい。", "いってきます。……いってきます。"],
+      },
+    ],
+  },
 };

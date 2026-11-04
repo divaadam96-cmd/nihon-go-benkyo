@@ -480,7 +480,8 @@
     });
     // Bacaan keliru khas yang ditulis manual (data/kanji-mirip-data.js), mis. 来 -> こ/く.
     const manual = typeof bacaanKeliruData !== "undefined" ? bacaanKeliruData[item.kanji] || [] : [];
-    manual.forEach((teks) => calon.push({ jenis: "manual", teks }));
+    // Catatan dalam kurung (mis. （を）) ditambahkan bila manualnya belum memuat.
+    manual.forEach((teks) => calon.push({ jenis: "manual", teks: catatan && !teks.endsWith(catatan) ? teks + catatan : teks }));
 
     // Bacaan yang sah untuk kanji ini (dari data mana pun) tidak boleh jadi pengecoh.
     if (!indeksBacaan) {
