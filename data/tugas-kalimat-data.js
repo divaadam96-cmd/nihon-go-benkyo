@@ -2006,4 +2006,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  24: {
+    susun: [
+      { arti: "Sdr. Sato memberi saya kartu Natal.", potongan: ["さとうさん", "は", "わたし", "に", "クリスマスカード", "を", "くれました"], alt: ["さとうさんはクリスマスカードをわたしにくれました"] },
+      { arti: "Saya meminjamkan buku kepada Sdr. Kimura.", potongan: ["わたし", "は", "きむらさん", "に", "ほん", "を", "かして", "あげました"], alt: ["わたしはほんをきむらさんにかしてあげました"] },
+      { arti: "Saya diberi tahu nomor telepon perpustakaan oleh Sdr. Yamada.", potongan: ["わたし", "は", "やまださん", "に", "としょかん", "の", "でんわばんごう", "を", "おしえて", "もらいました"] },
+      { arti: "Ibu mengirimkan sweter (untuk saya).", potongan: ["はは", "は", "セーター", "を", "おくって", "くれました"] },
+      { arti: "Siapa yang akan pergi membantu?", potongan: ["だれ", "が", "てつだい", "に", "いきます", "か"] },
+      { arti: "Saya dibantu pindah rumah oleh Sdri. Maria.", potongan: ["わたし", "は", "マリアさん", "に", "ひっこし", "を", "てつだって", "もらいました"] },
+      { arti: "Sdr. Tanaka mengantar (saya) sampai stasiun dengan mobil.", potongan: ["たなかさん", "が", "えき", "まで", "くるま", "で", "おくって", "くれました"], alt: ["たなかさんがくるまでえきまでおくってくれました"] },
+      { arti: "Orang kantor memandu (saya keliling) Kyoto.", potongan: ["かいしゃ", "の", "ひと", "が", "きょうと", "を", "あんないして", "くれました"] },
+      { arti: "Karangan saya diperbaiki oleh guru.", potongan: ["わたし", "は", "せんせい", "に", "さくぶん", "を", "なおして", "もらいました"] },
+      { arti: "Saya membawa anak ke taman.", potongan: ["わたし", "は", "こども", "を", "こうえん", "へ", "つれて", "いきました"], alt: ["わたしはこうえんへこどもをつれていきました"] },
+      { arti: "Sdr. Yamada memberi saya kue (makanan ringan) dari Hokkaido.", potongan: ["やまださん", "は", "わたし", "に", "ほっかいどう", "の", "おかし", "を", "くれました"], alt: ["やまださんはほっかいどうのおかしをわたしにくれました"] },
+      { arti: "Saya menjelaskan cara memakai komputer kepada nenek.", potongan: ["わたし", "は", "おばあさん", "に", "パソコン", "の", "つかいかた", "を", "せつめいして", "あげました"] },
+    ],
+    pilih: [
+      {
+        arti: "Sdr. Sato memberi saya kartu Natal.",
+        benar: "さとうさんは わたしに クリスマスカードを くれました。",
+        salah: ["さとうさんは わたしに クリスマスカードを あげました。", "さとうさんは わたしを クリスマスカードを くれました。", "さとうさんは わたしに クリスマスカードを もらいました。"],
+      },
+      {
+        arti: "Saya meminjamkan buku kepada Sdr. Kimura.",
+        benar: "わたしは きむらさんに ほんを かして あげました。",
+        salah: ["わたしは きむらさんに ほんを かして くれました。", "わたしは きむらさんに ほんを かりて あげました。", "わたしは きむらさんを ほんを かして あげました。"],
+      },
+      {
+        arti: "Saya diberi tahu nomor telepon perpustakaan oleh Sdr. Yamada.",
+        benar: "わたしは やまださんに としょかんの でんわばんごうを おしえて もらいました。",
+        salah: ["わたしは やまださんに としょかんの でんわばんごうを おしえて くれました。", "わたしは やまださんに としょかんの でんわばんごうを おしえて あげました。", "わたしは やまださんを としょかんの でんわばんごうを おしえて もらいました。"],
+      },
+      {
+        arti: "Ibu mengirimkan sweter (untuk saya).",
+        benar: "ははは セーターを おくって くれました。",
+        salah: ["ははは セーターを おくって もらいました。", "ははは セーターを おくって あげました。", "ははは セーターを おくて くれました。"],
+      },
+      {
+        arti: "Siapa yang akan pergi membantu? ... Sdri. Karina yang pergi.",
+        benar: "だれが てつだいに いきますか。……カリナさんが いきます。",
+        salah: ["だれは てつだいに いきますか。……カリナさんが いきます。", "だれが てつだいに いきますか。……カリナさんは いきます。", "だれが てつだいを いきますか。……カリナさんが いきます。"],
+      },
+      {
+        arti: "Saya dibantu pindah rumah oleh Sdri. Maria.",
+        benar: "わたしは マリアさんに ひっこしを てつだって もらいました。",
+        salah: ["わたしは マリアさんに ひっこしを てつだって くれました。", "わたしは マリアさんが ひっこしを てつだって もらいました。", "わたしは マリアさんに ひっこしを てつだいて もらいました。"],
+      },
+      {
+        arti: "Sdr. Tanaka mengantar (saya) sampai stasiun dengan mobil.",
+        benar: "たなかさんが えきまで くるまで おくって くれました。",
+        salah: ["たなかさんが えきまで くるまで おくって もらいました。", "たなかさんが えきまで くるまで おくって あげました。", "たなかさんに えきまで くるまで おくって くれました。"],
+      },
+      {
+        arti: "Karangan saya diperbaiki oleh guru.",
+        benar: "わたしは せんせいに さくぶんを なおして もらいました。",
+        salah: ["わたしは せんせいに さくぶんを なおして くれました。", "わたしは せんせいに さくぶんを なおって もらいました。", "わたしは せんせいで さくぶんを なおして もらいました。"],
+      },
+      {
+        arti: "Sdr. Yamada memberi saya kue (makanan ringan) dari Hokkaido.",
+        benar: "やまださんは わたしに ほっかいどうの おかしを くれました。",
+        salah: ["やまださんは わたしに ほっかいどうの おかしを もらいました。", "やまださんは わたしから ほっかいどうの おかしを くれました。", "やまださんは わたしに ほっかいどうの おかしを くれて あげました。"],
+      },
+      {
+        arti: "Saya mendapat oleh-oleh dari Sdr. Miller.",
+        benar: "わたしは ミラーさんに おみやげを もらいました。",
+        salah: ["わたしは ミラーさんに おみやげを くれました。", "わたしは ミラーさんを おみやげを もらいました。", "わたしは ミラーさんで おみやげを もらいました。"],
+      },
+      {
+        arti: "Saya menjelaskan cara memakai komputer kepada nenek.",
+        benar: "わたしは おばあさんに パソコンの つかいかたを せつめいして あげました。",
+        salah: ["わたしは おばあさんに パソコンの つかいかたを せつめいして くれました。", "わたしは おばあさんに パソコンの つかいかたを せつめいして もらいました。", "わたしは おばあさんを パソコンの つかいかたを せつめいして あげました。"],
+      },
+      {
+        arti: "Saya membawa anak ke taman.",
+        benar: "わたしは こどもを こうえんへ つれて いきました。",
+        salah: ["わたしは こどもに こうえんへ つれて いきました。", "わたしは こどもを こうえんへ つれる いきました。", "わたしは こどもを こうえんへ もって いきました。"],
+      },
+    ],
+  },
 };
