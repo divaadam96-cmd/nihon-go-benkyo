@@ -1850,4 +1850,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  22: {
+    susun: [
+      { arti: "Ini rumah yang dulu dihuni Sdr. Miller.", potongan: ["これ", "は", "ミラーさん", "が", "すんで", "いた", "うち", "です"] },
+      { arti: "Rumah yang dulu dihuni Sdr. Miller sudah tua.", potongan: ["ミラーさん", "が", "すんで", "いた", "うち", "は", "ふるい", "です"] },
+      { arti: "Ini kue yang dibuat oleh Sdr. Miller.", potongan: ["これ", "は", "ミラーさん", "が", "つくった", "ケーキ", "です"] },
+      { arti: "Saya suka lukisan yang digambar Sdri. Karina.", potongan: ["わたし", "は", "カリナさん", "が", "かいた", "え", "が", "すき", "です"] },
+      { arti: "Apakah (Anda) tahu tempat dia lahir?", potongan: ["かれ", "が", "うまれた", "ところ", "を", "しって", "います", "か"] },
+      { arti: "Saya tidak punya waktu untuk sarapan.", potongan: ["わたし", "は", "あさごはん", "を", "たべる", "じかん", "が", "ありません"] },
+      { arti: "Saya ada janji menonton film dengan teman.", potongan: ["わたし", "は", "ともだち", "と", "えいが", "を", "みる", "やくそく", "が", "あります"] },
+      { arti: "Hari ini (saya) ada urusan pergi ke kantor walikota.", potongan: ["きょう", "は", "しやくしょ", "へ", "いく", "ようじ", "が", "あります"] },
+      { arti: "Orang yang memakai kacamata itu Sdr. Tanaka.", potongan: ["めがね", "を", "かけて", "いる", "ひと", "は", "たなかさん", "です"] },
+      { arti: "Siapa orang yang pergi ke Kyoto?", potongan: ["きょうと", "へ", "いった", "ひと", "は", "だれ", "です", "か"] },
+      { arti: "Bagaimana kalau kita pergi sekarang?", potongan: ["いま", "から", "いきましょう", "か"] },
+      { arti: "Ini topi yang saya beli di Paris.", potongan: ["これ", "は", "パリ", "で", "かった", "ぼうし", "です"] },
+    ],
+    pilih: [
+      {
+        arti: "Ini kue yang dibuat oleh Sdr. Miller.",
+        benar: "これは ミラーさんが つくった ケーキです。",
+        salah: ["これは ミラーさんは つくった ケーキです。", "これは ミラーさんが つくりました ケーキです。", "これは ミラーさんが つくったの ケーキです。"],
+      },
+      {
+        arti: "Saya suka lukisan yang digambar Sdri. Karina.",
+        benar: "わたしは カリナさんが かいた えが すきです。",
+        salah: ["わたしは カリナさんが かいた えを すきです。", "わたしは カリナさんが かきました えが すきです。", "わたしは カリナさんが かいたの えが すきです。"],
+      },
+      {
+        arti: "Rumah yang dulu dihuni Sdr. Miller sudah tua.",
+        benar: "ミラーさんが すんで いた うちは ふるいです。",
+        salah: ["ミラーさんが すんで いたの うちは ふるいです。", "ミラーさんが すみます うちは ふるいです。", "ミラーさんが すんで いた うちを ふるいです。"],
+      },
+      {
+        arti: "Apakah (Anda) tahu tempat dia lahir?",
+        benar: "かれが うまれた ところを しって いますか。",
+        salah: ["かれは うまれた ところを しって いますか。", "かれが うまれました ところを しって いますか。", "かれが うまれた ところが しって いますか。"],
+      },
+      {
+        arti: "Saya tidak punya waktu untuk sarapan.",
+        benar: "あさごはんを たべる じかんが ありません。",
+        salah: ["あさごはんを たべた じかんが ありません。", "あさごはんを たべます じかんが ありません。", "あさごはんを たべる じかんを ありません。"],
+      },
+      {
+        arti: "(Saya) ada janji menonton film dengan teman.",
+        benar: "ともだちと えいがを みる やくそくが あります。",
+        salah: ["ともだちと えいがを みます やくそくが あります。", "ともだちと えいがを みる やくそくを あります。", "ともだちと えいがを みるの やくそくが あります。"],
+      },
+      {
+        arti: "Orang yang memakai kacamata itu Sdr. Tanaka.",
+        benar: "めがねを かけて いる ひとは たなかさんです。",
+        salah: ["めがねを きて いる ひとは たなかさんです。", "めがねを はいて いる ひとは たなかさんです。", "めがねを かぶって いる ひとは たなかさんです。"],
+      },
+      {
+        arti: "Orang yang memakai topi itu Sdr. Lee.",
+        benar: "ぼうしを かぶって いる ひとは イーさんです。",
+        salah: ["ぼうしを きて いる ひとは イーさんです。", "ぼうしを はいて いる ひとは イーさんです。", "ぼうしを かけて いる ひとは イーさんです。"],
+      },
+      {
+        arti: "Sdri. Maria memakai rok.",
+        benar: "マリアさんは スカートを はいて います。",
+        salah: ["マリアさんは スカートを きて います。", "マリアさんは スカートを かぶって います。", "マリアさんは スカートを かけて います。"],
+      },
+      {
+        arti: "Sdr. Santos memakai sweter.",
+        benar: "サントスさんは セーターを きて います。",
+        salah: ["サントスさんは セーターを はいて います。", "サントスさんは セーターを かぶって います。", "サントスさんは セーターを かけて います。"],
+      },
+      {
+        arti: "Selamat!",
+        benar: "おめでとうございます。",
+        salah: ["おだいじに。", "おかげさまで。", "いただきます。"],
+      },
+      {
+        arti: "Apakah kamar ini bisa dilihat hari ini? ... Ya. Bagaimana kalau kita pergi sekarang?",
+        benar: "この へや、きょう みる ことが できますか。……ええ。いまから いきましょうか。",
+        salah: ["この へや、きょう みる ことが できますか。……ええ。いまから いきましたか。", "この へや、きょう みる ことが できますか。……ええ。いまから いきませんでしたか。", "この へや、きょう みる ことが できますか。……ええ。いまで いきましょうか。"],
+      },
+    ],
+  },
 };

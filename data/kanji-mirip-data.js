@@ -4,7 +4,7 @@
    seperti soal kanji JLPT. Kanji yang belum ada di sini memakai pengecoh
    biasa (kanji lain sekelompok makna).
 
-   Isi per Bab saat tugas bab itu disusun. Sudah lengkap: Bab 1-21.
+   Isi per Bab saat tugas bab itu disusun. Sudah lengkap: Bab 1-22.
    Semua kanji di daftar harus kanji asli (bukan bentuk karangan). */
 const kanjiMiripData = {
   // Bab 1
@@ -636,6 +636,15 @@ const kanjiMiripData = {
   総: ["絵", "緑", "給"],
   臣: ["巨", "匠", "臥"],
   支: ["技", "枝", "文"],
+  // Bab 22
+  帽: ["幅", "冒", "帳"],
+  当: ["雪", "尚", "肖"],
+  賃: ["貨", "貸", "賀"],
+  布: ["市", "希", "怖"],
+  団: ["困", "因", "固"],
+  里: ["黒", "理", "重"],
+  城: ["域", "誠", "減"],
+  帯: ["滞", "常", "席"],
 };
 
 /* Bacaan keliru khas untuk tugas "Kanji → Hiragana" (js/tugas-bab.js).
@@ -1349,6 +1358,21 @@ const bacaanKeliruData = {
   看護師長: ["かんごしなが"],
   警察: ["けいざつ"],
   署長: ["しょなが", "しょうちょう"],
+  // Bab 22 - termasuk jebakan kata lain (着ます つきます, 都合 とあい)
+  着ます: ["つきます", "ちゃくます", "ぎます"],
+  生まれます: ["いまれます", "せいまれます", "うもれます"],
+  帽子: ["ぼし", "ぼうこ", "もうし"],
+  眼鏡: ["がんきょう", "めかね", "めがみ"],
+  お弁当: ["おべんと", "おべんどう", "おへんとう"],
+  都合: ["とあい", "つこう", "とごう"],
+  家賃: ["いえちん", "かちん", "やじん"],
+  和室: ["わじつ", "わしち", "なごしつ"],
+  押し入れ: ["おしはいれ", "おしいり", "おじいれ"],
+  布団: ["ぬのだん", "ふだん", "ふどん"],
+  万里の長城: ["まんりのちょうじょう", "ばんりのながしろ", "ばんさとのちょうじょう"],
+  上着: ["じょうぎ", "うえぎ", "うわき"],
+  靴下: ["くつか", "かした", "くつしだ"],
+  帯: ["おぴ", "おみ", "おぶ"],
 };
 
 /* Bacaan lain yang SAH tetapi tidak tercatat di data/bab-data.js - tidak
