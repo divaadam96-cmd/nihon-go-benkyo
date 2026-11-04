@@ -4578,7 +4578,7 @@ const babKanjiData = {
     ["\u91e3\u308a", "\u3064\u308a", "Pancing , memancing"],
     ["\u9031\u672b", "\u3057\u3085\u3046\u307e\u3064", "Akhir pekan"],
     [
-      "\u304a\u8af8\u738b\u6708",
+      "\u304a\u6b63\u6708",
       "\u304a\u3057\u3087\u3046\u304c\u3064",
       "Tahun baru",
     ],
@@ -4618,8 +4618,8 @@ const babKanjiData = {
     ],
     ["\u304a\u5bfa", "\u304a\u3066\u3089", "Kuil budha"],
     ["\u795e\u793e", "\u3058\u3093\u3058\u3083", "Kuil sinto"],
-    ["\u5354\u4f1a", "\u304d\u3087\u3046\u304b\u3044", "Gereja"],
-    ["\u4f53\u80b2\u9928", "\u305f\u3044\u3057\u304b\u3093", "Kedutaan besar"],
+    ["\u6559\u4f1a", "\u304d\u3087\u3046\u304b\u3044", "Gereja"],
+    ["\u5927\u4f7f\u9928", "\u305f\u3044\u3057\u304b\u3093", "Kedutaan besar"],
     [
       "\u5165\u56fd\u7ba1\u7406\u5c40",
       "\u306b\u3085\u3046\u3053\u304f\u304b\u3093\u308a\u304d\u3087\u304f",

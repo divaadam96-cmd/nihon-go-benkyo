@@ -1063,4 +1063,98 @@ const tugasKalimatData = {
       },
     ],
   },
+  13: {
+    susun: [
+      { arti: "Saya ingin punya teman.", potongan: ["わたし", "は", "ともだち", "が", "ほしい", "です"] },
+      { arti: "Sekarang apa yang paling (Anda) inginkan?", potongan: ["いま", "なに", "が", "いちばん", "ほしい", "です", "か"] },
+      { arti: "Saya ingin pergi ke Okinawa.", potongan: ["わたし", "は", "おきなわ", "へ", "いきたい", "です"] },
+      { arti: "Saya ingin makan tempura.", potongan: ["わたし", "は", "てんぷら", "を", "たべたい", "です"] },
+      { arti: "(Saya) tidak ingin minum apa-apa.", potongan: ["なに", "も", "のみたくない", "です"] },
+      {
+        arti: "Pergi ke Kobe untuk makan masakan India.",
+        potongan: ["こうべ", "へ", "インドりょうり", "を", "たべ", "に", "いきます"],
+        alt: ["インドりょうりをたべにこうべへいきます"],
+      },
+      {
+        arti: "Pergi ke Kobe untuk berbelanja.",
+        potongan: ["こうべ", "へ", "かいもの", "に", "いきます"],
+        alt: ["かいものにこうべへいきます"],
+      },
+      {
+        arti: "(Saya) datang ke Jepang untuk belajar seni.",
+        potongan: ["にほん", "へ", "びじゅつ", "の", "べんきょう", "に", "きました"],
+        alt: ["びじゅつのべんきょうににほんへきました"],
+      },
+      { arti: "Besok (saya) pergi ke festival di Kyoto.", potongan: ["あした", "きょうと", "の", "おまつり", "に", "いきます"] },
+      { arti: "Liburan musim dingin (Anda) pergi ke suatu tempat?", potongan: ["ふゆやすみ", "は", "どこか", "へ", "いきました", "か"] },
+      { arti: "Karena haus, (saya) ingin minum sesuatu.", potongan: ["のど", "が", "かわきました", "から", "なにか", "のみたい", "です"] },
+      {
+        arti: "Pergi ke kolam renang untuk berenang.",
+        potongan: ["プール", "へ", "およぎ", "に", "いきます"],
+        alt: ["およぎにプールへいきます"],
+      },
+    ],
+    pilih: [
+      {
+        arti: "Saya ingin punya mobil.",
+        benar: "わたしは くるまが ほしいです。",
+        salah: ["わたしは くるまを ほしいです。", "わたしは くるまが ほしたいです。", "わたしは くるまが ほしくないです。"],
+      },
+      {
+        arti: "Apakah (Anda) ingin punya anak? ... Tidak, tidak ingin.",
+        benar: "こどもが ほしいですか。……いいえ、ほしくないです。",
+        salah: ["こどもが ほしいですか。……いいえ、ほしいじゃ ありません。", "こどもが ほしいですか。……いいえ、ほしくです。", "こどもが ほしいですか。……はい、ほしくないです。"],
+      },
+      {
+        arti: "Saya ingin pergi ke Okinawa.",
+        benar: "わたしは おきなわへ いきたいです。",
+        salah: ["わたしは おきなわへ いきますたいです。", "わたしは おきなわへ いきほしいです。", "わたしは おきなわを いきたいです。"],
+      },
+      {
+        arti: "Di Kobe (Anda) ingin membeli apa? ... Ingin membeli sepatu.",
+        benar: "こうべで なにを かいたいですか。……くつを かいたいです。",
+        salah: ["こうべで なにを かいたいですか。……くつを かいたくないです。", "こうべへ なにを かいたいですか。……くつを かいたいです。", "こうべで なにを かいほしいですか。……くつを かいほしいです。"],
+      },
+      {
+        arti: "Pergi ke Kobe untuk makan masakan India.",
+        benar: "こうべへ インドりょうりを たべに いきます。",
+        salah: ["こうべへ インドりょうりを たべるに いきます。", "こうべへ インドりょうりを たべますに いきます。", "こうべへ インドりょうりを たべで いきます。"],
+      },
+      {
+        arti: "Pergi ke Kobe untuk berbelanja.",
+        benar: "こうべへ かいものに いきます。",
+        salah: ["こうべへ かいもので いきます。", "こうべへ かいものを いきます。", "こうべへ かいものに きました。"],
+      },
+      {
+        arti: "(Saya) datang ke Jepang untuk belajar seni.",
+        benar: "にほんへ びじゅつの べんきょうに きました。",
+        salah: ["にほんへ びじゅつの べんきょうで きました。", "にほんへ びじゅつの べんきょうを きました。", "にほんへ びじゅつの べんきょうに きます。"],
+      },
+      {
+        arti: "Besok (saya) pergi ke festival di Kyoto.",
+        benar: "あした きょうとの おまつりに いきます。",
+        salah: ["あした きょうとの おまつりで いきます。", "あしたに きょうとの おまつりに いきます。", "あした きょうとの おまつりを いきます。"],
+      },
+      {
+        arti: "Liburan musim dingin pergi ke suatu tempat? ... Ya, ke Hokkaido untuk bermain ski.",
+        benar: "ふゆやすみは どこかへ いきましたか。……はい。ほっかいどうへ スキーに いきました。",
+        salah: ["ふゆやすみは どこへ いきましたか。……はい。ほっかいどうへ スキーに いきました。", "ふゆやすみは どこかへ いきましたか。……はい。ほっかいどうへ スキーで いきました。", "ふゆやすみは なにかへ いきましたか。……はい。ほっかいどうへ スキーに いきました。"],
+      },
+      {
+        arti: "Karena haus, (saya) ingin minum sesuatu.",
+        benar: "のどが かわきましたから、なにか のみたいです。",
+        salah: ["のどが かわきましたから、なにも のみたいです。", "のどが かわきましたが、なにか のみたいです。", "のどが かわきましたから、なにか のみほしいです。"],
+      },
+      {
+        arti: "(Pelayan) Mau pesan apa?",
+        benar: "ごちゅうもんは？",
+        salah: ["おちゅうもんは？", "ごちゅうもんを？", "ごちゅうもんで？"],
+      },
+      {
+        arti: "(Membayar) Tolong (dibayar) masing-masing.",
+        benar: "べつべつに おねがいします。",
+        salah: ["べつべつで おねがいします。", "べつべつを おねがいします。", "いっしょに おねがいします。"],
+      },
+    ],
+  },
 };
