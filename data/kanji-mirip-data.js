@@ -4,7 +4,7 @@
    seperti soal kanji JLPT. Kanji yang belum ada di sini memakai pengecoh
    biasa (kanji lain sekelompok makna).
 
-   Isi per Bab saat tugas bab itu disusun. Sudah lengkap: Bab 1-19.
+   Isi per Bab saat tugas bab itu disusun. Sudah lengkap: Bab 1-20.
    Semua kanji di daftar harus kanji asli (bukan bentuk karangan). */
 const kanjiMiripData = {
   // Bab 1
@@ -612,6 +612,11 @@ const kanjiMiripData = {
   棋: ["碁", "基", "期"],
   盆: ["分", "盃", "盛"],
   踊: ["通", "痛", "涌"],
+  // Bab 20
+  要: ["腰", "票", "栗"],
+  修: ["悠", "條", "参"],
+  僕: ["撲", "樸", "業"],
+  君: ["群", "郡", "若"],
 };
 
 /* Bacaan keliru khas untuk tugas "Kanji → Hiragana" (js/tugas-bab.js).
@@ -1274,6 +1279,14 @@ const bacaanKeliruData = {
   "漫才。落語": ["まんさい。らくご", "まんざい。おちご", "まんざい。らくごう"],
   "囲碁。将棋": ["いき。しょうぎ", "いご。しょうき", "いご。しょぎ"],
   盆踊り: ["ぼんようり", "ぼんとり"],
+  // Bab 20
+  要ります: ["ようります", "かなめります", "いれます"],
+  調べます: ["ちょうべます", "しらめます"],
+  修理します: ["しゅりします", "おさりします"],
+  僕: ["ぼっく", "ぽく", "ぼう"],
+  君: ["きむ", "けみ"],
+  "～君": ["～ぐん", "～かん", "～こん"],
+  着物: ["ちゃくもの", "きぶつ"],
 };
 
 /* Bacaan lain yang SAH tetapi tidak tercatat di data/bab-data.js - tidak
@@ -1297,4 +1310,5 @@ const bacaanSahLainData = {
   持って行きます: ["もってゆきます"], 寒気がします: ["かんきがします"],
   弾きます: ["はじきます"],
   茶道: ["ちゃどう"], 一度: ["ひとたび"],
+  僕: ["しもべ"], 君: ["くん"], "～君": ["～きみ"],
 };

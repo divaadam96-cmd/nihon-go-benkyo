@@ -1687,4 +1687,89 @@ const tugasKalimatData = {
       },
     ],
   },
+  20: {
+    susun: [
+      { arti: "(Bentuk biasa) Mau minum kopi?", potongan: ["コーヒー", "を", "のむ"] },
+      { arti: "(Bentuk biasa) Besok ke Kyoto, yuk?", potongan: ["あした", "きょうと", "へ", "いかない"] },
+      { arti: "(Bentuk biasa) Apel ini enak, ya.", potongan: ["この", "りんご", "おいしい", "ね"] },
+      { arti: "(Bentuk biasa) Di situ ada gunting?", potongan: ["そこ", "に", "はさみ", "ある"] },
+      { arti: "(Bentuk biasa) Saya punya kamus.", potongan: ["わたし", "は", "じしょ", "を", "もって", "いる"] },
+      { arti: "(Bentuk biasa) Kare itu pedas, tetapi enak.", potongan: ["その", "カレー", "は", "からい", "けど", "おいしい"] },
+      {
+        arti: "(Bentuk biasa) Ada tiket sumo, mau pergi bersama?",
+        potongan: ["すもう", "の", "チケット", "が", "ある", "けど", "いっしょに", "いかない"],
+      },
+      { arti: "(Bentuk biasa) Saya perlu visa.", potongan: ["わたし", "は", "ビザ", "が", "いる"] },
+      {
+        arti: "(Bentuk biasa) (Saya) memeriksa kata itu di kamus.",
+        potongan: ["その", "ことば", "を", "じしょ", "で", "しらべる"],
+        alt: ["じしょでそのことばをしらべる"],
+      },
+      { arti: "(Bentuk biasa) Besok (saya) tidak pergi ke kantor.", potongan: ["あした", "かいしゃ", "へ", "いかない"] },
+      { arti: "(Bentuk biasa) Kemarin hujan.", potongan: ["きのう", "は", "あめ", "だった"] },
+      { arti: "(Bentuk biasa) Ini tidak mahal.", potongan: ["これ", "は", "たかくない"] },
+    ],
+    pilih: [
+      {
+        arti: "(Bentuk biasa) Mau minum kopi? ... Ya, mau.",
+        benar: "コーヒーを のむ？……うん、のむ。",
+        salah: ["コーヒーを のみ？……うん、のみ。", "コーヒーを のむ？……ううん、のむ。", "コーヒーを のんだ？……うん、のむ。"],
+      },
+      {
+        arti: "(Bentuk biasa) Nanti malam luang? ... Tidak, tidak luang.",
+        benar: "こんばん ひま？……ううん、ひまじゃ ない。",
+        salah: ["こんばん ひま？……ううん、ひまく ない。", "こんばん ひま？……うん、ひまじゃ ない。", "こんばん ひま？……ううん、ひまだ ない。"],
+      },
+      {
+        arti: "(Bentuk biasa) Besok ke Kyoto, yuk?",
+        benar: "あした きょうとへ いかない？",
+        salah: ["あした きょうとへ いきない？", "あした きょうとへ いくない？", "あした きょうとへ いかなかった？"],
+      },
+      {
+        arti: "(Bentuk biasa) Punya kamus? ... Tidak, tidak punya.",
+        benar: "じしょ、もってる？……ううん、もってない。",
+        salah: ["じしょ、もってる？……ううん、もっていらない。", "じしょ、もってる？……うん、もってない。", "じしょ、もってる？……ううん、もちない。"],
+      },
+      {
+        arti: "(Bentuk biasa) Kare itu enak? ... Ya, pedas tetapi enak.",
+        benar: "その カレー、おいしい？……うん、からいけど、おいしい。",
+        salah: ["その カレー、おいしい？……うん、からいだけど、おいしい。", "その カレー、おいしい？……うん、からくけど、おいしい。", "その カレー、おいしい？……ううん、からいけど、おいしい。"],
+      },
+      {
+        arti: "(Bentuk biasa) Kemarin hujan.",
+        benar: "きのうは あめだった。",
+        salah: ["きのうは あめかった。", "きのうは あめだ。", "きのうは あめじゃ なかった。"],
+      },
+      {
+        arti: "(Bentuk biasa) Ujian kemarin tidak mudah.",
+        benar: "きのうの しけんは かんたんじゃ なかった。",
+        salah: ["きのうの しけんは かんたんくなかった。", "きのうの しけんは かんたんじゃ ない。", "きのうの しけんは かんたんだった。"],
+      },
+      {
+        arti: "(Bentuk biasa) Pesta kemarin menyenangkan.",
+        benar: "きのうの パーティーは たのしかった。",
+        salah: ["きのうの パーティーは たのしいだった。", "きのうの パーティーは たのしくなかった。", "きのうの パーティーは たのしい。"],
+      },
+      {
+        arti: "(Bentuk biasa) Saya tidak minum sake.",
+        benar: "わたしは おさけを のまない。",
+        salah: ["わたしは おさけを のみない。", "わたしは おさけを のむない。", "わたしは おさけを のまなかった。"],
+      },
+      {
+        arti: "(Bentuk biasa) (Saya) sudah makan.",
+        benar: "もう たべた。",
+        salah: ["もう たべった。", "もう たべる。", "もう たべない。"],
+      },
+      {
+        arti: "(Saya sudah) kenyang.",
+        benar: "おなかが いっぱいです。",
+        salah: ["おなかが すきました。", "おなかが いたいです。", "おなかが いっぱいじゃ ありません。"],
+      },
+      {
+        arti: "Kalau mau, ayo pergi bersama-sama.",
+        benar: "よかったら、いっしょに いきませんか。",
+        salah: ["よかったら、いっしょに いきましたか。", "よかったら、ひとりで いきませんか。", "よくて、いっしょに いきませんか。"],
+      },
+    ],
+  },
 };
