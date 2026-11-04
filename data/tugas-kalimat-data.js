@@ -1433,4 +1433,90 @@ const tugasKalimatData = {
       },
     ],
   },
+  17: {
+    susun: [
+      {
+        arti: "Jangan mengambil foto di sini!",
+        potongan: ["ここ", "で", "しゃしん", "を", "とらないで", "ください"],
+        alt: ["しゃしんをここでとらないでください"],
+      },
+      { arti: "Karena saya sehat, jangan khawatir.", potongan: ["わたし", "は", "げんき", "です", "から", "しんぱいしないで", "ください"] },
+      { arti: "(Saya) harus minum obat.", potongan: ["くすり", "を", "のまなければ", "なりません"] },
+      { arti: "Besok tidak perlu datang.", potongan: ["あした", "こなくて", "も", "いいです"] },
+      { arti: "Barangnya jangan diletakkan di sini.", potongan: ["にもつ", "は", "ここ", "に", "おかないで", "ください"] },
+      { arti: "Makan siangnya, (saya) makan di kantin perusahaan.", potongan: ["ひるごはん", "は", "かいしゃ", "の", "しょくどう", "で", "たべます"] },
+      { arti: "Rapat selesai sebelum pukul lima.", potongan: ["かいぎ", "は", "ごじ", "までに", "おわります"] },
+      {
+        arti: "(Saya) harus mengembalikan buku paling lambat hari Sabtu.",
+        potongan: ["どようび", "までに", "ほん", "を", "かえさなければ", "なりません"],
+        alt: ["ほんをどようびまでにかえさなければなりません"],
+      },
+      { arti: "(Saya) bekerja sampai pukul lima.", potongan: ["ごじ", "まで", "はたらきます"] },
+      { arti: "Tidak perlu melepas sepatu.", potongan: ["くつ", "を", "ぬがなくて", "も", "いいです"] },
+      { arti: "Jangan lupa (membawa) paspor.", potongan: ["パスポート", "を", "わすれないで", "ください"] },
+      { arti: "Hari ini (saya) harus lembur.", potongan: ["きょう", "は", "ざんぎょうしなければ", "なりません"] },
+    ],
+    pilih: [
+      {
+        arti: "Jangan mengambil foto di sini!",
+        benar: "ここで しゃしんを とらないで ください。",
+        salah: ["ここで しゃしんを とりないで ください。", "ここで しゃしんを とらなくて ください。", "ここで しゃしんを とって ください。"],
+      },
+      {
+        arti: "(Saya) harus minum obat.",
+        benar: "くすりを のまなければ なりません。",
+        salah: ["くすりを のみなければ なりません。", "くすりを のまなくても いいです。", "くすりを のまないで ください。"],
+      },
+      {
+        arti: "Besok tidak perlu datang.",
+        benar: "あした こなくても いいです。",
+        salah: ["あした きなくても いいです。", "あした こなければ なりません。", "あした くなくても いいです。"],
+      },
+      {
+        arti: "Karena saya sehat, jangan khawatir.",
+        benar: "わたしは げんきですから、しんぱいしないで ください。",
+        salah: ["わたしは げんきですから、しんぱいしなくて ください。", "わたしは げんきですから、しんぱいさないで ください。", "わたしは げんきですから、しんぱいして ください。"],
+      },
+      {
+        arti: "Barangnya jangan diletakkan di sini.",
+        benar: "にもつは ここに おかないで ください。",
+        salah: ["にもつをは ここに おかないで ください。", "にもつは ここで おかないで ください。", "にもつは ここに おきないで ください。"],
+      },
+      {
+        arti: "Rapat selesai sebelum pukul lima.",
+        benar: "かいぎは ごじまでに おわります。",
+        salah: ["かいぎは ごじまで おわります。", "かいぎは ごじまでに おわりません。", "かいぎは ごじからに おわります。"],
+      },
+      {
+        arti: "(Saya) bekerja sampai pukul lima.",
+        benar: "ごじまで はたらきます。",
+        salah: ["ごじまでに はたらきます。", "ごじから はたらきます。", "ごじまで はたらいて ください。"],
+      },
+      {
+        arti: "(Saya) harus mengembalikan buku paling lambat hari Sabtu.",
+        benar: "どようびまでに ほんを かえさなければ なりません。",
+        salah: ["どようびまでに ほんを かえしなければ なりません。", "どようびまでに ほんを かえさなくても いいです。", "どようびまで ほんを かえさなければ なりません。"],
+      },
+      {
+        arti: "Tidak perlu melepas sepatu.",
+        benar: "くつを ぬがなくても いいです。",
+        salah: ["くつを ぬぎなくても いいです。", "くつを ぬがなければ なりません。", "くつを ぬがないで ください。"],
+      },
+      {
+        arti: "Ada apa? ... Kepala (saya) sakit.",
+        benar: "どうしましたか。……あたまが いたいです。",
+        salah: ["どうしましたか。……あたまを いたいです。", "どうしましたか。……あたまが いたくです。", "どうしてですか。……あたまが いたいです。"],
+      },
+      {
+        arti: "(Kepada orang sakit) Semoga lekas sembuh.",
+        benar: "おだいじに。",
+        salah: ["いってらっしゃい。", "だいじょうぶです。", "おかえりなさい。"],
+      },
+      {
+        arti: "Hari ini (saya) harus lembur.",
+        benar: "きょうは ざんぎょうしなければ なりません。",
+        salah: ["きょうは ざんぎょうさなければ なりません。", "きょうは ざんぎょうしなくても いいです。", "きょうは ざんぎょうしないで ください。"],
+      },
+    ],
+  },
 };

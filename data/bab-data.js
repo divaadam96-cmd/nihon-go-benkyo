@@ -1186,7 +1186,7 @@ const babKosakataData = {
     ["\u305d\u308c\u304b\u3089", "Setelah itu, kemudian , dan"],
     ["\u304a\u3060\u3044\u3058\u306b", "Semoga lekas sembuh"],
     ["\u3042\u305f\u307e\u304c\u3044\u305f\u3044", "Sakit kepala"],
-    ["\u304a\u306a\u304c\u304c\u3044\u305f\u3044", "Sakit perut"],
+    ["\u304a\u306a\u304b\u304c\u3044\u305f\u3044", "Sakit perut"],
     ["\u306f\u304c\u3044\u305f\u3044", "Sakit gigi"],
     ["\u306d\u3064\u304c\u3042\u308a\u307e\u3059", "Demam"],
     ["\u305b\u304d\u304c\u3067\u307e\u3059", "Batuk"],
