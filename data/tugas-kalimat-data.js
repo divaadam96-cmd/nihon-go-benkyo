@@ -2396,4 +2396,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  29: {
+    susun: [
+      { arti: "Jendelanya tertutup.", potongan: ["まど", "が", "しまって", "います"] },
+      { arti: "Lampunya menyala.", potongan: ["でんき", "が", "ついて", "います"] },
+      { arti: "Kursi ini rusak.", potongan: ["この", "いす", "は", "こわれて", "います"] },
+      { arti: "Jalan ini selalu macet.", potongan: ["この", "みち", "は", "いつも", "こんで", "います"] },
+      { arti: "Gelasnya pecah.", potongan: ["コップ", "が", "われて", "います"] },
+      { arti: "Pintunya terkunci.", potongan: ["ドア", "に", "かぎ", "が", "かかって", "います"] },
+      { arti: "PR kemarin sudah selesai (saya) kerjakan.", potongan: ["きのう", "の", "しゅくだい", "は", "もう", "やって", "しまいました"] },
+      { arti: "(Saya) ketinggalan payung di kereta.", potongan: ["でんしゃ", "に", "かさ", "を", "わすれて", "しまいました"], alt: ["かさをでんしゃにわすれてしまいました"] },
+      { arti: "(Saya) kehilangan paspor.", potongan: ["パスポート", "を", "なくして", "しまいました"] },
+      { arti: "Kantongnya sobek.", potongan: ["ふくろ", "が", "やぶれて", "います"] },
+      { arti: "Kalau tidak salah, ada kantor pos di sekitar sini.", potongan: ["たしか", "このへん", "に", "ゆうびんきょく", "が", "あります"] },
+      { arti: "Karena gempa bumi, pohonnya roboh.", potongan: ["じしん", "で", "き", "が", "たおれて", "います"] },
+    ],
+    pilih: [
+      {
+        arti: "Jendelanya tertutup.",
+        benar: "まどが しまって います。",
+        salah: ["まどを しまって います。", "まどが しめて います。", "まどが しまりて います。"],
+      },
+      {
+        arti: "Lampunya menyala.",
+        benar: "でんきが ついて います。",
+        salah: ["でんきが つけて います。", "でんきを ついて います。", "でんきが つきて います。"],
+      },
+      {
+        arti: "Gelasnya pecah.",
+        benar: "コップが われて います。",
+        salah: ["コップが わって います。", "コップを われて います。", "コップが われりて います。"],
+      },
+      {
+        arti: "Pintunya terkunci.",
+        benar: "ドアに かぎが かかって います。",
+        salah: ["ドアに かぎが かけて います。", "ドアに かぎを かかって います。", "ドアで かぎが かかって います。"],
+      },
+      {
+        arti: "Jalan ini selalu macet.",
+        benar: "この みちは いつも こんで います。",
+        salah: ["この みちは いつも こみて います。", "この みちは いつも すいて います。", "この みちは いつも こんで しまいました。"],
+      },
+      {
+        arti: "Mobilnya berhenti di depan stasiun.",
+        benar: "えきまえに くるまが とまって います。",
+        salah: ["えきまえに くるまが とめて います。", "えきまえに くるまを とまって います。", "えきまえを くるまが とまって います。"],
+      },
+      {
+        arti: "PR kemarin sudah selesai (saya) kerjakan.",
+        benar: "きのうの しゅくだいは もう やって しまいました。",
+        salah: ["きのうの しゅくだいは もう やり しまいました。", "きのうの しゅくだいは もう やって しまいます。", "きのうの しゅくだいは もう やるて しまいました。"],
+      },
+      {
+        arti: "(Saya) ketinggalan payung di kereta.",
+        benar: "でんしゃに かさを わすれて しまいました。",
+        salah: ["でんしゃに かさを わすれて しまいます。", "でんしゃに かさが わすれて しまいました。", "でんしゃに かさを わすれって しまいました。"],
+      },
+      {
+        arti: "(Saya) kehilangan paspor.",
+        benar: "パスポートを なくして しまいました。",
+        salah: ["パスポートが なくして しまいました。", "パスポートを なくって しまいました。", "パスポートを なくしで しまいました。"],
+      },
+      {
+        arti: "Bajunya kotor.",
+        benar: "ふくが よごれて います。",
+        salah: ["ふくを よごれて います。", "ふくが よごして います。", "ふくが よごれりて います。"],
+      },
+      {
+        arti: "Silakan duluan.",
+        benar: "おさきに どうぞ。",
+        salah: ["おさきで どうぞ。", "おさきを どうぞ。", "おさきが どうぞ。"],
+      },
+      {
+        arti: "(Saya) ketinggalan barang. ... Barang apa? ... Tas biru kira-kira sebesar ini.",
+        benar: "わすれものを して しまったんですが。……なにを わすれたんですか。……あおい かばんです。このくらいの……。",
+        salah: ["わすれものを して しまったんですが。……なにを わすれたんですか。……あおい かばんです。このくらいな……。", "わすれものを して しまいましたんですが。……なにを わすれたんですか。……あおい かばんです。このくらいの……。", "わすれものを して しまうんですが。……なにを わすれたんですか。……あおい かばんです。このくらいの……。"],
+      },
+    ],
+  },
 };
