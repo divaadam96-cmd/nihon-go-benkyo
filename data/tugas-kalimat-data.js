@@ -444,7 +444,7 @@ const tugasKalimatData = {
         potongan: ["いっしょに", "きょうと", "へ", "いきません", "か"],
         alt: ["きょうとへいっしょにいきませんか"],
       },
-      { arti: "Mari (kita) istirahat sebentar.", potongan: ["ちょっと", "やすみましょう"] },
+      { arti: "Mari (kita) istirahat sebentar di sini.", potongan: ["ここ", "で", "ちょっと", "やすみましょう"], alt: ["ちょっとここでやすみましょう"] },
       {
         arti: "Dengan apa (Anda) pergi ke Tokyo?",
         potongan: ["なん", "で", "とうきょう", "へ", "いきます", "か"],
