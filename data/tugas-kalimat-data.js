@@ -1157,4 +1157,90 @@ const tugasKalimatData = {
       },
     ],
   },
+  14: {
+    susun: [
+      { arti: "Tolong ajarkan cara membaca kanji ini.", potongan: ["この", "かんじ", "の", "よみかた", "を", "おしえて", "ください"] },
+      {
+        arti: "Tolong tuliskan nama dengan bolpoin.",
+        potongan: ["ボールペン", "で", "なまえ", "を", "かいて", "ください"],
+        alt: ["なまえをボールペンでかいてください"],
+      },
+      { arti: "Silakan makan yang banyak.", potongan: ["どうぞ", "たくさん", "たべて", "ください"] },
+      {
+        arti: "Sdr. Miller sekarang sedang menelepon.",
+        potongan: ["ミラーさん", "は", "いま", "でんわ", "を", "かけて", "います"],
+        alt: ["いまミラーさんはでんわをかけています"],
+      },
+      { arti: "Sekarang sedang turun hujan?", potongan: ["いま", "あめ", "が", "ふって", "います", "か"] },
+      { arti: "Bagaimana kalau besok saya juga datang?", potongan: ["あした", "も", "きましょう", "か"] },
+      { arti: "Bagaimana kalau saya pinjamkan payung?", potongan: ["かさ", "を", "かしましょう", "か"] },
+      { arti: "Maaf, tolong ambilkan garam.", potongan: ["すみません", "が", "しお", "を", "とって", "ください"] },
+      { arti: "Tolong datang pukul sepuluh.", potongan: ["じゅうじ", "に", "きて", "ください"] },
+      { arti: "Tolong nyalakan lampu.", potongan: ["でんき", "を", "つけて", "ください"] },
+      { arti: "Tolong bicara pelan-pelan.", potongan: ["ゆっくり", "はなして", "ください"] },
+      { arti: "Tolong tunggu sebentar.", potongan: ["ちょっと", "まって", "ください"] },
+    ],
+    pilih: [
+      {
+        arti: "Tolong tuliskan nama dengan bolpoin.",
+        benar: "ボールペンで なまえを かいて ください。",
+        salah: ["ボールペンで なまえを かきて ください。", "ボールペンで なまえを かって ください。", "ボールペンを なまえで かいて ください。"],
+      },
+      {
+        arti: "Sdr. Miller sekarang sedang menelepon.",
+        benar: "ミラーさんは いま でんわを かけて います。",
+        salah: ["ミラーさんは いま でんわを かけて ください。", "ミラーさんは いま でんわを かけます います。", "ミラーさんは いま でんわを かけって います。"],
+      },
+      {
+        arti: "Hujan sedang turun.",
+        benar: "あめが ふって います。",
+        salah: ["あめが ふいて います。", "あめが ふって ください。", "あめを ふって います。"],
+      },
+      {
+        arti: "Bagaimana kalau saya pinjamkan payung? ... Terima kasih, tolong.",
+        benar: "かさを かしましょうか。……すみません。おねがいします。",
+        salah: ["かさを かしませんか。……すみません。おねがいします。", "かさを かりましょうか。……すみません。おねがいします。", "かさを かしましょうか。……はい、かしましょう。"],
+      },
+      {
+        arti: "Bagaimana kalau saya bawakan barangnya? ... Tidak, terima kasih.",
+        benar: "にもつを もちましょうか。……いいえ、けっこうです。",
+        salah: ["にもつを もちましょうか。……いいえ、もちましょう。", "にもつを もちませんか。……いいえ、けっこうです。", "にもつを もって いますか。……いいえ、けっこうです。"],
+      },
+      {
+        arti: "Silakan makan yang banyak.",
+        benar: "どうぞ たくさん たべて ください。",
+        salah: ["どうぞ たくさん たべって ください。", "どうぞ たくさん たべりて ください。", "どうぞ たくさん たべましょうか。"],
+      },
+      {
+        arti: "Maaf, tolong ambilkan garam.",
+        benar: "すみませんが、しおを とって ください。",
+        salah: ["すみませんが、しおを といて ください。", "すみませんが、しおを とりて ください。", "すみませんが、しおを とって います。"],
+      },
+      {
+        arti: "Tolong panggilkan taksi.",
+        benar: "タクシーを よんで ください。",
+        salah: ["タクシーを よって ください。", "タクシーを よびて ください。", "タクシーを よいて ください。"],
+      },
+      {
+        arti: "Tolong cepat sedikit.",
+        benar: "すこし いそいで ください。",
+        salah: ["すこし いそいて ください。", "すこし いそって ください。", "すこし いそぎて ください。"],
+      },
+      {
+        arti: "Tolong tunggu sebentar.",
+        benar: "ちょっと まって ください。",
+        salah: ["ちょっと まちて ください。", "ちょっと まんで ください。", "ちょっと まいて ください。"],
+      },
+      {
+        arti: "Tolong bicara pelan-pelan.",
+        benar: "ゆっくり はなして ください。",
+        salah: ["ゆっくり はなって ください。", "ゆっくり はなしって ください。", "ゆっくり はないて ください。"],
+      },
+      {
+        arti: "Tolong matikan AC.",
+        benar: "エアコンを けして ください。",
+        salah: ["エアコンを つけて ください。", "エアコンを けいて ください。", "エアコンを けって ください。"],
+      },
+    ],
+  },
 };
