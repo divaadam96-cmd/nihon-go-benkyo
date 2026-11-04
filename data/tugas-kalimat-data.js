@@ -977,4 +977,90 @@ const tugasKalimatData = {
       },
     ],
   },
+  12: {
+    susun: [
+      { arti: "Kemarin hujan.", potongan: ["きのう", "は", "あめ", "でした"] },
+      { arti: "Ujian kemarin tidak mudah.", potongan: ["きのう", "の", "しけん", "は", "かんたん", "じゃ", "ありませんでした"] },
+      { arti: "Kemarin panas.", potongan: ["きのう", "は", "あつかった", "です"] },
+      { arti: "Pesta kemarin tidak begitu menyenangkan.", potongan: ["きのう", "の", "パーティー", "は", "あまり", "たのしくなかった", "です"] },
+      { arti: "Mobil ini lebih besar daripada mobil itu.", potongan: ["この", "くるま", "は", "あの", "くるま", "より", "おおきい", "です"] },
+      {
+        arti: "Mana yang lebih menarik, sepak bola atau baseball?",
+        potongan: ["サッカー", "と", "やきゅう", "と", "どちら", "が", "おもしろい", "です", "か"],
+        alt: ["やきゅうとサッカーとどちらがおもしろいですか"],
+      },
+      { arti: "Sepak bola yang lebih menarik.", potongan: ["サッカー", "の", "ほう", "が", "おもしろい", "です"] },
+      { arti: "Di antara masakan Jepang, apa yang paling enak?", potongan: ["にほんりょうり", "で", "なに", "が", "いちばん", "おいしい", "です", "か"] },
+      { arti: "Tempura yang paling enak.", potongan: ["てんぷら", "が", "いちばん", "おいしい", "です"] },
+      { arti: "Dalam setahun, kapan yang paling dingin?", potongan: ["いちねん", "で", "いつ", "が", "いちばん", "さむい", "です", "か"] },
+      {
+        arti: "(Anda) lebih suka musim semi atau musim gugur?",
+        potongan: ["はる", "と", "あき", "と", "どちら", "が", "すき", "です", "か"],
+        alt: ["あきとはるとどちらがすきですか"],
+      },
+      { arti: "Tas Sdri. Karina yang mana?", potongan: ["カリナさん", "の", "かばん", "は", "どれ", "です", "か"] },
+    ],
+    pilih: [
+      {
+        arti: "Kemarin hujan.",
+        benar: "きのうは あめでした。",
+        salah: ["きのうは あめです。", "きのうは あめかったです。", "きのうは あめじゃ ありませんでした。"],
+      },
+      {
+        arti: "Ujian kemarin tidak mudah.",
+        benar: "きのうの しけんは かんたんじゃ ありませんでした。",
+        salah: ["きのうの しけんは かんたんくなかったです。", "きのうの しけんは かんたんじゃ ありません。", "きのうの しけんは かんたんでした。"],
+      },
+      {
+        arti: "Kemarin panas.",
+        benar: "きのうは あつかったです。",
+        salah: ["きのうは あついでした。", "きのうは あつかったでした。", "きのうは あついです。"],
+      },
+      {
+        arti: "Pesta kemarin tidak begitu menyenangkan.",
+        benar: "きのうの パーティーは あまり たのしくなかったです。",
+        salah: ["きのうの パーティーは あまり たのしかったです。", "きのうの パーティーは あまり たのしいじゃ ありませんでした。", "きのうの パーティーは とても たのしくなかったです。"],
+      },
+      {
+        arti: "Mobil ini lebih besar daripada mobil itu.",
+        benar: "この くるまは あの くるまより おおきいです。",
+        salah: ["あの くるまは この くるまより おおきいです。", "この くるまは あの くるまより ちいさいです。", "この くるまは あの くるまから おおきいです。"],
+      },
+      {
+        arti: "Mana yang lebih menarik, sepak bola atau baseball? ... Sepak bola yang lebih menarik.",
+        benar: "サッカーと やきゅうと どちらが おもしろいですか。……サッカーの ほうが おもしろいです。",
+        salah: ["サッカーと やきゅうと どれが おもしろいですか。……サッカーの ほうが おもしろいです。", "サッカーと やきゅうと どちらが おもしろいですか。……サッカーが ほうが おもしろいです。", "サッカーと やきゅうと なにが おもしろいですか。……サッカーの ほうが おもしろいです。"],
+      },
+      {
+        arti: "Di antara masakan Jepang, apa yang paling enak? ... Tempura yang paling enak.",
+        benar: "にほんりょうりで なにが いちばん おいしいですか。……てんぷらが いちばん おいしいです。",
+        salah: ["にほんりょうりで なにが いちばん おいしいですか。……てんぷらは いちばん おいしいです。", "にほんりょうりに なにが いちばん おいしいですか。……てんぷらが いちばん おいしいです。", "にほんりょうりで どちらが いちばん おいしいですか。……てんぷらが いちばん おいしいです。"],
+      },
+      {
+        arti: "Di Eropa, mana yang paling bagus? ... Swiss yang paling bagus.",
+        benar: "ヨーロッパで どこが いちばん よかったですか。……スイスが いちばん よかったです。",
+        salah: ["ヨーロッパで どこが いちばん いかったですか。……スイスが いちばん いかったです。", "ヨーロッパで どこが いちばん よかったですか。……スイスが いちばん いいでした。", "ヨーロッパで なにが いちばん よかったですか。……スイスが いちばん よかったです。"],
+      },
+      {
+        arti: "Dalam setahun, kapan yang paling dingin? ... Februari yang paling dingin.",
+        benar: "いちねんで いつが いちばん さむいですか。……にがつが いちばん さむいです。",
+        salah: ["いちねんで いつが いちばん さむいですか。……にがつは いちばん さむいです。", "いちねんで なんが いちばん さむいですか。……にがつが いちばん さむいです。", "いちねんに いつが いちばん さむいですか。……にがつが いちばん さむいです。"],
+      },
+      {
+        arti: "Tas Sdri. Karina yang mana? ... Yang merah dan besar itu.",
+        benar: "カリナさんの かばんは どれですか。……あの あかくて、おおきいのです。",
+        salah: ["カリナさんの かばんは どれですか。……あの あかくて、おおきいです。", "カリナさんの かばんは どれですか。……あの あかい、おおきいのです。", "カリナさんの かばんは なんですか。……あの あかくて、おおきいのです。"],
+      },
+      {
+        arti: "(Anda) lebih suka musim semi atau musim gugur? ... Dua-duanya suka.",
+        benar: "はると あきと どちらが すきですか。……どちらも すきです。",
+        salah: ["はると あきと どちらが すきですか。……どちらが すきです。", "はると あきと どれが すきですか。……どちらも すきです。", "はると あきと どちらが すきですか。……どちらも すきじゃ ありません。"],
+      },
+      {
+        arti: "(Yang datang) Saya pulang. ... (Yang di rumah) Selamat datang kembali.",
+        benar: "ただいま。……おかえりなさい。",
+        salah: ["おかえりなさい。……ただいま。", "ただいま。……いってらっしゃい。", "ただいま。……いらっしゃいませ。"],
+      },
+    ],
+  },
 };
