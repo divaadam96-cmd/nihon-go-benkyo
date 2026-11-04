@@ -1584,7 +1584,7 @@ const babKosakataData = {
     ["\u3053\u3068", "Hal"],
     ["\u3072\u307e\u306a", "Senggang, waktu luang"],
     [
-      "\u3044\u308d\u3044\u308d\u304a\u305b\u308f\u3044\u306a\u308a\u307e\u3057\u305f",
+      "\u3044\u308d\u3044\u308d\u304a\u305b\u308f\u306b\u306a\u308a\u307e\u3057\u305f",
       "Terima kasih banyak bantuan anda yang telah diberikan",
     ],
     ["\u304c\u3093\u3070\u308a\u307e\u3059", "Berusaha, bekerja keras"],
@@ -5599,7 +5599,7 @@ const babKanjiData = {
     ["\u6687\u306a", "\u3072\u307e\u306a", "Senggang, waktu luang"],
     [
       "\u3044\u308d\u3044\u308d\u304a\u4e16\u8a71\u306b\u306a\u308a\u307e\u3057\u305f",
-      "\u3044\u308d\u3044\u308d\u304a\u305b\u308f\u3044\u306a\u308a\u307e\u3057\u305f",
+      "\u3044\u308d\u3044\u308d\u304a\u305b\u308f\u306b\u306a\u308a\u307e\u3057\u305f",
       "Terima kasih banyak bantuan anda yang telah diberikan",
     ],
     [

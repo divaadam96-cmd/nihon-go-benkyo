@@ -2084,4 +2084,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  25: {
+    susun: [
+      { arti: "Kalau hujan, (saya) tidak akan keluar.", potongan: ["あめ", "が", "ふったら", "でかけません"] },
+      { arti: "Kalau sudah sampai di stasiun, tolong telepon (saya).", potongan: ["えき", "に", "ついたら", "でんわして", "ください"] },
+      { arti: "Kalau ada 100 juta yen, (saya) ingin bepergian ke berbagai negara.", potongan: ["もし", "いちおくえん", "あったら", "いろいろな", "くに", "を", "りょこうしたい", "です"] },
+      { arti: "Kalau murah, (saya) ingin membeli komputer.", potongan: ["やすかったら", "パソコン", "を", "かいたい", "です"] },
+      { arti: "Kalau senggang, tolong bantu (saya).", potongan: ["ひまだったら", "てつだって", "ください"] },
+      { arti: "Kalau cuacanya bagus, mari jalan-jalan.", potongan: ["いい", "てんき", "だったら", "さんぽしましょう"] },
+      { arti: "Kalau sudah jam 10, mari kita berangkat.", potongan: ["じゅうじ", "に", "なったら", "でかけましょう"] },
+      { arti: "Walaupun dipikirkan berapa kali pun, (saya) tidak mengerti.", potongan: ["いくら", "かんがえても", "わかりません"] },
+      { arti: "Walaupun hujan, (saya) tetap mencuci pakaian.", potongan: ["あめ", "が", "ふっても", "せんたくします"] },
+      { arti: "Walaupun murah, saya tidak suka perjalanan rombongan.", potongan: ["やすくても", "わたし", "は", "グループりょこう", "が", "きらい", "です"] },
+      { arti: "Walaupun hari Minggu, (saya) tetap bekerja.", potongan: ["にちようび", "でも", "はたらきます"] },
+      { arti: "Kalau tidak mengerti artinya, tolong tanyakan kepada guru.", potongan: ["いみ", "が", "わからなかったら", "せんせい", "に", "きいて", "ください"] },
+    ],
+    pilih: [
+      {
+        arti: "Kalau hujan, (saya) tidak akan keluar.",
+        benar: "あめが ふったら、でかけません。",
+        salah: ["あめが ふるたら、でかけません。", "あめが ふりたら、でかけません。", "あめが ふっても、でかけません。"],
+      },
+      {
+        arti: "Kalau murah, (saya) ingin membeli komputer.",
+        benar: "やすかったら、パソコンを かいたいです。",
+        salah: ["やすいだったら、パソコンを かいたいです。", "やすいたら、パソコンを かいたいです。", "やすくても、パソコンを かいたいです。"],
+      },
+      {
+        arti: "Kalau senggang, tolong bantu (saya).",
+        benar: "ひまだったら、てつだって ください。",
+        salah: ["ひまかったら、てつだって ください。", "ひまなたら、てつだって ください。", "ひまでも、てつだって ください。"],
+      },
+      {
+        arti: "Kalau cuacanya bagus, mari jalan-jalan.",
+        benar: "いい てんきだったら、さんぽしましょう。",
+        salah: ["いい てんきかったら、さんぽしましょう。", "いい てんきたら、さんぽしましょう。", "いい てんきでも、さんぽしましょう。"],
+      },
+      {
+        arti: "Kalau sudah sampai di stasiun, tolong telepon (saya).",
+        benar: "えきに ついたら、でんわして ください。",
+        salah: ["えきに つきたら、でんわして ください。", "えきに ついても、でんわして ください。", "えきを ついたら、でんわして ください。"],
+      },
+      {
+        arti: "Kalau ada 100 juta yen, (saya) ingin bepergian ke berbagai negara.",
+        benar: "もし 1おくえん あったら、いろいろな くにを りょこうしたいです。",
+        salah: ["もし 1おくえん あるたら、いろいろな くにを りょこうしたいです。", "もし 1おくえん あっても、いろいろな くにを りょこうしたいです。", "もし 1おくえん ありたら、いろいろな くにを りょこうしたいです。"],
+      },
+      {
+        arti: "Walaupun dipikirkan berapa kali pun, (saya) tidak mengerti.",
+        benar: "いくら かんがえても、わかりません。",
+        salah: ["いくら かんがえたら、わかりません。", "いくら かんがえっても、わかりません。", "いくら かんがえるても、わかりません。"],
+      },
+      {
+        arti: "Walaupun hujan, (saya) tetap mencuci pakaian.",
+        benar: "あめが ふっても、せんたくします。",
+        salah: ["あめが ふりても、せんたくします。", "あめが ふるでも、せんたくします。", "あめが ふったら、せんたくします。"],
+      },
+      {
+        arti: "Walaupun murah, saya tidak suka perjalanan rombongan.",
+        benar: "やすくても、わたしは グループりょこうが きらいです。",
+        salah: ["やすいても、わたしは グループりょこうが きらいです。", "やすいでも、わたしは グループりょこうが きらいです。", "やすかったら、わたしは グループりょこうが きらいです。"],
+      },
+      {
+        arti: "Walaupun sepi (tenang), (saya) tidak bisa tidur.",
+        benar: "しずかでも、ねむれません。",
+        salah: ["しずかくても、ねむれません。", "しずかなでも、ねむれません。", "しずかだったら、ねむれません。"],
+      },
+      {
+        arti: "Walaupun hari Minggu, (saya) tetap bekerja.",
+        benar: "にちようびでも、はたらきます。",
+        salah: ["にちようびても、はたらきます。", "にちようびくても、はたらきます。", "にちようびだったら、はたらきます。"],
+      },
+      {
+        arti: "Selama ini (Anda) sudah banyak membantu (saya). Terima kasih.",
+        benar: "いろいろ おせわに なりました。",
+        salah: ["いろいろ おせわを なりました。", "いろいろ おせわに しました。", "どうぞ おげんきで。"],
+      },
+    ],
+  },
 };
