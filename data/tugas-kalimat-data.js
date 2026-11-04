@@ -1821,7 +1821,7 @@ const tugasKalimatData = {
       {
         arti: "Sdr. Miller mengatakan bahwa ia akan dinas ke Tokyo.",
         benar: "ミラーさんは とうきょうへ しゅっちょうすると いいました。",
-        salah: ["ミラーさんは とうきょうへ しゅっちょうしますと いいました。", "ミラーさんは とうきょうへ しゅっちょうすると おもいました。", "ミラーさんは とうきょうへ しゅっちょうするを いいました。"],
+        salah: ["ミラーさんは とうきょうへ しゅっちょうするの いいました。", "ミラーさんは とうきょうへ しゅっちょうすると おもいました。", "ミラーさんは とうきょうへ しゅっちょうするを いいました。"],
       },
       {
         arti: "Besok (Anda) pergi ke pesta, bukan? ... Ya, pergi.",
