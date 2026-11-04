@@ -2240,4 +2240,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  27: {
+    susun: [
+      { arti: "Saya bisa berbicara bahasa Jepang sedikit.", potongan: ["わたし", "は", "にほんご", "が", "すこし", "はなせます"] },
+      { arti: "Apakah (Anda) bisa membaca katakana?", potongan: ["かたかな", "が", "よめます", "か"] },
+      { arti: "Dari atas gunung laut kelihatan.", potongan: ["やま", "の", "うえ", "から", "うみ", "が", "みえます"] },
+      { arti: "Suara radio kedengaran.", potongan: ["ラジオ", "の", "おと", "が", "きこえます"] },
+      { arti: "Di depan stasiun sudah jadi sebuah supermarket besar.", potongan: ["えき", "の", "まえ", "に", "おおきい", "スーパー", "が", "できました"] },
+      { arti: "(Saya) hanya bisa menulis hiragana.", potongan: ["ひらがな", "しか", "かけません"] },
+      { arti: "Di apartemen ini tidak boleh (tidak bisa) memelihara binatang.", potongan: ["この", "マンション", "で", "は", "ペット", "が", "かえません"] },
+      { arti: "Suatu saat (saya) ingin membangun rumah sendiri.", potongan: ["いつか", "じぶん", "の", "いえ", "を", "たてたい", "です"] },
+      { arti: "Apakah besok (Anda) bisa datang?", potongan: ["あした", "こられます", "か"] },
+      { arti: "Kemarin (saya) hanya tidur 3 jam.", potongan: ["きのう", "さんじかん", "しか", "ねません", "でした"] },
+      { arti: "Di mana (saya) bisa membeli tiket konser?", potongan: ["どこ", "で", "コンサート", "の", "チケット", "が", "かえます", "か"] },
+      { arti: "Di sini (saya) bisa melihat kembang api dengan jelas.", potongan: ["ここ", "から", "はなび", "が", "はっきり", "みえます"] },
+    ],
+    pilih: [
+      {
+        arti: "Saya bisa berbicara bahasa Jepang sedikit.",
+        benar: "わたしは にほんごが すこし はなせます。",
+        salah: ["わたしは にほんごが すこし はなされます。", "わたしは にほんごが すこし はなしれます。", "わたしは にほんごが すこし はなすます。"],
+      },
+      {
+        arti: "Apakah (Anda) bisa membaca katakana?",
+        benar: "かたかなが よめますか。",
+        salah: ["かたかなが よまれますか。", "かたかなが よみれますか。", "かたかなが よむれますか。"],
+      },
+      {
+        arti: "Apakah besok (Anda) bisa datang?",
+        benar: "あした こられますか。",
+        salah: ["あした きられますか。", "あした くられますか。", "あした きますれますか。"],
+      },
+      {
+        arti: "Saya bisa makan sashimi.",
+        benar: "わたしは さしみが たべられます。",
+        salah: ["わたしは さしみが たべます られます。", "わたしは さしみが たべせます。", "わたしは さしみが たべえます。"],
+      },
+      {
+        arti: "Dari atas gunung laut kelihatan.",
+        benar: "やまの うえから うみが みえます。",
+        salah: ["やまの うえから うみが みえられます。", "やまの うえから うみを みえます。", "やまの うえから うみが みえれます。"],
+      },
+      {
+        arti: "Suara radio kedengaran.",
+        benar: "ラジオの おとが きこえます。",
+        salah: ["ラジオの おとが きこえられます。", "ラジオの おとを きこえます。", "ラジオの おとが きけえます。"],
+      },
+      {
+        arti: "(Saya) hanya bisa menulis hiragana.",
+        benar: "ひらがなしか かけません。",
+        salah: ["ひらがなしか かけます。", "ひらがなだけ かけません。", "ひらがなしか かきれません。"],
+      },
+      {
+        arti: "Kemarin (saya) hanya tidur 3 jam.",
+        benar: "きのう 3じかんしか ねませんでした。",
+        salah: ["きのう 3じかんしか ねました。", "きのう 3じかんだけ ねませんでした。", "きのう 3じかんしか ねなかったでした。"],
+      },
+      {
+        arti: "Di depan stasiun sudah jadi sebuah supermarket besar.",
+        benar: "えきの まえに おおきい スーパーが できました。",
+        salah: ["えきの まえに おおきい スーパーを できました。", "えきの まえに おおきい スーパーが できられました。", "えきの まえで おおきい スーパーが できました。"],
+      },
+      {
+        arti: "Di apartemen ini tidak bisa memelihara binatang.",
+        benar: "この マンションでは ペットが かえません。",
+        salah: ["この マンションでは ペットが かいえません。", "この マンションでは ペットが かわれません。", "この マンションでは ペットが かいれません。"],
+      },
+      {
+        arti: "Bahasa Inggris bisa, tetapi bahasa Prancis tidak bisa.",
+        benar: "えいごは はなせますが、フランスごは はなせません。",
+        salah: ["えいごは はなせますが、フランスごは はなしません。", "えいごは はなせますが、フランスごも はなせません。", "えいごは はなしますが、フランスごは はなせません。"],
+      },
+      {
+        arti: "Hari Minggu (saya) bisa mengambil libur.",
+        benar: "にちようびは やすみが とれます。",
+        salah: ["にちようびは やすみが とられます。", "にちようびは やすみが とりれます。", "にちようびは やすみを とるます。"],
+      },
+    ],
+  },
 };
