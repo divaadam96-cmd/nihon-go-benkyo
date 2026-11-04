@@ -189,7 +189,7 @@ const babKosakataData = {
     ["\uff5e\u3058", "Jam , pukul"],
     ["\uff5e\u3075\u3093\uff0f\u3076\u3093", "Menit"],
     ["\u306f\u3093", "Setengah"],
-    ["\u306a\u3093\u3093\u3058", "Jam berapa?"],
+    ["\u306a\u3093\u3058", "Jam berapa?"],
     ["\u306a\u3093\u3077\u3093", "Berapa menit ?"],
     ["\u3054\u305c\u3093", "AM (waktu sebelum jam 12 siang)"],
     ["\u3054\u3054", "PM (waktu setelah jam 12 siang)"],
@@ -949,7 +949,7 @@ const babKosakataData = {
     ["\u3042\u3051\u307e\u3059", "Membuka"],
     ["\u3057\u3081\u307e\u3059", "Menutup"],
     ["\u3044\u305d\u304e\u307e\u3059", "Buru-buru"],
-    ["\u307e\u3061\u307e\u3059\uff53\u3046", "Menunggu"],
+    ["\u307e\u3061\u307e\u3059", "Menunggu"],
     ["\u3082\u3061\u307e\u3059", "Membawa"],
     ["\u3068\u308a\u307e\u3059", "Mengambil"],
     ["\u3066\u3064\u3060\u3044\u307e\u3059", "Membantu"],
@@ -1186,7 +1186,7 @@ const babKosakataData = {
     ["\u305d\u308c\u304b\u3089", "Setelah itu, kemudian , dan"],
     ["\u304a\u3060\u3044\u3058\u306b", "Semoga lekas sembuh"],
     ["\u3042\u305f\u307e\u304c\u3044\u305f\u3044", "Sakit kepala"],
-    ["\u304a\u306a\u304c\u304c\u3044\u305f\u3044", "Sakit perut"],
+    ["\u304a\u306a\u304b\u304c\u3044\u305f\u3044", "Sakit perut"],
     ["\u306f\u304c\u3044\u305f\u3044", "Sakit gigi"],
     ["\u306d\u3064\u304c\u3042\u308a\u307e\u3059", "Demam"],
     ["\u305b\u304d\u304c\u3067\u307e\u3059", "Batuk"],
@@ -1584,7 +1584,7 @@ const babKosakataData = {
     ["\u3053\u3068", "Hal"],
     ["\u3072\u307e\u306a", "Senggang, waktu luang"],
     [
-      "\u3044\u308d\u3044\u308d\u304a\u305b\u308f\u3044\u306a\u308a\u307e\u3057\u305f",
+      "\u3044\u308d\u3044\u308d\u304a\u305b\u308f\u306b\u306a\u308a\u307e\u3057\u305f",
       "Terima kasih banyak bantuan anda yang telah diberikan",
     ],
     ["\u304c\u3093\u3070\u308a\u307e\u3059", "Berusaha, bekerja keras"],
@@ -3708,7 +3708,7 @@ const babKanjiData = {
       "Datang dari\u2026..",
     ],
     [
-      "\u3069\u3046\u305e\u3088\u308d\u3057\u304f\u304a\u9858\u3057\u307e\u3059",
+      "\u3069\u3046\u305e\u3088\u308d\u3057\u304f\u304a\u9858\u3044\u3057\u307e\u3059",
       "\u3069\u3046\u305e\u3088\u308d\u3057\u304f\u304a\u306d\u304c\u3044\u3057\u307e\u3059",
       "Terimalah perkenalan saya",
     ],
@@ -3868,7 +3868,7 @@ const babKanjiData = {
     ["\uff5e\u6642", "\uff5e\u3058", "Jam , pukul"],
     ["\uff5e\u5206", "\uff5e\u3075\u3093\uff0f\u3076\u3093", "Menit"],
     ["\u534a", "\u306f\u3093", "Setengah"],
-    ["\u4f55\u6642", "\u306a\u3093\u3093\u3058", "Jam berapa?"],
+    ["\u4f55\u6642", "\u306a\u3093\u3058", "Jam berapa?"],
     ["\u4f55\u5206", "\u306a\u3093\u3077\u3093", "Berapa menit ?"],
     ["\u5348\u524d", "\u3054\u305c\u3093", "AM (waktu sebelum jam 12 siang)"],
     ["\u5348\u5f8c", "\u3054\u3054", "PM (waktu setelah jam 12 siang)"],
@@ -4195,7 +4195,7 @@ const babKanjiData = {
   ],
   8: [
     [
-      "\u9759\u9999\uff08\u306a\uff09",
+      "\u9759\u304b\uff08\u306a\uff09",
       "\u3057\u305a\u304b\uff08\u306a\uff09",
       "Sunyi / tenang",
     ],
@@ -4205,7 +4205,7 @@ const babKanjiData = {
       "Terkenal",
     ],
     [
-      "\u65b0\u8a2d\uff08\u306a\uff09",
+      "\u89aa\u5207\uff08\u306a\uff09",
       "\u3057\u3093\u305b\u3064\uff08\u306a\uff09",
       "Baik hati",
     ],
@@ -4578,7 +4578,7 @@ const babKanjiData = {
     ["\u91e3\u308a", "\u3064\u308a", "Pancing , memancing"],
     ["\u9031\u672b", "\u3057\u3085\u3046\u307e\u3064", "Akhir pekan"],
     [
-      "\u304a\u8af8\u738b\u6708",
+      "\u304a\u6b63\u6708",
       "\u304a\u3057\u3087\u3046\u304c\u3064",
       "Tahun baru",
     ],
@@ -4618,8 +4618,8 @@ const babKanjiData = {
     ],
     ["\u304a\u5bfa", "\u304a\u3066\u3089", "Kuil budha"],
     ["\u795e\u793e", "\u3058\u3093\u3058\u3083", "Kuil sinto"],
-    ["\u5354\u4f1a", "\u304d\u3087\u3046\u304b\u3044", "Gereja"],
-    ["\u4f53\u80b2\u9928", "\u305f\u3044\u3057\u304b\u3093", "Kedutaan besar"],
+    ["\u6559\u4f1a", "\u304d\u3087\u3046\u304b\u3044", "Gereja"],
+    ["\u5927\u4f7f\u9928", "\u305f\u3044\u3057\u304b\u3093", "Kedutaan besar"],
     [
       "\u5165\u56fd\u7ba1\u7406\u5c40",
       "\u306b\u3085\u3046\u3053\u304f\u304b\u3093\u308a\u304d\u3087\u304f",
@@ -4656,7 +4656,7 @@ const babKanjiData = {
     ["\u6025\u304e\u307e\u3059", "\u3044\u305d\u304e\u307e\u3059", "Buru-buru"],
     [
       "\u5f85\u3061\u307e\u3059",
-      "\u307e\u3061\u307e\u3059\uff53\u3046",
+      "\u307e\u3061\u307e\u3059",
       "Menunggu",
     ],
     ["\u6301\u3061\u307e\u3059", "\u3082\u3061\u307e\u3059", "Membawa"],
@@ -4686,7 +4686,7 @@ const babKanjiData = {
     ["\u4f4f\u6240", "\u3058\u3085\u3046\u3057\u3087", "Alamat"],
     ["\u5730\u56f3", "\u3061\u305a", "Peta"],
     ["\u5869", "\u3057\u304a", "Garam"],
-    ["\u4f50\u85e4", "\u3055\u3068\u3046", "Gula"],
+    ["\u7802\u7cd6", "\u3055\u3068\u3046", "Gula"],
     ["\u554f\u984c", "\u3082\u3093\u3060\u3044", "Masalah, soal"],
     ["\u7b54\u3048", "\u3053\u305f\u3048", "Jawaban"],
     ["\u8aad\u307f\u65b9", "\u3088\u307f\u304b\u305f", "Cara membaca"],
@@ -5599,7 +5599,7 @@ const babKanjiData = {
     ["\u6687\u306a", "\u3072\u307e\u306a", "Senggang, waktu luang"],
     [
       "\u3044\u308d\u3044\u308d\u304a\u4e16\u8a71\u306b\u306a\u308a\u307e\u3057\u305f",
-      "\u3044\u308d\u3044\u308d\u304a\u305b\u308f\u3044\u306a\u308a\u307e\u3057\u305f",
+      "\u3044\u308d\u3044\u308d\u304a\u305b\u308f\u306b\u306a\u308a\u307e\u3057\u305f",
       "Terima kasih banyak bantuan anda yang telah diberikan",
     ],
     [

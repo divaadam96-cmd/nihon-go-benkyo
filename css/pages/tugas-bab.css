@@ -1,0 +1,544 @@
+/* Tahap 4 "Tugas & target" di pembaca Materi + kunci pelajaran
+   (js/tugas-bab.js). Dimuat setelah css/pages/materi.css. */
+
+.material-learning-steps {
+  grid-template-columns: repeat(4, 1fr);
+}
+.material-learning-steps.tanpa-latihan {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* === Pelajaran terkunci === */
+.material-choice.locked {
+  border-style: dashed;
+  background: #efebe3;
+  opacity: .78;
+}
+.material-choice.locked .material-choice-status {
+  border-color: #9a948a;
+  background: transparent;
+}
+.material-choice.locked.active {
+  opacity: 1;
+}
+.material-choice.target-done:not(.active) .material-choice-state {
+  color: #2e8068;
+  font-weight: 800;
+}
+.material-lock-notice {
+  margin: 16px 25px 22px;
+  padding: 18px 20px;
+  border: 1px dashed #b9a98c;
+  border-radius: 10px;
+  color: var(--ink);
+  background: #fffaf1;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.material-lock-notice b {
+  color: var(--navy);
+  font-size: 14px;
+}
+.material-lock-notice p {
+  margin: 6px 0 12px;
+}
+.material-reader.is-locked .material-learning-steps,
+.material-reader.is-locked .material-completeness,
+.material-reader.is-locked .material-step-panel,
+.material-reader.is-locked .material-reader-actions > div {
+  display: none !important;
+}
+
+/* === Daftar tugas === */
+.material-tugas-study {
+  padding: 22px 25px;
+}
+.tugas-loading,
+.tugas-error,
+.tugas-hint {
+  color: var(--muted);
+  font-size: 11px;
+}
+.tugas-error {
+  color: var(--red);
+}
+.tugas-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #d8ccb5;
+}
+.tugas-head h3 {
+  margin: 6px 0 5px;
+  color: var(--navy);
+  font-size: 20px;
+}
+.tugas-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+.tugas-meter {
+  flex: none;
+  display: grid;
+  place-content: center;
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background:
+    radial-gradient(closest-side, #f8f1e4 78%, transparent 80%),
+    conic-gradient(#2e8068 var(--tugas-progress), #ddd3c2 0);
+  text-align: center;
+}
+.tugas-meter.cukup b {
+  color: #2e8068;
+}
+.tugas-meter b {
+  color: var(--navy);
+  font-size: 17px;
+}
+.tugas-meter span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+}
+.tugas-staff-note,
+.tugas-warning {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+.tugas-staff-note {
+  border: 1px solid #b9c7dc;
+  color: #2c4d7c;
+  background: #eef3fa;
+}
+.tugas-warning {
+  border: 1px solid #ddb38f;
+  color: #864c31;
+  background: #fff5eb;
+}
+.tugas-group {
+  margin-bottom: 18px;
+}
+.tugas-group h4 {
+  margin: 0 0 8px;
+  color: #8a6c3d;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+}
+.tugas-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+.tugas-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 15px;
+  border: 1px solid #d8ccb5;
+  border-radius: 9px;
+  background: #fffdf8;
+}
+.tugas-group > .tugas-card {
+  flex-direction: row;
+  align-items: center;
+}
+.tugas-card.lulus {
+  border-color: #a9c8bb;
+  background: linear-gradient(145deg, #f7fbf8, #e8f2ed);
+}
+.tugas-card.ulang {
+  border-color: #d1a17e;
+  background: linear-gradient(145deg, #fffaf4, #f6e9dc);
+}
+.tugas-card b {
+  color: var(--navy);
+  font-size: 13px;
+}
+.tugas-card p {
+  margin: 4px 0 6px;
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+.tugas-count {
+  display: block;
+  margin-bottom: 7px;
+  color: #8e7b5b;
+  font-size: 9.5px;
+  font-weight: 700;
+}
+.tugas-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  font-weight: 800;
+}
+.tugas-status.baru {
+  color: #5f6670;
+  background: #ece7dd;
+}
+.tugas-status.lulus {
+  color: #205c4c;
+  background: #d8ebe3;
+}
+.tugas-status.ulang {
+  color: #8c472f;
+  background: #f4dfd6;
+}
+.tugas-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.tugas-card-actions button {
+  padding: 8px 13px;
+  font-size: 11px;
+}
+.tugas-card-actions button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* === Mengerjakan === */
+.tugas-quiz,
+.tugas-result {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 22px;
+  border: 1px solid #b8c9c1;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #f3f8f5, #e5f0eb);
+}
+.tugas-quiz-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #4e6c62;
+  font-size: 10px;
+  font-weight: 800;
+}
+.tugas-quiz-exit {
+  padding: 6px 9px;
+  border: 1px solid #c0ccc6;
+  border-radius: 6px;
+  color: #546861;
+  background: #fffdf8;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.tugas-quiz-score {
+  color: #22644f;
+}
+.tugas-quiz-track {
+  margin-top: 10px;
+}
+.tugas-quiz-instruction {
+  margin: 16px 0 6px;
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 800;
+}
+.tugas-quiz-prompt {
+  display: block;
+  padding: 18px;
+  border-radius: 8px;
+  color: var(--navy);
+  background: #fffdf8;
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.5;
+  text-align: center;
+}
+.tugas-quiz-prompt.is-jp,
+.tugas-choice[lang="ja"],
+.tugas-pieces,
+.tugas-result [lang="ja"],
+.tugas-feedback [lang="ja"] {
+  font-family: "Zen Kaku Gothic New", "Yu Gothic", sans-serif;
+}
+.tugas-quiz-prompt.is-jp {
+  font-size: 30px;
+}
+.tugas-quiz-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+.tugas-choice {
+  display: grid;
+  grid-template-columns: 25px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 12px 13px;
+  border: 1px solid #c0ccc6;
+  border-radius: 7px;
+  color: var(--ink);
+  background: white;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.tugas-choice[lang="ja"] {
+  font-size: 16px;
+}
+.tugas-choice-key {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 1px solid #c6d1cc;
+  border-radius: 50%;
+  color: #546861;
+  font: 800 9px "DM Sans", "DM Sans Fallback", sans-serif;
+}
+.tugas-choice:hover:not(:disabled),
+.tugas-choice:focus-visible:not(:disabled) {
+  border-color: #2e8068;
+  outline: none;
+}
+.tugas-choice:disabled {
+  cursor: default;
+}
+.tugas-choice.benar {
+  border-color: #2e8068;
+  color: #205c4c;
+  background: #d8ebe3;
+}
+.tugas-choice.benar .tugas-choice-key {
+  border-color: #2e8068;
+  color: white;
+  background: #2e8068;
+}
+.tugas-choice.salah {
+  border-color: #bd7357;
+  color: #8c452f;
+  background: #f4dfd6;
+}
+.tugas-choice.salah .tugas-choice-key {
+  border-color: #bd7357;
+  color: white;
+  background: #bd7357;
+}
+.tugas-pieces {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: potongan;
+}
+.tugas-pieces li {
+  counter-increment: potongan;
+  padding: 9px 13px;
+  border: 1px solid #c0ccc6;
+  border-radius: 7px;
+  color: var(--navy);
+  background: white;
+  font-size: 17px;
+}
+.tugas-pieces li::before {
+  content: counter(potongan);
+  display: inline-grid;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: #1c6c58;
+  font: 800 10px/1 "DM Sans", "DM Sans Fallback", sans-serif;
+  vertical-align: 3px;
+}
+.tugas-susun-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+.tugas-susun-form label {
+  display: grid;
+  flex: 1 1 220px;
+  gap: 5px;
+  color: #4e6c62;
+  font-size: 10px;
+  font-weight: 800;
+}
+.tugas-susun-form input {
+  padding: 10px 12px;
+  border: 1px solid #b8c9c1;
+  border-radius: 7px;
+  color: var(--navy);
+  background: white;
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+.tugas-susun-form button {
+  padding: 11px 16px;
+}
+.tugas-feedback {
+  margin-top: 12px;
+}
+.tugas-feedback p {
+  margin: 0 0 10px;
+  padding: 11px 13px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.6;
+}
+.tugas-feedback-benar {
+  color: #22644f;
+  background: #d8ebe3;
+}
+.tugas-feedback-salah {
+  color: #8c452f;
+  background: #f4dfd6;
+}
+.tugas-feedback-info {
+  color: #4e6c62;
+  background: #fffdf8;
+}
+.tugas-next {
+  padding: 10px 16px;
+}
+
+/* === Hasil === */
+.tugas-result.lulus {
+  border-color: #9cc5b5;
+}
+.tugas-result.ulang {
+  border-color: #ddb38f;
+  background: linear-gradient(145deg, #fffaf4, #f6ebdf);
+}
+.tugas-result-score {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 10px;
+}
+.tugas-result-score b {
+  color: var(--navy);
+  font-size: 44px;
+  line-height: 1;
+}
+.tugas-result-score span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+.tugas-result h3 {
+  margin: 8px 0 10px;
+  color: var(--navy);
+  font-size: 17px;
+}
+.tugas-ringkas {
+  margin-top: 6px !important;
+  color: #8e7b5b !important;
+  font-weight: 700;
+}
+.tugas-rata,
+.tugas-masih {
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.tugas-masih {
+  padding: 10px 12px;
+  border-radius: 7px;
+  color: #864c31;
+  background: #fff5eb;
+}
+.tugas-unlock {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  color: #205c4c;
+  background: #d8ebe3;
+  font-size: 11px;
+  font-weight: 800;
+}
+.tugas-mistakes {
+  margin: 0 0 14px;
+  font-size: 11px;
+}
+.tugas-mistakes summary {
+  color: #864c31;
+  font-weight: 800;
+  cursor: pointer;
+}
+.tugas-mistakes ul {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.tugas-mistakes li {
+  display: grid;
+  gap: 2px;
+  padding: 9px 11px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, .75);
+  line-height: 1.5;
+}
+.tugas-mistakes li b {
+  color: var(--navy);
+  font-size: 13px;
+}
+.tugas-mistakes li span {
+  color: var(--muted);
+}
+.tugas-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 560px) {
+  .material-lock-notice {
+    margin-inline: 17px;
+  }
+  .material-tugas-study {
+    padding: 18px 17px;
+  }
+  .tugas-head {
+    align-items: flex-start;
+  }
+  .tugas-group > .tugas-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tugas-quiz,
+  .tugas-result {
+    padding: 16px;
+  }
+  .tugas-quiz-choices,
+  .tugas-cards {
+    grid-template-columns: 1fr;
+  }
+  .tugas-quiz-prompt.is-jp {
+    font-size: 26px;
+  }
+}
