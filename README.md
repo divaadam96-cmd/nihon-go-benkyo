@@ -87,7 +87,8 @@ data/                     dataset murni (tanpa kode render), dimuat halaman
   materi-grammar-data.js  Keterangan Tata Bahasa Pelajaran 1-50 (Materi)
   tugas-kalimat-data.js   soal susun/pilih kalimat per Bab (Materi - Tugas)
   tugas-kategori-data.js  kelompok makna kosakata (pengecoh pilihan ganda)
-  kanji-mirip-data.js     kanji mirip bentuk (pengecoh Hiragana → Kanji)
+  kanji-mirip-data.js     kanji mirip, bacaan keliru & bacaan sah lain
+                          (pengecoh soal kanji)
 assets/
   icons/                  ikon PWA
   images/                 logo & gambar latar
@@ -327,23 +328,32 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   cek peran di fungsi: `require_staff()`/`require_operator()` atau
   `coalesce(...)`, jangan `not in`/`<>` langsung.
 - **Target per Bab & kunci bab** (`supabase/add-target-bab.sql`,
-  `js/tugas-bab.js`). Setiap Pelajaran punya target: tandai materi "Sudah
-  paham", lalu tugas pilihan ganda kotoba (2 arah), kanji (4 arah) dan
-  kalimat (susun + pilih; hanya bab yang punya data di
-  `data/tugas-kalimat-data.js`). Pelajaran N+1 terbuka untuk **siswa**
-  setelah materi Pelajaran N ditandai, semua tugasnya dikerjakan, dan
-  rata-rata skor terbaik semua tugas >= 80 (`TUGAS_KKM` di JS =
-  `target_bab_kkm()` di SQL; satu tugas boleh di bawah 80). Pengecoh
-  pilihan ganda diambil dari kelompok makna yang sama
-  (`data/tugas-kategori-data.js`) dan tidak berulang dalam satu tugas.
-  Soal Hiragana → Kanji memakai pengecoh kanji mirip bentuk
-  (`data/kanji-mirip-data.js`, mis. 先生 / 失生 / 先主), dan Kanji →
-  Hiragana memakai cara baca mirip (bunyi panjang, tenten, huruf kecil,
-  tsu kecil, plus `bacaanKeliruData` di file yang sama).
-  Sensei/Operator tidak dikunci. Hasil dicatat lewat `catat_target_bab()` (skor terbaik,
-  lulus tidak pernah dicabut) ke tabel `bab_targets`; siswa tidak punya hak
-  tulis langsung. Penilaian tugas terjadi di browser (bahannya kosakata
-  publik), jadi kunci ini gerbang belajar, bukan pengamanan nilai.
+  `js/tugas-bab.js`, tahap "Tugas & target" di `js/pages/materi.js`).
+  Setiap Pelajaran punya target: tandai materi "Sudah paham", lalu tugas
+  pilihan ganda kotoba (2 arah), kanji (4 arah) dan kalimat (susun +
+  pilih). Pelajaran N+1 terbuka untuk **siswa** setelah materi Pelajaran N
+  ditandai, semua tugasnya dikerjakan, dan rata-rata skor terbaik semua
+  tugas >= 80 (`TUGAS_KKM` di JS = `target_bab_kkm()` di SQL; satu tugas
+  boleh di bawah 80). Sensei/Operator tidak dikunci. Hasil dicatat lewat
+  `catat_target_bab()` (skor terbaik, lulus tidak pernah dicabut) ke tabel
+  `bab_targets`; siswa tidak punya hak tulis langsung. Penilaian terjadi
+  di browser (bahannya kosakata publik), jadi kunci ini gerbang belajar,
+  bukan pengamanan nilai.
+  - Bahan soal: kotoba & kanji dari `data/bab-data.js` (sama dengan
+    Hafalan); kalimat dari `data/tugas-kalimat-data.js` (satu nomor = satu
+    kata atau satu partikel; `alt` untuk susunan lain yang juga benar).
+  - Pengecoh: kelompok makna yang sama (`data/tugas-kategori-data.js`;
+    `kana@bab` untuk homonim, `tugasSinonim` untuk kata yang artinya sama),
+    tidak berulang dalam satu tugas. Hiragana → Kanji memakai kanji mirip
+    bentuk; Kanji → Hiragana memakai cara baca mirip (bunyi panjang,
+    tenten, huruf kecil, tsu kecil) + `bacaanKeliruData`; bacaan sah yang
+    tidak ada di data dicatat di `bacaanSahLainData` (ketiganya di
+    `data/kanji-mirip-data.js`).
+  - Menambah bab: tulis soal kalimatnya di `data/tugas-kalimat-data.js`
+    (tahap lama "Kerjakan latihan" otomatis hilang untuk bab itu), lalu
+    lengkapi kelompok makna, sinonim, kanji mirip & bacaan keliru bab
+    tersebut. Setelah semua 50 bab selesai, kode latihan lama
+    (`buildPracticeTest` di `materi.js`) bisa dihapus.
 - **Password minimal 10 karakter, huruf + angka** - dicek di form, di
   Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket

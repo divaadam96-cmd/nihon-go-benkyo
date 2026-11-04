@@ -152,15 +152,20 @@
   }
 
   // === Server ===
+  function dariServer(row) {
+    return { skor_terbaik: row.skor_terbaik, skor_terakhir: row.skor_terakhir, percobaan: row.percobaan, lulus: row.lulus };
+  }
+  async function kirimKeServer(bab, target, benar, total) {
+    const { data, error } = await window.supabaseClient.rpc("catat_target_bab", {
+      p_bab: bab, p_target: target, p_benar: benar, p_total: total,
+    });
+    if (error) throw error;
+    return data;
+  }
   function applyServerRow(row) {
     const key = `${row.bab}:${row.target}`;
     const local = rows[key];
-    rows[key] = {
-      skor_terbaik: row.skor_terbaik,
-      skor_terakhir: row.skor_terakhir,
-      percobaan: row.percobaan,
-      lulus: row.lulus,
-    };
+    rows[key] = dariServer(row);
     // Hasil lokal yang belum terkirim & lebih baik tetap ditandai pending.
     if (local?.pending && ((local.lulus && !row.lulus) || local.skor_terbaik > row.skor_terbaik)) {
       rows[key] = { ...local };
@@ -170,13 +175,13 @@
     const pending = Object.entries(rows).filter(([, r]) => r.pending);
     for (const [key, r] of pending) {
       const [bab, target] = key.split(/:(.+)/);
-      const total = target === "materi" ? 1 : 100;
-      const benar = target === "materi" ? 1 : r.skor_terbaik;
-      const { data, error } = await window.supabaseClient.rpc("catat_target_bab", {
-        p_bab: Number(bab), p_target: target, p_benar: benar, p_total: total,
-      });
-      if (error) return;
-      applyServerRow(data);
+      // Skor terbaik dikirim sebagai benar/100 (materi selalu 1/1).
+      const materi = target === "materi";
+      try {
+        applyServerRow(await kirimKeServer(Number(bab), target, materi ? 1 : r.skor_terbaik, materi ? 1 : 100));
+      } catch {
+        return; // dicoba lagi saat halaman dibuka berikutnya
+      }
     }
   }
   let initPromise = null;
@@ -191,8 +196,8 @@
           .select("bab, target, skor_terbaik, skor_terakhir, percobaan, lulus")
           .eq("siswa_id", uid());
         if (error) throw error;
-        const pendingRows = Object.fromEntries(Object.entries(rows).filter(([, r]) => r.pending));
-        rows = pendingRows;
+        // Server = sumber kebenaran; hanya hasil lokal yang belum terkirim dipertahankan.
+        rows = Object.fromEntries(Object.entries(rows).filter(([, r]) => r.pending));
         data.forEach(applyServerRow);
         serverOk = true;
         await sendPending();
@@ -222,16 +227,7 @@
     let saved = false;
     if (window.supabaseClient && uid()) {
       try {
-        const { data, error } = await window.supabaseClient.rpc("catat_target_bab", {
-          p_bab: bab, p_target: target, p_benar: benar, p_total: total,
-        });
-        if (error) throw error;
-        rows[key] = {
-          skor_terbaik: data.skor_terbaik,
-          skor_terakhir: data.skor_terakhir,
-          percobaan: data.percobaan,
-          lulus: data.lulus,
-        };
+        rows[key] = dariServer(await kirimKeServer(bab, target, benar, total));
         saved = true;
         serverOk = true;
       } catch (error) {
@@ -309,9 +305,9 @@
      sama, sama-sama berawalan/berakhiran ～, panjang mirip, banyak huruf
      yang sama seperti かいしゃ/かいしゃいん). */
   function scriptOf(text) {
-    if (/[一-鿿]/.test(text)) return "kanji";
-    if (/^[゠-ヿ～]+$/.test(text)) return "kata";
-    if (/[぀-ゟ]/.test(text)) return "hira";
+    if (/[\u4e00-\u9fff]/.test(text)) return "kanji";
+    if (/^[\u30a0-\u30ff～]+$/.test(text)) return "kata";
+    if (/[\u3040-\u309f]/.test(text)) return "hira";
     return "latin";
   }
   function similarity(a, b) {
@@ -336,12 +332,13 @@
      tidak boleh punya set 4 pilihan yang persis sama - supaya pilihan
      tidak itu-itu saja. `pemakaian` direset setiap buildQuestions(). */
   let pemakaian = { kali: new Map(), set: new Set() };
+  const tandaSet = (values) => values.map(norm).sort().join("|");
   function dipakai(value) {
     return pemakaian.kali.get(norm(value)) || 0;
   }
   function catatPemakaian(values) {
     values.forEach((v) => pemakaian.kali.set(norm(v), dipakai(v) + 1));
-    pemakaian.set.add(values.map(norm).sort().join("|"));
+    pemakaian.set.add(tandaSet(values));
   }
   function distractors(bab, itemsOf, correct, valueOf, conflicts) {
     const answer = valueOf(correct);
@@ -376,12 +373,7 @@
     kandidat.forEach((k) => (k.skor = k.kelompok * 1000 + dipakai(k.value) * (k.kelompok ? 3 : 2) + k.bobot + Math.random() * 1.2));
     kandidat.sort((x, y) => x.skor - y.skor);
 
-    let picked = kandidat.slice(0, 3).map((k) => k.value);
-    const tanda = (values) => values.map(norm).sort().join("|");
-    // Set pilihan kembar dengan soal sebelumnya -> ganti pengecoh terakhir.
-    for (let i = 3; pemakaian.set.has(tanda([answer, ...picked])) && i < kandidat.length; i++) {
-      picked = [picked[0], picked[1], kandidat[i].value];
-    }
+    const picked = pilihTiga(answer, kandidat.map((k) => k.value));
     catatPemakaian([answer, ...picked]);
     return picked;
   }
@@ -454,7 +446,7 @@
     const tambah = (jenis, mora) => calon.push({ jenis, teks: awal + mora.join("") + akhir });
     // Kana yang tertulis di tengah soal (の pada 子供の服, し pada 催し物)
     // tidak diubah - pengecoh seperti こどものうふく gampang dicoret.
-    const kanaTerlihat = new Set(kanji.slice(depan, kanji.length - belakang).filter((ch) => /[぀-ゟ]/.test(ch)));
+    const kanaTerlihat = new Set(kanji.slice(depan, kanji.length - belakang).filter((ch) => /[\u3040-\u309f]/.test(ch)));
     inti.forEach((m, i) => {
       if (kanaTerlihat.has(m)) return;
       const kepala = m[0], ekor = m.slice(1), next = inti[i + 1];
@@ -492,7 +484,8 @@
       });
     }
     const sah = new Set([norm(item.kana), ...(indeksBacaan.get(item.kanji) || [])]);
-    (BACAAN_SAH_LAIN[item.kanji] || []).forEach((k) => sah.add(norm(k)));
+    const sahLain = typeof bacaanSahLainData !== "undefined" ? bacaanSahLainData[item.kanji] || [] : [];
+    sahLain.forEach((k) => sah.add(norm(k)));
 
     const perJenis = {};
     shuffle(calon).forEach((c) => {
@@ -511,31 +504,28 @@
     return hasil;
   }
   /* Ambil 3 pengecoh pertama dari daftar berurutan; kalau set pilihannya
-     kembar dengan soal sebelumnya (dua kanji dengan bacaan sama), ganti
-     pengecoh terakhir dengan calon berikutnya. */
+     kembar dengan soal sebelumnya, ganti pengecoh terakhir dengan calon
+     berikutnya. */
   function pilihTiga(answer, daftar) {
     let picked = daftar.slice(0, 3);
-    const tanda = (values) => values.map(norm).sort().join("|");
-    for (let i = 3; picked.length === 3 && pemakaian.set.has(tanda([answer, ...picked])) && i < daftar.length; i++) {
+    for (let i = 3; picked.length === 3 && pemakaian.set.has(tandaSet([answer, ...picked])) && i < daftar.length; i++) {
       picked = [picked[0], picked[1], daftar[i]];
     }
     return picked;
   }
-  // Bacaan alternatif yang benar tapi tidak ada di data (jangan jadi pengecoh).
-  const BACAAN_SAH_LAIN = {
-    日本: ["にっぽん"], 私: ["わたくし"], "～人": ["～にん"],
-    家: ["いえ"], 何階: ["なんかい"], "～階": ["～がい"], 靴: ["ぐつ"],
-    昨日: ["さくじつ"], 今日: ["こんにち"], 明日: ["あす", "みょうにち"], 明後日: ["みょうごにち"],
-    今朝: ["こんちょう"], 一昨日: ["いっさくじつ", "おとつい"], 何時: ["なんどき"], 何分: ["なんぶん"],
-    行きます: ["ゆきます"], 一日: ["いちにち"], 二十日: ["にじゅうにち"], 今年: ["こんねん"], 元日: ["がんにち"],
-    "～日": ["～か"], 兄弟: ["けいてい"],
-    上: ["うわ", "かみ"], 下: ["しも", "げ", "もと"], 外: ["ほか"], 間: ["ま", "かん", "けん"],
-    右: ["ゆう"], 中: ["じゅう"], 木: ["こ"], 物: ["もつ"],
-    辛い: ["つらい"], 紅葉: ["こうよう"], 川: ["がわ"], 魚屋: ["うおや"], 何か: ["なんか"],
-    開けます: ["ひらけます"], 入ります: ["いります"], 降ります: ["おります"], 東京行き: ["とうきょうゆき"],
-    "～方": ["～ほう", "～がた"], "～発": ["～ぱつ"], 入口: ["はいりぐち", "いりくち"],
-  };
 
+  /* Pengecoh khusus (bacaan/kanji mirip) dulu; kalau kurang dari 3,
+     ditambah pengecoh biasa sekelompok makna. */
+  function pengecohKhusus(bab, item, answer, khusus, valueOf, conflicts) {
+    const wrong = pilihTiga(answer, khusus);
+    if (wrong.length < 3) {
+      const biasa = distractors(bab, kanjiItems, item, valueOf, (x) => conflicts(x) || wrong.includes(valueOf(x)));
+      wrong.push(...biasa.slice(0, 3 - wrong.length));
+    } else {
+      catatPemakaian([answer, ...wrong]);
+    }
+    return wrong;
+  }
   function mcQuestion(prompt, promptJp, answer, wrong, instruction) {
     return { type: "pilih", prompt, promptJp, answer, choices: shuffle([answer, ...wrong]), instruction };
   }
@@ -556,26 +546,14 @@
       const items = kanjiItems(bab);
       return shuffle(items).map((item) => {
         switch (target) {
-          case "kanji-kanji-kana": {
-            const wrong = pilihTiga(item.kana, bacaanMirip(bab, item));
-            if (wrong.length < 3) {
-              const biasa = distractors(bab, kanjiItems, item, (x) => x.kana, (x) => x.kanji === item.kanji || wrong.includes(x.kana));
-              wrong.push(...biasa.slice(0, 3 - wrong.length));
-            } else {
-              catatPemakaian([item.kana, ...wrong]);
-            }
-            return mcQuestion(item.kanji, true, item.kana, wrong, "Bagaimana cara baca yang benar?");
-          }
-          case "kanji-kana-kanji": {
-            const wrong = pilihTiga(item.kanji, kanjiMirip(bab, item));
-            if (wrong.length < 3) {
-              const biasa = distractors(bab, kanjiItems, item, (x) => x.kanji, (x) => norm(x.kana) === norm(item.kana) || wrong.includes(x.kanji));
-              wrong.push(...biasa.slice(0, 3 - wrong.length));
-            } else {
-              catatPemakaian([item.kanji, ...wrong]);
-            }
-            return mcQuestion(item.kana, true, item.kanji, wrong, "Mana tulisan kanji yang benar?");
-          }
+          case "kanji-kanji-kana":
+            return mcQuestion(item.kanji, true, item.kana,
+              pengecohKhusus(bab, item, item.kana, bacaanMirip(bab, item), (x) => x.kana, (x) => x.kanji === item.kanji),
+              "Bagaimana cara baca yang benar?");
+          case "kanji-kana-kanji":
+            return mcQuestion(item.kana, true, item.kanji,
+              pengecohKhusus(bab, item, item.kanji, kanjiMirip(bab, item), (x) => x.kanji, (x) => norm(x.kana) === norm(item.kana)),
+              "Mana tulisan kanji yang benar?");
           case "kanji-kanji-id":
             return mcQuestion(item.kanji, true, item.id,
               distractors(bab, kanjiItems, item, (x) => x.id, (x) => x.kanji === item.kanji), "Apa arti kanji ini?");
@@ -590,10 +568,11 @@
       return shuffle(data.susun).slice(0, TUGAS_KALIMAT_JUMLAH).map((item) => {
         const indexes = item.potongan.map((_, i) => i);
         const kalimat = item.potongan.join("");
+        // Susunan lain yang juga benar (data `alt`, mis. A と B ditukar).
+        const kalimatSah = [kalimat, ...(item.alt || []).map((a) => a.replace(/\s+/g, ""))];
         let order = shuffle(indexes);
         // Jangan tampilkan potongan yang kebetulan sudah tersusun benar.
-        const sahSemua = [kalimat, ...(item.alt || []).map((a) => (Array.isArray(a) ? a.join("") : a).replace(/\s+/g, ""))];
-        while (order.length > 1 && sahSemua.includes(order.map((i) => item.potongan[i]).join(""))) order = shuffle(indexes);
+        while (order.length > 1 && kalimatSah.includes(order.map((i) => item.potongan[i]).join(""))) order = shuffle(indexes);
         // order[k] = potongan ke-berapa yang tampil sebagai nomor k+1
         const answer = indexes.map((i) => order.indexOf(i) + 1);
         return {
@@ -601,9 +580,7 @@
           prompt: item.arti,
           pieces: order.map((i) => item.potongan[i]),
           answer,
-          kalimat,
-          // Susunan lain yang juga benar (data `alt`, mis. A と B ditukar).
-          kalimatSah: [kalimat, ...(item.alt || []).map((a) => (Array.isArray(a) ? a.join("") : a).replace(/\s+/g, ""))],
+          kalimatSah,
           sentence: kalimat + "。",
         };
       });
@@ -612,7 +589,6 @@
       mcQuestion(item.arti, false, item.benar, item.salah, "Pilih kalimat bahasa Jepang yang benar."));
   }
   function questionCount(bab, target) {
-    if (target === "materi") return 0;
     if (target.startsWith("kotoba-")) return (babKosakataData[bab] || []).length;
     if (target.startsWith("kanji-")) return (babKanjiData[bab] || []).length;
     const data = tugasKalimatData[bab];
@@ -808,7 +784,6 @@
     KKM: TUGAS_KKM,
     init,
     onChange: (fn) => listeners.push(fn),
-    targetsFor,
     progress,
     isComplete,
     kekurangan,
@@ -817,10 +792,5 @@
     frontierBab,
     recordMateri,
     renderPanel,
-    // untuk pengujian
-    _buildQuestions: buildQuestions,
-    _record: record,
-    _parseOrder: parseOrder,
-    _ensureBabData: ensureBabData,
   };
 })();
