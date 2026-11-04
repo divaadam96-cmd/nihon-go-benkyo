@@ -1928,4 +1928,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  23: {
+    susun: [
+      { arti: "Ketika meminjam buku di perpustakaan, diperlukan kartu.", potongan: ["としょかん", "で", "ほん", "を", "かりる", "とき", "カード", "が", "いります"] },
+      { arti: "Ketika menyeberang jalan, (saya) berhati-hati terhadap mobil.", potongan: ["みち", "を", "わたる", "とき", "くるま", "に", "きをつけます"] },
+      { arti: "Ketika mengantuk, (saya) minum kopi.", potongan: ["ねむい", "とき", "コーヒー", "を", "のみます"] },
+      { arti: "Ketika senggang, (saya) menonton video di rumah.", potongan: ["ひまな", "とき", "うち", "で", "ビデオ", "を", "みます"] },
+      { arti: "Ketika masih anak-anak, (saya) sering berenang di sungai.", potongan: ["こども", "の", "とき", "よく", "かわ", "で", "およぎました"] },
+      { arti: "Ketika kesepian, (saya) menelepon keluarga.", potongan: ["さびしい", "とき", "かぞく", "に", "でんわします"] },
+      { arti: "Kalau tombol ini ditekan, uang kembalian keluar.", potongan: ["この", "ボタン", "を", "おす", "と", "おつり", "が", "でます"] },
+      { arti: "Kalau tombol putar ini diputar, suaranya menjadi keras.", potongan: ["この", "つまみ", "を", "まわす", "と", "おと", "が", "おおきく", "なります"] },
+      { arti: "Kalau menyeberangi jembatan itu, ada kantor pos.", potongan: ["あの", "はし", "を", "わたる", "と", "ゆうびんきょく", "が", "あります"] },
+      { arti: "Kalau belok ke kanan di perempatan itu, ada stasiun.", potongan: ["あの", "こうさてん", "を", "みぎ", "へ", "まがる", "と", "えき", "が", "あります"] },
+      { arti: "Kalau tuas ini ditarik, air keluar.", potongan: ["この", "レバー", "を", "ひく", "と", "みず", "が", "でます"] },
+      { arti: "Ketika pulang ke negara asal, (saya) membeli oleh-oleh.", potongan: ["くに", "へ", "かえる", "とき", "おみやげ", "を", "かいます"] },
+    ],
+    pilih: [
+      {
+        arti: "Ketika meminjam buku di perpustakaan, diperlukan kartu.",
+        benar: "としょかんで ほんを かりる とき、カードが いります。",
+        salah: ["としょかんで ほんを かります とき、カードが いります。", "としょかんで ほんを かりるの とき、カードが いります。", "としょかんで ほんを かりる と、カードを いります。"],
+      },
+      {
+        arti: "Ketika mengantuk, (saya) minum kopi.",
+        benar: "ねむい とき、コーヒーを のみます。",
+        salah: ["ねむいの とき、コーヒーを のみます。", "ねむいな とき、コーヒーを のみます。", "ねむくて とき、コーヒーを のみます。"],
+      },
+      {
+        arti: "Ketika senggang, (saya) menonton video di rumah.",
+        benar: "ひまな とき、うちで ビデオを みます。",
+        salah: ["ひまの とき、うちで ビデオを みます。", "ひま とき、うちで ビデオを みます。", "ひまだ とき、うちで ビデオを みます。"],
+      },
+      {
+        arti: "Ketika masih anak-anak, (saya) sering berenang di sungai.",
+        benar: "こどもの とき、よく かわで およぎました。",
+        salah: ["こどもな とき、よく かわで およぎました。", "こども とき、よく かわで およぎました。", "こどもの とき、よく かわを およぎました。"],
+      },
+      {
+        arti: "Ketika (akan) pulang ke negara asal, (saya) membeli oleh-oleh (di Jepang).",
+        benar: "くにへ かえる とき、おみやげを かいます。",
+        salah: ["くにへ かえった とき、おみやげを かいます。", "くにへ かえります とき、おみやげを かいます。", "くにへ かえるの とき、おみやげを かいます。"],
+      },
+      {
+        arti: "Ketika (sudah) sampai di rumah, (saya) bilang \"ただいま\".",
+        benar: "うちへ かえった とき、「ただいま」と いいます。",
+        salah: ["うちへ かえる とき、「ただいま」と いいます。", "うちへ かえりました とき、「ただいま」と いいます。", "うちへ かえったの とき、「ただいま」と いいます。"],
+      },
+      {
+        arti: "Kalau tombol ini ditekan, uang kembalian keluar.",
+        benar: "この ボタンを おすと、おつりが でます。",
+        salah: ["この ボタンを おすの と、おつりが でます。", "この ボタンを おすと、おつりを でます。", "この ボタンを おしたと、おつりが でます。"],
+      },
+      {
+        arti: "Kalau tombol putar ini diputar, suaranya menjadi keras.",
+        benar: "この つまみを まわすと、おとが おおきく なります。",
+        salah: ["この つまみを まわすと、おとが おおきい なります。", "この つまみを まわすと、おとが おおきに なります。", "この つまみを まわしと、おとが おおきく なります。"],
+      },
+      {
+        arti: "Kalau menyeberangi jembatan itu, ada kantor pos.",
+        benar: "あの はしを わたると、ゆうびんきょくが あります。",
+        salah: ["あの はしに わたると、ゆうびんきょくが あります。", "あの はしを わたって と、ゆうびんきょくが あります。", "あの はしを わたると、ゆうびんきょくを あります。"],
+      },
+      {
+        arti: "Kalau belok ke kanan di lampu lalu lintas kedua, ada stasiun.",
+        benar: "ふたつめの しんごうを みぎへ まがると、えきが あります。",
+        salah: ["ふたつめの しんごうで みぎを まがると、えきが あります。", "ふたつめの しんごうを みぎへ まがって と、えきが あります。", "ふたつの しんごうを みぎへ まがると、えきが あります。"],
+      },
+      {
+        arti: "Ketika menyeberang jalan, (saya) berhati-hati terhadap mobil.",
+        benar: "みちを わたる とき、くるまに きを つけます。",
+        salah: ["みちに わたる とき、くるまに きを つけます。", "みちを わたる とき、くるまを きを つけます。", "みちを わたります とき、くるまに きを つけます。"],
+      },
+      {
+        arti: "Kalau tuas ini ditarik, air keluar.",
+        benar: "この レバーを ひくと、みずが でます。",
+        salah: ["この レバーを ひくと、みずを でます。", "この レバーを ひいて と、みずが でます。", "この レバーを ひくの と、みずが でます。"],
+      },
+    ],
+  },
 };
