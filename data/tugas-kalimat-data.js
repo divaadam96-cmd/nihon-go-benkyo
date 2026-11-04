@@ -1337,4 +1337,100 @@ const tugasKalimatData = {
       },
     ],
   },
+  16: {
+    susun: [
+      {
+        arti: "Pagi hari (saya) joging, mandi, lalu pergi ke kantor.",
+        potongan: ["あさ", "ジョギング", "を", "して", "シャワー", "を", "あびて", "かいしゃ", "へ", "いきます"],
+      },
+      {
+        arti: "(Saya) pergi ke Kobe, menonton film, lalu minum teh.",
+        potongan: ["こうべ", "へ", "いって", "えいが", "を", "みて", "おちゃ", "を", "のみました"],
+      },
+      { arti: "Sdr. Miller muda dan sehat.", potongan: ["ミラーさん", "は", "わかくて", "げんき", "です"] },
+      { arti: "Sdr. Miller tampan dan baik hati.", potongan: ["ミラーさん", "は", "ハンサムで", "しんせつ", "です"] },
+      { arti: "Nara adalah kota yang tenang dan indah.", potongan: ["なら", "は", "しずかで", "きれいな", "まち", "です"] },
+      { arti: "Tekan tombol setelah memasukkan uang.", potongan: ["おかね", "を", "いれて", "から", "ボタン", "を", "おして", "ください"] },
+      { arti: "Setelah pekerjaan ini selesai, (saya) makan.", potongan: ["この", "しごと", "が", "おわって", "から", "たべます"] },
+      { arti: "Osaka makanannya enak.", potongan: ["おおさか", "は", "たべもの", "が", "おいしい", "です"] },
+      { arti: "Sdri. Maria rambutnya panjang.", potongan: ["マリアさん", "は", "かみ", "が", "ながい", "です"] },
+      {
+        arti: "Pukul tujuh (saya) keluar dari rumah.",
+        potongan: ["しちじ", "に", "うち", "を", "でます"],
+        alt: ["うちをしちじにでます"],
+      },
+      {
+        arti: "(Saya) turun dari kereta di Umeda.",
+        potongan: ["うめだ", "で", "でんしゃ", "を", "おりました"],
+        alt: ["でんしゃをうめだでおりました"],
+      },
+      {
+        arti: "Bagaimana caranya pergi ke universitas?",
+        potongan: ["だいがく", "まで", "どうやって", "いきます", "か"],
+        alt: ["どうやってだいがくまでいきますか"],
+      },
+    ],
+    pilih: [
+      {
+        arti: "(Saya) pergi ke Kobe, menonton film, lalu minum teh.",
+        benar: "こうべへ いって、えいがを みて、おちゃを のみました。",
+        salah: ["こうべへ いきて、えいがを みて、おちゃを のみました。", "こうべへ いって、えいがを みって、おちゃを のみました。", "こうべへ いって、えいがを みて、おちゃを のんで。"],
+      },
+      {
+        arti: "Sdr. Miller muda dan sehat.",
+        benar: "ミラーさんは わかくて、げんきです。",
+        salah: ["ミラーさんは わかいて、げんきです。", "ミラーさんは わかいで、げんきです。", "ミラーさんは わかくて、げんきでです。"],
+      },
+      {
+        arti: "Kemarin cuacanya baik dan panas.",
+        benar: "きのうは てんきが よくて、あつかったです。",
+        salah: ["きのうは てんきが いくて、あつかったです。", "きのうは てんきが よくて、あついでした。", "きのうは てんきが いいで、あつかったです。"],
+      },
+      {
+        arti: "Sdr. Miller tampan dan baik hati.",
+        benar: "ミラーさんは ハンサムで、しんせつです。",
+        salah: ["ミラーさんは ハンサムくて、しんせつです。", "ミラーさんは ハンサムなで、しんせつです。", "ミラーさんは ハンサムて、しんせつです。"],
+      },
+      {
+        arti: "Sdri. Karina mahasiswi, sedangkan Sdri. Maria ibu rumah tangga.",
+        benar: "カリナさんは がくせいで、マリアさんは しゅふです。",
+        salah: ["カリナさんは がくせいくて、マリアさんは しゅふです。", "カリナさんは がくせいて、マリアさんは しゅふです。", "カリナさんは がくせいの、マリアさんは しゅふです。"],
+      },
+      {
+        arti: "Tekan tombol setelah memasukkan uang.",
+        benar: "おかねを いれてから、ボタンを おして ください。",
+        salah: ["ボタンを おしてから、おかねを いれて ください。", "おかねを いれるから、ボタンを おして ください。", "おかねを いれてから、ボタンを おいて ください。"],
+      },
+      {
+        arti: "Osaka makanannya enak.",
+        benar: "おおさかは たべものが おいしいです。",
+        salah: ["おおさかは たべものを おいしいです。", "おおさかが たべものは おいしいです。", "おおさかは たべものが おいしくです。"],
+      },
+      {
+        arti: "Sdri. Maria rambutnya panjang.",
+        benar: "マリアさんは かみが ながいです。",
+        salah: ["マリアさんは かみが みじかいです。", "マリアさんは かみを ながいです。", "マリアさんは かみが ながくです。"],
+      },
+      {
+        arti: "Pukul tujuh (saya) keluar dari rumah.",
+        benar: "しちじに うちを でます。",
+        salah: ["しちじに うちに でます。", "しちじに うちで でます。", "しちじに うちを はいります。"],
+      },
+      {
+        arti: "(Saya) turun dari kereta di Umeda.",
+        benar: "うめだで でんしゃを おりました。",
+        salah: ["うめだで でんしゃに おりました。", "うめだに でんしゃを おりました。", "うめだで でんしゃを のりました。"],
+      },
+      {
+        arti: "Bagaimana caranya pergi ke universitas? ... Dari stasiun Kyoto naik bus nomor 16, lalu turun di Daigakumae.",
+        benar: "だいがくまで どうやって いきますか。……きょうとえきから 16ばんの バスに のって、だいがくまえで おります。",
+        salah: ["だいがくまで どうして いきますか。……きょうとえきから 16ばんの バスに のって、だいがくまえで おります。", "だいがくまで どうやって いきますか。……きょうとえきから 16ばんの バスを のって、だいがくまえで おります。", "だいがくまで どうやって いきますか。……きょうとえきから 16ばんの バスに のりて、だいがくまえで おります。"],
+      },
+      {
+        arti: "Payung Sdr. Miller yang mana? ... Payung yang biru itu.",
+        benar: "ミラーさんの かさは どれですか。……あの あおい かさです。",
+        salah: ["ミラーさんの かさは どのですか。……あの あおい かさです。", "ミラーさんの かさは どれ かさですか。……あの あおい かさです。", "ミラーさんの かさは どれですか。……あの あおいな かさです。"],
+      },
+    ],
+  },
 };

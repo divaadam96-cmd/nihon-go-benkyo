@@ -426,6 +426,7 @@
     return mora;
   }
   let indeksBacaan = null; // tulisan kanji -> semua bacaannya di data
+  const dasarBacaan = (teks) => norm(teks.replace(/（[^）]*）$/, ""));
   function bacaanMirip(bab, item) {
     // Pisahkan kana yang sama di depan/belakang (sudah tertulis di soal).
     // Catatan dalam kurung di akhir bacaan (mis. なおります（が）) tidak diubah.
@@ -480,16 +481,18 @@
       indeksBacaan = new Map();
       for (let b = 1; b <= MAX_BAB; b++) kanjiItems(b).forEach((x) => {
         if (!indeksBacaan.has(x.kanji)) indeksBacaan.set(x.kanji, new Set());
-        indeksBacaan.get(x.kanji).add(norm(x.kana));
+        indeksBacaan.get(x.kanji).add(dasarBacaan(x.kana));
       });
     }
-    const sah = new Set([norm(item.kana), ...(indeksBacaan.get(item.kanji) || [])]);
+    // Dibandingkan TANPA catatan kurung: 降ります dibaca ふります (Bab 14) dan
+    // おります（を） (Bab 16), jadi ふります（を） juga bacaan sah.
+    const sah = new Set([dasarBacaan(item.kana), ...(indeksBacaan.get(item.kanji) || [])]);
     const sahLain = typeof bacaanSahLainData !== "undefined" ? bacaanSahLainData[item.kanji] || [] : [];
-    sahLain.forEach((k) => sah.add(norm(k)));
+    sahLain.forEach((k) => sah.add(dasarBacaan(k)));
 
     const perJenis = {};
     shuffle(calon).forEach((c) => {
-      if (sah.has(norm(c.teks))) return;
+      if (sah.has(dasarBacaan(c.teks))) return;
       (perJenis[c.jenis] = perJenis[c.jenis] || []).push(c.teks);
     });
     // Urutan: jenis perubahan bergiliran supaya ketiga pengecoh berbeda jenis.
