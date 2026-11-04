@@ -2162,4 +2162,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  26: {
+    susun: [
+      { arti: "Kemarin kenapa (Anda) libur?", potongan: ["きのう", "どうして", "やすんだ", "んです", "か"], alt: ["どうしてきのうやすんだんですか"] },
+      { arti: "(Saya) tidak enak badan.", potongan: ["きぶん", "が", "わるい", "んです"] },
+      { arti: "Kenapa kemarin (Anda) terlambat? ... Karena busnya tidak datang.", potongan: ["バス", "が", "こなかった", "んです"] },
+      { arti: "(Saya) sudah menulis surat dalam bahasa Jepang, bisakah (Anda) melihatnya sebentar?", potongan: ["にほんご", "で", "てがみ", "を", "かいた", "んです", "が", "ちょっと", "みて", "いただけません", "か"] },
+      { arti: "(Saya) ingin mengunjungi perusahaan surat kabar, sebaiknya bagaimana?", potongan: ["しんぶんしゃ", "を", "けんがくしたい", "んです", "が", "どう", "したら", "いい", "です", "か"] },
+      { arti: "Sampah sebaiknya dibuang di mana?", potongan: ["ごみ", "は", "どこ", "に", "だしたら", "いい", "です", "か"] },
+      { arti: "(Saya) ingin ikut pesta, sebaiknya mendaftar kepada siapa?", potongan: ["パーティー", "に", "さんかしたい", "んです", "が", "だれ", "に", "もうしこんだら", "いい", "です", "か"] },
+      { arti: "Baju ini dibeli di mana?", potongan: ["この", "ふく", "は", "どこ", "で", "かった", "んです", "か"] },
+      { arti: "Kalau ada kesulitan, silakan hubungi (saya) kapan saja.", potongan: ["こまった", "こと", "が", "あったら", "いつでも", "れんらくして", "ください"] },
+      { arti: "Siapa pun bisa ikut serta sebagai sukarelawan.", potongan: ["だれでも", "ボランティア", "に", "さんかする", "こと", "が", "できます"] },
+      { arti: "(Saya) tidak sempat tepat waktu.", potongan: ["じかん", "に", "まにあわなかった", "んです"] },
+      { arti: "Logat Osaka ya. Pernah tinggal di Osaka?", potongan: ["おおさか", "に", "すんで", "いた", "んです", "か"] },
+    ],
+    pilih: [
+      {
+        arti: "Ada apa? ... (Saya) tidak enak badan.",
+        benar: "どうしたんですか。……きぶんが わるいんです。",
+        salah: ["どうしたんですか。……きぶんが わるいなんです。", "どうしたんですか。……きぶんが わるかったなんです。", "どうするんですか。……きぶんが わるいんです。"],
+      },
+      {
+        arti: "Kenapa (Anda) terlambat? ... Karena busnya tidak datang.",
+        benar: "どうして おくれたんですか。……バスが こなかったんです。",
+        salah: ["どうして おくれたんですか。……バスが こないかったんです。", "どうして おくれたんですか。……バスが きなかったんです。", "どうして おくれたんですか。……バスを こなかったんです。"],
+      },
+      {
+        arti: "Tenang sekali ya. ... Ya, di sini (memang) tenang.",
+        benar: "しずかですね。……ええ、ここは しずかなんです。",
+        salah: ["しずかですね。……ええ、ここは しずかんです。", "しずかですね。……ええ、ここは しずかだんです。", "しずかですね。……ええ、ここは しずかいんです。"],
+      },
+      {
+        arti: "Apakah (Anda) mahasiswa? ... Ya, saya mahasiswa.",
+        benar: "がくせいなんですか。……ええ、がくせいなんです。",
+        salah: ["がくせいなんですか。……ええ、がくせいだんです。", "がくせいなんですか。……ええ、がくせいんです。", "がくせいなんですか。……ええ、がくせいのんです。"],
+      },
+      {
+        arti: "(Saya) sudah menulis surat dalam bahasa Jepang, bisakah (Anda) melihatnya sebentar?",
+        benar: "にほんごで てがみを かいたんですが、ちょっと みて いただけませんか。",
+        salah: ["にほんごで てがみを かいたんですが、ちょっと みて いただきませんか。", "にほんごで てがみを かいたんですが、ちょっと みって いただけませんか。", "にほんごで てがみを かいたなんですが、ちょっと みて いただけませんか。"],
+      },
+      {
+        arti: "Sampah sebaiknya dibuang di mana?",
+        benar: "ごみは どこに だしたら いいですか。",
+        salah: ["ごみは どこに だすたら いいですか。", "ごみは どこに だしたら いいんでしたか。", "ごみは どこを だしたら いいですか。"],
+      },
+      {
+        arti: "(Saya) ingin ikut pesta, sebaiknya mendaftar kepada siapa?",
+        benar: "パーティーに さんかしたいんですが、だれに もうしこんだら いいですか。",
+        salah: ["パーティーに さんかしたいんですが、だれに もうしこみたら いいですか。", "パーティーを さんかしたいんですが、だれに もうしこんだら いいですか。", "パーティーに さんかしたいですんが、だれに もうしこんだら いいですか。"],
+      },
+      {
+        arti: "Baju ini bagus ya. Dibeli di mana?",
+        benar: "この ふく、すてきですね。どこで かったんですか。",
+        salah: ["この ふく、すてきですね。どこで かうんでしたか。", "この ふく、すてきですね。どこで かいたんですか。", "この ふく、すてきですね。どこに かったんですか。"],
+      },
+      {
+        arti: "(Saya) ingin mengunjungi perusahaan surat kabar, sebaiknya bagaimana?",
+        benar: "しんぶんしゃを けんがくしたいんですが、どう したら いいですか。",
+        salah: ["しんぶんしゃを けんがくしたいんですが、どう しても いいですか。", "しんぶんしゃを けんがくしたいんですが、どう するたら いいですか。", "しんぶんしゃを けんがくしたいなんですが、どう したら いいですか。"],
+      },
+      {
+        arti: "Sampah yang dapat dibakar dibuang hari Senin, Rabu, dan Jumat.",
+        benar: "もえる ごみは げつ・すい・きんに だします。",
+        salah: ["もえない ごみは げつ・すい・きんに だします。", "もえる ごみは げつ・すい・きんを だします。", "もえる ごみは げつ・すい・きんで だします。"],
+      },
+      {
+        arti: "Kalau ada kesulitan, silakan hubungi (saya) kapan saja.",
+        benar: "こまった ことが あったら、いつでも れんらくして ください。",
+        salah: ["こまった ことが あったら、いつも れんらくして ください。", "こまった ことが あったら、いつでも れんらくして もらいます。", "こまった ことが あったら、だれでも れんらくして ください。"],
+      },
+      {
+        arti: "(Saya) tidak sempat tepat waktu.",
+        benar: "じかんに まにあわなかったんです。",
+        salah: ["じかんを まにあわなかったんです。", "じかんに まにあいなかったんです。", "じかんに まにあわないかったんです。"],
+      },
+    ],
+  },
 };

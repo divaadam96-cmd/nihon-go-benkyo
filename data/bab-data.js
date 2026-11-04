@@ -1696,7 +1696,7 @@ const babKosakataData = {
       "Barang-barang yang terbuat dari kaca",
     ],
     [
-      "\u304d\u3093\u305e\u304f\u305b\u3044\u3060\u3044\u3060\u3044\u3069\u3053\u308d\u3088\u3046\u3072\u3093",
+      "\u304d\u3093\u305e\u304f\u305b\u3044\u3060\u3044\u3069\u3053\u308d\u3088\u3046\u3072\u3093",
       "Barang yang dipakai di dapur dan terbuat dari logam",
     ],
     ["\u305d\u3060\u3044\u3054\u307f", "Sampah besar"],
@@ -5789,7 +5789,7 @@ const babKanjiData = {
     ],
     [
       "\u91d1\u5c5e\u88fd\u53f0\u6240\u7528\u54c1",
-      "\u304d\u3093\u305e\u304f\u305b\u3044\u3060\u3044\u3060\u3044\u3069\u3053\u308d\u3088\u3046\u3072\u3093",
+      "\u304d\u3093\u305e\u304f\u305b\u3044\u3060\u3044\u3069\u3053\u308d\u3088\u3046\u3072\u3093",
       "Barang yang dipakai di dapur dan terbuat dari logam",
     ],
     [
