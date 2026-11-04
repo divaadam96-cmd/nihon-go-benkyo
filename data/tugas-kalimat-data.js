@@ -1243,4 +1243,98 @@ const tugasKalimatData = {
       },
     ],
   },
+  15: {
+    susun: [
+      { arti: "Bolehkah (saya) mengambil foto?", potongan: ["しゃしん", "を", "とって", "も", "いいです", "か"] },
+      {
+        arti: "Bolehkah (saya) merokok di sini?",
+        potongan: ["ここ", "で", "たばこ", "を", "すって", "も", "いいです", "か"],
+        alt: ["たばこをここですってもいいですか"],
+      },
+      {
+        arti: "Tidak boleh merokok di sini.",
+        potongan: ["ここ", "で", "たばこ", "を", "すって", "は", "いけません"],
+        alt: ["たばこをここですってはいけません"],
+      },
+      { arti: "Saya sudah menikah.", potongan: ["わたし", "は", "けっこんして", "います"] },
+      { arti: "Saya kenal Sdr. Tanaka.", potongan: ["わたし", "は", "たなかさん", "を", "しって", "います"] },
+      { arti: "Saya mempunyai kamera.", potongan: ["わたし", "は", "カメラ", "を", "もって", "います"] },
+      { arti: "Saya tinggal di Osaka.", potongan: ["わたし", "は", "おおさか", "に", "すんで", "います"] },
+      { arti: "Sdr. Miller bekerja di IMC.", potongan: ["ミラーさん", "は", "IMC", "で", "はたらいて", "います"] },
+      {
+        arti: "Di supermarket dijual kecap ikan.",
+        potongan: ["スーパー", "で", "ナンプラー", "を", "うって", "います"],
+        alt: ["ナンプラーをスーパーでうっています"],
+      },
+      { arti: "Tidak boleh masuk ke sini.", potongan: ["ここ", "に", "はいって", "は", "いけません"] },
+      { arti: "Bolehkah (saya) duduk di sini?", potongan: ["ここ", "に", "すわって", "も", "いいです", "か"] },
+      {
+        arti: "Tolong hentikan mobil di sini.",
+        potongan: ["ここ", "に", "くるま", "を", "とめて", "ください"],
+        alt: ["くるまをここにとめてください"],
+      },
+    ],
+    pilih: [
+      {
+        arti: "Bolehkah (saya) mengambil foto?",
+        benar: "しゃしんを とっても いいですか。",
+        salah: ["しゃしんを とりても いいですか。", "しゃしんを とっては いいですか。", "しゃしんを とっても いけませんか。"],
+      },
+      {
+        arti: "Bolehkah merokok di sini? ... Ya, boleh.",
+        benar: "ここで たばこを すっても いいですか。……ええ、いいですよ。",
+        salah: ["ここで たばこを すっても いいですか。……ええ、いけません。", "ここで たばこを すっても いいですか。……ええ、すっては いいですよ。", "ここに たばこを すっても いいですか。……ええ、いいですよ。"],
+      },
+      {
+        arti: "Tidak boleh merokok di sini. Karena dilarang merokok.",
+        benar: "ここで たばこを すっては いけません。きんえんですから。",
+        salah: ["ここで たばこを すっても いけません。きんえんですから。", "ここで たばこを すっては いいです。きんえんですから。", "ここで たばこを すっては いけません。きんえんですが。"],
+      },
+      {
+        arti: "Saya sudah menikah.",
+        benar: "わたしは けっこんして います。",
+        salah: ["わたしは けっこんします。", "わたしは けっこんしました います。", "わたしは けっこんしって います。"],
+      },
+      {
+        arti: "Tahu nomor telepon kantor walikota? ... Tidak, tidak tahu.",
+        benar: "しやくしょの でんわばんごうを しって いますか。……いいえ、しりません。",
+        salah: ["しやくしょの でんわばんごうを しって いますか。……いいえ、しって いません。", "しやくしょの でんわばんごうを しって いますか。……いいえ、しりませんでした。", "しやくしょの でんわばんごうを しりますか。……いいえ、しりません。"],
+      },
+      {
+        arti: "Saya tinggal di Osaka.",
+        benar: "わたしは おおさかに すんで います。",
+        salah: ["わたしは おおさかで すんで います。", "わたしは おおさかに すみて います。", "わたしは おおさかに すって います。"],
+      },
+      {
+        arti: "IMC memproduksi perangkat lunak komputer.",
+        benar: "IMCは コンピューターソフトを つくって います。",
+        salah: ["IMCは コンピューターソフトを つくりて います。", "IMCは コンピューターソフトに つくって います。", "IMCは コンピューターソフトを うって います。"],
+      },
+      {
+        arti: "Sdr. Miller bekerja di IMC.",
+        benar: "ミラーさんは IMCで はたらいて います。",
+        salah: ["ミラーさんは IMCに はたらいて います。", "ミラーさんは IMCで はたらって います。", "ミラーさんは IMCで はたらきて います。"],
+      },
+      {
+        arti: "Adik perempuan saya kuliah di universitas.",
+        benar: "いもうとは だいがくで べんきょうして います。",
+        salah: ["いもうとさんは だいがくで べんきょうして います。", "いもうとは だいがくに べんきょうして います。", "あねは だいがくで べんきょうして います。"],
+      },
+      {
+        arti: "Tidak boleh masuk ke sini.",
+        benar: "ここに はいっては いけません。",
+        salah: ["ここで はいっては いけません。", "ここに はいりては いけません。", "ここに はいっても いいです。"],
+      },
+      {
+        arti: "Silakan naik bus nomor 16 dari stasiun Kyoto.",
+        benar: "きょうとえきから 16ばんの バスに のって ください。",
+        salah: ["きょうとえきから 16ばんの バスを のって ください。", "きょうとえきから 16ばんの バスで のって ください。", "きょうとえきから 16ばんの バスに のりて ください。"],
+      },
+      {
+        arti: "Tolong tuliskan alamat di sini.",
+        benar: "ここに じゅうしょを かいて ください。",
+        salah: ["ここに じゅうしょに かいて ください。", "ここに じゅうしょを かきて ください。", "ここを じゅうしょに かいて ください。"],
+      },
+    ],
+  },
 };
