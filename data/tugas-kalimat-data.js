@@ -1519,4 +1519,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  18: {
+    susun: [
+      { arti: "Sdr. Miller bisa berbahasa Jepang.", potongan: ["ミラーさん", "は", "にほんご", "が", "できます"] },
+      { arti: "Sdr. Miller bisa membaca kanji.", potongan: ["ミラーさん", "は", "かんじ", "を", "よむ", "こと", "が", "できます"] },
+      { arti: "Bisa membayar dengan kartu.", potongan: ["カード", "で", "はらう", "こと", "が", "できます"] },
+      { arti: "Hobi saya musik.", potongan: ["わたし", "の", "しゅみ", "は", "おんがく", "です"] },
+      { arti: "Hobi saya mendengarkan musik.", potongan: ["わたし", "の", "しゅみ", "は", "おんがく", "を", "きく", "こと", "です"] },
+      { arti: "Sebelum datang ke Jepang, (saya) belajar bahasa Jepang.", potongan: ["にほん", "へ", "くる", "まえ", "に", "にほんご", "を", "べんきょうしました"] },
+      { arti: "Sebelum tidur, (saya) membaca buku.", potongan: ["ねる", "まえ", "に", "ほん", "を", "よみます"] },
+      { arti: "Sebelum makan, (saya) mencuci tangan.", potongan: ["しょくじ", "の", "まえ", "に", "て", "を", "あらいます"] },
+      { arti: "Sdr. Tanaka keluar satu jam yang lalu.", potongan: ["たなかさん", "は", "いちじかん", "まえ", "に", "でかけました"] },
+      { arti: "Di Jepang tidak mudah melihat kuda.", potongan: ["にほん", "で", "は", "なかなか", "うま", "を", "みる", "こと", "が", "できません"] },
+      { arti: "(Saya) ingin sekali pergi ke Hokkaido.", potongan: ["ぜひ", "ほっかいどう", "へ", "いきたい", "です"] },
+      { arti: "Saya bisa bermain piano.", potongan: ["わたし", "は", "ピアノ", "を", "ひく", "こと", "が", "できます"] },
+    ],
+    pilih: [
+      {
+        arti: "Sdr. Miller bisa berbahasa Jepang.",
+        benar: "ミラーさんは にほんごが できます。",
+        salah: ["ミラーさんは にほんごを できます。", "ミラーさんは にほんごに できます。", "ミラーさんは にほんごが できる ことです。"],
+      },
+      {
+        arti: "Sdr. Miller bisa membaca kanji.",
+        benar: "ミラーさんは かんじを よむ ことが できます。",
+        salah: ["ミラーさんは かんじを よみ ことが できます。", "ミラーさんは かんじを よむが できます。", "ミラーさんは かんじを よむ ことを できます。"],
+      },
+      {
+        arti: "Bisa membayar dengan kartu.",
+        benar: "カードで はらう ことが できます。",
+        salah: ["カードで はらいます ことが できます。", "カードを はらう ことが できます。", "カードで はらって ことが できます。"],
+      },
+      {
+        arti: "Hobi saya mendengarkan musik.",
+        benar: "わたしの しゅみは おんがくを きく ことです。",
+        salah: ["わたしの しゅみは おんがくを きくです。", "わたしの しゅみは おんがくを ききます ことです。", "わたしの しゅみは おんがくを きく ことが できます。"],
+      },
+      {
+        arti: "Sebelum datang ke Jepang, (saya) belajar bahasa Jepang.",
+        benar: "にほんへ くる まえに、にほんごを べんきょうしました。",
+        salah: ["にほんへ きた まえに、にほんごを べんきょうしました。", "にほんへ きます まえに、にほんごを べんきょうしました。", "にほんへ くるの まえに、にほんごを べんきょうしました。"],
+      },
+      {
+        arti: "Sebelum makan, (saya) mencuci tangan.",
+        benar: "しょくじの まえに、てを あらいます。",
+        salah: ["しょくじ まえに、てを あらいます。", "しょくじを まえに、てを あらいます。", "しょくじの あとで、てを あらいます。"],
+      },
+      {
+        arti: "Sdr. Tanaka keluar satu jam yang lalu.",
+        benar: "たなかさんは いちじかんまえに、でかけました。",
+        salah: ["たなかさんは いちじかんの まえに、でかけました。", "たなかさんは いちじまえに、でかけました。", "たなかさんは いちじかんまえに、でかけます。"],
+      },
+      {
+        arti: "Di Jepang tidak mudah melihat kuda.",
+        benar: "にほんでは なかなか うまを みる ことが できません。",
+        salah: ["にほんでは なかなか うまを みる ことが できます。", "にほんでは とても うまを みる ことが できません。", "にほんでは なかなか うまを みます ことが できません。"],
+      },
+      {
+        arti: "(Saya) ingin sekali pergi ke Hokkaido.",
+        benar: "ぜひ ほっかいどうへ いきたいです。",
+        salah: ["ぜひ ほっかいどうへ いきたくないです。", "なかなか ほっかいどうへ いきたいです。", "ぜひ ほっかいどうへ いきません。"],
+      },
+      {
+        arti: "Karena salju turun banyak, tahun ini bisa bermain ski.",
+        benar: "ゆきが たくさん ふりましたから、ことしは スキーが できます。",
+        salah: ["ゆきが たくさん ふりましたから、ことしは スキーを できます。", "ゆきが たくさん ふりましたが、ことしは スキーが できます。", "ゆきが たくさん ふりましたから、ことしは スキーが できる ことです。"],
+      },
+      {
+        arti: "Itu menarik, ya.",
+        benar: "それは おもしろいですね。",
+        salah: ["それは おもしろいですか。", "それは おもしろくですね。", "それは おもしろいでしたね。"],
+      },
+      {
+        arti: "Bisakah (Anda) bermain piano?",
+        benar: "ピアノを ひく ことが できますか。",
+        salah: ["ピアノを ひきます ことが できますか。", "ピアノを する ことが できますか。", "ピアノを ひく ことを できますか。"],
+      },
+    ],
+  },
 };
