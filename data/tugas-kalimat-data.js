@@ -1772,4 +1772,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  21: {
+    susun: [
+      { arti: "Saya kira besok hujan.", potongan: ["あした", "あめ", "が", "ふる", "と", "おもいます"] },
+      { arti: "Saya kira Teresa sudah tidur.", potongan: ["テレサちゃん", "は", "もう", "ねた", "と", "おもいます"] },
+      { arti: "Saya kira Sdr. Miller tidak tahu.", potongan: ["ミラーさん", "は", "しらない", "と", "おもいます"] },
+      { arti: "Saya pikir di Jepang harga barangnya mahal.", potongan: ["にほん", "は", "ぶっか", "が", "たかい", "と", "おもいます"] },
+      { arti: "Bagaimana pendapat Anda tentang bandara baru?", potongan: ["あたらしい", "くうこう", "に", "ついて", "どう", "おもいます", "か"] },
+      { arti: "Sebelum tidur, (kita) mengucapkan \"Selamat tidur\".", potongan: ["ねる", "まえ", "に", "「おやすみなさい」", "と", "いいます"] },
+      { arti: "Sdr. Miller mengatakan bahwa ia akan dinas ke Tokyo.", potongan: ["ミラーさん", "は", "とうきょう", "へ", "しゅっちょうする", "と", "いいました"] },
+      { arti: "Besok (Anda) pergi ke pesta, bukan?", potongan: ["あした", "パーティー", "に", "いく", "でしょう"] },
+      { arti: "Di Tokyo ada pertandingan sepak bola.", potongan: ["とうきょう", "で", "サッカー", "の", "しあい", "が", "あります"] },
+      { arti: "Bagaimana kalau minum bir atau apa?", potongan: ["ちょっと", "ビール", "でも", "のみません", "か"] },
+      { arti: "Saya juga berpikir begitu.", potongan: ["わたし", "も", "そう", "おもいます"] },
+      { arti: "(Saya) berkata kepada ayah bahwa (saya) ingin belajar di luar negeri.", potongan: ["ちち", "に", "りゅうがくしたい", "と", "いいました"] },
+    ],
+    pilih: [
+      {
+        arti: "Saya kira besok hujan.",
+        benar: "あした あめが ふると おもいます。",
+        salah: ["あした あめが ふりますと おもいます。", "あした あめが ふるを おもいます。", "あした あめが ふったと おもいます。"],
+      },
+      {
+        arti: "(Apakah ia tahu berita ini?) Tidak, saya kira (ia) tidak tahu.",
+        benar: "いいえ、しらないと おもいます。",
+        salah: ["いいえ、しって いないと おもいます。", "いいえ、しりますと おもいます。", "いいえ、しらないを おもいます。"],
+      },
+      {
+        arti: "Saya pikir di Jepang harga barangnya mahal.",
+        benar: "にほんは ぶっかが たかいと おもいます。",
+        salah: ["にほんは ぶっかが たかいだと おもいます。", "にほんは ぶっかが たかくと おもいます。", "にほんは ぶっかを たかいと おもいます。"],
+      },
+      {
+        arti: "(Bandara baru) bersih, tetapi lalu lintasnya agak kurang praktis.",
+        benar: "きれいですが、ちょっと こうつうが ふべんだと おもいます。",
+        salah: ["きれいですが、ちょっと こうつうが ふべんと おもいます。", "きれいですが、ちょっと こうつうが ふべんなと おもいます。", "きれいですが、ちょっと こうつうが ふべんですと おもいます。"],
+      },
+      {
+        arti: "HP itu praktis, ya. ... Saya juga berpikir begitu.",
+        benar: "ケータイは べんりですね。……わたしも そう おもいます。",
+        salah: ["ケータイは べんりですね。……わたしも そうと おもいます。", "ケータイは べんりですね。……わたしも そう いいます。", "ケータイは べんりですね。……わたしは そう おもいません。"],
+      },
+      {
+        arti: "Sebelum tidur, (kita) mengucapkan \"Selamat tidur\".",
+        benar: "ねる まえに、「おやすみなさい」と いいます。",
+        salah: ["ねる まえに、「おやすみなさい」を いいます。", "ねる まえに、「おやすみなさい」と おもいます。", "ねた まえに、「おやすみなさい」と いいます。"],
+      },
+      {
+        arti: "Sdr. Miller mengatakan bahwa ia akan dinas ke Tokyo.",
+        benar: "ミラーさんは とうきょうへ しゅっちょうすると いいました。",
+        salah: ["ミラーさんは とうきょうへ しゅっちょうしますと いいました。", "ミラーさんは とうきょうへ しゅっちょうすると おもいました。", "ミラーさんは とうきょうへ しゅっちょうするを いいました。"],
+      },
+      {
+        arti: "Besok (Anda) pergi ke pesta, bukan? ... Ya, pergi.",
+        benar: "あした パーティーに いくでしょう？……ええ、いきます。",
+        salah: ["あした パーティーに いきますでしょう？……ええ、いきます。", "あした パーティーに いくでしょう？……ええ、いきません。", "あした パーティーに いくだでしょう？……ええ、いきます。"],
+      },
+      {
+        arti: "Hokkaido dingin, bukan? ... Tidak, tidak begitu dingin.",
+        benar: "ほっかいどうは さむかったでしょう？……いいえ、そんなに さむくなかったです。",
+        salah: ["ほっかいどうは さむかったでしょう？……いいえ、そんなに さむかったです。", "ほっかいどうは さむいかったでしょう？……いいえ、そんなに さむくなかったです。", "ほっかいどうは さむかったでしょう？……いいえ、とても さむくなかったです。"],
+      },
+      {
+        arti: "Di Tokyo ada pertandingan sepak bola.",
+        benar: "とうきょうで サッカーの しあいが あります。",
+        salah: ["とうきょうに サッカーの しあいが あります。", "とうきょうで サッカーの しあいが います。", "とうきょうで サッカーの しあいを あります。"],
+      },
+      {
+        arti: "Bagaimana kalau minum bir atau apa?",
+        benar: "ちょっと ビールでも のみませんか。",
+        salah: ["ちょっと ビールでも のみましたか。", "ちょっと ビールでも のみたいですか。", "ちょっと ビールを のみませんでしたか。"],
+      },
+      {
+        arti: "(Saya) sudah harus pulang...",
+        benar: "もう かえらないと……。",
+        salah: ["もう かえりないと……。", "もう かえらなくても……。", "もう かえるないと……。"],
+      },
+    ],
+  },
 };
