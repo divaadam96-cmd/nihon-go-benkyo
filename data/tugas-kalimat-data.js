@@ -2318,4 +2318,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  28: {
+    susun: [
+      { arti: "(Saya) makan sambil mendengarkan musik.", potongan: ["おんがく", "を", "ききながら", "しょくじします"] },
+      { arti: "(Saya) belajar bahasa Jepang sambil bekerja.", potongan: ["はたらきながら", "にほんご", "を", "べんきょうして", "います"] },
+      { arti: "Setiap pagi (saya) jogging.", potongan: ["まいあさ", "ジョギング", "を", "して", "います"] },
+      { arti: "Waktu kecil, setiap malam (saya) tidur jam 8.", potongan: ["こども", "の", "とき", "まいばん", "はちじ", "に", "ねて", "いました"] },
+      { arti: "Toko ini harganya murah, rasanya juga enak.", potongan: ["この", "みせ", "は", "ねだん", "も", "やすい", "し", "あじ", "も", "いい", "です"] },
+      { arti: "Sdr. Miller rajin, tekun, dan lagi berpengalaman.", potongan: ["ミラーさん", "は", "まじめだ", "し", "ねっしんだ", "し", "それに", "けいけん", "も", "あります"] },
+      { arti: "Jangan menyetir sambil makan permen karet.", potongan: ["ガム", "を", "かみながら", "うんてんしないで", "ください"] },
+      { arti: "Anak saya kuliah di universitas Tokyo.", potongan: ["むすこ", "は", "とうきょう", "の", "だいがく", "に", "かよって", "います"] },
+      { arti: "Hari ini hujan, dan juga (saya) tidak punya uang, jadi (saya) tidak keluar.", potongan: ["きょう", "は", "あめ", "だ", "し", "おかね", "も", "ない", "し", "でかけません"] },
+      { arti: "Biasanya (saya) pergi ke kantor dengan bus.", potongan: ["たいてい", "バス", "で", "かいしゃ", "へ", "いきます"], alt: ["たいていかいしゃへバスでいきます"] },
+      { arti: "Acara ini populer di kalangan anak muda.", potongan: ["この", "ばんぐみ", "は", "わかい", "ひと", "に", "にんき", "が", "あります"] },
+      { arti: "Sambil menulis catatan, (saya) mendengarkan penjelasan guru.", potongan: ["メモしながら", "せんせい", "の", "せつめい", "を", "ききます"] },
+    ],
+    pilih: [
+      {
+        arti: "(Saya) makan sambil mendengarkan musik.",
+        benar: "おんがくを ききながら しょくじします。",
+        salah: ["おんがくを きくながら しょくじします。", "おんがくを きいてながら しょくじします。", "おんがくを ききますながら しょくじします。"],
+      },
+      {
+        arti: "(Saya) belajar bahasa Jepang sambil bekerja.",
+        benar: "はたらきながら にほんごを べんきょうして います。",
+        salah: ["はたらくながら にほんごを べんきょうして います。", "はたらいてながら にほんごを べんきょうして います。", "はたらきながら にほんごに べんきょうして います。"],
+      },
+      {
+        arti: "Setiap pagi (saya) jogging.",
+        benar: "まいあさ ジョギングを して います。",
+        salah: ["まいあさ ジョギングを します います。", "まいあさ ジョギングが して います。", "まいあさ ジョギングを しながら います。"],
+      },
+      {
+        arti: "Toko ini harganya murah, rasanya juga enak.",
+        benar: "この みせは ねだんも やすいし、あじも いいです。",
+        salah: ["この みせは ねだんも やすいだし、あじも いいです。", "この みせは ねだんも やすくし、あじも いいです。", "この みせは ねだんも やすいし、あじも わるいです。"],
+      },
+      {
+        arti: "Sdr. Miller rajin, tekun, dan lagi berpengalaman.",
+        benar: "ミラーさんは まじめだし、ねっしんだし、それに けいけんも あります。",
+        salah: ["ミラーさんは まじめし、ねっしんし、それに けいけんも あります。", "ミラーさんは まじめなし、ねっしんなし、それに けいけんも あります。", "ミラーさんは まじめだし、ねっしんだし、それで けいけんが ありません。"],
+      },
+      {
+        arti: "Hari ini hujan, dan juga (saya) tidak punya uang, jadi (saya) tidak keluar.",
+        benar: "きょうは あめだし、おかねも ないし、でかけません。",
+        salah: ["きょうは あめし、おかねも ないし、でかけません。", "きょうは あめだし、おかねも なくし、でかけません。", "きょうは あめなし、おかねも ないし、でかけません。"],
+      },
+      {
+        arti: "Waktu kecil, setiap malam (saya) tidur jam 8.",
+        benar: "こどもの とき、まいばん 8じに ねて いました。",
+        salah: ["こどもの とき、まいばん 8じに ねて います。", "こどもの とき、まいばん 8じを ねて いました。", "こどもの とき、まいばん 8じに ねながら いました。"],
+      },
+      {
+        arti: "Jangan menyetir sambil makan permen karet.",
+        benar: "ガムを かみながら うんてんしないで ください。",
+        salah: ["ガムを かむながら うんてんしないで ください。", "ガムを かんでながら うんてんしないで ください。", "ガムを かみながら うんてんしなくて ください。"],
+      },
+      {
+        arti: "Anak saya kuliah di universitas Tokyo.",
+        benar: "むすこは とうきょうの だいがくに かよって います。",
+        salah: ["むすこは とうきょうの だいがくを かよって います。", "むすこは とうきょうの だいがくに かよいて います。", "むすこさんは とうきょうの だいがくに かよって います。"],
+      },
+      {
+        arti: "Kenapa (Anda) memilih universitas ini? ... Karena ayah lulus dari sini, dan gurunya juga banyak yang bagus.",
+        benar: "どうして この だいがくを えらんだんですか。……ちちが でた だいがくだし、いい せんせいも おおいし……。",
+        salah: ["どうして この だいがくを えらんだんですか。……ちちが でた だいがくし、いい せんせいも おおいし……。", "どうして この だいがくを えらんだんですか。……ちちが でた だいがくだし、いい せんせいも おおいだし……。", "どうして この だいがくを えらびたんですか。……ちちが でた だいがくだし、いい せんせいも おおいし……。"],
+      },
+      {
+        arti: "Acara ini populer di kalangan anak muda.",
+        benar: "この ばんぐみは わかい ひとに にんきが あります。",
+        salah: ["この ばんぐみは わかい ひとを にんきが あります。", "この ばんぐみは わかい ひとに にんきを あります。", "この ばんぐみは わかい ひとに にんきが います。"],
+      },
+      {
+        arti: "Ada sedikit permintaan.",
+        benar: "ちょっと おねがいが あるんですが。",
+        salah: ["ちょっと おねがいを あるんですが。", "ちょっと おねがいが いるんですが。", "ちょっと おねがいが あるなんですが。"],
+      },
+    ],
+  },
 };
