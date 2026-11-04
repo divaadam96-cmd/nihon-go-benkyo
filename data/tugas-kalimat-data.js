@@ -1597,4 +1597,94 @@ const tugasKalimatData = {
       },
     ],
   },
+  19: {
+    susun: [
+      { arti: "(Saya) pernah berkuda.", potongan: ["うま", "に", "のった", "こと", "が", "あります"] },
+      { arti: "Tahun lalu (saya) berkuda di Hokkaido.", potongan: ["きょねん", "ほっかいどう", "で", "うま", "に", "のりました"] },
+      {
+        arti: "Hari Minggu (saya) bermain tenis, menonton film, dan lain-lain.",
+        potongan: ["にちようび", "は", "テニス", "を", "したり", "えいが", "を", "みたり", "します"],
+        alt: ["にちようびはえいがをみたりテニスをしたりします"],
+      },
+      { arti: "Mulai sekarang (cuaca) akan menjadi dingin.", potongan: ["これから", "さむく", "なります"] },
+      { arti: "Anak itu sudah menjadi sehat.", potongan: ["こども", "は", "げんきに", "なりました"] },
+      { arti: "Saya sudah berumur 25 tahun.", potongan: ["わたし", "は", "にじゅうごさい", "に", "なりました"] },
+      {
+        arti: "Saya belum pernah naik pesawat sekali pun.",
+        potongan: ["いちども", "ひこうき", "に", "のった", "こと", "が", "ありません"],
+        alt: ["ひこうきにいちどものったことがありません"],
+      },
+      { arti: "Pernahkah (Anda) makan sushi?", potongan: ["すし", "を", "たべた", "こと", "が", "あります", "か"] },
+      { arti: "Sedikit demi sedikit (saya) menjadi pandai.", potongan: ["だんだん", "じょうずに", "なります"] },
+      { arti: "Sebentar lagi musim panas.", potongan: ["もうすぐ", "なつ", "です"] },
+      {
+        arti: "Hari Minggu (saya) membersihkan kamar, mencuci pakaian, dan lain-lain.",
+        potongan: ["にちようび", "は", "へや", "を", "そうじしたり", "せんたくしたり", "します"],
+        alt: ["にちようびはせんたくしたりへやをそうじしたりします"],
+      },
+      { arti: "Kondisi (badan) saya sudah membaik.", potongan: ["ちょうし", "が", "よく", "なりました"] },
+    ],
+    pilih: [
+      {
+        arti: "(Saya) pernah berkuda.",
+        benar: "うまに のった ことが あります。",
+        salah: ["うまに のる ことが あります。", "うまに のりました ことが あります。", "うまを のった ことが あります。"],
+      },
+      {
+        arti: "Tahun lalu (saya) berkuda di Hokkaido.",
+        benar: "きょねん ほっかいどうで うまに のりました。",
+        salah: ["きょねん ほっかいどうで うまに のった ことが あります。", "きょねん ほっかいどうに うまに のりました。", "きょねん ほっかいどうで うまを のりました。"],
+      },
+      {
+        arti: "Hari Minggu (saya) bermain tenis, menonton film, dan lain-lain.",
+        benar: "にちようびは テニスを したり、えいがを みたり します。",
+        salah: ["にちようびは テニスを したり、えいがを みます。", "にちようびは テニスを しったり、えいがを みったり します。", "にちようびは テニスを したり、えいがを みたり です。"],
+      },
+      {
+        arti: "(Cuacanya) menjadi dingin.",
+        benar: "さむく なります。",
+        salah: ["さむいに なります。", "さむいく なります。", "さむく します。"],
+      },
+      {
+        arti: "(Ia) menjadi sehat.",
+        benar: "げんきに なります。",
+        salah: ["げんきく なります。", "げんきなに なります。", "げんきで なります。"],
+      },
+      {
+        arti: "(Saya) menjadi berumur 25 tahun.",
+        benar: "にじゅうごさいに なります。",
+        salah: ["にじゅうごさいく なります。", "にじゅうごさいを なります。", "にじゅうごさいで なります。"],
+      },
+      {
+        arti: "Saya belum pernah naik pesawat sekali pun.",
+        benar: "いちども ひこうきに のった ことが ありません。",
+        salah: ["いちども ひこうきに のった ことが あります。", "いちども ひこうきに のる ことが ありません。", "いちども ひこうきを のった ことが ありません。"],
+      },
+      {
+        arti: "Pernahkah (Anda) menonton sumo? ... Ya, sekali.",
+        benar: "すもうを みた ことが ありますか。……ええ、いちど あります。",
+        salah: ["すもうを みた ことが ありますか。……ええ、いちども あります。", "すもうを みる ことが ありますか。……ええ、いちど あります。", "すもうを みた ことが ありますか。……ええ、いちど みました ことが あります。"],
+      },
+      {
+        arti: "Sedikit demi sedikit (saya) menjadi pandai.",
+        benar: "だんだん じょうずに なります。",
+        salah: ["だんだん じょうずく なります。", "だんだん じょうずなに なります。", "もうすぐ じょうずに なりました。"],
+      },
+      {
+        arti: "Sebentar lagi musim panas.",
+        benar: "もうすぐ なつです。",
+        salah: ["だんだん なつです。", "もうすぐ なつに です。", "もうすぐ なつでした。"],
+      },
+      {
+        arti: "Apa kabar? ... Berkat doa Anda, baik.",
+        benar: "おげんきですか。……おかげさまで、げんきです。",
+        salah: ["おげんきですか。……かんぱい、げんきです。", "おげんきですか。……おだいじに、げんきです。", "おげんきですか。……おかげさまで、げんきじゃ ありません。"],
+      },
+      {
+        arti: "Kondisi (badan) saya sudah membaik.",
+        benar: "ちょうしが よく なりました。",
+        salah: ["ちょうしが いく なりました。", "ちょうしが よいに なりました。", "ちょうしが よく しました。"],
+      },
+    ],
+  },
 };

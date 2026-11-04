@@ -442,8 +442,9 @@
     if (!inti.length && !(typeof bacaanKeliruData !== "undefined" && bacaanKeliruData[item.kanji])) return [];
 
     const calon = []; // { jenis, teks }
-    // Bacaan ganda ("～ふん／ぶん") tidak diubah otomatis - hanya pengecoh manual.
-    if (item.kana.includes("／")) inti.length = 0;
+    // Bacaan ganda ("～ふん／ぶん", "まんざい。らくご") tidak diubah otomatis -
+    // hanya pengecoh manual.
+    if (/[／。]/.test(item.kana)) inti.length = 0;
     const tambah = (jenis, mora) => calon.push({ jenis, teks: awal + mora.join("") + akhir });
     // Kana yang tertulis di tengah soal (の pada 子供の服, し pada 催し物)
     // tidak diubah - pengecoh seperti こどものうふく gampang dicoret.
