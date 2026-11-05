@@ -3020,4 +3020,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  37: {
+    susun: [
+      { arti: "Saya dipuji oleh guru.", potongan: ["わたし", "は", "せんせい", "に", "ほめられました"] },
+      { arti: "Saya dimarahi oleh ibu.", potongan: ["わたし", "は", "はは", "に", "しかられました"] },
+      { arti: "Kaki saya diinjak oleh seseorang.", potongan: ["わたし", "は", "だれか", "に", "あし", "を", "ふまれました"] },
+      { arti: "Dompet saya dicuri oleh pencuri.", potongan: ["わたし", "は", "どろぼう", "に", "さいふ", "を", "とられました"] },
+      { arti: "Komputer saya dirusak oleh adik laki-laki.", potongan: ["わたし", "は", "おとうと", "に", "パソコン", "を", "こわされました"] },
+      { arti: "Gedung ini dibangun tahun 1990.", potongan: ["この", "ビル", "は", "せんきゅうひゃくきゅうじゅうねん", "に", "たてられました"] },
+      { arti: "Rapat diadakan di Tokyo.", potongan: ["かいぎ", "は", "とうきょう", "で", "おこなわれます"] },
+      { arti: "Buku ini dibaca di seluruh dunia.", potongan: ["この", "ほん", "は", "せかいじゅう", "で", "よまれて", "います"] },
+      { arti: "Telepon ditemukan (diciptakan) oleh Bell.", potongan: ["でんわ", "は", "ベル", "に", "よって", "はつめいされました"] },
+      { arti: "Bir dibuat dari gandum.", potongan: ["ビール", "は", "むぎ", "から", "つくられます"] },
+      { arti: "Sdr. Miller diundang ke pesta oleh manajer.", potongan: ["ミラーさん", "は", "ぶちょう", "に", "パーティー", "に", "しょうたいされました"] },
+      { arti: "Minyak bumi diimpor dari luar negeri.", potongan: ["せきゆ", "は", "がいこく", "から", "ゆにゅうされて", "います"] },
+    ],
+    pilih: [
+      {
+        arti: "Saya dipuji oleh guru.",
+        benar: "わたしは せんせいに ほめられました。",
+        salah: ["わたしは せんせいに ほめれました。", "わたしは せんせいに ほめさせました。", "わたしは せんせいを ほめられました。"],
+      },
+      {
+        arti: "Saya dimarahi oleh ibu.",
+        benar: "わたしは ははに しかられました。",
+        salah: ["わたしは ははに しかりられました。", "わたしは ははに しかれました。", "わたしは ははが しかられました。"],
+      },
+      {
+        arti: "Kaki saya diinjak oleh seseorang.",
+        benar: "わたしは だれかに あしを ふまれました。",
+        salah: ["わたしは だれかに あしを ふみられました。", "わたしは だれかに あしが ふまれました。", "わたしは だれかを あしを ふまれました。"],
+      },
+      {
+        arti: "Dompet saya dicuri oleh pencuri.",
+        benar: "わたしは どろぼうに さいふを とられました。",
+        salah: ["わたしは どろぼうに さいふを とりられました。", "わたしは どろぼうに さいふを とれました。", "わたしの さいふは どろぼうを とられました。"],
+      },
+      {
+        arti: "Komputer saya dirusak oleh adik laki-laki.",
+        benar: "わたしは おとうとに パソコンを こわされました。",
+        salah: ["わたしは おとうとに パソコンを こわれられました。", "わたしは おとうとに パソコンを こわしられました。", "わたしは おとうとに パソコンを こわしました。"],
+      },
+      {
+        arti: "Gedung ini dibangun tahun 1990.",
+        benar: "この ビルは 1990ねんに たてられました。",
+        salah: ["この ビルは 1990ねんに たちられました。", "この ビルは 1990ねんに たてました。", "この ビルは 1990ねんに たてれました。"],
+      },
+      {
+        arti: "Rapat diadakan di Tokyo.",
+        benar: "かいぎは とうきょうで おこなわれます。",
+        salah: ["かいぎは とうきょうで おこないられます。", "かいぎは とうきょうに おこなわれます。", "かいぎは とうきょうで おこなえます。"],
+      },
+      {
+        arti: "Buku ini dibaca di seluruh dunia.",
+        benar: "この ほんは せかいじゅうで よまれて います。",
+        salah: ["この ほんは せかいじゅうで よめて います。", "この ほんは せかいじゅうで よみられて います。", "この ほんは せかいじゅうを よまれて います。"],
+      },
+      {
+        arti: "Telepon diciptakan oleh Bell.",
+        benar: "でんわは ベルによって はつめいされました。",
+        salah: ["でんわは ベルによって はつめいしました。", "でんわは ベルによって はつめいられました。", "でんわは ベルについて はつめいされました。"],
+      },
+      {
+        arti: "Bir dibuat dari gandum.",
+        benar: "ビールは むぎから つくられます。",
+        salah: ["ビールは むぎから つくれます。", "ビールは むぎを つくられます。", "ビールは むぎから つくりられます。"],
+      },
+      {
+        arti: "Sdr. Miller diundang ke pesta oleh manajer.",
+        benar: "ミラーさんは ぶちょうに パーティーに しょうたいされました。",
+        salah: ["ミラーさんは ぶちょうに パーティーに しょうたいしました。", "ミラーさんは ぶちょうに パーティーに しょうたいられました。", "ミラーさんは ぶちょうに パーティーを しょうたいされました。"],
+      },
+      {
+        arti: "Minyak bumi diimpor dari luar negeri.",
+        benar: "せきゆは がいこくから ゆにゅうされて います。",
+        salah: ["せきゆは がいこくから ゆしゅつされて います。", "せきゆは がいこくから ゆにゅうしられて います。", "せきゆは がいこくに ゆにゅうされて います。"],
+      },
+    ],
+  },
 };
