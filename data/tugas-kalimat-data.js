@@ -2864,4 +2864,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  35: {
+    susun: [
+      { arti: "Kalau sudah musim semi, bunga sakura mekar.", potongan: ["はる", "に", "なれば", "さくら", "が", "さきます"] },
+      { arti: "Kalau tombol ini ditekan, jendela terbuka.", potongan: ["この", "ボタン", "を", "おせば", "まど", "が", "あきます"] },
+      { arti: "Kalau tas ini murah, (saya) beli.", potongan: ["この", "かばん", "が", "やすければ", "かいます"] },
+      { arti: "Kalau cuacanya bagus, pulau kelihatan di seberang sana.", potongan: ["てんき", "が", "よければ", "むこう", "に", "しま", "が", "みえます"] },
+      { arti: "Kalau senggang, tolong bantu (saya).", potongan: ["ひま", "なら", "てつだって", "ください"] },
+      { arti: "Kalau tidak ada pendapat lain, kita akhiri sampai di sini.", potongan: ["ほか", "に", "いけん", "が", "なければ", "これ", "で", "おわります"] },
+      { arti: "Sebaiknya bagaimana (caranya)?", potongan: ["どう", "すれば", "いい", "です", "か"] },
+      { arti: "Kalau soal komputer, Sdr. Miller paham betul.", potongan: ["パソコン", "なら", "ミラーさん", "が", "くわしい", "です"] },
+      { arti: "Kalau tidak tahu arti kata, tolong cari di kamus.", potongan: ["ことば", "の", "いみ", "が", "わからなければ", "じしょ", "で", "しらべて", "ください"] },
+      { arti: "Kalau pergi ke mana, (saya) bisa membeli tiket?", potongan: ["どこ", "へ", "いけば", "きっぷ", "が", "かえます", "か"] },
+      { arti: "Kalau hujan, (saya) tidak pergi.", potongan: ["あめ", "なら", "いきません"] },
+      { arti: "Kalau ada kesempatan, (saya) ingin pergi ke luar negeri.", potongan: ["きかい", "が", "あれば", "かいがい", "へ", "いきたい", "です"] },
+    ],
+    pilih: [
+      {
+        arti: "Kalau tombol ini ditekan, jendela terbuka.",
+        benar: "この ボタンを おせば、まどが あきます。",
+        salah: ["この ボタンを おすば、まどが あきます。", "この ボタンを おしば、まどが あきます。", "この ボタンを おせば、まどを あきます。"],
+      },
+      {
+        arti: "Kalau murah, (saya) beli.",
+        benar: "やすければ、かいます。",
+        salah: ["やすいければ、かいます。", "やすくければ、かいます。", "やすければ、かいません。"],
+      },
+      {
+        arti: "Kalau cuacanya bagus, pulau kelihatan di seberang sana.",
+        benar: "てんきが よければ、むこうに しまが みえます。",
+        salah: ["てんきが いければ、むこうに しまが みえます。", "てんきが いいければ、むこうに しまが みえます。", "てんきが よければ、むこうに しまを みえます。"],
+      },
+      {
+        arti: "Kalau senggang, tolong bantu (saya).",
+        benar: "ひまなら、てつだって ください。",
+        salah: ["ひまければ、てつだって ください。", "ひまなれば、てつだって ください。", "ひまだれば、てつだって ください。"],
+      },
+      {
+        arti: "Kalau tidak ada pendapat lain, kita akhiri sampai di sini.",
+        benar: "ほかに いけんが なければ、これで おわります。",
+        salah: ["ほかに いけんが ないれば、これで おわります。", "ほかに いけんが なくれば、これで おわります。", "ほかに いけんが あれば、これで おわります。"],
+      },
+      {
+        arti: "Sebaiknya bagaimana (caranya)?",
+        benar: "どう すれば いいですか。",
+        salah: ["どう するば いいですか。", "どう しれば いいですか。", "どう すれば いいでしたか。"],
+      },
+      {
+        arti: "Kalau besok datang, tolong telepon (saya).",
+        benar: "あした くれば、でんわして ください。",
+        salah: ["あした これば、でんわして ください。", "あした きれば、でんわして ください。", "あした くるば、でんわして ください。"],
+      },
+      {
+        arti: "Kalau soal komputer, Sdr. Miller paham betul.",
+        benar: "パソコンなら、ミラーさんが くわしいです。",
+        salah: ["パソコンれば、ミラーさんが くわしいです。", "パソコンければ、ミラーさんが くわしいです。", "パソコンなら、ミラーさんを くわしいです。"],
+      },
+      {
+        arti: "Kalau tidak tahu arti kata, tolong cari di kamus.",
+        benar: "ことばの いみが わからなければ、じしょで しらべて ください。",
+        salah: ["ことばの いみが わかりなければ、じしょで しらべて ください。", "ことばの いみが わからないれば、じしょで しらべて ください。", "ことばの いみが わかれば、じしょで しらべて ください。"],
+      },
+      {
+        arti: "Kalau pergi ke mana, (saya) bisa membeli tiket?",
+        benar: "どこへ いけば、きっぷが かえますか。",
+        salah: ["どこへ いくば、きっぷが かえますか。", "どこへ いきば、きっぷが かえますか。", "どこへ いけるば、きっぷが かえますか。"],
+      },
+      {
+        arti: "Kalau ada kesempatan, (saya) ingin pergi ke luar negeri.",
+        benar: "きかいが あれば、かいがいへ いきたいです。",
+        salah: ["きかいが あるば、かいがいへ いきたいです。", "きかいが ありば、かいがいへ いきたいです。", "きかいが なければ、かいがいへ いきたいです。"],
+      },
+      {
+        arti: "Kalau sudah musim semi, bunga sakura mekar.",
+        benar: "はるに なれば、さくらが さきます。",
+        salah: ["はるに なるば、さくらが さきます。", "はるが なれば、さくらが さきます。", "はるに なれば、さくらを さきます。"],
+      },
+    ],
+  },
 };
