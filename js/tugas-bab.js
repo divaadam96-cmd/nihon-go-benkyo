@@ -473,7 +473,12 @@
       }
     });
     // Bacaan keliru khas yang ditulis manual (data/kanji-mirip-data.js), mis. 来 -> こ/く.
-    const manual = typeof bacaanKeliruData !== "undefined" ? bacaanKeliruData[item.kanji] || [] : [];
+    // Satu kanji bisa dipakai di dua bab dengan bentuk bacaan berbeda (～分:
+    // "～ふん／ぶん" di Bab 4, "～ぶん" di Bab 34) - pengecoh bergaris miring
+    // hanya untuk bacaan bergaris miring, dan sebaliknya.
+    const ganda = item.kana.includes("／");
+    const manual = (typeof bacaanKeliruData !== "undefined" ? bacaanKeliruData[item.kanji] || [] : [])
+      .filter((teks) => teks.includes("／") === ganda);
     // Catatan dalam kurung (mis. （を）) ditambahkan bila manualnya belum memuat.
     manual.forEach((teks) => calon.push({ jenis: "manual", teks: catatan && !teks.endsWith(catatan) ? teks + catatan : teks }));
 

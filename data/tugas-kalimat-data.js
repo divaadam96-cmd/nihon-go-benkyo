@@ -2786,4 +2786,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  34: {
+    susun: [
+      { arti: "Tolong lakukan seperti yang saya lakukan.", potongan: ["わたし", "が", "やる", "とおり", "に", "やって", "ください"] },
+      { arti: "Tolong ceritakan seperti yang (Anda) lihat.", potongan: ["みた", "とおり", "に", "はなして", "ください"] },
+      { arti: "(Saya) merakitnya sesuai buku petunjuk.", potongan: ["せつめいしょ", "の", "とおり", "に", "くみたてました"] },
+      { arti: "Setelah pekerjaan selesai, (saya) pergi minum.", potongan: ["しごと", "が", "おわった", "あと", "で", "のみ", "に", "いきます"] },
+      { arti: "Sesudah makan, (saya) menggosok gigi.", potongan: ["しょくじ", "の", "あと", "で", "は", "を", "みがきます"] },
+      { arti: "(Saya) makan dengan mencelupkan ke kecap asin.", potongan: ["しょうゆ", "を", "つけて", "たべます"] },
+      { arti: "(Saya) minum kopi tanpa memasukkan gula.", potongan: ["さとう", "を", "いれないで", "コーヒー", "を", "のみます"] },
+      { arti: "Hari Minggu (saya) tidak pergi ke mana-mana, tetapi beristirahat di rumah.", potongan: ["にちようび", "は", "どこ", "も", "いかないで", "うち", "で", "やすみます"] },
+      { arti: "Tolong lipat kertas mengikuti garis.", potongan: ["せん", "の", "とおり", "に", "かみ", "を", "おって", "ください"] },
+      { arti: "Kemarin malam setelah menonton film, (saya) makan malam.", potongan: ["ゆうべ", "えいが", "を", "みた", "あと", "で", "しょくじしました"] },
+      { arti: "(Saya) memasak nasi dengan rice cooker.", potongan: ["すいはんき", "で", "ごはん", "を", "たきます"] },
+      { arti: "Silakan pergi duluan.", potongan: ["どうぞ", "さきに", "いって", "ください"] },
+    ],
+    pilih: [
+      {
+        arti: "Tolong lakukan seperti yang saya lakukan.",
+        benar: "わたしが やる とおりに、やって ください。",
+        salah: ["わたしが やるの とおりに、やって ください。", "わたしが やって とおりに、やって ください。", "わたしが やります とおりに、やって ください。"],
+      },
+      {
+        arti: "(Saya) merakitnya sesuai buku petunjuk.",
+        benar: "せつめいしょの とおりに、くみたてました。",
+        salah: ["せつめいしょな とおりに、くみたてました。", "せつめいしょが とおりに、くみたてました。", "せつめいしょの とおりで、くみたてました。"],
+      },
+      {
+        arti: "Setelah pekerjaan selesai, (saya) pergi minum.",
+        benar: "しごとが おわった あとで、のみに いきます。",
+        salah: ["しごとが おわる あとで、のみに いきます。", "しごとが おわって あとで、のみに いきます。", "しごとが おわった あとに、のみを いきます。"],
+      },
+      {
+        arti: "Sesudah makan, (saya) menggosok gigi.",
+        benar: "しょくじの あとで、はを みがきます。",
+        salah: ["しょくじ あとで、はを みがきます。", "しょくじした の あとで、はを みがきます。", "しょくじの まえに、はを みがきます。"],
+      },
+      {
+        arti: "(Saya) makan dengan mencelupkan ke kecap asin.",
+        benar: "しょうゆを つけて たべます。",
+        salah: ["しょうゆを つけないで たべます。", "しょうゆを つけで たべます。", "しょうゆを つけって たべます。"],
+      },
+      {
+        arti: "(Saya) minum kopi tanpa memasukkan gula.",
+        benar: "さとうを いれないで コーヒーを のみます。",
+        salah: ["さとうを いれなくて コーヒーを のみます。", "さとうを いれて コーヒーを のみます。", "さとうを いれないて コーヒーを のみます。"],
+      },
+      {
+        arti: "Hari Minggu (saya) tidak pergi ke mana-mana, tetapi beristirahat di rumah.",
+        benar: "にちようびは どこも いかないで、うちで やすみます。",
+        salah: ["にちようびは どこも いかなくて、うちで やすみます。", "にちようびは どこでも いかないで、うちで やすみます。", "にちようびは どこも いきないで、うちで やすみます。"],
+      },
+      {
+        arti: "Tolong ceritakan seperti yang (Anda) lihat.",
+        benar: "みた とおりに はなして ください。",
+        salah: ["みて とおりに はなして ください。", "みたの とおりに はなして ください。", "みます とおりに はなして ください。"],
+      },
+      {
+        arti: "(Saya) pergi ke kantor tanpa memakai dasi.",
+        benar: "ネクタイを しないで かいしゃへ いきました。",
+        salah: ["ネクタイを しなくて かいしゃへ いきました。", "ネクタイを きないで かいしゃへ いきました。", "ネクタイを しないて かいしゃへ いきました。"],
+      },
+      {
+        arti: "Setelah selesai merakit perabot, (saya) membersihkan kamar.",
+        benar: "かぐを くみたてた あとで、へやを そうじしました。",
+        salah: ["かぐを くみたてる あとで、へやを そうじしました。", "かぐを くみたてて あとで、へやを そうじしました。", "かぐを くみたてたの あとで、へやを そうじしました。"],
+      },
+      {
+        arti: "Tolong lipat kertas mengikuti garis.",
+        benar: "せんの とおりに かみを おって ください。",
+        salah: ["せんの とおりに かみを おりて ください。", "せんの とおりに かみを おれて ください。", "せんで とおりに かみを おって ください。"],
+      },
+      {
+        arti: "Ini sudah benar? ... Ya, bagus sekali.",
+        benar: "これで いいですか。……ええ、とても じょうずです。",
+        salah: ["これに いいですか。……ええ、とても じょうずです。", "これを いいですか。……ええ、とても じょうずです。", "これで いいですか。……ええ、とても へたです。"],
+      },
+    ],
+  },
 };
