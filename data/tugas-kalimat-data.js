@@ -3176,4 +3176,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  39: {
+    susun: [
+      { arti: "Mendengar berita itu, (saya) terkejut.", potongan: ["ニュース", "を", "きいて", "びっくりしました"] },
+      { arti: "Tidak bisa bertemu keluarga, (saya) kesepian.", potongan: ["かぞく", "に", "あえなくて", "さびしい", "です"] },
+      { arti: "Ceritanya rumit, jadi (saya) kurang mengerti.", potongan: ["はなし", "が", "ふくざつで", "よく", "わかりません"] },
+      { arti: "Karena ada kecelakaan, busnya terlambat.", potongan: ["じこ", "が", "あって", "バス", "が", "おくれて", "しまいました"] },
+      { arti: "Karena gempa bumi, gedungnya roboh.", potongan: ["じしん", "で", "ビル", "が", "たおれました"] },
+      { arti: "Karena sakit, (saya) tidak masuk kantor.", potongan: ["びょうき", "で", "かいしゃ", "を", "やすみました"] },
+      { arti: "Karena ada urusan, saya permisi duluan.", potongan: ["ようじ", "が", "ある", "ので", "おさきに", "しつれいします"] },
+      { arti: "Karena (saya) tidak mengerti bahasa Jepang, bisakah (Anda) berbicara dalam bahasa Inggris?", potongan: ["にほんご", "が", "わからない", "ので", "えいご", "で", "はなして", "いただけません", "か"] },
+      { arti: "Karena kamar ini tenang, (saya) bisa tidur nyenyak.", potongan: ["この", "へや", "は", "しずかな", "ので", "よく", "ねむれます"] },
+      { arti: "Soalnya sulit, jadi (saya) tidak bisa menjawab.", potongan: ["もんだい", "が", "むずかしくて", "こたえられませんでした"] },
+      { arti: "Maaf, (saya) terlambat dari waktu janji.", potongan: ["やくそく", "の", "じかん", "に", "おくれて", "すみませんでした"] },
+      { arti: "Di tengah perjalanan, mobil bertabrakan dengan truk.", potongan: ["とちゅう", "で", "くるま", "が", "トラック", "に", "ぶつかりました"] },
+    ],
+    pilih: [
+      {
+        arti: "Mendengar berita itu, (saya) terkejut.",
+        benar: "ニュースを きいて、びっくりしました。",
+        salah: ["ニュースを きって、びっくりしました。", "ニュースを ききて、びっくりしました。", "ニュースを きいて、あんしんしました。"],
+      },
+      {
+        arti: "Tidak bisa bertemu keluarga, (saya) kesepian.",
+        benar: "かぞくに あえなくて、さびしいです。",
+        salah: ["かぞくに あえないで、さびしいです。", "かぞくに あえないくて、さびしいです。", "かぞくを あえなくて、さびしいです。"],
+      },
+      {
+        arti: "Ceritanya rumit, jadi (saya) kurang mengerti.",
+        benar: "はなしが ふくざつで、よく わかりません。",
+        salah: ["はなしが ふくざつて、よく わかりません。", "はなしが ふくざつくて、よく わかりません。", "はなしが ふくざつなで、よく わかりません。"],
+      },
+      {
+        arti: "Karena gempa bumi, gedungnya roboh.",
+        benar: "じしんで ビルが たおれました。",
+        salah: ["じしんに ビルが たおれました。", "じしんで ビルを たおれました。", "じしんで ビルが たおしました。"],
+      },
+      {
+        arti: "Karena sakit, (saya) tidak masuk kantor.",
+        benar: "びょうきで かいしゃを やすみました。",
+        salah: ["びょうきて かいしゃを やすみました。", "びょうきくて かいしゃを やすみました。", "びょうきで かいしゃに やすみました。"],
+      },
+      {
+        arti: "Karena ada urusan, saya permisi duluan.",
+        benar: "ようじが あるので、おさきに しつれいします。",
+        salah: ["ようじが あるなので、おさきに しつれいします。", "ようじが ありので、おさきに しつれいします。", "ようじが あるので、おさきに しつれいしましょう。"],
+      },
+      {
+        arti: "Karena (saya) tidak mengerti bahasa Jepang, bisakah (Anda) berbicara dalam bahasa Inggris?",
+        benar: "にほんごが わからないので、えいごで はなして いただけませんか。",
+        salah: ["にほんごが わからなくので、えいごで はなして いただけませんか。", "にほんごが わかりないので、えいごで はなして いただけませんか。", "にほんごが わからないので、えいごを はなして いただけませんか。"],
+      },
+      {
+        arti: "Karena kamar ini tenang, (saya) bisa tidur nyenyak.",
+        benar: "この へやは しずかなので、よく ねむれます。",
+        salah: ["この へやは しずかので、よく ねむれます。", "この へやは しずかだので、よく ねむれます。", "この へやは しずかくて、よく ねむれます。"],
+      },
+      {
+        arti: "Soalnya sulit, jadi (saya) tidak bisa menjawab.",
+        benar: "もんだいが むずかしくて、こたえられませんでした。",
+        salah: ["もんだいが むずかしいて、こたえられませんでした。", "もんだいが むずかしで、こたえられませんでした。", "もんだいが むずかしくて、こたえませられんでした。"],
+      },
+      {
+        arti: "Maaf, (saya) terlambat dari waktu janji.",
+        benar: "やくそくの じかんに おくれて、すみませんでした。",
+        salah: ["やくそくの じかんを おくれて、すみませんでした。", "やくそくの じかんに おくれって、すみませんでした。", "やくそくの じかんに おくりて、すみませんでした。"],
+      },
+      {
+        arti: "Di tengah perjalanan, mobil bertabrakan dengan truk.",
+        benar: "とちゅうで くるまが トラックに ぶつかりました。",
+        salah: ["とちゅうに くるまが トラックを ぶつかりました。", "とちゅうで くるまが トラックを ぶつかりました。", "とちゅうで くるまを トラックに ぶつかりました。"],
+      },
+      {
+        arti: "Terima kasih atas kerja kerasnya. ... Saya pamit dulu.",
+        benar: "おつかれさまでした。……おさきに しつれいします。",
+        salah: ["おつかれさまでした。……おさきで しつれいします。", "おつかれさまでした。……おさきに しつれいでした。", "おつかれさまでした。……おさきを しつれいします。"],
+      },
+    ],
+  },
 };
