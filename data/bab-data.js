@@ -2218,7 +2218,7 @@ const babKosakataData = {
     ],
     [
       "\u306f\u305a\u3057\u307e\u3059\uff08\u305b\u304d\u3092\uff09",
-      "Tidak ada (ditempat)",
+      "Meninggalkan (tempat duduk)",
     ],
     ["\u3060\u3081\u306a", "Jangan,tidak boleh,tidak bisa"],
     ["\u305b\u304d", "Tempat duduk"],
@@ -2296,7 +2296,7 @@ const babKosakataData = {
     ],
     ["\u3066\u3042\u3089\u3044", "Cuci dengan tangan"],
     [
-      "\u30a2\u30a4\u30ed\u30f3\uff08\u3066\u3044\u304a\u3093\uff09",
+      "\u3066\u3044\u304a\u3093\u30a2\u30a4\u30ed\u30f3",
       "Harus disetrika dalam suhu rendah",
     ],
     [
@@ -6663,7 +6663,7 @@ const babKanjiData = {
     [
       "\u5916\u3057\u307e\u3059",
       "\u306f\u305a\u3057\u307e\u3059\uff08\u305b\u304d\u3092\uff09",
-      "Tidak ada (ditempat)",
+      "Meninggalkan (tempat duduk)",
     ],
     ["\u5e2d", "\u305b\u304d", "Tempat duduk"],
     ["\u6d17\u6fef\u6a5f", "\u305b\u3093\u305f\u304f\u304d", "Mesin cuci"],
@@ -6804,8 +6804,8 @@ const babKanjiData = {
     ],
     ["\u624b\u6d17\u3044", "\u3066\u3042\u3089\u3044", "Cuci dengan tangan"],
     [
-      "\u30a2\u30a4\u30ed\u30f3\uff08\u4f4e\u6e29\uff09",
-      "\u30a2\u30a4\u30ed\u30f3\uff08\u3066\u3044\u304a\u3093\uff09",
+      "\u4f4e\u6e29\u30a2\u30a4\u30ed\u30f3",
+      "\u3066\u3044\u304a\u3093\u30a2\u30a4\u30ed\u30f3",
       "Harus disetrika dalam suhu rendah",
     ],
   ],

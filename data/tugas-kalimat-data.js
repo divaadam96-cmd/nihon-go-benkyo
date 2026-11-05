@@ -2708,4 +2708,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  33: {
+    susun: [
+      { arti: "Jangan berlari di sini!", potongan: ["ここ", "で", "はしる", "な"] },
+      { arti: "Kanji itu dibaca apa? ... Dibaca \"kin'en\".", potongan: ["あの", "かんじ", "は", "なん", "と", "よみます", "か"] },
+      { arti: "Tanda ini artinya apa?", potongan: ["この", "マーク", "は", "どういう", "いみ", "です", "か"] },
+      { arti: "\"Tachiiri kinshi\" artinya jangan masuk.", potongan: ["たちいりきんし", "は", "はいる", "な", "と", "いう", "いみ", "です"] },
+      { arti: "Sdr. Tanaka bilang besok (dia) libur.", potongan: ["たなかさん", "は", "あした", "やすむ", "と", "いって", "いました"] },
+      { arti: "Bisakah (Anda) sampaikan kepada Sdr. Miller agar menelepon (saya) nanti?", potongan: ["ミラーさん", "に", "あとで", "でんわ", "を", "ください", "と", "つたえて", "いただけません", "か"] },
+      { arti: "Jangan parkir mobil di sini!", potongan: ["ここ", "に", "くるま", "を", "とめる", "な"] },
+      { arti: "Lari sampai garis finis! (perintah)", potongan: ["ゴール", "まで", "はしれ"] },
+      { arti: "Tolong hubungi (saya) secepat mungkin.", potongan: ["できるだけ", "はやく", "れんらくして", "ください"] },
+      { arti: "Tinggal 5 menit lagi.", potongan: ["あと", "ごふん", "です"] },
+      { arti: "Denda pelanggaran parkir harus dibayar dalam satu minggu.", potongan: ["ばっきん", "は", "いっしゅうかん", "いない", "に", "はらって", "ください"] },
+      { arti: "Sdr. Watanabe sedang meninggalkan tempat duduknya.", potongan: ["わたなべさん", "は", "いま", "せき", "を", "はずして", "います"] },
+    ],
+    pilih: [
+      {
+        arti: "Larilah! (perintah)",
+        benar: "にげろ。",
+        salah: ["にげれ。", "にげい。", "にげら。"],
+      },
+      {
+        arti: "Cepat! (perintah)",
+        benar: "いそげ。",
+        salah: ["いそぎろ。", "いそげろ。", "いそがれ。"],
+      },
+      {
+        arti: "Kemari! (perintah)",
+        benar: "こい。",
+        salah: ["きろ。", "くれ。", "こえ。"],
+      },
+      {
+        arti: "Kerjakan! (perintah)",
+        benar: "しろ。",
+        salah: ["すれ。", "しれ。", "せろ。"],
+      },
+      {
+        arti: "Jangan berlari di sini!",
+        benar: "ここで はしるな。",
+        salah: ["ここで はしりな。", "ここで はしらな。", "ここで はしれな。"],
+      },
+      {
+        arti: "Jangan buang sampah! (larangan)",
+        benar: "ごみを すてるな。",
+        salah: ["ごみを すてな。", "ごみを すてろな。", "ごみを すてないな。"],
+      },
+      {
+        arti: "Kanji itu dibaca apa? ... Dibaca \"kin'en\".",
+        benar: "あの かんじは なんと よみますか。……「きんえん」と よみます。",
+        salah: ["あの かんじは なにを よみますか。……「きんえん」と よみます。", "あの かんじは なんと よみますか。……「きんえん」を よみます。", "あの かんじは なんで よみますか。……「きんえん」と よみます。"],
+      },
+      {
+        arti: "\"Tachiiri kinshi\" artinya jangan masuk.",
+        benar: "「たちいりきんし」は はいるなと いう いみです。",
+        salah: ["「たちいりきんし」は はいるなの いみです。", "「たちいりきんし」は はいるなと いいます いみです。", "「たちいりきんし」は はいれと いう いみです。"],
+      },
+      {
+        arti: "Sdr. Tanaka bilang besok (dia) libur.",
+        benar: "たなかさんは あした やすむと いって いました。",
+        salah: ["たなかさんは あした やすむを いって いました。", "たなかさんは あした やすみと いって いました。", "たなかさんは あした やすむと いって いきました。"],
+      },
+      {
+        arti: "Bisakah (Anda) sampaikan kepada Sdr. Miller agar menelepon (saya) nanti?",
+        benar: "ミラーさんに あとで でんわを くださいと つたえて いただけませんか。",
+        salah: ["ミラーさんを あとで でんわを くださいと つたえて いただけませんか。", "ミラーさんに あとで でんわを くださいを つたえて いただけませんか。", "ミラーさんに あとで でんわを くださいと つたえって いただけませんか。"],
+      },
+      {
+        arti: "Tidak boleh merokok di sini.",
+        benar: "ここで たばこを すっては いけません。",
+        salah: ["ここで たばこを すうては いけません。", "ここで たばこを すいては いけません。", "ここで たばこを すっては いきません。"],
+      },
+      {
+        arti: "(Saya) sudah tidak bisa berjalan lagi.",
+        benar: "もう あるけません。",
+        salah: ["まだ あるけません。", "もう あるけます。", "もう あるきません けます。"],
+      },
+    ],
+  },
 };
