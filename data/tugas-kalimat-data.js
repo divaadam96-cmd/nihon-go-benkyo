@@ -3098,4 +3098,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  38: {
+    susun: [
+      { arti: "Menggambar itu menyenangkan.", potongan: ["え", "を", "かく", "の", "は", "たのしい", "です"] },
+      { arti: "Saya suka melihat bintang.", potongan: ["わたし", "は", "ほし", "を", "みる", "の", "が", "すき", "です"] },
+      { arti: "Ibu pandai memasak.", potongan: ["はは", "は", "りょうり", "を", "つくる", "の", "が", "じょうず", "です"] },
+      { arti: "(Saya) lupa membawa dokumen.", potongan: ["しょるい", "を", "もって", "くる", "の", "を", "わすれました"] },
+      { arti: "Apakah (Anda) tahu bahwa Sdr. Miller akan menikah bulan depan?", potongan: ["ミラーさん", "が", "らいげつ", "けっこんする", "の", "を", "しって", "います", "か"] },
+      { arti: "Tempat saya lahir adalah sebuah desa kecil di Hokkaido.", potongan: ["わたし", "が", "うまれた", "の", "は", "ほっかいどう", "の", "ちいさな", "むら", "です"] },
+      { arti: "Yang paling penting adalah keluarga.", potongan: ["いちばん", "たいせつな", "の", "は", "かぞく", "です"] },
+      { arti: "Membesarkan anak itu berat.", potongan: ["こども", "を", "そだてる", "の", "は", "たいへん", "です"] },
+      { arti: "Jangan lupa mematikan aliran listrik.", potongan: ["でんげん", "を", "きる", "の", "を", "わすれないで", "ください"] },
+      { arti: "(Saya) lupa mengunci pintu.", potongan: ["ドア", "に", "かぎ", "を", "かける", "の", "を", "わすれました"] },
+      { arti: "Adik perempuan saya mirip dengan ibu.", potongan: ["いもうと", "は", "はは", "に", "にて", "います"] },
+      { arti: "Sdr. Tanaka masuk rumah sakit minggu lalu.", potongan: ["たなかさん", "は", "せんしゅう", "にゅういんしました"] },
+    ],
+    pilih: [
+      {
+        arti: "Menggambar itu menyenangkan.",
+        benar: "えを かくのは たのしいです。",
+        salah: ["えを かくは たのしいです。", "えを かきのは たのしいです。", "えを かくのを たのしいです。"],
+      },
+      {
+        arti: "Saya suka melihat bintang.",
+        benar: "わたしは ほしを みるのが すきです。",
+        salah: ["わたしは ほしを みるのを すきです。", "わたしは ほしを みるが すきです。", "わたしは ほしを みますのが すきです。"],
+      },
+      {
+        arti: "Ibu pandai memasak.",
+        benar: "ははは りょうりを つくるのが じょうずです。",
+        salah: ["ははは りょうりを つくるのを じょうずです。", "ははは りょうりを つくりのが じょうずです。", "ははは りょうりを つくるのが へたです。"],
+      },
+      {
+        arti: "(Saya) lupa menutup jendela.",
+        benar: "まどを しめるのを わすれました。",
+        salah: ["まどを しめるのが わすれました。", "まどを しめのを わすれました。", "まどを しまるのを わすれました。"],
+      },
+      {
+        arti: "Apakah (Anda) tahu bahwa Sdr. Miller akan menikah bulan depan?",
+        benar: "ミラーさんが らいげつ けっこんするのを しって いますか。",
+        salah: ["ミラーさんが らいげつ けっこんするのが しって いますか。", "ミラーさんが らいげつ けっこんするを しって いますか。", "ミラーさんが らいげつ けっこんしますのを しって いますか。"],
+      },
+      {
+        arti: "Tempat saya lahir adalah sebuah desa kecil di Hokkaido.",
+        benar: "わたしが うまれたのは ほっかいどうの ちいさな むらです。",
+        salah: ["わたしが うまれるのは ほっかいどうの ちいさな むらです。", "わたしが うまれたは ほっかいどうの ちいさな むらです。", "わたしが うまれたのは ほっかいどうの ちいさい な むらです。"],
+      },
+      {
+        arti: "Yang paling penting adalah keluarga.",
+        benar: "いちばん たいせつなのは かぞくです。",
+        salah: ["いちばん たいせつのは かぞくです。", "いちばん たいせつだのは かぞくです。", "いちばん たいせつなは かぞくです。"],
+      },
+      {
+        arti: "Jangan lupa mematikan aliran listrik.",
+        benar: "でんげんを きるのを わすれないで ください。",
+        salah: ["でんげんを きりのを わすれないで ください。", "でんげんを きるのが わすれないで ください。", "でんげんを いれるのを わすれないで ください。"],
+      },
+      {
+        arti: "Adik perempuan saya mirip dengan ibu.",
+        benar: "いもうとは ははに にて います。",
+        salah: ["いもうとは ははに にます。", "いもうとは ははを にて います。", "いもうとは ははに にって います。"],
+      },
+      {
+        arti: "Saya permisi duluan.",
+        benar: "おさきに しつれいします。",
+        salah: ["おさきに しつれいです。", "おさきで しつれいします。", "おさきを しつれいします。"],
+      },
+      {
+        arti: "Aduh, celaka. (Saya) lupa menutup jendela.",
+        benar: "あ、いけない。まどを しめるのを わすれました。",
+        salah: ["あ、いけない。まどを しめたのを わすれます。", "あ、いけない。まどを しめるのに わすれました。", "あ、いけない。まどが しめるのを わすれました。"],
+      },
+      {
+        arti: "Kucing ini besar ya.",
+        benar: "この ねこは おおきいですね。",
+        salah: ["この ねこは おおきなですね。", "この ねこは おおきいなですね。", "この ねこは おおきくですね。"],
+      },
+    ],
+  },
 };
