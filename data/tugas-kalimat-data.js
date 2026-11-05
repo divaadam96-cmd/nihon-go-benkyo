@@ -3254,4 +3254,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  40: {
+    susun: [
+      { arti: "Tolong cari tahu jam berapa pesawat JL107 tiba.", potongan: ["JL107びん", "は", "なんじ", "に", "とうちゃくする", "か", "しらべて", "ください"] },
+      { arti: "Tolong beri jawaban apakah (Anda) hadir di pesta akhir tahun atau tidak.", potongan: ["ぼうねんかい", "に", "しゅっせきする", "か", "どうか", "へんじ", "を", "ください"] },
+      { arti: "(Saya) tidak tahu apakah cerita itu benar atau tidak.", potongan: ["その", "はなし", "は", "ほんとう", "か", "どうか", "わかりません"] },
+      { arti: "Tolong periksa sekali lagi apakah ada kesalahan atau tidak.", potongan: ["まちがい", "が", "ない", "か", "どうか", "もう", "いちど", "たしかめて", "ください"] },
+      { arti: "Bolehkah (saya) mencoba memakai celana ini?", potongan: ["この", "ズボン", "を", "はいて", "みても", "いい", "です", "か"] },
+      { arti: "(Saya) ingin mencoba minum sake Jepang.", potongan: ["にほん", "の", "おさけ", "を", "のんで", "みたい", "です"] },
+      { arti: "Berapa kira-kira tinggi Gunung Fuji?", potongan: ["ふじさん", "の", "たかさ", "は", "どのくらい", "です", "か"] },
+      { arti: "Tolong timbang berat barangnya.", potongan: ["にもつ", "の", "おもさ", "を", "はかって", "ください"] },
+      { arti: "(Kami) menyelidiki siapa yang paling cepat.", potongan: ["だれ", "が", "いちばん", "はやい", "か", "しらべます"] },
+      { arti: "Tolong tentukan motif mana yang bagus.", potongan: ["どんな", "もよう", "が", "いい", "か", "きめて", "ください"] },
+      { arti: "Mari coba hitung jumlah barangnya.", potongan: ["にもつ", "の", "かず", "を", "かぞえて", "みましょう"] },
+      { arti: "Tiba-tiba (dia) menjalankan mobilnya.", potongan: ["きゅうに", "くるま", "を", "うごかしました"] },
+    ],
+    pilih: [
+      {
+        arti: "Tolong cari tahu jam berapa pesawat JL107 tiba.",
+        benar: "JL107びんは なんじに とうちゃくするか、しらべて ください。",
+        salah: ["JL107びんは なんじに とうちゃくするのか どうか、しらべて ください。", "JL107びんは なんじに とうちゃくしますか、しらべて ください。", "JL107びんは なんじに とうちゃくするか どうか、しらべて ください。"],
+      },
+      {
+        arti: "Tolong beri jawaban apakah (Anda) hadir di pesta akhir tahun atau tidak.",
+        benar: "ぼうねんかいに しゅっせきするか どうか、へんじを ください。",
+        salah: ["ぼうねんかいに しゅっせきするか ないか、へんじを ください。", "ぼうねんかいに しゅっせきしますか どうか、へんじを ください。", "ぼうねんかいに しゅっせきするの どうか、へんじを ください。"],
+      },
+      {
+        arti: "(Saya) tidak tahu apakah cerita itu benar atau tidak.",
+        benar: "その はなしは ほんとうか どうか、わかりません。",
+        salah: ["その はなしは ほんとうだか どうか、わかりません。", "その はなしは ほんとうなか どうか、わかりません。", "その はなしは ほんとうか なにか、わかりません。"],
+      },
+      {
+        arti: "Tolong periksa sekali lagi apakah ada kesalahan atau tidak.",
+        benar: "まちがいが ないか どうか、もう いちど たしかめて ください。",
+        salah: ["まちがいが ないの どうか、もう いちど たしかめて ください。", "まちがいが なくか どうか、もう いちど たしかめて ください。", "まちがいが ないか どうか、もう いちど たしかめって ください。"],
+      },
+      {
+        arti: "Bolehkah (saya) mencoba memakai celana ini?",
+        benar: "この ズボンを はいて みても いいですか。",
+        salah: ["この ズボンを はいて みりても いいですか。", "この ズボンを はきて みても いいですか。", "この ズボンを きて みても いいですか。"],
+      },
+      {
+        arti: "(Saya) ingin mencoba minum sake Jepang.",
+        benar: "にほんの おさけを のんで みたいです。",
+        salah: ["にほんの おさけを のみて みたいです。", "にほんの おさけを のんで みりたいです。", "にほんの おさけを のんで みますたいです。"],
+      },
+      {
+        arti: "Berapa kira-kira tinggi Gunung Fuji?",
+        benar: "ふじさんの たかさは どのくらいですか。",
+        salah: ["ふじさんの たかいさは どのくらいですか。", "ふじさんの たかくさは どのくらいですか。", "ふじさんの たかさを どのくらいですか。"],
+      },
+      {
+        arti: "Tolong timbang berat barangnya.",
+        benar: "にもつの おもさを はかって ください。",
+        salah: ["にもつの おもいさを はかって ください。", "にもつの おもさを はかりて ください。", "にもつの おもさが はかって ください。"],
+      },
+      {
+        arti: "(Kami) menyelidiki siapa yang paling cepat.",
+        benar: "だれが いちばん はやいか、しらべます。",
+        salah: ["だれが いちばん はやいだか、しらべます。", "だれが いちばん はやくか、しらべます。", "だれを いちばん はやいか、しらべます。"],
+      },
+      {
+        arti: "Tolong tentukan motif mana yang bagus.",
+        benar: "どんな もようが いいか、きめて ください。",
+        salah: ["どんな もようが いいか どうか、きめて ください。", "どんな もようが いいだか、きめて ください。", "どんな もようが よくか、きめて ください。"],
+      },
+      {
+        arti: "Mari kita coba hitung.",
+        benar: "かぞえて みましょう。",
+        salah: ["かぞえて みりましょう。", "かぞえり みましょう。", "かぞえて みえましょう。"],
+      },
+      {
+        arti: "Ngomong-ngomong, bagaimana hasil ujiannya? ... Hmm, bagaimana ya.",
+        benar: "ところで、テストの せいせきは どうでしたか。……さあ、どうでしょうか。",
+        salah: ["ところで、テストの せいせきは どうでしたか。……さあ、どうでしょうでした。", "ところで、テストの せいせきは どうでしたか。……さあ、どうでしょうだか。", "ところで、テストの せいせきを どうでしたか。……さあ、どうでしょうか。"],
+      },
+    ],
+  },
 };
