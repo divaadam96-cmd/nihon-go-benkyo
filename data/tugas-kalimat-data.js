@@ -3332,4 +3332,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  41: {
+    susun: [
+      { arti: "Saya menerima oleh-oleh dari direktur.", potongan: ["わたし", "は", "しゃちょう", "に", "おみやげ", "を", "いただきました"] },
+      { arti: "Istri manajer memberi saya kue.", potongan: ["ぶちょう", "の", "おくさん", "が", "わたし", "に", "おかし", "を", "くださいました"] },
+      { arti: "Saya memberi makan anjing.", potongan: ["わたし", "は", "いぬ", "に", "えさ", "を", "やりました"] },
+      { arti: "Saya dibetulkan kesalahan surat oleh guru.", potongan: ["わたし", "は", "せんせい", "に", "てがみ", "の", "まちがい", "を", "なおして", "いただきました"] },
+      { arti: "Istri manajer mengajari saya upacara minum teh.", potongan: ["ぶちょう", "の", "おくさん", "が", "さどう", "を", "おしえて", "くださいました"] },
+      { arti: "Saya membacakan buku bergambar untuk cucu.", potongan: ["わたし", "は", "まご", "に", "えほん", "を", "よんで", "やりました"] },
+      { arti: "Bisakah (Anda) menitipkan barang ini sebentar?", potongan: ["ちょっと", "この", "にもつ", "を", "あずかって", "いただけません", "か"] },
+      { arti: "Guru memotretkan (foto kami).", potongan: ["せんせい", "が", "しゃしん", "を", "とって", "くださいました"] },
+      { arti: "Saya membelikan mainan untuk anak laki-laki saya.", potongan: ["わたし", "は", "むすこ", "に", "おもちゃ", "を", "かって", "やりました"] },
+      { arti: "Tolong beri makan kucingnya.", potongan: ["ねこ", "に", "えさ", "を", "やって", "ください"] },
+      { arti: "Dulu kala, ada seorang pemuda yang menolong kura-kura.", potongan: ["むかし", "かめ", "を", "たすけた", "ひと", "が", "いました"] },
+      { arti: "Bisakah kaos kaki ini ditukar?", potongan: ["この", "くつした", "を", "とりかえて", "いただけません", "か"] },
+    ],
+    pilih: [
+      {
+        arti: "Saya menerima oleh-oleh dari direktur.",
+        benar: "わたしは しゃちょうに おみやげを いただきました。",
+        salah: ["わたしは しゃちょうに おみやげを くださいました。", "わたしは しゃちょうに おみやげを やりました。", "わたしは しゃちょうを おみやげを いただきました。"],
+      },
+      {
+        arti: "Istri manajer memberi saya kue.",
+        benar: "ぶちょうの おくさんが わたしに おかしを くださいました。",
+        salah: ["ぶちょうの おくさんが わたしに おかしを いただきました。", "ぶちょうの おくさんが わたしに おかしを やりました。", "ぶちょうの おくさんを わたしに おかしを くださいました。"],
+      },
+      {
+        arti: "Saya memberi makan anjing.",
+        benar: "わたしは いぬに えさを やりました。",
+        salah: ["わたしは いぬに えさを くださいました。", "わたしは いぬに えさを いただきました。", "わたしは いぬを えさを やりました。"],
+      },
+      {
+        arti: "Saya dibetulkan kesalahan surat oleh guru.",
+        benar: "わたしは せんせいに てがみの まちがいを なおして いただきました。",
+        salah: ["わたしは せんせいに てがみの まちがいを なおして くださいました。", "わたしは せんせいに てがみの まちがいを なおして やりました。", "わたしは せんせいに てがみの まちがいを なおりて いただきました。"],
+      },
+      {
+        arti: "Istri manajer mengajari saya upacara minum teh.",
+        benar: "ぶちょうの おくさんが さどうを おしえて くださいました。",
+        salah: ["ぶちょうの おくさんが さどうを おしえて いただきました。", "ぶちょうの おくさんが さどうを おしえて やりました。", "ぶちょうの おくさんが さどうを おしえって くださいました。"],
+      },
+      {
+        arti: "Saya membacakan buku bergambar untuk cucu.",
+        benar: "わたしは まごに えほんを よんで やりました。",
+        salah: ["わたしは まごに えほんを よんで くださいました。", "わたしは まごに えほんを よんで いただきました。", "わたしは まごに えほんを よみて やりました。"],
+      },
+      {
+        arti: "Bisakah (Anda) menitipkan barang ini sebentar?",
+        benar: "ちょっと この にもつを あずかって いただけませんか。",
+        salah: ["ちょっと この にもつを あずかって いただきませんか。", "ちょっと この にもつを あずかって やりませんか。", "ちょっと この にもつを あずかりて いただけませんか。"],
+      },
+      {
+        arti: "Guru memotretkan (foto kami).",
+        benar: "せんせいが しゃしんを とって くださいました。",
+        salah: ["せんせいが しゃしんを とって いただきました。", "せんせいに しゃしんを とって くださいました。", "せんせいが しゃしんを とりて くださいました。"],
+      },
+      {
+        arti: "Tolong beri makan kucingnya.",
+        benar: "ねこに えさを やって ください。",
+        salah: ["ねこに えさを くださって ください。", "ねこを えさを やって ください。", "ねこに えさを やりて ください。"],
+      },
+      {
+        arti: "Kalau tidak keberatan, bolehkah (saya) meminjam payung?",
+        benar: "かさを かして いただけませんか。",
+        salah: ["かさを かりて いただけませんか。", "かさを かして くださいませんでしたか。", "かさを かして いただきませんか。"],
+      },
+      {
+        arti: "Mohon maaf. (sangat sopan)",
+        benar: "もうしわけ ありません。",
+        salah: ["もうしわけ ありました。", "もうしわけ いません。", "もうしわけ ございました。"],
+      },
+      {
+        arti: "Terima kasih banyak, sangat tertolong.",
+        benar: "どうも ありがとう ございました。たすかりました。",
+        salah: ["どうも ありがとう ございました。たすけました。", "どうも ありがとう ございました。たすかれました。", "どうも ありがとう ございました。たすかりませんでした。"],
+      },
+    ],
+  },
 };
