@@ -2552,4 +2552,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  31: {
+    susun: [
+      { arti: "(Saya) berniat mendirikan perusahaan sendiri di masa depan.", potongan: ["しょうらい", "じぶん", "の", "かいしゃ", "を", "つくろう", "と", "おもって", "います"] },
+      { arti: "Tahun depan (saya) berniat masuk universitas.", potongan: ["らいねん", "だいがく", "に", "にゅうがくしよう", "と", "おもって", "います"] },
+      { arti: "Walaupun pulang ke negara asal, (saya) bermaksud meneruskan belajar bahasa Jepang.", potongan: ["くに", "へ", "かえっても", "にほんご", "の", "べんきょう", "を", "つづける", "つもり", "です"] },
+      { arti: "Mulai besok (saya) bermaksud tidak merokok.", potongan: ["あした", "から", "たばこ", "を", "すわない", "つもり", "です"] },
+      { arti: "Dinas luar kotanya direncanakan kira-kira satu minggu.", potongan: ["しゅっちょう", "は", "いっしゅうかん", "ぐらい", "の", "よてい", "です"] },
+      { arti: "Akhir bulan Juli (saya) dijadwalkan dinas ke Jerman.", potongan: ["しちがつ", "の", "おわり", "に", "ドイツ", "へ", "しゅっちょうする", "よてい", "です"] },
+      { arti: "(Saya) belum menentukan.", potongan: ["まだ", "きめて", "いません"] },
+      { arti: "(Saya) belum menulis laporan.", potongan: ["まだ", "レポート", "を", "かいて", "いません"] },
+      { arti: "Capek, jadi mari istirahat sebentar di sini. (bentuk biasa)", potongan: ["つかれた", "から", "ここ", "で", "ちょっと", "やすもう"], alt: ["つかれたからちょっとここでやすもう"] },
+      { arti: "(Saya) berniat belajar ekonomi di pascasarjana.", potongan: ["だいがくいん", "で", "けいざいがく", "を", "べんきょうしよう", "と", "おもって", "います"] },
+      { arti: "Upacara pernikahan dimulai jam 2.", potongan: ["けっこんしき", "は", "にじ", "から", "はじまります"] },
+      { arti: "Liburan panjang ini (saya) berniat pergi ke pemandian air panas.", potongan: ["こんど", "の", "れんきゅう", "は", "おんせん", "へ", "いこう", "と", "おもって", "います"] },
+    ],
+    pilih: [
+      {
+        arti: "(Saya) berniat mendirikan perusahaan sendiri di masa depan.",
+        benar: "しょうらい じぶんの かいしゃを つくろうと おもって います。",
+        salah: ["しょうらい じぶんの かいしゃを つくりようと おもって います。", "しょうらい じぶんの かいしゃを つくるようと おもって います。", "しょうらい じぶんの かいしゃを つくろうを おもって います。"],
+      },
+      {
+        arti: "Tahun depan (saya) berniat masuk universitas.",
+        benar: "らいねん だいがくに にゅうがくしようと おもって います。",
+        salah: ["らいねん だいがくに にゅうがくすようと おもって います。", "らいねん だいがくに にゅうがくしろうと おもって います。", "らいねん だいがくを にゅうがくしようと おもって います。"],
+      },
+      {
+        arti: "Mari makan bersama. (bentuk biasa)",
+        benar: "いっしょに たべよう。",
+        salah: ["いっしょに たべろう。", "いっしょに たべおう。", "いっしょに たべるよう。"],
+      },
+      {
+        arti: "Besok datang lagi yuk. (bentuk biasa)",
+        benar: "あした また こよう。",
+        salah: ["あした また きよう。", "あした また くよう。", "あした また ころう。"],
+      },
+      {
+        arti: "Mari istirahat sebentar. (bentuk biasa)",
+        benar: "ちょっと やすもう。",
+        salah: ["ちょっと やすみよう。", "ちょっと やすむよう。", "ちょっと やすまう。"],
+      },
+      {
+        arti: "Walaupun pulang ke negara asal, (saya) bermaksud meneruskan belajar bahasa Jepang.",
+        benar: "くにへ かえっても、にほんごの べんきょうを つづける つもりです。",
+        salah: ["くにへ かえっても、にほんごの べんきょうを つづけた つもりです。", "くにへ かえっても、にほんごの べんきょうを つづけます つもりです。", "くにへ かえっても、にほんごの べんきょうを つづけるの つもりです。"],
+      },
+      {
+        arti: "Mulai besok (saya) bermaksud tidak merokok.",
+        benar: "あしたから たばこを すわない つもりです。",
+        salah: ["あしたから たばこを すいない つもりです。", "あしたから たばこを すわないの つもりです。", "あしたから たばこを すいません つもりです。"],
+      },
+      {
+        arti: "Dinas luar kotanya direncanakan kira-kira satu minggu.",
+        benar: "しゅっちょうは 1しゅうかんぐらいの よていです。",
+        salah: ["しゅっちょうは 1しゅうかんぐらい よていです。", "しゅっちょうは 1しゅうかんぐらいな よていです。", "しゅっちょうは 1しゅうかんぐらいを よていです。"],
+      },
+      {
+        arti: "Akhir bulan Juli (saya) dijadwalkan dinas ke Jerman.",
+        benar: "7がつの おわりに ドイツへ しゅっちょうする よていです。",
+        salah: ["7がつの おわりに ドイツへ しゅっちょうするの よていです。", "7がつの おわりに ドイツへ しゅっちょうします よていです。", "7がつの おわりに ドイツへ しゅっちょうしよう よていです。"],
+      },
+      {
+        arti: "Laporannya sudah ditulis? ... Belum, belum (saya) tulis.",
+        benar: "レポートは もう かきましたか。……いいえ、まだ かいて いません。",
+        salah: ["レポートは もう かきましたか。……いいえ、まだ かきませんでした。", "レポートは もう かきましたか。……いいえ、もう かいて いません。", "レポートは もう かきましたか。……いいえ、まだ かいて います。"],
+      },
+      {
+        arti: "Upacara pernikahan dimulai jam 2.",
+        benar: "けっこんしきは 2じから はじまります。",
+        salah: ["けっこんしきを 2じから はじまります。", "けっこんしきは 2じから はじめます。", "けっこんしきは 2じまで はじまります。"],
+      },
+      {
+        arti: "(Saya) ingin menghadiri pesta.",
+        benar: "パーティーに しゅっせきしたいです。",
+        salah: ["パーティーを しゅっせきしたいです。", "パーティーで しゅっせきしたいです。", "パーティーに しゅっせきしようです。"],
+      },
+    ],
+  },
 };

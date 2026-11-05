@@ -2066,7 +2066,7 @@ const babKosakataData = {
     ["\u3042\u3064\u307e\u308a\u307e\u3059", "Berkumpul"],
     ["\u3046\u3064\u304f\u3057\u3044", "Indah"],
     ["\u3057\u305c\u3093", "Alam"],
-    ["\u3059\u3070\u3089\u3057\u3055", "Kebaikan,kenijakan"],
+    ["\u3059\u3070\u3089\u3057\u3055", "Kehebatan, keindahan"],
     ["\u304d\u304c\u3064\u304d\u307e\u3059", "Menyadari"],
     ["\u305b\u3093\u3082\u3093", "Bidang keilmuan"],
     ["\u3044\u304c\u304f", "Kedokteran"],
