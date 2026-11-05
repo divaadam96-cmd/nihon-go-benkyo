@@ -2630,4 +2630,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  32: {
+    susun: [
+      { arti: "Sebaiknya berolahraga setiap hari.", potongan: ["まいにち", "うんどうした", "ほう", "が", "いい", "です"] },
+      { arti: "Waktu demam, sebaiknya tidak masuk ke bak mandi.", potongan: ["ねつ", "が", "ある", "とき", "は", "おふろ", "に", "はいらない", "ほう", "が", "いい", "です"] },
+      { arti: "Besok mungkin akan hujan.", potongan: ["あした", "は", "あめ", "が", "ふる", "でしょう"] },
+      { arti: "Malam ini bintang mungkin kelihatan.", potongan: ["こんや", "は", "ほし", "が", "みえる", "でしょう"] },
+      { arti: "Mungkin (saya) tidak sempat tepat pada waktu janji.", potongan: ["やくそく", "の", "じかん", "に", "まにあわない", "かも", "しれません"] },
+      { arti: "Mungkin (saya) masuk angin.", potongan: ["かぜ", "を", "ひいた", "かも", "しれません"] },
+      { arti: "Sebaiknya jangan memaksakan diri.", potongan: ["むり", "を", "しない", "ほう", "が", "いい", "です", "よ"] },
+      { arti: "Barangkali (itu) penyakit lambung.", potongan: ["もしかしたら", "い", "の", "びょうき", "かも", "しれません"] },
+      { arti: "Sebaiknya minuman didinginkan di kulkas.", potongan: ["のみもの", "は", "れいぞうこ", "で", "ひやした", "ほう", "が", "いい", "です"] },
+      { arti: "Besok sore mungkin akan cerah.", potongan: ["あした", "の", "ゆうがた", "は", "はれる", "でしょう"] },
+      { arti: "Mesin mobilnya mungkin rusak.", potongan: ["くるま", "の", "エンジン", "が", "こわれた", "かも", "しれません"] },
+      { arti: "Tim itu mungkin akan menang.", potongan: ["あの", "チーム", "は", "かつ", "でしょう"] },
+    ],
+    pilih: [
+      {
+        arti: "Sebaiknya berolahraga setiap hari.",
+        benar: "まいにち うんどうした ほうが いいです。",
+        salah: ["まいにち うんどうしたの ほうが いいです。", "まいにち うんどうして ほうが いいです。", "まいにち うんどうします ほうが いいです。"],
+      },
+      {
+        arti: "Waktu demam, sebaiknya tidak masuk ke bak mandi.",
+        benar: "ねつが ある ときは、おふろに はいらない ほうが いいです。",
+        salah: ["ねつが ある ときは、おふろに はいらなかった ほうが いいです。", "ねつが ある ときは、おふろに はいりない ほうが いいです。", "ねつが ある ときは、おふろに はいった ほうが いいです。"],
+      },
+      {
+        arti: "Besok mungkin akan hujan.",
+        benar: "あしたは あめが ふるでしょう。",
+        salah: ["あしたは あめが ふりでしょう。", "あしたは あめが ふるだでしょう。", "あしたは あめが ふったでしょう。"],
+      },
+      {
+        arti: "Mungkin (saya) masuk angin.",
+        benar: "かぜを ひいたかも しれません。",
+        salah: ["かぜを ひいただかも しれません。", "かぜを ひきたかも しれません。", "かぜが ひいたかも しれません。"],
+      },
+      {
+        arti: "Barangkali (itu) penyakit lambung.",
+        benar: "もしかしたら いの びょうきかも しれません。",
+        salah: ["もしかしたら いの びょうきだかも しれません。", "もしかしたら いの びょうきなかも しれません。", "もしかしたら いの びょうきのかも しれません。"],
+      },
+      {
+        arti: "Besok mungkin dingin.",
+        benar: "あしたは さむいでしょう。",
+        salah: ["あしたは さむいだでしょう。", "あしたは さむくでしょう。", "あしたは さむかったでしょう。"],
+      },
+      {
+        arti: "Besok mungkin akan tenang (tidak berangin).",
+        benar: "あしたは しずかでしょう。",
+        salah: ["あしたは しずかだでしょう。", "あしたは しずかなでしょう。", "あしたは しずかいでしょう。"],
+      },
+      {
+        arti: "Mungkin (saya) tidak sempat tepat pada waktu janji.",
+        benar: "やくそくの じかんに まにあわないかも しれません。",
+        salah: ["やくそくの じかんに まにあいないかも しれません。", "やくそくの じかんを まにあわないかも しれません。", "やくそくの じかんに まにあわないでしょうかも しれません。"],
+      },
+      {
+        arti: "Sebaiknya jangan memaksakan diri.",
+        benar: "むりを しない ほうが いいですよ。",
+        salah: ["むりを しなかった ほうが いいですよ。", "むりを しないで ほうが いいですよ。", "むりを する ほうが いいですよ。"],
+      },
+      {
+        arti: "Kenapa? ... Sakit lambung. ... Kasihan ya.",
+        benar: "どうしたんですか。……いが いたいんです。……それは いけませんね。",
+        salah: ["どうしたんですか。……いが いたいんです。……それは いいですね。", "どうしたんですか。……いを いたいんです。……それは いけませんね。", "どうしたんですか。……いが いたいなんです。……それは いけませんね。"],
+      },
+      {
+        arti: "Mesin mobilnya mungkin rusak.",
+        benar: "くるまの エンジンが こわれたかも しれません。",
+        salah: ["くるまの エンジンが こわしたかも しれません。", "くるまの エンジンを こわれたかも しれません。", "くるまの エンジンが こわれりかも しれません。"],
+      },
+      {
+        arti: "Hujannya sudah berhenti.",
+        benar: "あめが やみました。",
+        salah: ["あめを やみました。", "あめが やめました。", "あめが やすみました。"],
+      },
+    ],
+  },
 };

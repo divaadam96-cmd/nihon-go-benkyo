@@ -2162,7 +2162,7 @@ const babKosakataData = {
     ["\u304a\u305d\u304f", "Malam sekali/telat"],
     ["\u3053\u3093\u306a", "Seperti ini"],
     ["\u305d\u3093\u306a", "Seperti itu"],
-    ["\u3042\u3093\u306a", "Seperti itu"],
+    ["\u3042\u3093\u306a", "Seperti yang di sana"],
     ["\u3082\u3057\u304b\u3057\u305f\u3089", "Kemungkinannya"],
     ["\u305d\u308c\u306f\u3044\u3051\u307e\u305b\u3093\u306d", "Kasihan ya."],
     ["\u3052\u3093\u304d", "Sehat"],
