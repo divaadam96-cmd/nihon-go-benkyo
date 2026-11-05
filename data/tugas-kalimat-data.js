@@ -2474,4 +2474,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  30: {
+    susun: [
+      { arti: "Di pos polisi tertempel peta kota.", potongan: ["こうばん", "に", "まち", "の", "ちず", "が", "はって", "あります"] },
+      { arti: "Di kalender tertulis rencana.", potongan: ["カレンダー", "に", "よてい", "が", "かいて", "あります"] },
+      { arti: "Di dinding tergantung lukisan.", potongan: ["かべ", "に", "え", "が", "かけて", "あります"] },
+      { arti: "Di atas meja (sudah) dihias bunga.", potongan: ["つくえ", "の", "うえ", "に", "はな", "が", "かざって", "あります"] },
+      { arti: "Di halaman (sudah) ditanam pohon.", potongan: ["にわ", "に", "き", "が", "うえて", "あります"] },
+      { arti: "Sebelum bepergian, (saya) membeli tiket terlebih dahulu.", potongan: ["りょこう", "の", "まえ", "に", "きっぷ", "を", "かって", "おきます"] },
+      { arti: "Sebelum pelajaran, (saya) mempersiapkan pelajaran terlebih dahulu.", potongan: ["じゅぎょう", "の", "まえ", "に", "よしゅうして", "おきます"] },
+      { arti: "Setelah memakai gunting, tolong kembalikan ke tempat semula.", potongan: ["はさみ", "を", "つかったら", "もとのところ", "に", "もどして", "おいて", "ください"] },
+      { arti: "Boleh saya bereskan kursinya? ... Tolong biarkan saja.", potongan: ["そのまま", "に", "して", "おいて", "ください"] },
+      { arti: "Masih hujan.", potongan: ["まだ", "あめ", "が", "ふって", "います"] },
+      { arti: "Sampai rapat, tolong susun materinya terlebih dahulu.", potongan: ["かいぎ", "までに", "しりょう", "を", "まとめて", "おいて", "ください"] },
+      { arti: "Di sudut kamar ada tempat sampah.", potongan: ["へや", "の", "すみ", "に", "ごみばこ", "が", "おいて", "あります"] },
+    ],
+    pilih: [
+      {
+        arti: "Di pos polisi tertempel peta kota.",
+        benar: "こうばんに まちの ちずが はって あります。",
+        salah: ["こうばんに まちの ちずを はって あります。", "こうばんに まちの ちずが はって います。", "こうばんに まちの ちずが はりて あります。"],
+      },
+      {
+        arti: "Di kalender tertulis rencana.",
+        benar: "カレンダーに よていが かいて あります。",
+        salah: ["カレンダーに よていが かいて います。", "カレンダーに よていを かいて あります。", "カレンダーで よていが かいて あります。"],
+      },
+      {
+        arti: "Jendelanya (sengaja) dibuka.",
+        benar: "まどが あけて あります。",
+        salah: ["まどが あけて います。", "まどを あけて あります。", "まどが あいて あります。"],
+      },
+      {
+        arti: "Di dinding tergantung lukisan.",
+        benar: "かべに えが かけて あります。",
+        salah: ["かべに えが かかって あります。", "かべに えを かけて あります。", "かべに えが かけて います。"],
+      },
+      {
+        arti: "Sebelum bepergian, (saya) membeli tiket terlebih dahulu.",
+        benar: "りょこうの まえに きっぷを かって おきます。",
+        salah: ["りょこうの まえに きっぷを かって あります。", "りょこうの まえに きっぷを かいて おきます。", "りょこうの まえに きっぷが かって おきます。"],
+      },
+      {
+        arti: "Sebelum pelajaran, (saya) mempersiapkan pelajaran terlebih dahulu.",
+        benar: "じゅぎょうの まえに よしゅうして おきます。",
+        salah: ["じゅぎょうの まえに よしゅうして あります。", "じゅぎょうの あとで よしゅうして おきます。", "じゅぎょうの まえに よしゅうしって おきます。"],
+      },
+      {
+        arti: "Setelah memakai gunting, tolong kembalikan ke tempat semula.",
+        benar: "はさみを つかったら、もとの ところに もどして おいて ください。",
+        salah: ["はさみを つかったら、もとの ところに もどして あって ください。", "はさみを つかったら、もとの ところを もどして おいて ください。", "はさみを つかったら、もとの ところに もどって おいて ください。"],
+      },
+      {
+        arti: "Boleh saya bereskan kursinya? ... Tolong biarkan saja.",
+        benar: "いすを かたづけましょうか。……そのままに して おいて ください。",
+        salah: ["いすを かたづけましょうか。……そのままに して あって ください。", "いすを かたづけましょうか。……そのままを して おいて ください。", "いすを かたづけましょうか。……そのままに しって おいて ください。"],
+      },
+      {
+        arti: "Masih hujan.",
+        benar: "まだ あめが ふって います。",
+        salah: ["もう あめが ふって います。", "まだ あめが ふって あります。", "まだ あめを ふって います。"],
+      },
+      {
+        arti: "Sampai rapat, tolong susun materinya terlebih dahulu.",
+        benar: "かいぎまでに しりょうを まとめて おいて ください。",
+        salah: ["かいぎまで しりょうを まとめて おいて ください。", "かいぎまでに しりょうを まとめて あって ください。", "かいぎまでに しりょうが まとめて おいて ください。"],
+      },
+      {
+        arti: "Terima kasih atas jerih payah Anda. (atasan kepada bawahan)",
+        benar: "ごくろうさまです。",
+        salah: ["ごちそうさまでした。", "おせわに なりました。", "おかげさまで。"],
+      },
+      {
+        arti: "Bunga sudah dihias di dalam vas.",
+        benar: "かびんに はなが かざって あります。",
+        salah: ["かびんに はなが かざって います。", "かびんに はなを かざって あります。", "かびんに はなが かざりて あります。"],
+      },
+    ],
+  },
 };
