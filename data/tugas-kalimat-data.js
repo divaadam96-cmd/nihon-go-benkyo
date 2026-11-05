@@ -2942,4 +2942,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  36: {
+    susun: [
+      { arti: "Supaya bisa berenang dengan cepat, (saya) berlatih setiap hari.", potongan: ["はやく", "およげる", "ように", "まいにち", "れんしゅうして", "います"] },
+      { arti: "Supaya tidak lupa, tolong dicatat.", potongan: ["わすれない", "ように", "メモして", "ください"] },
+      { arti: "Kalau berlatih setiap hari, (Anda) akan menjadi bisa berenang.", potongan: ["まいにち", "れんしゅうすれば", "およげる", "ように", "なります"] },
+      { arti: "Akhirnya (saya) menjadi bisa naik sepeda.", potongan: ["やっと", "じてんしゃ", "に", "のれる", "ように", "なりました"] },
+      { arti: "(Saya) mengusahakan berolahraga setiap hari.", potongan: ["まいにち", "うんどうする", "ように", "して", "います"] },
+      { arti: "Tolong usahakan jangan sampai terlambat.", potongan: ["ぜったいに", "おくれない", "ように", "して", "ください"] },
+      { arti: "(Saya) berusaha makan sayur sebanyak mungkin.", potongan: ["できるだけ", "やさい", "を", "たべる", "ように", "して", "います"] },
+      { arti: "Supaya tidak masuk angin, (saya) memakai sweter.", potongan: ["かぜ", "を", "ひかない", "ように", "セーター", "を", "きて", "います"] },
+      { arti: "Supaya anak-anak bisa membaca, (saya) menulis dengan hiragana.", potongan: ["こども", "が", "よめる", "ように", "ひらがな", "で", "かきます"] },
+      { arti: "Akhir-akhir ini (saya) sudah terbiasa dengan kehidupan di Jepang.", potongan: ["このごろ", "にほん", "の", "せいかつ", "に", "なれました"] },
+      { arti: "Barangnya akhirnya sampai.", potongan: ["にもつ", "が", "やっと", "とどきました"] },
+      { arti: "Setiap bulan (saya) menabung sedikit demi sedikit.", potongan: ["まいつき", "すこし", "ずつ", "ちょきんして", "います"] },
+    ],
+    pilih: [
+      {
+        arti: "Supaya bisa berenang dengan cepat, (saya) berlatih setiap hari.",
+        benar: "はやく およげる ように、まいにち れんしゅうして います。",
+        salah: ["はやく およげれる ように、まいにち れんしゅうして います。", "はやく およげて ように、まいにち れんしゅうして います。", "はやく およげるの ように、まいにち れんしゅうして います。"],
+      },
+      {
+        arti: "Supaya tidak lupa, tolong dicatat.",
+        benar: "わすれない ように、メモして ください。",
+        salah: ["わすれなく ように、メモして ください。", "わすれないで ように、メモして ください。", "わすれる ように、メモして ください。"],
+      },
+      {
+        arti: "Akhirnya (saya) menjadi bisa naik sepeda.",
+        benar: "やっと じてんしゃに のれる ように なりました。",
+        salah: ["やっと じてんしゃを のれる ように なりました。", "やっと じてんしゃに のれる ように しました。", "やっと じてんしゃに のりれる ように なりました。"],
+      },
+      {
+        arti: "(Saya) mengusahakan berolahraga setiap hari.",
+        benar: "まいにち うんどうする ように して います。",
+        salah: ["まいにち うんどうした ように して います。", "まいにち うんどうする ように なって います。", "まいにち うんどうするの ように して います。"],
+      },
+      {
+        arti: "Tolong usahakan jangan sampai terlambat.",
+        benar: "ぜったいに おくれない ように して ください。",
+        salah: ["ぜったいに おくれない ように なって ください。", "ぜったいに おくれなくて ように して ください。", "ぜったいに おくれる ように して ください。"],
+      },
+      {
+        arti: "Supaya tidak masuk angin, (saya) memakai sweter.",
+        benar: "かぜを ひかない ように、セーターを きて います。",
+        salah: ["かぜを ひきない ように、セーターを きて います。", "かぜを ひかないで ように、セーターを きて います。", "かぜを ひかない ように、セーターを はいて います。"],
+      },
+      {
+        arti: "Supaya anak-anak bisa membaca, (saya) menulis dengan hiragana.",
+        benar: "こどもが よめる ように、ひらがなで かきます。",
+        salah: ["こどもが よまれる ように、ひらがなで かきます。", "こどもが よめれる ように、ひらがなで かきます。", "こどもが よめる ように、ひらがなを かきます。"],
+      },
+      {
+        arti: "(Saya) sudah bisa berbicara bahasa Jepang.",
+        benar: "にほんごが はなせる ように なりました。",
+        salah: ["にほんごが はなされる ように なりました。", "にほんごが はなせる ように しました。", "にほんごが はなせる ように なります でした。"],
+      },
+      {
+        arti: "Akhir-akhir ini (saya) sudah terbiasa dengan kehidupan di Jepang.",
+        benar: "このごろ にほんの せいかつに なれました。",
+        salah: ["このごろ にほんの せいかつを なれました。", "このごろ にほんの せいかつで なれました。", "このごろ にほんの せいかつに なりました。"],
+      },
+      {
+        arti: "Setiap bulan (saya) menabung sedikit demi sedikit.",
+        benar: "まいつき すこしずつ ちょきんして います。",
+        salah: ["まいつき すこしだけ ちょきんして います。", "まいつき すこしずつ ちょきんしって います。", "まいつき すこしも ちょきんして います。"],
+      },
+      {
+        arti: "Sudah lewat jam 7. ... Ayo cepat.",
+        benar: "もう 7じを すぎました。……いそぎましょう。",
+        salah: ["もう 7じに すぎました。……いそぎましょう。", "もう 7じで すぎました。……いそぎましょう。", "まだ 7じを すぎました。……いそぎましょう。"],
+      },
+      {
+        arti: "Pak Tanaka ikut pertandingan.",
+        benar: "たなかさんは しあいに でます。",
+        salah: ["たなかさんは しあいを でます。", "たなかさんは しあいで でます。", "たなかさんは しあいに だします。"],
+      },
+    ],
+  },
 };

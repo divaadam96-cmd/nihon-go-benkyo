@@ -2565,7 +2565,7 @@ const babKosakataData = {
       "Sering minum-minuman keras",
     ],
     ["\u3048\u3044\u3088\u3046\u305d", "Nutrisi"],
-    ["\u3075\u304f\u3080", "mengandung"],
+    ["\u3075\u304f\u3080", "Mengandung"],
     ["\u305f\u3093\u3059\u3044\u304b\u3076\u3064", "Karbohidrat"],
     ["\u3044\u3082", "Umbi-umbian"],
     ["\u3057\u307c\u3046", "Lemak"],
@@ -7087,7 +7087,7 @@ const babKanjiData = {
     ["\u5b87\u5b99", "\u3046\u3061\u3085\u3046", "Luar angkasa"],
     ["\u5730\u7403", "\u3061\u304d\u3085\u3046", "Bumi"],
     ["\u6804\u990a\u7d20", "\u3048\u3044\u3088\u3046\u305d", "Nutrisi"],
-    ["\u542b\u3080", "\u3075\u304f\u3080", "mengandung"],
+    ["\u542b\u3080", "\u3075\u304f\u3080", "Mengandung"],
     [
       "\u70ad\u6c34\u5316\u7269",
       "\u305f\u3093\u3059\u3044\u304b\u3076\u3064",
