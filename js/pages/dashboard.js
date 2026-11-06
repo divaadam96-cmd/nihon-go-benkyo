@@ -120,7 +120,11 @@ function initPage() {
       if (label && !label.dataset.navBound) {
         label.dataset.navBound = "1";
         label.style.cursor = "pointer";
-        label.onclick = () => open(row.dataset.goto);
+        label.onclick = () => {
+          // Ada kartu Hafalan jatuh tempo -> langsung ke mode Ulangan.
+          if (row.dataset.task === "hafalan" && srsDueCount("hafalan:") > 0) location.href = "pages/hafalan.html?ulangan=1";
+          else open(row.dataset.goto);
+        };
       }
     });
 

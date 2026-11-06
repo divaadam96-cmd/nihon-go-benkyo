@@ -34,6 +34,10 @@ function initPage() {
   };
 
   function nextCard(master) {
+    if (category === ULANGAN) {
+      nextUlangan(master);
+      return;
+    }
     const word = deck[category]?.[index]?.[0];
     if (word) srsReview(`hafalan:${category}:${word}`, master ? "good" : "again");
     if (master) {
@@ -65,6 +69,45 @@ function initPage() {
       item[2],
       item[1],
     ]);
+  }
+
+  /* Mode "Ulangan": semua kartu Hafalan (lintas bab) yang jatuh tempo hari
+     ini - dari kartu yang ditandai "Belum ingat" di sini maupun kata/kanji
+     yang salah dijawab di Tugas & target (js/tugas-bab.js). Kartu yang
+     dijawab "Sudah paham" keluar dari daftar; "Belum ingat" pindah ke
+     belakang supaya diulang lagi di sesi ini. */
+  const ULANGAN = "ulangan";
+  function buildUlangan() {
+    const store = srsLoad();
+    const today = srsToday();
+    const cards = [];
+    Object.keys(store).forEach((id) => {
+      const item = store[id];
+      if (!id.startsWith("hafalan:") || !item.reviews || (item.due && item.due > today)) return;
+      const match = /^hafalan:(bab(\d+)-(kosakata|kanji)):(.+)$/.exec(id);
+      if (!match) return;
+      const card = (deck[match[1]] || []).find((c) => c[0] === match[4]);
+      if (card) cards.push([card[0], card[1], card[2], id, "Bab " + match[2] + " · " + (match[3] === "kanji" ? "Kanji" : "Kosakata")]);
+    });
+    // Paling lama terlambat lebih dulu.
+    cards.sort((a, b) => String(store[a[3]].due || "").localeCompare(String(store[b[3]].due || "")));
+    deck[ULANGAN] = cards;
+  }
+  function nextUlangan(master) {
+    const list = deck[ULANGAN];
+    const card = list[index];
+    if (card) {
+      srsReview(card[3], master ? "good" : "again");
+      list.splice(index, 1);
+      if (master) {
+        state.mastered++;
+        save();
+        syncShell();
+      } else list.push(card);
+    }
+    if (index >= list.length) index = 0;
+    renderCard();
+    updateMaster();
   }
 
   const memorizationView = document.getElementById("memorization");
@@ -240,19 +283,28 @@ function initPage() {
   filterBox2.innerHTML =
     '<span class="study-section-label">Hafalan per Bab (Minna no Nihongo)</span><div class="bab-filter-row"><select id="babSelect" class="bab-select" aria-label="Pilih Bab">' +
     babOptions +
-    '</select><button class="filter active" data-mode="kosakata">Kosakata</button><button class="filter" data-mode="kanji">Kanji</button></div><p class="bab-total-info" id="babTotalInfo"></p>';
+    '</select><button class="filter active" data-mode="kosakata">Kosakata</button><button class="filter" data-mode="kanji">Kanji</button><button class="filter filter-ulangan" data-mode="ulangan">Ulangan <span class="ulangan-count"></span></button></div><p class="bab-total-info" id="babTotalInfo"></p>';
   const babSelectEl = filterBox2.querySelector("#babSelect");
   const babTotalInfoEl = filterBox2.querySelector("#babTotalInfo");
   const savedBab = sessionStorage.getItem("hafalanBab");
   if (savedBab && babSelectEl.querySelector(`option[value="${savedBab}"]`))
     babSelectEl.value = savedBab;
-  let babMode = sessionStorage.getItem("hafalanBabMode") || "kosakata";
+  const ulanganDariTugas = new URLSearchParams(location.search).has("ulangan");
+  let babMode = ulanganDariTugas ? "ulangan" : sessionStorage.getItem("hafalanBabMode") || "kosakata";
   filterBox2
     .querySelectorAll("[data-mode]")
     .forEach((btn) => btn.classList.toggle("active", btn.dataset.mode === babMode));
 
+  const ulanganCountEl = filterBox2.querySelector(".ulangan-count");
+  function updateUlanganCount() {
+    const n = srsDueCount("hafalan:");
+    ulanganCountEl.textContent = n ? "(" + n + ")" : "";
+  }
   function applyBabCategory() {
-    category = "bab" + babSelectEl.value + "-" + babMode;
+    const ulangan = babMode === ULANGAN;
+    babSelectEl.disabled = ulangan;
+    if (ulangan) buildUlangan();
+    category = ulangan ? ULANGAN : "bab" + babSelectEl.value + "-" + babMode;
     sessionStorage.setItem("hafalanBab", babSelectEl.value);
     sessionStorage.setItem("hafalanBabMode", babMode);
     sessionStorage.setItem("hafalanCategory", category);
@@ -260,7 +312,10 @@ function initPage() {
     state.mastered = 0;
     renderCard();
     updateMaster();
-    if (babTotalInfoEl) {
+    if (babTotalInfoEl && ulangan) {
+      babTotalInfoEl.textContent =
+        "Ulangan berisi kartu dari semua bab yang jadwal ulangnya hari ini, termasuk kata dan kanji yang salah di Tugas & target. Kartu yang sudah diingat muncul lagi beberapa hari kemudian, makin lama makin jarang.";
+    } else if (babTotalInfoEl) {
       const n = babSelectEl.value;
       const kCount = (babKosakataData[n] || []).length;
       const jCount = (babKanjiData[n] || []).length;
@@ -288,13 +343,17 @@ function initPage() {
   );
 
   renderCard = () => {
+    updateUlanganCount();
     const list = deck[category] || [];
+    const ulangan = category === ULANGAN;
     const modeLabel = babMode === "kanji" ? "Kanji" : "Kosakata";
-    const label = "Bab " + babSelectEl.value + " · " + modeLabel;
+    const label = ulangan ? "Ulangan" : "Bab " + babSelectEl.value + " · " + modeLabel;
+    document.getElementById("again").disabled = document.getElementById("known").disabled = !list.length;
     if (!list.length) {
-      document.getElementById("front").textContent = "—";
-      document.getElementById("back").textContent =
-        "Belum ada data kanji untuk bab ini.";
+      document.getElementById("front").textContent = ulangan ? "🎉" : "—";
+      document.getElementById("back").textContent = ulangan
+        ? "Tidak ada kartu yang perlu diulang hari ini."
+        : "Belum ada data kanji untuk bab ini.";
       document.getElementById("reading").textContent = "";
       document.getElementById("cardCount").textContent = "0 kartu · " + label;
       flash.classList.remove("flipped");
@@ -304,13 +363,15 @@ function initPage() {
     document.getElementById("front").textContent = c[0];
     document.getElementById("back").textContent = c[1];
     document.getElementById("reading").textContent = c[2] || "";
-    document.getElementById("cardCount").textContent =
-      "Kartu " + (index + 1) + " dari " + list.length + " · " + label;
+    document.getElementById("cardCount").textContent = ulangan
+      ? "Sisa " + list.length + " kartu · " + c[4]
+      : "Kartu " + (index + 1) + " dari " + list.length + " · " + label;
     flash.classList.remove("flipped");
   };
   updateMaster = () => {
     const list = deck[category] || [];
-    const total = list.length || 1;
+    // Di Ulangan kartu yang sudah diingat keluar dari daftar.
+    const total = (category === ULANGAN ? list.length + state.mastered : list.length) || 1;
     const p = Math.min(100, Math.round((state.mastered / total) * 100));
     document.getElementById("mastered").textContent = state.mastered + " kata";
     document.getElementById("masterPct").textContent = p + "%";
@@ -354,6 +415,6 @@ function initPage() {
     };
 
   applyBabCategory();
-  showHafalanPanel(sessionStorage.getItem("hafalanPanel") || null);
+  showHafalanPanel(ulanganDariTugas ? "flash" : sessionStorage.getItem("hafalanPanel") || null);
 }
 window.initPage = initPage;

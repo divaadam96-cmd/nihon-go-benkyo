@@ -29,6 +29,10 @@
 @media(max-width:480px){.kana-board-main{width:150px;height:150px}.kana-board-small{width:84px;height:84px}}
 .bab-filter-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:2px}
 .bab-select{border:1px solid #ded9d0;background:#fffdf9;color:#3a4252;border-radius:20px;padding:8px 13px;font:600 12px "DM Sans";cursor:pointer}
+.bab-select:disabled{opacity:.45;cursor:default}
+.filter-ulangan{border-color:#c9a45c;color:#7a5a1c}
+.filter-ulangan.active{background:#7a5a1c;border-color:#7a5a1c;color:#fff}
+.flash-controls button:disabled{opacity:.45;cursor:default}
 .bab-note{color:var(--muted);font-size:11px;margin:8px 0 10px}
 .bab-total-info{color:#7a6a3f;background:#f8f2e3;border:1px solid #e7d9b8;border-radius:7px;padding:8px 11px;font-size:11px;line-height:1.5;margin:2px 0 16px}
 .hafalan-hidden{display:none!important}
