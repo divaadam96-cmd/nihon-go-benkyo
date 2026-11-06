@@ -170,6 +170,8 @@ function initPage() {
         langkah.push({ judul: `Pelajaran ${l.bab}: baca & pahami materi`, ket: "Pelajari polanya, lalu tekan \"Sudah paham\" untuk membuka tugas.", href: materi });
       else if (l.jenis === "tugas")
         langkah.push({ judul: `Pelajaran ${l.bab}: ${l.judul}`, ket: `${l.dikerjakan} dari ${l.totalTugas} tugas sudah dikerjakan.`, href: `${materi}&tahap=tugas&tugas=${l.target}` });
+      else if (l.jenis === "ujian")
+        langkah.push({ judul: l.judul, ket: l.skor === null ? `Semua tugas Pelajaran ${l.bab} selesai. Ujian campuran 5 pelajaran ini membuka pelajaran berikutnya.` : `Skor terbaik ${l.skor}, perlu minimal ${TugasBab.KKM} untuk lulus.`, href: `${materi}&tahap=tugas&tugas=${l.target}` });
       else if (l.jenis === "ulang")
         langkah.push({ judul: `Pelajaran ${l.bab}: ulangi ${l.judul}`, ket: `Rata-rata tugas ${l.rataRata}, perlu minimal ${TugasBab.KKM}. Skor terbaik tugas ini ${l.skor}.`, href: `${materi}&tahap=tugas&tugas=${l.target}` });
       else

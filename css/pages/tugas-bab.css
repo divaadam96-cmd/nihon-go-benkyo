@@ -548,3 +548,17 @@
     font-size: 26px;
   }
 }
+
+/* Ujian ulang tiap 5 bab */
+.tugas-ujian .tugas-card {
+  border-color: #c9a45c;
+}
+.tugas-quiz-bab {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: #f1e6cc;
+  color: #7a5a1c;
+  font-weight: 800;
+}
