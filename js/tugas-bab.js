@@ -63,7 +63,7 @@
     { key: "kalimat", judul: "Tugas 3 · Menyusun kalimat" },
   ];
 
-  const babDataUrl = new URL("../data/bab-data.js", document.currentScript.src).href;
+  const dataBaseUrl = new URL("../data/", document.currentScript.src).href;
   let rows = {}; // "bab:target" -> { skor_terbaik, skor_terakhir, percobaan, lulus, pending? }
   let serverOk = null; // null = belum dicoba, false = gagal (pakai cache)
   const listeners = [];
@@ -302,21 +302,31 @@
   }
 
   // === Bahan soal ===
-  let babDataPromise = null;
-  function ensureBabData() {
-    if (typeof babKosakataData !== "undefined" && typeof babKanjiData !== "undefined") return Promise.resolve();
-    if (babDataPromise) return babDataPromise;
-    babDataPromise = new Promise((resolve, reject) => {
+  /* Data soal (~1 MB) baru dimuat saat panel Tugas dibuka - halaman Materi
+     dan Beranda tidak perlu mengunduh & memproses semuanya di awal. Tiap
+     berkas cukup dicek lewat salah satu konstanta globalnya. */
+  const DATA_SOAL = [
+    ["bab-data.js", () => typeof babKosakataData !== "undefined" && typeof babKanjiData !== "undefined"],
+    ["tugas-kalimat-data.js", () => typeof tugasKalimatData !== "undefined"],
+    ["tugas-kategori-data.js", () => typeof tugasKategoriKata !== "undefined"],
+    ["kanji-mirip-data.js", () => typeof kanjiMiripData !== "undefined"],
+  ];
+  const muatData = {};
+  function muatSkrip(nama) {
+    return (muatData[nama] ||= new Promise((resolve, reject) => {
       const script = document.createElement("script");
-      script.src = babDataUrl;
+      script.src = new URL(nama, dataBaseUrl).href;
       script.onload = () => resolve();
       script.onerror = () => {
-        babDataPromise = null;
-        reject(new Error("Gagal memuat data kosakata."));
+        delete muatData[nama];
+        script.remove();
+        reject(new Error("Gagal memuat data soal."));
       };
       document.head.appendChild(script);
-    });
-    return babDataPromise;
+    }));
+  }
+  function ensureBabData() {
+    return Promise.all(DATA_SOAL.filter(([, ada]) => !ada()).map(([nama]) => muatSkrip(nama)));
   }
   // Dibentuk sekali per bab lalu disimpan (dipindai berulang saat memilih pengecoh).
   const cacheItems = { kotoba: {}, kanji: {} };
