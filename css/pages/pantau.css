@@ -1325,3 +1325,95 @@ body.monitor-modal-open {
     transition: none;
   }
 }
+
+/* Tugas & target per pelajaran */
+.monitor-bab-grid {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 12px;
+}
+.monitor-bab-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 2px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #faf8f3;
+  color: var(--navy);
+  font: inherit;
+  cursor: pointer;
+}
+.monitor-bab-cell b {
+  font-size: 13px;
+}
+.monitor-bab-cell small {
+  color: var(--muted);
+  font-size: 10px;
+}
+.monitor-bab-cell.level-high {
+  background: #d8ebe3;
+}
+.monitor-bab-cell.level-mid {
+  background: #f8edd2;
+}
+.monitor-bab-cell.level-low {
+  background: #fbe3dc;
+}
+.monitor-bab-cell.active {
+  outline: 2px solid var(--navy);
+}
+.monitor-bab-detail h5 {
+  margin: 16px 0 6px;
+  color: var(--navy);
+  font-size: 13px;
+}
+.monitor-bab-table-wrap {
+  overflow-x: auto;
+}
+.monitor-bab-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.monitor-bab-table th,
+.monitor-bab-table td {
+  padding: 5px 6px;
+  border-bottom: 1px solid #eeeae3;
+  text-align: center;
+  white-space: nowrap;
+}
+.monitor-bab-table tr > th:first-child {
+  text-align: left;
+}
+.monitor-bab-table td.level-high {
+  color: #205c4c;
+}
+.monitor-bab-table td.level-mid {
+  color: #8a6418;
+}
+.monitor-bab-table td.level-low {
+  color: #9b3d2a;
+  font-weight: 700;
+}
+.monitor-bab-table td.kosong {
+  color: var(--muted);
+}
+.monitor-bab-salah {
+  margin: 6px 0 0;
+  padding-left: 20px;
+  font-size: 12px;
+}
+.monitor-bab-salah li {
+  padding: 3px 0;
+}
+.monitor-bab-salah small {
+  display: block;
+  color: var(--muted);
+}
+@media (max-width: 640px) {
+  .monitor-bab-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}

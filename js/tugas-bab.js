@@ -288,6 +288,14 @@
     notify();
     return { skor, saved };
   }
+  /* Soal yang salah dikirim untuk Pantau Siswa (supabase/add-pantau-bab.sql).
+     Sekadar statistik: gagal kirim (offline, SQL belum dijalankan) diabaikan. */
+  function kirimKesalahan(items) {
+    if (!items.length || !window.supabaseClient || !uid() || isStaff()) return;
+    window.supabaseClient
+      .rpc("catat_kesalahan", { p_items: items.slice(0, 100) })
+      .then(({ error }) => error && console.warn("catat_kesalahan gagal:", error.message), () => {});
+  }
   function recordMateri(bab) {
     if (isPassed(bab, "materi")) return Promise.resolve({ skor: 100, saved: true });
     return record(bab, "materi", 1, 1);
@@ -692,10 +700,10 @@
     return true;
   }
   function kotobaQuestion(bab, target, item) {
-    return Object.assign(kotobaSoal(bab, target, item), { jenis: target });
+    return Object.assign(kotobaSoal(bab, target, item), { jenis: target, kunci: item.jp, asal: bab });
   }
   function kanjiQuestion(bab, target, item) {
-    return Object.assign(kanjiSoal(bab, target, item), { jenis: target });
+    return Object.assign(kanjiSoal(bab, target, item), { jenis: target, kunci: item.kanji, asal: bab });
   }
   function kotobaSoal(bab, target, item) {
     if (target === "kotoba-jp-id") {
@@ -739,6 +747,8 @@
         return {
           type: "susun",
           jenis: "kalimat-susun",
+          kunci: item.arti,
+          asal: bab,
           prompt: item.arti,
           pieces: order.map((i) => item.potongan[i]),
           answer,
@@ -748,7 +758,7 @@
       });
     }
     return shuffle(data.pilih).slice(0, TUGAS_KALIMAT_JUMLAH).map((item) =>
-      Object.assign(mcQuestion(item.arti, false, item.benar, item.salah, "Pilih kalimat bahasa Jepang yang benar."), { jenis: "kalimat-pilih" }));
+      Object.assign(mcQuestion(item.arti, false, item.benar, item.salah, "Pilih kalimat bahasa Jepang yang benar."), { jenis: "kalimat-pilih", kunci: item.arti, asal: bab }));
   }
   function questionCount(bab, target) {
     if (target === "latihan-partikel") return buildPartikel(bab).length;
@@ -955,6 +965,7 @@
     let correct = 0;
     const mistakes = [];
     const keHafalan = new Set();
+    const salahServer = new Map(); // untuk Pantau Siswa per bab (catat_kesalahan)
 
     function backToList() {
       renderList(container, bab, hooks);
@@ -1054,6 +1065,10 @@
           console.warn(error); // penjelasan hanya tambahan - jangan sampai menghentikan kuis
         }
         mistakes.push({ prompt: q.prompt, given, answer: answerText, sebab });
+        if (q.kunci && q.jenis && !isLatihan(target)) {
+          const row = { bab: q.asal, target: q.jenis, item: String(q.kunci).slice(0, 200) };
+          salahServer.set(JSON.stringify(row), row);
+        }
         // "again" = jatuh tempo besok (lihat srsReview), lalu makin jarang kalau sudah hafal.
         if (q.srsId && typeof srsReview === "function" && !keHafalan.has(q.srsId)) {
           keHafalan.add(q.srsId);
@@ -1082,6 +1097,7 @@
         return;
       }
       const { saved } = await record(bab, target, correct, total);
+      kirimKesalahan([...salahServer.values()]);
       const babSelesai = isComplete(bab);
       let html = `<div class="tugas-result ${lulus ? "lulus" : "ulang"}"><div class="eyebrow">${esc(info.judul)} · Pelajaran ${bab}</div><div class="tugas-result-score"><b>${skor}</b><span>${correct} benar dari ${total} soal</span></div><h3>${lulus ? (target === UJIAN ? "Lulus ujian ulang! 🎉" : "Bagus! 🎉") : target === UJIAN ? `Belum lulus - perlu nilai minimal ${TUGAS_KKM}. Ulangi kata yang salah di Hafalan, lalu coba lagi.` : `Skor di bawah ${TUGAS_KKM} - boleh diulang untuk menaikkan rata-rata.`}</h3>`;
       const p = progress(bab);

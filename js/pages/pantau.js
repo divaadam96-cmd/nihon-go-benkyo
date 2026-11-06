@@ -18,6 +18,7 @@ function displayLoginId(email) {
 
 const monitorListEl = document.getElementById("monitorList");
 const monitorClassEl = document.getElementById("monitorClass");
+const monitorBabEl = document.getElementById("monitorBab");
 const monitorFiltersEl = document.getElementById("monitorFilters");
 const monitorSortEl = document.getElementById("monitorSort");
 const monitorExportBtn = document.getElementById("monitorExport");
@@ -368,11 +369,93 @@ async function loadMonitorPanel() {
     return;
   }
   monitorStudents = data || [];
+  loadBabPanel();
   if (monitorStudents.length === 0) {
     monitorListEl.innerHTML = '<p class="muted">Belum ada siswa terdaftar.</p>';
     return;
   }
   renderMonitorList();
+}
+
+/* === Tugas & target per pelajaran (supabase/add-pantau-bab.sql) ===
+   Kotak 50 pelajaran: berapa siswa yang tugasnya tuntas; klik satu
+   pelajaran untuk skor tiap siswa dan soal yang paling sering salah. */
+const BAB_TARGETS = [
+  ["kotoba-jp-id", "Kotoba J→I"], ["kotoba-id-jp", "Kotoba I→J"],
+  ["kanji-kanji-kana", "Kanji→kana"], ["kanji-kana-kanji", "Kana→kanji"],
+  ["kanji-kanji-id", "Kanji→arti"], ["kanji-id-kanji", "Arti→kanji"],
+  ["kalimat-susun", "Susun"], ["kalimat-pilih", "Pilih kalimat"],
+];
+const BAB_TARGET_LABEL = Object.fromEntries(BAB_TARGETS);
+let babRingkas = [];
+let babTerpilih = null;
+
+async function loadBabPanel() {
+  const { data, error } = await window.supabaseClient.rpc("pantau_bab_ringkas");
+  if (error) {
+    monitorBabEl.innerHTML = `<p class="muted">Ringkasan Tugas &amp; target per pelajaran belum tersedia (${escapeHtml(error.message)}). Operator perlu menjalankan supabase/add-pantau-bab.sql.</p>`;
+    return;
+  }
+  babRingkas = data || [];
+  renderBabGrid();
+  if (babTerpilih) loadBabDetail(babTerpilih);
+}
+
+function renderBabGrid() {
+  const byBab = Object.fromEntries(babRingkas.map((r) => [r.bab, r]));
+  const totalSiswa = monitorStudents.length;
+  const cells = Array.from({ length: 50 }, (_, i) => {
+    const bab = i + 1;
+    const r = byBab[bab];
+    const tuntas = r ? r.tuntas : 0;
+    const pct = totalSiswa ? Math.round((tuntas / totalSiswa) * 100) : 0;
+    const level = !r ? "none" : scoreLevel(pct);
+    const title = r ? `Pelajaran ${bab}: ${tuntas} tuntas, ${r.mulai} mulai, rata-rata ${r.rata}${bab % 5 === 0 ? `, ${r.lulus_ujian} lulus ujian` : ""}` : `Pelajaran ${bab}: belum ada yang mulai`;
+    return `<button type="button" class="monitor-bab-cell level-${level}${babTerpilih === bab ? " active" : ""}" data-bab="${bab}" title="${escapeHtml(title)}"><b>${bab}</b><small>${r ? `${tuntas}/${totalSiswa || "?"}` : "–"}</small></button>`;
+  }).join("");
+  monitorBabEl.innerHTML = `<header><div><span>TUGAS &amp; TARGET PER PELAJARAN</span><h4>Siswa yang tugasnya tuntas</h4></div><small>Klik pelajaran untuk melihat skor tiap siswa dan soal yang paling sering salah.</small></header><div class="monitor-bab-grid">${cells}</div><div class="monitor-bab-detail" id="monitorBabDetail"></div>`;
+  monitorBabEl.querySelectorAll("[data-bab]").forEach((button) => {
+    button.onclick = () => {
+      babTerpilih = Number(button.dataset.bab);
+      monitorBabEl.querySelectorAll("[data-bab]").forEach((b) => b.classList.toggle("active", b === button));
+      loadBabDetail(babTerpilih);
+    };
+  });
+}
+
+async function loadBabDetail(bab) {
+  const slot = document.getElementById("monitorBabDetail");
+  if (!slot) return;
+  slot.innerHTML = '<p class="muted">Memuat…</p>';
+  const { data, error } = await window.supabaseClient.rpc("pantau_bab_detail", { p_bab: bab });
+  if (babTerpilih !== bab) return;
+  if (error) {
+    slot.innerHTML = `<p class="muted">Gagal memuat Pelajaran ${bab}: ${escapeHtml(error.message)}</p>`;
+    return;
+  }
+  slot.innerHTML = babDetailHtml(bab, data);
+}
+
+function babDetailHtml(bab, data) {
+  const adaUjian = bab % 5 === 0;
+  const head = `<tr><th>Siswa</th><th>Materi</th>${BAB_TARGETS.map(([, label]) => `<th>${label}</th>`).join("")}<th>Rata-rata</th>${adaUjian ? "<th>Ujian ulang</th>" : ""}</tr>`;
+  const rows = data.siswa
+    .map((s) => {
+      const t = s.targets || {};
+      const skor = BAB_TARGETS.map(([key]) => t[key]?.skor ?? null);
+      const dikerjakan = skor.filter((v) => v !== null).length;
+      const rata = Math.floor(skor.reduce((sum, v) => sum + (v || 0), 0) / BAB_TARGETS.length);
+      const cell = (v, n) => (v === null ? '<td class="kosong">–</td>' : `<td class="level-${scoreLevel(v)}" title="${n || 1}× dikerjakan">${v}</td>`);
+      const ujian = t["ujian-ulang"];
+      return `<tr><th>${escapeHtml(s.full_name)}</th><td>${t.materi ? "✓" : "–"}</td>${BAB_TARGETS.map(([key], i) => cell(skor[i], t[key]?.percobaan)).join("")}<td class="${dikerjakan ? `level-${scoreLevel(rata)}` : "kosong"}"><b>${dikerjakan ? rata : "–"}</b></td>${adaUjian ? (ujian ? cell(ujian.skor, ujian.percobaan) : '<td class="kosong">–</td>') : ""}</tr>`;
+    })
+    .join("");
+  const salah = data.kesalahan.length
+    ? `<ol class="monitor-bab-salah">${data.kesalahan
+        .map((k) => `<li><span lang="ja">${escapeHtml(k.item)}</span><small>${escapeHtml(BAB_TARGET_LABEL[k.target] || k.target)} · ${k.siswa} siswa · ${k.jumlah}× salah</small></li>`)
+        .join("")}</ol>`
+    : '<p class="muted">Belum ada data soal yang salah untuk pelajaran ini.</p>';
+  return `<h5>Pelajaran ${bab} · skor terbaik tiap tugas</h5><div class="monitor-bab-table-wrap"><table class="monitor-bab-table">${head}${rows}</table></div><h5>Soal yang paling sering salah</h5><p class="monitor-class-note">Kata, kanji, atau kalimat (arti) - bahan yang perlu dibahas ulang di kelas.</p>${salah}`;
 }
 
 function attentionHtml(weakItems) {
