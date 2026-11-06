@@ -3566,4 +3566,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  44: {
+    susun: [
+      { arti: "Tadi malam (saya) terlalu banyak minum sake.", potongan: ["ゆうべ", "おさけ", "を", "のみすぎました"] },
+      { arti: "Sweter ini terlalu besar.", potongan: ["この", "セーター", "は", "おおきすぎます"] },
+      { arti: "Soal ini terlalu rumit, jadi (saya) tidak mengerti.", potongan: ["この", "もんだい", "は", "ふくざつすぎて", "わかりません"] },
+      { arti: "Pena ini mudah dipakai menulis.", potongan: ["この", "ペン", "は", "かきやすい", "です"] },
+      { arti: "Obat ini sulit diminum.", potongan: ["この", "くすり", "は", "のみにくい", "です"] },
+      { arti: "Jalan bersalju mudah membuat terpeleset.", potongan: ["ゆき", "の", "みち", "は", "すべりやすい", "です"] },
+      { arti: "Tolong kecilkan suaranya.", potongan: ["おと", "を", "ちいさく", "して", "ください"] },
+      { arti: "Tolong bersihkan kamarnya.", potongan: ["へや", "を", "きれい", "に", "して", "ください"] },
+      { arti: "Tolong potong rambut (saya) menjadi pendek.", potongan: ["かみ", "を", "みじかく", "して", "ください"] },
+      { arti: "Saya pilih kopi.", potongan: ["わたし", "は", "コーヒー", "に", "します"] },
+      { arti: "Mari kita bagi dua kuenya.", potongan: ["ケーキ", "を", "はんぶん", "に", "しましょう"] },
+      { arti: "Kata ini sulit diingat.", potongan: ["この", "ことば", "は", "おぼえにくい", "です"] },
+    ],
+    pilih: [
+      {
+        arti: "Tadi malam (saya) terlalu banyak minum sake.",
+        benar: "ゆうべ おさけを のみすぎました。",
+        salah: ["ゆうべ おさけを のむすぎました。", "ゆうべ おさけを のんですぎました。", "ゆうべ おさけが のみすぎました。"],
+      },
+      {
+        arti: "Sweter ini terlalu besar.",
+        benar: "この セーターは おおきすぎます。",
+        salah: ["この セーターは おおきいすぎます。", "この セーターは おおきくすぎます。", "この セーターは おおきなすぎます。"],
+      },
+      {
+        arti: "Soal ini terlalu rumit, jadi (saya) tidak mengerti.",
+        benar: "この もんだいは ふくざつすぎて、わかりません。",
+        salah: ["この もんだいは ふくざつなすぎて、わかりません。", "この もんだいは ふくざつにすぎて、わかりません。", "この もんだいは ふくざつすぎで、わかりません。"],
+      },
+      {
+        arti: "Pena ini mudah dipakai menulis.",
+        benar: "この ペンは かきやすいです。",
+        salah: ["この ペンは かくやすいです。", "この ペンは かいてやすいです。", "この ペンは かきやすくです。"],
+      },
+      {
+        arti: "Obat ini sulit diminum.",
+        benar: "この くすりは のみにくいです。",
+        salah: ["この くすりは のむにくいです。", "この くすりは のみやすいです。", "この くすりは のんでにくいです。"],
+      },
+      {
+        arti: "Tolong kecilkan suaranya.",
+        benar: "おとを ちいさく して ください。",
+        salah: ["おとを ちいさい して ください。", "おとを ちいさに して ください。", "おとが ちいさく して ください。"],
+      },
+      {
+        arti: "Tolong bersihkan kamarnya.",
+        benar: "へやを きれいに して ください。",
+        salah: ["へやを きれいく して ください。", "へやを きれいな して ください。", "へやを きれいで して ください。"],
+      },
+      {
+        arti: "Tolong potong rambut (saya) menjadi pendek.",
+        benar: "かみを みじかく して ください。",
+        salah: ["かみを みじかい して ください。", "かみを みじかに して ください。", "かみを ながく して ください。"],
+      },
+      {
+        arti: "Saya pilih kopi.",
+        benar: "わたしは コーヒーに します。",
+        salah: ["わたしは コーヒーを します。", "わたしは コーヒーで します。", "わたしは コーヒーく します。"],
+      },
+      {
+        arti: "Mari kita bagi dua kuenya.",
+        benar: "ケーキを はんぶんに しましょう。",
+        salah: ["ケーキを はんぶんく しましょう。", "ケーキを はんぶんを しましょう。", "ケーキが はんぶんに しましょう。"],
+      },
+      {
+        arti: "Jalan bersalju mudah membuat terpeleset.",
+        benar: "ゆきの みちは すべりやすいです。",
+        salah: ["ゆきの みちは すべるやすいです。", "ゆきの みちは すべりにくいです。", "ゆきの みちは すべってやすいです。"],
+      },
+      {
+        arti: "Mau dipotong bagaimana? ... Tolong buat seperti foto ini.",
+        benar: "どういう ふうに なさいますか。……この しゃしんみたいに して ください。",
+        salah: ["どういう ふうに なさいますか。……この しゃしんみたいな して ください。", "どういう ふうに なさいますか。……この しゃしんみたいく して ください。", "どういう ふうに なさいますか。……この しゃしんみたいを して ください。"],
+      },
+    ],
+  },
 };
