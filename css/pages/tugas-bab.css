@@ -593,3 +593,24 @@
 .tugas-audio small {
   color: var(--muted);
 }
+
+/* Penjelasan singkat saat salah */
+.tugas-sebab {
+  margin: 6px 0 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: #fff8e6;
+  color: #5c4a1f;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.tugas-sebab mark {
+  padding: 0 2px;
+  border-radius: 3px;
+  background: #f6d98c;
+  color: inherit;
+}
+.tugas-mistakes li .tugas-sebab {
+  display: block;
+  margin: 4px 0 0;
+}

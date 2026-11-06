@@ -692,6 +692,12 @@
     return true;
   }
   function kotobaQuestion(bab, target, item) {
+    return Object.assign(kotobaSoal(bab, target, item), { jenis: target });
+  }
+  function kanjiQuestion(bab, target, item) {
+    return Object.assign(kanjiSoal(bab, target, item), { jenis: target });
+  }
+  function kotobaSoal(bab, target, item) {
     if (target === "kotoba-jp-id") {
       const wrong = distractors(bab, kotobaItems, item, (x) => x.id, (x) => norm(x.jp) === norm(item.jp));
       return mcQuestion(item.jp, true, item.id, wrong, "Apa arti kata ini dalam bahasa Indonesia?");
@@ -699,7 +705,7 @@
     const wrong = distractors(bab, kotobaItems, item, (x) => x.jp, (x) => norm(x.id) === norm(item.id));
     return mcQuestion(item.id, false, item.jp, wrong, "Apa bahasa Jepangnya?");
   }
-  function kanjiQuestion(bab, target, item) {
+  function kanjiSoal(bab, target, item) {
     switch (target) {
       case "kanji-kanji-kana":
         return mcQuestion(item.kanji, true, item.kana,
@@ -732,6 +738,7 @@
         const answer = indexes.map((i) => order.indexOf(i) + 1);
         return {
           type: "susun",
+          jenis: "kalimat-susun",
           prompt: item.arti,
           pieces: order.map((i) => item.potongan[i]),
           answer,
@@ -741,7 +748,7 @@
       });
     }
     return shuffle(data.pilih).slice(0, TUGAS_KALIMAT_JUMLAH).map((item) =>
-      mcQuestion(item.arti, false, item.benar, item.salah, "Pilih kalimat bahasa Jepang yang benar."));
+      Object.assign(mcQuestion(item.arti, false, item.benar, item.salah, "Pilih kalimat bahasa Jepang yang benar."), { jenis: "kalimat-pilih" }));
   }
   function questionCount(bab, target) {
     if (target === "latihan-partikel") return buildPartikel(bab).length;
@@ -758,6 +765,94 @@
     if (!trimmed) return [];
     const parts = /[^0-9]/.test(trimmed) ? trimmed.split(/[^0-9]+/).filter(Boolean) : count <= 9 ? trimmed.split("") : [trimmed];
     return parts.map(Number);
+  }
+
+  // === Penjelasan singkat saat salah ===
+  /* Dibuat otomatis dari data (tanpa teks penjelasan per soal): arti dari
+     pilihan yang salah, jenis kekeliruan cara baca (bunyi panjang, tenten,
+     っ/ゃ kecil), atau bagian kalimat yang berbeda. */
+  let indeksKata = null;
+  function indeks() {
+    if (indeksKata) return indeksKata;
+    indeksKata = { jp: new Map(), arti: new Map(), kanji: new Map(), kana: new Map(), artiKanji: new Map() };
+    const tambah = (map, key, val) => {
+      if (!map.has(key)) map.set(key, val);
+    };
+    for (let bab = 1; bab <= MAX_BAB; bab++) {
+      kotobaItems(bab).forEach((x) => {
+        tambah(indeksKata.jp, x.jp, x);
+        tambah(indeksKata.arti, norm(x.id), x);
+      });
+      kanjiItems(bab).forEach((x) => {
+        tambah(indeksKata.kanji, x.kanji, x);
+        tambah(indeksKata.kana, dasarBacaan(x.kana), x);
+        tambah(indeksKata.artiKanji, norm(x.id), x);
+      });
+    }
+    return indeksKata;
+  }
+  const TANPA_TENTEN = Object.fromEntries(
+    [..."がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ"].map((c, i) => [c, "かきくけこさしすせそたちつてとはひふへほはひふへほ"[i]]),
+  );
+  const KECIL_BESAR = { ゃ: "や", ゅ: "ゆ", ょ: "よ", ぁ: "あ", ぃ: "い", ぅ: "う", ぇ: "え", ぉ: "お" };
+  function hapusPanjang(t) {
+    return t.replace(/ー/g, "").replace(/([おこそとのほもよろごぞどぼぽょ])[うお]/g, "$1").replace(/([えけせてねへめれげぜでべぺ])い/g, "$1").replace(/(.)\1/g, "$1")
+      .replace(/([あかさたなはまやらわがざだばぱゃ])あ/g, "$1").replace(/([いきしちにひみりぎじびぴ])い/g, "$1").replace(/([うくすつぬふむゆるぐずぶぷゅ])う/g, "$1");
+  }
+  function sebabBacaan(dipilih, benar) {
+    const a = dasarBacaan(dipilih), b = dasarBacaan(benar);
+    if (a === b) return "";
+    const sama = (f) => f(a) === f(b);
+    if (sama((t) => t.replace(/っ/g, ""))) return "Perhatikan <b>っ kecil</b> (bunyi ganda/berhenti sejenak).";
+    if (sama((t) => [...t].map((c) => KECIL_BESAR[c] || c).join(""))) return "Perhatikan <b>ゃ・ゅ・ょ kecil</b>: dibaca menyatu dengan huruf sebelumnya.";
+    if (sama((t) => [...t].map((c) => TANPA_TENTEN[c] || c).join(""))) return "Perhatikan <b>tenten/maru (゛゜)</b>: bunyinya berubah (k→g, s→z, t→d, h→b/p).";
+    if (sama(hapusPanjang)) return "Perhatikan <b>bunyi panjang</b> (おう・えい・ー, dsb.).";
+    const lain = indeks().kana.get(a);
+    if (lain) return `<span lang="ja">${esc(dipilih)}</span> adalah cara baca <span lang="ja">${esc(lain.kanji)}</span> (${esc(lain.id)}).`;
+    return "";
+  }
+  function bedaKalimat(dipilih, benar) {
+    const a = [...dipilih], b = [...benar];
+    let awal = 0;
+    while (awal < a.length && awal < b.length && a[awal] === b[awal]) awal++;
+    let akhir = 0;
+    while (akhir < a.length - awal && akhir < b.length - awal && a[a.length - 1 - akhir] === b[b.length - 1 - akhir]) akhir++;
+    const bagianA = a.slice(awal, a.length - akhir).join("");
+    const bagianB = b.slice(awal, b.length - akhir).join("");
+    const tandai = (arr, bagian) => esc(arr.slice(0, awal).join("")) + `<mark>${esc(bagian) || "…"}</mark>` + esc(arr.slice(arr.length - akhir).join(""));
+    const partikel = /^(は|が|を|に|で|へ|と|も|の|から|まで|か|や|より)$/.test(bagianB) && /^(は|が|を|に|で|へ|と|も|の|から|まで|か|や|より)?$/.test(bagianA);
+    return `${partikel ? "Bedanya di <b>partikel</b>. " : "Bedanya di bagian yang ditandai. "}Pilihanmu: <span lang="ja">${tandai(a, bagianA)}</span> · Benar: <span lang="ja">${tandai(b, bagianB)}</span>`;
+  }
+  function jelaskan(q, dipilih) {
+    const ix = indeks();
+    switch (q.jenis) {
+      case "kotoba-jp-id": {
+        const x = ix.arti.get(norm(dipilih));
+        return x ? `"${esc(dipilih)}" adalah arti <span lang="ja">${esc(x.jp)}</span>.` : "";
+      }
+      case "kotoba-id-jp": {
+        const x = ix.jp.get(dipilih);
+        return x ? `<span lang="ja">${esc(dipilih)}</span> artinya "${esc(x.id)}".` : "";
+      }
+      case "kanji-kanji-id": {
+        const x = ix.artiKanji.get(norm(dipilih));
+        return x ? `"${esc(dipilih)}" adalah arti <span lang="ja">${esc(x.kanji)}</span> (${esc(x.kana)}).` : "";
+      }
+      case "kanji-id-kanji":
+      case "kanji-kana-kanji": {
+        const x = ix.kanji.get(dipilih);
+        if (x) return `<span lang="ja">${esc(dipilih)}</span> dibaca <span lang="ja">${esc(x.kana)}</span>, artinya "${esc(x.id)}".`;
+        return `<span lang="ja">${esc(dipilih)}</span> bentuknya mirip <span lang="ja">${esc(q.answer)}</span> - perhatikan bagian yang berbeda.`;
+      }
+      case "kanji-kanji-kana":
+        return sebabBacaan(dipilih, q.answer);
+      case "kalimat-pilih":
+        return bedaKalimat(dipilih, q.answer);
+      case "kalimat-susun":
+        return dipilih ? `Kalimatmu: <span lang="ja">${esc(dipilih)}</span> - perhatikan urutan: keterangan → partikel → predikat di akhir.` : "";
+      default:
+        return "";
+    }
   }
 
   // === Tampilan panel tugas ===
@@ -943,16 +1038,22 @@
           const ok = q.kalimatSah.includes(given.map((n) => q.pieces[n - 1]).join(""));
           input.disabled = true;
           form.querySelector("button").disabled = true;
-          answered(ok, given.join(" "), `${q.answer.join(" ")} → ${q.sentence}`);
+          answered(ok, given.join(" "), `${q.answer.join(" ")} → ${q.sentence}`, given.map((n) => q.pieces[n - 1]).join("") + "。");
         };
       }
     }
 
-    function answered(ok, given, answerText) {
+    function answered(ok, given, answerText, pembanding = given) {
       const q = questions[index];
+      let sebab = "";
       if (ok) correct++;
       else {
-        mistakes.push({ prompt: q.prompt, given, answer: answerText });
+        try {
+          sebab = jelaskan(q, pembanding);
+        } catch (error) {
+          console.warn(error); // penjelasan hanya tambahan - jangan sampai menghentikan kuis
+        }
+        mistakes.push({ prompt: q.prompt, given, answer: answerText, sebab });
         // "again" = jatuh tempo besok (lihat srsReview), lalu makin jarang kalau sudah hafal.
         if (q.srsId && typeof srsReview === "function" && !keHafalan.has(q.srsId)) {
           keHafalan.add(q.srsId);
@@ -961,7 +1062,7 @@
       }
       const feedback = container.querySelector(".tugas-feedback");
       const last = index === questions.length - 1;
-      feedback.innerHTML = `<p class="${ok ? "tugas-feedback-benar" : "tugas-feedback-salah"}">${ok ? "Benar!" : `Belum tepat. Jawaban benar: <span lang="ja">${esc(answerText)}</span>`}</p><button type="button" class="primary tugas-next">${last ? "Lihat hasil" : "Lanjut →"}</button>`;
+      feedback.innerHTML = `<p class="${ok ? "tugas-feedback-benar" : "tugas-feedback-salah"}">${ok ? "Benar!" : `Belum tepat. Jawaban benar: <span lang="ja">${esc(answerText)}</span>`}</p>${sebab ? `<p class="tugas-sebab">💡 ${sebab}</p>` : ""}<button type="button" class="primary tugas-next">${last ? "Lihat hasil" : "Lanjut →"}</button>`;
       const nextButton = feedback.querySelector(".tugas-next");
       nextButton.focus({ preventScroll: true });
       nextButton.onclick = () => {
@@ -990,7 +1091,7 @@
       if (!saved) html += `<p class="tugas-warning">Hasil belum tersimpan di server - disimpan di perangkat ini dan dikirim ulang otomatis nanti.</p>`;
       if (mistakes.length) {
         html += `<details class="tugas-mistakes"${lulus ? "" : " open"}><summary>Soal yang salah (${mistakes.length})</summary><ul>${mistakes
-          .map((m) => `<li><b lang="ja">${esc(m.prompt)}</b><span>Jawabanmu: ${esc(m.given)}</span><span>Benar: <span lang="ja">${esc(m.answer)}</span></span></li>`)
+          .map((m) => `<li><b lang="ja">${esc(m.prompt)}</b><span>Jawabanmu: ${esc(m.given)}</span><span>Benar: <span lang="ja">${esc(m.answer)}</span></span>${m.sebab ? `<span class="tugas-sebab">💡 ${m.sebab}</span>` : ""}</li>`)
           .join("")}</ul></details>`;
       }
       if (keHafalan.size) {
@@ -1007,7 +1108,7 @@
       let html = `<div class="tugas-result ${skor >= TUGAS_KKM ? "lulus" : "ulang"}"><div class="eyebrow">Latihan ${esc(info.judul)} · Pelajaran ${bab}</div><div class="tugas-result-score"><b>${skor}</b><span>${correct} benar dari ${questions.length} soal</span></div><h3>${skor >= TUGAS_KKM ? "Bagus! 🎉" : "Terus berlatih!"}</h3><p class="tugas-rata">Latihan tambahan tidak dinilai dan tidak memengaruhi kunci pelajaran.</p>`;
       if (mistakes.length) {
         html += `<details class="tugas-mistakes" open><summary>Soal yang salah (${mistakes.length})</summary><ul>${mistakes
-          .map((m) => `<li><b lang="ja">${esc(m.prompt)}</b><span>Jawabanmu: ${esc(m.given)}</span><span>Benar: <span lang="ja">${esc(m.answer)}</span></span></li>`)
+          .map((m) => `<li><b lang="ja">${esc(m.prompt)}</b><span>Jawabanmu: ${esc(m.given)}</span><span>Benar: <span lang="ja">${esc(m.answer)}</span></span>${m.sebab ? `<span class="tugas-sebab">💡 ${m.sebab}</span>` : ""}</li>`)
           .join("")}</ul></details>`;
       }
       if (keHafalan.size) html += `<p class="tugas-hafalan-note">📌 ${keHafalan.size} kata yang salah masuk ke <b>Ulangan</b> di Hafalan dan muncul lagi besok. <a href="hafalan.html?ulangan=1">Buka Hafalan</a></p>`;
