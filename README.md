@@ -349,11 +349,11 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
     tenten, huruf kecil, tsu kecil) + `bacaanKeliruData`; bacaan sah yang
     tidak ada di data dicatat di `bacaanSahLainData` (ketiganya di
     `data/kanji-mirip-data.js`).
-  - Menambah bab: tulis soal kalimatnya di `data/tugas-kalimat-data.js`
-    (tahap lama "Kerjakan latihan" otomatis hilang untuk bab itu), lalu
-    lengkapi kelompok makna, sinonim, kanji mirip & bacaan keliru bab
-    tersebut. Setelah semua 50 bab selesai, kode latihan lama
-    (`buildPracticeTest` di `materi.js`) bisa dihapus.
+  - Kelima puluh bab sudah punya tugas lengkap (tahap lama "Kerjakan
+    latihan" sudah dihapus). Mengubah soal: edit `data/tugas-kalimat-data.js`
+    lalu kelompok makna, sinonim, kanji mirip & bacaan keliru. Kanji mirip
+    tidak boleh berbunyi sama dengan jawabannya (mis. 製/制 = せい), dan
+    arti kata tidak boleh memuat kana jawabannya.
 - **Password minimal 10 karakter, huruf + angka** - dicek di form, di
   Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket

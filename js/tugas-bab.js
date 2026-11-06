@@ -796,7 +796,6 @@
     progress,
     isComplete,
     kekurangan,
-    tugasLengkap,
     isLocked,
     frontierBab,
     recordMateri,

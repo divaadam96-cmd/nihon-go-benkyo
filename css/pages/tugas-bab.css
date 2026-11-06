@@ -1,12 +1,5 @@
-/* Tahap 4 "Tugas & target" di pembaca Materi + kunci pelajaran
+/* Tahap 3 "Tugas & target" di pembaca Materi + kunci pelajaran
    (js/tugas-bab.js). Dimuat setelah css/pages/materi.css. */
-
-.material-learning-steps {
-  grid-template-columns: repeat(4, 1fr);
-}
-.material-learning-steps.tanpa-latihan {
-  grid-template-columns: repeat(3, 1fr);
-}
 
 /* === Pelajaran terkunci === */
 .material-choice.locked {

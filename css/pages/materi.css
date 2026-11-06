@@ -466,16 +466,13 @@
   border-color: var(--navy);
 }
 .material-reader-body .grammar-japanese-example,
-.material-example-japanese,
-.material-practice-japanese,
-.material-practice-options button > span {
+.material-example-japanese {
   line-height: 2;
 }
 .material-step-panel[hidden] {
   display: none !important;
 }
-.material-example-study,
-.material-practice-study {
+.material-example-study {
   padding: 22px 25px;
 }
 .material-study-section-head {
@@ -492,11 +489,6 @@
   margin: 0;
   color: var(--muted);
   font-size: 11px;
-}
-.material-practice-furigana-note {
-  margin-top: 8px !important;
-  color: #956e30 !important;
-  font-weight: 700;
 }
 .material-example-list {
   display: grid;
@@ -545,301 +537,6 @@
   font-size: 7px;
   font-weight: 850;
   letter-spacing: 1px;
-}
-.material-practice-card {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 23px;
-  border: 1px solid #b8c9c1;
-  border-radius: 11px;
-  background: linear-gradient(145deg, #f3f8f5, #e5f0eb);
-}
-.material-test-types {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 7px;
-  max-width: 760px;
-  margin: 0 auto 13px;
-}
-.material-test-types span {
-  padding: 6px 9px;
-  border: 1px solid #c9d6d0;
-  border-radius: 999px;
-  color: #4e6c62;
-  background: #f6faf7;
-  font-size: 8px;
-  font-weight: 800;
-}
-.material-mistake-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  max-width: 760px;
-  margin: 0 auto 12px;
-  padding: 11px 13px;
-  border: 1px solid #ddb38f;
-  border-radius: 8px;
-  background: #fff5eb;
-}
-.material-mistake-bar[hidden] {
-  display: none;
-}
-.material-mistake-bar div {
-  display: grid;
-  gap: 2px;
-}
-.material-mistake-bar b {
-  color: #864c31;
-  font-size: 10px;
-}
-.material-mistake-bar span {
-  color: #806859;
-  font-size: 9px;
-}
-.material-mistake-bar button,
-.material-all-practice {
-  padding: 8px 10px;
-  border: 1px solid #b86e4e;
-  border-radius: 6px;
-  color: #8c472f;
-  background: #fffaf5;
-  font-size: 9px;
-  font-weight: 800;
-  cursor: pointer;
-}
-.material-practice-progress {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #4e6c62;
-  font-size: 9px;
-  font-weight: 800;
-}
-.material-practice-progress i {
-  flex: 1;
-  height: 5px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #cddbd5;
-}
-.material-practice-progress i b {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: #2e8068;
-}
-.material-practice-test-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 18px;
-}
-.material-practice-test-head span {
-  padding: 6px 9px;
-  border-radius: 5px;
-  color: #f9f1df;
-  background: #1c6c58;
-  font-size: 8px;
-  font-weight: 850;
-  letter-spacing: .35px;
-}
-.material-practice-test-head b {
-  color: #8a6c3d;
-  font: 700 11px/1.2 "Zen Kaku Gothic New", "Yu Gothic", sans-serif;
-}
-.material-practice-instruction {
-  margin: 13px 0 5px;
-  color: var(--navy);
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.55;
-}
-.material-practice-context {
-  margin-bottom: 10px;
-  color: #64726d;
-  font-size: 10px;
-  line-height: 1.55;
-}
-.material-practice-japanese {
-  padding: 17px;
-  border-radius: 8px;
-  color: var(--navy);
-  background: #fffdf8;
-  font: 700 19px/1.6 "Zen Kaku Gothic New", "Yu Gothic", sans-serif;
-}
-.material-practice-options {
-  display: grid;
-  gap: 8px;
-  margin-top: 14px;
-}
-.material-practice-options button {
-  display: grid;
-  grid-template-columns: 25px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
-  padding: 11px 13px;
-  border: 1px solid #c0ccc6;
-  border-radius: 7px;
-  color: var(--ink);
-  background: white;
-  text-align: left;
-  font-size: 11px;
-  cursor: pointer;
-}
-.material-practice-options button > b {
-  display: grid;
-  width: 24px;
-  height: 24px;
-  place-items: center;
-  border: 1px solid #c6d1cc;
-  border-radius: 50%;
-  color: #546861;
-  font-size: 9px;
-}
-.material-practice-options button > span {
-  min-width: 0;
-  line-height: 1.55;
-}
-.material-practice-options button:hover:not(:disabled),
-.material-practice-options button:focus-visible:not(:disabled) {
-  border-color: #2e8068;
-  outline: none;
-}
-.material-practice-options button.correct {
-  border-color: #2e8068;
-  color: #205c4c;
-  background: #d8ebe3;
-}
-.material-practice-options button.correct > b {
-  border-color: #2e8068;
-  color: white;
-  background: #2e8068;
-}
-.material-practice-options button.wrong {
-  border-color: #bd7357;
-  color: #8c452f;
-  background: #f4dfd6;
-}
-.material-practice-options button.wrong > b {
-  border-color: #bd7357;
-  color: white;
-  background: #bd7357;
-}
-.material-practice-feedback {
-  min-height: 19px;
-  margin: 11px 0;
-  padding: 0;
-  color: #536760;
-  font-size: 10px;
-  line-height: 1.6;
-}
-.material-practice-feedback:not(:empty) {
-  padding: 12px 13px;
-  border: 1px solid #cbd8d2;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, .72);
-}
-.material-practice-feedback > b {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 11px;
-}
-.material-practice-feedback > b.is-correct {
-  color: #22644f;
-}
-.material-practice-feedback > b.is-wrong {
-  color: #9a4e35;
-}
-.material-practice-feedback p {
-  margin: 0 0 5px;
-  color: var(--navy);
-  font-weight: 750;
-}
-.material-practice-feedback small {
-  display: block;
-  color: #68766f;
-  font-size: 9px;
-  line-height: 1.7;
-}
-.material-practice-next,
-.material-retry-practice {
-  padding: 10px 13px;
-  border: 0;
-  border-radius: 7px;
-  color: #f8e8c4;
-  background: #142945;
-  font-size: 10px;
-  font-weight: 800;
-  cursor: pointer;
-}
-.material-practice-result {
-  display: grid;
-  justify-items: center;
-  padding: 24px 10px;
-  text-align: center;
-}
-.material-practice-result > span {
-  color: #2e8068;
-  font-size: 8px;
-  font-weight: 900;
-  letter-spacing: 1.4px;
-}
-.material-practice-result > b {
-  margin: 10px 0;
-  color: var(--navy);
-  font: 700 36px Georgia, serif;
-}
-.material-practice-result > small {
-  margin-top: -10px;
-  color: #8e7b5b;
-  font-size: 8px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-}
-.material-practice-result h4 {
-  margin: 0;
-  font-size: 17px;
-}
-.material-practice-result p {
-  max-width: 480px;
-  margin: 8px 0 17px;
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.6;
-}
-.material-practice-breakdown {
-  display: grid;
-  gap: 6px;
-  width: min(100%, 390px);
-  margin: 2px 0 16px;
-  padding: 0;
-  list-style: none;
-}
-.material-practice-breakdown li {
-  display: flex;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  color: #536760;
-  background: rgba(255, 255, 255, .68);
-  font-size: 9px;
-}
-.material-practice-breakdown b {
-  color: #235f4f;
-}
-.material-result-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-}
-.material-practice-empty {
-  margin: 0;
-  color: var(--muted);
-  text-align: center;
 }
 .material-reader-actions {
   display: grid;
@@ -960,22 +657,11 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
-  .material-example-study,
-  .material-practice-study {
+  .material-example-study {
     padding: 18px 17px;
   }
   .material-example-list {
     grid-template-columns: 1fr;
-  }
-  .material-practice-card {
-    padding: 17px;
-  }
-  .material-mistake-bar {
-    align-items: stretch;
-    flex-direction: column;
-  }
-.material-mistake-bar button {
-    width: 100%;
   }
 }
 .material-book-back {
@@ -1157,7 +843,7 @@
 /* Label editorial di bawah sebagian kalimat contoh (mis. "(frase Kata
    Benda)" Pelajaran 18 pola 2) yang di buku sumber dicetak polos, lebih
    kecil - beda dari kalimat Jepang tebal di atasnya. Dibuang dari teks
-   soal Tahap 3 (lihat getAllExamplesData, materi.js). */
+   kartu contoh Tahap 2 (lihat getAllExamplesData, materi.js). */
 .grammar-annotation {
   display: block;
   font: 400 12px "DM Sans";
