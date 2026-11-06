@@ -3602,7 +3602,7 @@ const babKosakataData = {
     ],
     [
       "\u305e\u3093\u3058\u307e\u3059",
-      "Mengetahui (bentuk merndah \u3057\u308a\u307e\u3059)",
+      "Mengetahui (bentuk merendah \u3057\u308a\u307e\u3059)",
     ],
     [
       "\u3046\u304b\u304c\u3044\u307e\u3059",
@@ -3614,11 +3614,11 @@ const babKosakataData = {
     ],
     [
       "\u3054\u3056\u3044\u307e\u3059",
-      "Ada (bentuk hormat \u3042\u308a\u307e\u3059)",
+      "Ada (bentuk sopan \u3042\u308a\u307e\u3059)",
     ],
     [
       "\uff5e\u3067\u3054\u3056\u3044\u307e\u3059",
-      "Bentuk hormat \u3067\u3059",
+      "Bentuk sopan \u3067\u3059",
     ],
     ["\u308f\u305f\u304f\u3057", "Saya (bentuk merendah \u308f\u305f\u3057)"],
     ["\u30ac\u30a4\u30c9", "Pemandu,guide"],
@@ -8460,7 +8460,7 @@ const babKanjiData = {
     [
       "\u5b58\u3058\u307e\u3059",
       "\u305e\u3093\u3058\u307e\u3059",
-      "Mengetahui (bentuk merndah \u3057\u308a\u307e\u3059)",
+      "Mengetahui (bentuk merendah \u3057\u308a\u307e\u3059)",
     ],
     [
       "\u4f3a\u3044\u307e\u3059",
