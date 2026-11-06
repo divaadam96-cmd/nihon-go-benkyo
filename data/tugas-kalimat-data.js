@@ -3488,4 +3488,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  43: {
+    susun: [
+      { arti: "Sepertinya sebentar lagi akan hujan.", potongan: ["いまにも", "あめ", "が", "ふりそう", "です"] },
+      { arti: "Kue ini kelihatannya enak.", potongan: ["この", "ケーキ", "は", "おいしそう", "です"] },
+      { arti: "Sdr. Miller kelihatannya senang.", potongan: ["ミラーさん", "は", "うれしそう", "です"] },
+      { arti: "Barang itu kelihatannya berat ya.", potongan: ["その", "にもつ", "は", "おもそう", "です", "ね"] },
+      { arti: "Kancingnya kelihatannya akan lepas.", potongan: ["ボタン", "が", "とれそう", "です"] },
+      { arti: "Sebentar, (saya) pergi membeli rokok (lalu kembali).", potongan: ["ちょっと", "たばこ", "を", "かって", "きます"] },
+      { arti: "(Saya) pergi ke kantor pos dulu (lalu kembali).", potongan: ["ゆうびんきょく", "へ", "いって", "きます"] },
+      { arti: "Sepatu ini kelihatannya kuat.", potongan: ["この", "くつ", "は", "じょうぶそう", "です"] },
+      { arti: "Harganya kelihatannya akan naik.", potongan: ["ねだん", "が", "あがりそう", "です"] },
+      { arti: "Toko ini kelihatannya bagus.", potongan: ["この", "みせ", "は", "よさそう", "です"] },
+      { arti: "Kelihatannya tidak ada waktu.", potongan: ["じかん", "が", "なさそう", "です"] },
+      { arti: "Sdri. Tanaka kelihatannya sehat.", potongan: ["たなかさん", "は", "げんきそう", "です"] },
+    ],
+    pilih: [
+      {
+        arti: "Sepertinya sebentar lagi akan hujan.",
+        benar: "いまにも あめが ふりそうです。",
+        salah: ["いまにも あめが ふりさそうです。", "いまにも あめが ふらそうです。", "いまにも あめを ふりそうです。"],
+      },
+      {
+        arti: "Kue ini kelihatannya enak.",
+        benar: "この ケーキは おいしそうです。",
+        salah: ["この ケーキは おいしくそうです。", "この ケーキは おいしいだそうです。", "この ケーキは おいしなそうです。"],
+      },
+      {
+        arti: "Sdr. Miller kelihatannya senang.",
+        benar: "ミラーさんは うれしそうです。",
+        salah: ["ミラーさんは うれしくそうです。", "ミラーさんは うれしなそうです。", "ミラーさんは うれしいだそうです。"],
+      },
+      {
+        arti: "Sdri. Tanaka kelihatannya sehat.",
+        benar: "たなかさんは げんきそうです。",
+        salah: ["たなかさんは げんきなそうです。", "たなかさんは げんきいそうです。", "たなかさんは げんきくそうです。"],
+      },
+      {
+        arti: "Toko ini kelihatannya bagus.",
+        benar: "この みせは よさそうです。",
+        salah: ["この みせは いさそうです。", "この みせは いいさそうです。", "この みせは よくそうです。"],
+      },
+      {
+        arti: "Kelihatannya tidak ada waktu.",
+        benar: "じかんが なさそうです。",
+        salah: ["じかんが なそうです。", "じかんが ないさそうです。", "じかんが なくそうです。"],
+      },
+      {
+        arti: "Kancingnya kelihatannya akan lepas.",
+        benar: "ボタンが とれそうです。",
+        salah: ["ボタンが とれさそうです。", "ボタンが とりそうです。", "ボタンを とれそうです。"],
+      },
+      {
+        arti: "Sebentar, (saya) pergi membeli rokok (lalu kembali).",
+        benar: "ちょっと たばこを かって きます。",
+        salah: ["ちょっと たばこを かいて きます。", "ちょっと たばこを かいって きます。", "ちょっと たばこが かって きます。"],
+      },
+      {
+        arti: "Barang itu kelihatannya berat ya.",
+        benar: "その にもつは おもそうですね。",
+        salah: ["その にもつは おもいさそうですね。", "その にもつは おもくそうですね。", "その にもつは おもさそうですね。"],
+      },
+      {
+        arti: "Harganya kelihatannya akan naik.",
+        benar: "ねだんが あがりそうです。",
+        salah: ["ねだんが あげりそうです。", "ねだんを あがりそうです。", "ねだんが あがりさそうです。"],
+      },
+      {
+        arti: "Bensinnya kelihatannya akan habis.",
+        benar: "ガソリンが なくなりそうです。",
+        salah: ["ガソリンが なくなりさそうです。", "ガソリンが なくりそうです。", "ガソリンを なくなりそうです。"],
+      },
+      {
+        arti: "Orang itu kelihatannya keras kepala.",
+        benar: "あの ひとは がんこそうです。",
+        salah: ["あの ひとは がんこなそうです。", "あの ひとは がんこいそうです。", "あの ひとは がんこくそうです。"],
+      },
+    ],
+  },
 };
