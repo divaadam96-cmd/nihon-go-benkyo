@@ -3722,4 +3722,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  46: {
+    susun: [
+      { arti: "(Saya) baru akan makan siang sekarang.", potongan: ["これから", "ひるごはん", "を", "たべる", "ところ", "です"] },
+      { arti: "Sekarang (saya) sedang rapat.", potongan: ["いま", "かいぎ", "を", "して", "いる", "ところ", "です"] },
+      { arti: "(Saya) baru saja pulang.", potongan: ["たったいま", "かえって", "きた", "ところ", "です"] },
+      { arti: "(Saya) baru (saja) datang ke Jepang.", potongan: ["にほん", "へ", "きた", "ばかり", "です"] },
+      { arti: "(Saya) baru tadi makan siang.", potongan: ["さっき", "ひるごはん", "を", "たべた", "ばかり", "です"] },
+      { arti: "Sdr. Miller seharusnya datang hari ini.", potongan: ["ミラーさん", "は", "きょう", "くる", "はず", "です"] },
+      { arti: "Karena dikirim lewat jasa pengantaran, seharusnya besok sampai.", potongan: ["たくはいびん", "で", "おくりました", "から", "あした", "とどく", "はず", "です"] },
+      { arti: "Dia seharusnya pandai bahasa Jepang.", potongan: ["かれ", "は", "にほんご", "が", "じょうずな", "はず", "です"] },
+      { arti: "Sdr. Yamada seharusnya tidak ada di rumah sekarang.", potongan: ["やまださん", "は", "いま", "るす", "の", "はず", "です"] },
+      { arti: "Busnya baru saja berangkat.", potongan: ["バス", "は", "ちょうど", "でた", "ところ", "です"] },
+      { arti: "Sekarang (saya) baru akan berangkat.", potongan: ["いま", "でかける", "ところ", "です"] },
+      { arti: "Kompor gasnya tidak beres.", potongan: ["ガスレンジ", "の", "ぐあい", "が", "わるい", "んです"] },
+    ],
+    pilih: [
+      {
+        arti: "(Saya) baru akan makan siang sekarang.",
+        benar: "これから ひるごはんを たべる ところです。",
+        salah: ["これから ひるごはんを たべた ところです。", "これから ひるごはんを たべて いる ところです。", "これから ひるごはんを たべるの ところです。"],
+      },
+      {
+        arti: "Sekarang (saya) sedang rapat.",
+        benar: "いま かいぎを して いる ところです。",
+        salah: ["いま かいぎを する ところです。", "いま かいぎを した ところです。", "いま かいぎを して いるの ところです。"],
+      },
+      {
+        arti: "(Saya) baru saja pulang.",
+        benar: "たったいま かえって きた ところです。",
+        salah: ["たったいま かえって くる ところです。", "たったいま かえって きて いる ところです。", "たったいま かえって きたの ところです。"],
+      },
+      {
+        arti: "(Saya) baru (saja) datang ke Jepang.",
+        benar: "にほんへ きた ばかりです。",
+        salah: ["にほんへ くる ばかりです。", "にほんへ きて ばかりです。", "にほんへ きたの ばかりです。"],
+      },
+      {
+        arti: "(Saya) baru tadi makan siang.",
+        benar: "さっき ひるごはんを たべた ばかりです。",
+        salah: ["さっき ひるごはんを たべる ばかりです。", "さっき ひるごはんを たべて ばかりです。", "さっき ひるごはんを たべます ばかりです。"],
+      },
+      {
+        arti: "Sdr. Miller seharusnya datang hari ini.",
+        benar: "ミラーさんは きょう くる はずです。",
+        salah: ["ミラーさんは きょう くるの はずです。", "ミラーさんは きょう きます はずです。", "ミラーさんは きょう こない はずです。"],
+      },
+      {
+        arti: "Dia seharusnya pandai bahasa Jepang.",
+        benar: "かれは にほんごが じょうずな はずです。",
+        salah: ["かれは にほんごが じょうずの はずです。", "かれは にほんごが じょうず はずです。", "かれは にほんごが じょうずだ はずです。"],
+      },
+      {
+        arti: "Sdr. Yamada seharusnya tidak ada di rumah sekarang.",
+        benar: "やまださんは いま るすの はずです。",
+        salah: ["やまださんは いま るす はずです。", "やまださんは いま るすな はずです。", "やまださんは いま るすだ はずです。"],
+      },
+      {
+        arti: "Karena dikirim lewat jasa pengantaran, seharusnya besok sampai.",
+        benar: "たくはいびんで おくりましたから、あした とどく はずです。",
+        salah: ["たくはいびんで おくりましたから、あした とどいた はずです。", "たくはいびんで おくりましたから、あした とどくの はずです。", "たくはいびんで おくりましたから、あした とどきます はずです。"],
+      },
+      {
+        arti: "Busnya baru saja berangkat.",
+        benar: "バスは ちょうど でた ところです。",
+        salah: ["バスは ちょうど でる ところです。", "バスは ちょうど でて ところです。", "バスを ちょうど でた ところです。"],
+      },
+      {
+        arti: "Siapa ini? (di telepon, sopan)",
+        benar: "どちらさまでしょうか。",
+        salah: ["どちらさまでしょうが。", "どちらにさまでしょうか。", "どちらさまでしょうでした。"],
+      },
+      {
+        arti: "Maaf membuat (Anda) menunggu.",
+        benar: "おまたせしました。",
+        salah: ["おまちしました。", "おまたせられました。", "おまたせします した。"],
+      },
+    ],
+  },
 };
