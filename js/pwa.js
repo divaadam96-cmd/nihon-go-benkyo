@@ -23,11 +23,37 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
   // mengambil alih, muat ulang sekali supaya file terbaru langsung
   // dipakai - hanya di awal buka halaman, supaya siswa yang sedang
   // mengerjakan tes tidak kehilangan jawabannya.
+  // Kalau pemasangan versi baru selesai setelah 15 detik (cache ~1 MB di
+  // koneksi lambat), halaman TIDAK dimuat ulang otomatis - tampilkan bilah
+  // "Versi baru siap" supaya pengguna memuat ulang sendiri saat aman.
   const hadController = !!navigator.serviceWorker.controller;
   const pageOpenedAt = Date.now();
   navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (hadController && Date.now() - pageOpenedAt < 15000) location.reload();
+    if (!hadController) return;
+    if (Date.now() - pageOpenedAt < 15000) location.reload();
+    else showUpdateBar();
   });
+}
+
+function showUpdateBar() {
+  if (document.querySelector(".app-update-bar")) return;
+  const bar = document.createElement("div");
+  bar.className = "app-update-bar";
+  bar.setAttribute("role", "status");
+  const text = document.createElement("span");
+  text.textContent = "Versi baru aplikasi sudah siap.";
+  const reload = document.createElement("button");
+  reload.type = "button";
+  reload.textContent = "Muat ulang";
+  reload.addEventListener("click", () => location.reload());
+  const later = document.createElement("button");
+  later.type = "button";
+  later.className = "app-update-later";
+  later.textContent = "Nanti";
+  later.setAttribute("aria-label", "Tutup pemberitahuan");
+  later.addEventListener("click", () => bar.remove());
+  bar.append(text, reload, later);
+  document.body.appendChild(bar);
 }
 
 let deferredInstallPrompt = null;
