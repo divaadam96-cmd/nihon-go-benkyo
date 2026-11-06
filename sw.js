@@ -11,7 +11,7 @@ const RUNTIME_CACHE = 'nihon-go-benkyo-runtime-v1';
 const APP_FILES = [
   'index.html',
   'css/base.css', 'css/shell.css', 'css/auth.css', 'css/shell-akhir.css',
-  'js/app-shell.js', 'js/app-sidebar.js', 'js/app-effects.js', 'js/soal-html.js', 'js/quiz-results.js', 'js/srs.js', 'js/sesi-idle.js', 'js/auth.js', 'js/assignments.js', 'js/pwa.js',
+  'js/app-shell.js', 'js/app-sidebar.js', 'js/app-effects.js', 'js/soal-html.js', 'js/quiz-results.js', 'js/srs.js', 'js/kana-ketik.js', 'js/sesi-idle.js', 'js/auth.js', 'js/assignments.js', 'js/pwa.js',
   'js/pages/dashboard.js', 'css/pages/dashboard.css',
   'nihon-go-benkyo.webmanifest',
   'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png',

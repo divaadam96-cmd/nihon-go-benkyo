@@ -35,7 +35,15 @@
     "kalimat-susun": { grup: "kalimat", judul: "Susun kalimat", ket: "Kata-kata diberi nomor - tuliskan urutan nomor yang membentuk kalimat yang benar." },
     "kalimat-pilih": { grup: "kalimat", judul: "Pilih kalimat Jepang", ket: "Soal menampilkan kalimat bahasa Indonesia, pilih kalimat bahasa Jepang yang benar." },
     "ujian-ulang": { grup: "ujian", judul: "Ujian ulang", ket: "Soal campuran kotoba, kanji, dan kalimat dari 5 pelajaran terakhir." },
+    // Latihan tambahan: tidak dinilai & tidak memengaruhi kunci bab.
+    "latihan-partikel": { grup: "latihan", judul: "Isi partikel", ket: "Ketik partikel yang hilang dari kalimat (boleh kana atau romaji, mis. \"wo\" atau \"を\"). Melatih mengingat sendiri, bukan sekadar memilih." },
+    "latihan-dengar": { grup: "latihan", judul: "Mendengar", ket: "Dengarkan kata atau kalimat (suara perangkat), lalu pilih artinya. Tulisannya ditampilkan setelah menjawab." },
   };
+  const LATIHAN = ["latihan-partikel", "latihan-dengar"];
+  const LATIHAN_JUMLAH = 10;
+  function isLatihan(target) {
+    return LATIHAN.includes(target);
+  }
   /* Ujian ulang tiap 5 bab (Bab 5, 10, ..., 50): soal campuran dari 5 bab
      terakhir, lulus kalau skor >= TUGAS_KKM. Wajib untuk membuka bab
      berikutnya - kecuali siswa yang sudah melewati bab itu sebelum ujian
@@ -589,6 +597,8 @@
   function buildQuestions(bab, target) {
     pemakaian = { kali: new Map(), set: new Set() };
     if (target === UJIAN) return buildUjian(bab);
+    if (target === "latihan-partikel") return buildPartikel(bab);
+    if (target === "latihan-dengar") return buildDengar(bab);
     if (target.startsWith("kotoba-")) {
       const items = kotobaItems(bab);
       return shuffle(items).map((item) => denganKartu(kotobaQuestion(bab, target, item), `hafalan:bab${bab}-kosakata:${item.jp}`));
@@ -615,6 +625,71 @@
       dariBab(kalimatQuestions(b, "kalimat-susun")[0], b),
     ]);
     return shuffle([...kotoba, ...kanji, ...kalimat]);
+  }
+  /* Isi partikel: satu partikel di kalimat susun dikosongkan. Partikel
+     kasus didahulukan (は paling akhir karena sering bisa diganti が);
+     partikel di akhir kalimat (か, ね, よ) tidak dipakai. */
+  const PARTIKEL = ["を", "に", "で", "へ", "と", "から", "まで", "の", "も", "が", "や", "より", "か", "は"];
+  const GERAK = /(いきます|きます|かえります|もどります|いって|きて|かえって|行|来|帰)/;
+  function soalPartikel(item) {
+    const kandidat = item.potongan
+      .map((p, i) => ({ p, i }))
+      .filter(({ p, i }) => PARTIKEL.includes(p) && i < item.potongan.length - 1)
+      .sort((a, b) => PARTIKEL.indexOf(a.p) - PARTIKEL.indexOf(b.p));
+    if (!kandidat.length) return null;
+    // Acak di antara partikel dengan prioritas terbaik supaya tidak selalu sama.
+    const terbaik = kandidat.filter((k) => PARTIKEL.indexOf(k.p) === PARTIKEL.indexOf(kandidat[0].p));
+    const { p, i } = acak(terbaik);
+    const kalimat = item.potongan.join("");
+    const sah = [p];
+    if ((p === "に" || p === "へ") && GERAK.test(kalimat)) sah.push(p === "に" ? "へ" : "に");
+    return {
+      type: "isi",
+      prompt: item.arti,
+      sebelum: item.potongan.slice(0, i).join(""),
+      sesudah: item.potongan.slice(i + 1).join(""),
+      answer: p,
+      sah,
+      sentence: kalimat + "。",
+    };
+  }
+  function buildPartikel(bab) {
+    return shuffle(tugasKalimatData[bab].susun).map(soalPartikel).filter(Boolean).slice(0, LATIHAN_JUMLAH);
+  }
+  /* Mendengar: 6 kata + 4 kalimat, dibacakan suara bahasa Jepang perangkat
+     (speechSynthesis). Pilihan jawaban = arti bahasa Indonesia. */
+  function teksSuara(teks) {
+    return String(teks).replace(/（[^）]*）/g, "").replace(/[～〜]/g, "").split("／")[0].trim();
+  }
+  function buildDengar(bab) {
+    const kata = shuffle(kotobaItems(bab)).filter((item) => teksSuara(item.jp)).slice(0, 6).map((item) =>
+      Object.assign(denganKartu(kotobaQuestion(bab, "kotoba-jp-id", item), `hafalan:bab${bab}-kosakata:${item.jp}`), {
+        audio: teksSuara(item.jp), instruction: "Dengarkan, lalu pilih artinya.",
+      }));
+    const semua = tugasKalimatData[bab].pilih;
+    const kalimat = shuffle(semua).slice(0, LATIHAN_JUMLAH - kata.length).map((item) => {
+      const lain = shuffle(semua.filter((x) => x !== item && norm(x.arti) !== norm(item.arti))).slice(0, 3).map((x) => x.arti);
+      return Object.assign(mcQuestion(item.arti, false, item.arti, lain, "Dengarkan kalimatnya, lalu pilih artinya."), { audio: item.benar, prompt: item.benar });
+    });
+    return shuffle([...kata, ...kalimat]);
+  }
+  let suaraJepang = null;
+  function cariSuara() {
+    if (!("speechSynthesis" in window)) return null;
+    suaraJepang = speechSynthesis.getVoices().find((v) => /^ja\b|ja-JP/i.test(v.lang)) || suaraJepang;
+    return suaraJepang;
+  }
+  if ("speechSynthesis" in window) speechSynthesis.addEventListener?.("voiceschanged", cariSuara);
+  function putar(teks) {
+    if (!("speechSynthesis" in window)) return false;
+    const u = new SpeechSynthesisUtterance(teks);
+    u.lang = "ja-JP";
+    u.rate = 0.85;
+    const suara = cariSuara();
+    if (suara) u.voice = suara;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+    return true;
   }
   function kotobaQuestion(bab, target, item) {
     if (target === "kotoba-jp-id") {
@@ -669,6 +744,8 @@
       mcQuestion(item.arti, false, item.benar, item.salah, "Pilih kalimat bahasa Jepang yang benar."));
   }
   function questionCount(bab, target) {
+    if (target === "latihan-partikel") return buildPartikel(bab).length;
+    if (target === "latihan-dengar") return LATIHAN_JUMLAH;
     if (target === UJIAN) return UJIAN_SUSUNAN.kotoba + UJIAN_SUSUNAN.kanji + 10;
     if (target.startsWith("kotoba-")) return (babKosakataData[bab] || []).length;
     if (target.startsWith("kanji-")) return (babKanjiData[bab] || []).length;
@@ -760,6 +837,10 @@
       const ket = `Ulangi Pelajaran ${rentangUjian(bab)} sekaligus: ${UJIAN_SUSUNAN.kotoba} soal kotoba, ${UJIAN_SUSUNAN.kanji} soal kanji, dan 2 soal kalimat dari tiap pelajaran. Kata & kanji yang salah masuk Ulangan Hafalan.`;
       html += `<section class="tugas-group tugas-ujian"><h4>Ujian ulang · Pelajaran ${rentangUjian(bab)}</h4><div class="tugas-card ${st.cls}"><div><b>Ujian ulang Pelajaran ${rentangUjian(bab)}</b><p>${ket}</p><small class="tugas-count">${questionCount(bab, UJIAN)} soal · lulus dengan nilai minimal ${TUGAS_KKM}${ujianWajib(bab) ? "" : " · tidak wajib untuk akun ini (sudah melewati bab ini)"}</small><span class="tugas-status ${st.cls}">${st.text}</span></div><div class="tugas-card-actions"><button type="button" class="${row ? "secondary" : "primary"}" data-tugas-mulai="${UJIAN}"${terbuka ? "" : " disabled"}>${row ? "Kerjakan lagi" : "Mulai ujian"}</button></div></div>${terbuka ? "" : `<p class="tugas-hint">🔒 Ujian terbuka setelah semua tugas Pelajaran ${bab} selesai dengan rata-rata minimal ${TUGAS_KKM}.</p>`}</section>`;
     }
+    html += `<section class="tugas-group tugas-latihan"><h4>Latihan tambahan · tidak dinilai</h4><div class="tugas-cards">${LATIHAN.map((target) => {
+      const info = TARGET_INFO[target];
+      return `<div class="tugas-card"><div><b>${info.judul}</b><p>${info.ket}</p><small class="tugas-count">${questionCount(bab, target)} soal · boleh diulang sesukanya</small></div><div class="tugas-card-actions"><button type="button" class="secondary" data-tugas-mulai="${target}"${tugasTerbuka ? "" : " disabled"}>Latihan</button></div></div>`;
+    }).join("")}</div></section>`;
     if (!tugasTerbuka) html += `<p class="tugas-hint">🔒 Tugas terbuka setelah materi ditandai <b>Sudah paham</b>.</p>`;
     container.innerHTML = html;
 
@@ -789,8 +870,13 @@
       const q = questions[index];
       const pct = Math.round((index / questions.length) * 100);
       let body = `<div class="tugas-quiz-top"><button type="button" class="tugas-quiz-exit">✕ Keluar</button><span>${esc(info.judul)} · Soal ${index + 1} dari ${questions.length}</span><span class="tugas-quiz-score">Benar ${correct}</span></div><div class="track tugas-quiz-track"><div class="fill" style="width:${pct}%"></div></div>`;
-      if (q.type === "pilih") {
-        body += `<p class="tugas-quiz-instruction">${q.bab ? `<span class="tugas-quiz-bab">Pelajaran ${q.bab}</span> ` : ""}${esc(q.instruction)}</p><div class="tugas-quiz-prompt${q.promptJp ? " is-jp" : ""}" lang="${q.promptJp ? "ja" : "id"}">${esc(q.prompt)}</div><div class="tugas-quiz-choices">${q.choices
+      if (q.type === "isi") {
+        body += `<p class="tugas-quiz-instruction">Ketik partikel yang hilang (kana atau romaji). Artinya:</p><div class="tugas-quiz-prompt">${esc(q.prompt)}</div><p class="tugas-isi-kalimat" lang="ja">${esc(q.sebelum)}<span class="tugas-isi-kosong">？</span>${esc(q.sesudah)}。</p><form class="tugas-susun-form"><label>Partikel <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" lang="ja" placeholder="contoh: wo / を" required></label><button type="submit" class="primary">Periksa</button></form>`;
+      } else if (q.type === "pilih") {
+        const promptHtml = q.audio
+          ? `<div class="tugas-quiz-prompt tugas-audio"><button type="button" class="primary tugas-putar">🔊 Putar lagi</button><span class="tugas-audio-teks" lang="ja" hidden>${esc(q.audio)}</span>${"speechSynthesis" in window ? "" : `<small>Perangkat ini tidak bisa membacakan suara - tulisannya ditampilkan.</small>`}</div>`
+          : `<div class="tugas-quiz-prompt${q.promptJp ? " is-jp" : ""}" lang="${q.promptJp ? "ja" : "id"}">${esc(q.prompt)}</div>`;
+        body += `<p class="tugas-quiz-instruction">${q.bab ? `<span class="tugas-quiz-bab">Pelajaran ${q.bab}</span> ` : ""}${esc(q.instruction)}</p>${promptHtml}<div class="tugas-quiz-choices">${q.choices
           .map((c, i) => `<button type="button" class="tugas-choice" data-choice="${i}"${/[぀-ヿ一-鿿]/.test(c) ? ' lang="ja"' : ""}><span class="tugas-choice-key">${"ABCD"[i]}</span>${esc(c)}</button>`)
           .join("")}</div>`;
       } else {
@@ -800,7 +886,28 @@
       container.innerHTML = `<div class="tugas-quiz">${body}</div>`;
       container.querySelector(".tugas-quiz-exit").onclick = backToList;
 
-      if (q.type === "pilih") {
+      if (q.audio) {
+        const teksEl = container.querySelector(".tugas-audio-teks");
+        const main = () => {
+          if (!putar(q.audio)) teksEl.hidden = false;
+        };
+        container.querySelector(".tugas-putar").onclick = main;
+        main();
+      }
+      if (q.type === "isi") {
+        const form = container.querySelector(".tugas-susun-form");
+        const input = form.querySelector("input");
+        input.focus({ preventScroll: true });
+        form.onsubmit = (event) => {
+          event.preventDefault();
+          if (!input.value.trim()) return;
+          const ok = q.sah.some((p) => KanaKetik.cocokKetik(input.value, p));
+          input.disabled = true;
+          form.querySelector("button").disabled = true;
+          container.querySelector(".tugas-isi-kosong").textContent = q.answer;
+          answered(ok, KanaKetik.normalKetik(input.value), `${q.sah.join(" / ")} → ${q.sentence}`);
+        };
+      } else if (q.type === "pilih") {
         container.querySelectorAll(".tugas-choice").forEach((button) => {
           button.onclick = () => {
             const chosen = q.choices[Number(button.dataset.choice)];
@@ -811,6 +918,8 @@
               if (value === q.answer) b.classList.add("benar");
               else if (b === button) b.classList.add("salah");
             });
+            const teksEl = container.querySelector(".tugas-audio-teks");
+            if (teksEl) teksEl.hidden = false;
             answered(ok, chosen, q.answer);
           };
         });
@@ -867,6 +976,10 @@
       const skor = Math.floor((100 * correct) / total);
       const lulus = skor >= TUGAS_KKM; // skor tugas ini sendiri (penanda warna)
       container.innerHTML = `<div class="tugas-result"><p class="tugas-loading">Menyimpan hasil…</p></div>`;
+      if (isLatihan(target)) {
+        finishLatihan(skor);
+        return;
+      }
       const { saved } = await record(bab, target, correct, total);
       const babSelesai = isComplete(bab);
       let html = `<div class="tugas-result ${lulus ? "lulus" : "ulang"}"><div class="eyebrow">${esc(info.judul)} · Pelajaran ${bab}</div><div class="tugas-result-score"><b>${skor}</b><span>${correct} benar dari ${total} soal</span></div><h3>${lulus ? (target === UJIAN ? "Lulus ujian ulang! 🎉" : "Bagus! 🎉") : target === UJIAN ? `Belum lulus - perlu nilai minimal ${TUGAS_KKM}. Ulangi kata yang salah di Hafalan, lalu coba lagi.` : `Skor di bawah ${TUGAS_KKM} - boleh diulang untuk menaikkan rata-rata.`}</h3>`;
@@ -885,6 +998,20 @@
         html += `<p class="tugas-hafalan-note">📌 ${keHafalan.size} ${jenis} yang salah masuk ke <b>Ulangan</b> di Hafalan dan muncul lagi besok. <a href="hafalan.html?ulangan=1">Buka Hafalan</a></p>`;
       }
       html += `<div class="tugas-result-actions"><button type="button" class="secondary" data-tugas-ulang>Kerjakan lagi (soal diacak)</button><button type="button" class="primary" data-tugas-kembali>Kembali ke daftar tugas</button></div></div>`;
+      container.innerHTML = html;
+      container.querySelector("[data-tugas-ulang]").onclick = () => runQuiz(container, bab, target, hooks);
+      container.querySelector("[data-tugas-kembali]").onclick = backToList;
+    }
+
+    function finishLatihan(skor) {
+      let html = `<div class="tugas-result ${skor >= TUGAS_KKM ? "lulus" : "ulang"}"><div class="eyebrow">Latihan ${esc(info.judul)} · Pelajaran ${bab}</div><div class="tugas-result-score"><b>${skor}</b><span>${correct} benar dari ${questions.length} soal</span></div><h3>${skor >= TUGAS_KKM ? "Bagus! 🎉" : "Terus berlatih!"}</h3><p class="tugas-rata">Latihan tambahan tidak dinilai dan tidak memengaruhi kunci pelajaran.</p>`;
+      if (mistakes.length) {
+        html += `<details class="tugas-mistakes" open><summary>Soal yang salah (${mistakes.length})</summary><ul>${mistakes
+          .map((m) => `<li><b lang="ja">${esc(m.prompt)}</b><span>Jawabanmu: ${esc(m.given)}</span><span>Benar: <span lang="ja">${esc(m.answer)}</span></span></li>`)
+          .join("")}</ul></details>`;
+      }
+      if (keHafalan.size) html += `<p class="tugas-hafalan-note">📌 ${keHafalan.size} kata yang salah masuk ke <b>Ulangan</b> di Hafalan dan muncul lagi besok. <a href="hafalan.html?ulangan=1">Buka Hafalan</a></p>`;
+      html += `<div class="tugas-result-actions"><button type="button" class="secondary" data-tugas-ulang>Latihan lagi (soal diacak)</button><button type="button" class="primary" data-tugas-kembali>Kembali ke daftar tugas</button></div></div>`;
       container.innerHTML = html;
       container.querySelector("[data-tugas-ulang]").onclick = () => runQuiz(container, bab, target, hooks);
       container.querySelector("[data-tugas-kembali]").onclick = backToList;

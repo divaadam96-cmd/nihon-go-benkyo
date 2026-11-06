@@ -562,3 +562,34 @@
   color: #7a5a1c;
   font-weight: 800;
 }
+
+/* Latihan tambahan (tidak dinilai) */
+.tugas-latihan .tugas-card {
+  border-style: dashed;
+}
+.tugas-isi-kalimat {
+  margin: 0 0 12px;
+  font-size: 20px;
+  line-height: 1.7;
+}
+.tugas-isi-kosong {
+  display: inline-block;
+  min-width: 2.2em;
+  margin: 0 4px;
+  border-bottom: 2px solid var(--navy);
+  color: var(--navy);
+  font-weight: 800;
+  text-align: center;
+}
+.tugas-audio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.tugas-audio-teks {
+  font-size: 22px;
+}
+.tugas-audio small {
+  color: var(--muted);
+}
