@@ -3956,4 +3956,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  49: {
+    susun: [
+      { arti: "Manajer sudah pulang. (hormat)", potongan: ["ぶちょう", "は", "もう", "おかえり", "に", "なりました"] },
+      { arti: "Jam berapa direktur datang? (hormat)", potongan: ["しゃちょう", "は", "なんじ", "に", "いらっしゃいます", "か"] },
+      { arti: "Guru mau makan apa? (hormat)", potongan: ["せんせい", "は", "なに", "を", "めしあがります", "か"] },
+      { arti: "Sdr. Miller yang menulis buku ini. (hormat)", potongan: ["ミラーさん", "は", "この", "ほん", "を", "おかき", "に", "なりました"] },
+      { arti: "Besok guru pergi ke Kyoto. (hormat)", potongan: ["せんせい", "は", "あした", "きょうと", "へ", "いかれます"] },
+      { arti: "Sekarang direktur sedang melakukan apa? (hormat)", potongan: ["しゃちょう", "は", "いま", "なに", "を", "なさって", "います", "か"] },
+      { arti: "Apakah (Anda) sudah melihat foto ini? (hormat)", potongan: ["この", "しゃしん", "を", "ごらん", "に", "なりました", "か"] },
+      { arti: "Apakah (Anda) kenal Prof. Yamada? (hormat)", potongan: ["やまだせんせい", "を", "ごぞんじ", "です", "か"] },
+      { arti: "Silakan duduk.", potongan: ["どうぞ", "おかけ", "ください"] },
+      { arti: "Silakan makan, jangan sungkan.", potongan: ["えんりょなく", "めしあがって", "ください"] },
+      { arti: "Sdr. Tanaka mengatakan apa? (hormat)", potongan: ["たなかさん", "は", "なん", "と", "おっしゃいました", "か"] },
+      { arti: "Pada waktu pulang, (saya) mampir ke toko buku.", potongan: ["かえりに", "ほんや", "に", "よりました"] },
+    ],
+    pilih: [
+      {
+        arti: "Manajer sudah pulang. (hormat)",
+        benar: "ぶちょうは もう おかえりに なりました。",
+        salah: ["ぶちょうは もう おかえりを なりました。", "ぶちょうは もう おかえりに しました。", "ぶちょうは もう おかえるに なりました。"],
+      },
+      {
+        arti: "Jam berapa direktur datang? (hormat)",
+        benar: "しゃちょうは なんじに いらっしゃいますか。",
+        salah: ["しゃちょうは なんじに いらっしゃりますか。", "しゃちょうは なんじに まいりますか。", "しゃちょうは なんじに いらっしゃいましょうか。"],
+      },
+      {
+        arti: "Guru mau makan apa? (hormat)",
+        benar: "せんせいは なにを めしあがりますか。",
+        salah: ["せんせいは なにを いただきますか。", "せんせいは なにを めしあがいますか。", "せんせいは なにを めしあがるますか。"],
+      },
+      {
+        arti: "Sdr. Miller yang menulis buku ini. (hormat)",
+        benar: "ミラーさんは この ほんを おかきに なりました。",
+        salah: ["ミラーさんは この ほんを おかいに なりました。", "ミラーさんは この ほんを おかくに なりました。", "ミラーさんは この ほんを おかきを なりました。"],
+      },
+      {
+        arti: "Besok guru pergi ke Kyoto. (hormat)",
+        benar: "せんせいは あした きょうとへ いかれます。",
+        salah: ["せんせいは あした きょうとへ いかられます。", "せんせいは あした きょうとへ いきられます。", "せんせいは あした きょうとへ まいります。"],
+      },
+      {
+        arti: "Sekarang direktur sedang melakukan apa? (hormat)",
+        benar: "しゃちょうは いま なにを なさって いますか。",
+        salah: ["しゃちょうは いま なにを なさいって いますか。", "しゃちょうは いま なにを いたして いますか。", "しゃちょうは いま なにを なさりて いますか。"],
+      },
+      {
+        arti: "Apakah (Anda) sudah melihat foto ini? (hormat)",
+        benar: "この しゃしんを ごらんに なりましたか。",
+        salah: ["この しゃしんを ごらんを なりましたか。", "この しゃしんを はいけんに なりましたか。", "この しゃしんを ごらんに しましたか。"],
+      },
+      {
+        arti: "Apakah (Anda) kenal Prof. Yamada? (hormat)",
+        benar: "やまだせんせいを ごぞんじですか。",
+        salah: ["やまだせんせいを ぞんじて おりますか。", "やまだせんせいを ごぞんじに なりますか。", "やまだせんせいが ごぞんじですか。"],
+      },
+      {
+        arti: "Silakan duduk.",
+        benar: "どうぞ おかけ ください。",
+        salah: ["どうぞ おかけて ください。", "どうぞ おかけに ください。", "どうぞ おかけを ください。"],
+      },
+      {
+        arti: "Sdr. Tanaka mengatakan apa? (hormat)",
+        benar: "たなかさんは なんと おっしゃいましたか。",
+        salah: ["たなかさんは なんと もうしましたか。", "たなかさんは なんと おっしゃりましたか。", "たなかさんは なんで おっしゃいましたか。"],
+      },
+      {
+        arti: "Silakan makan, jangan sungkan.",
+        benar: "えんりょなく めしあがって ください。",
+        salah: ["えんりょなく めしあがりて ください。", "えんりょなく いただいて ください。", "えんりょなく めしあがっで ください。"],
+      },
+      {
+        arti: "Tolong sampaikan salam saya kepada keluarga.",
+        benar: "ごかぞくに よろしく おつたえ ください。",
+        salah: ["ごかぞくに よろしく おつたえて ください。", "ごかぞくを よろしく おつたえ ください。", "ごかぞくに よろしく つたえさせて ください。"],
+      },
+    ],
+  },
 };

@@ -3539,13 +3539,13 @@ const babKosakataData = {
     ["\uff5e\u3055\u307e", "Kata hormat \uff5e\u3055\u3093"],
     ["\u304b\u3048\u308a\u306b", "Pada waktu pulang"],
     ["\u305f\u307e\u306b", "Sesekali"],
-    ["\u3061\u3087\u3063\u3068\u3082", "Sama sekali (diikuti bentuk negatif)"],
+    ["\u3061\u3063\u3068\u3082", "Sama sekali (diikuti bentuk negatif)"],
     ["\u3048\u3093\u308a\u3087\u306a\u304f", "Tanpa malu-malu"],
     ["\uff5e\u306d\u3093\uff5e\u304f\u307f", "Kelas---,---"],
     ["\u3067\u306f", "Kalau begitu (bentuk hormat \u3058\u3083)"],
-    ["\u3060\u3057\u307e\u3059\uff08\u3092\uff09", "Demam"],
+    ["\u3060\u3057\u307e\u3059\uff08\u3092\uff09", "Mengeluarkan (demam)"],
     [
-      "\u3088\u308d\u3057\u304f\u304a\u3064\u305f\u3048\u3066\u304f\u3060\u3055\u3044",
+      "\u3088\u308d\u3057\u304f\u304a\u3064\u305f\u3048\u304f\u3060\u3055\u3044",
       "Tolong sampaikan salam saya",
     ],
     [
@@ -8346,7 +8346,7 @@ const babKanjiData = {
   ],
   49: [
     [
-      "\u52aa\u3081\u307e\u3059",
+      "\u52e4\u3081\u307e\u3059",
       "\u3064\u3068\u3081\u307e\u3059\uff08\u306b\uff09",
       "Bekerja (untuk perusahaan)",
     ],
@@ -8405,7 +8405,7 @@ const babKanjiData = {
     [
       "\u51fa\u3057\u307e\u3059",
       "\u3060\u3057\u307e\u3059\uff08\u3092\uff09",
-      "Demam",
+      "Mengeluarkan (demam)",
     ],
     [
       "\u5931\u793c\u3044\u305f\u3057\u307e\u3059",
