@@ -3800,4 +3800,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  47: {
+    susun: [
+      { arti: "Menurut prakiraan cuaca, katanya besok akan dingin.", potongan: ["てんきよほう", "に", "よると", "あした", "は", "さむく", "なる", "そう", "です"] },
+      { arti: "Katanya Sdri. Klara waktu kecil tinggal di Prancis.", potongan: ["クララさん", "は", "こども", "の", "とき", "フランス", "に", "すんで", "いた", "そう", "です"] },
+      { arti: "Katanya Pulau Bali sangat indah.", potongan: ["バリとう", "は", "とても", "きれいだ", "そう", "です"] },
+      { arti: "Katanya Sdr. Miller akan menikah bulan depan.", potongan: ["ミラーさん", "は", "らいげつ", "けっこんする", "そう", "です"] },
+      { arti: "Banyak orang berkumpul ya. ... Sepertinya ada kecelakaan.", potongan: ["じこ", "の", "よう", "です", "ね"] },
+      { arti: "Sepertinya (saya) masuk angin.", potongan: ["どうも", "かぜ", "を", "ひいた", "よう", "です"] },
+      { arti: "Sepertinya tidak ada siapa-siapa.", potongan: ["だれ", "も", "いない", "よう", "です"] },
+      { arti: "Terdengar bunyi aneh.", potongan: ["へんな", "おと", "が", "します"] },
+      { arti: "Tercium bau harum.", potongan: ["いい", "におい", "が", "します"] },
+      { arti: "Sup ini rasanya aneh.", potongan: ["この", "スープ", "は", "へんな", "あじ", "が", "します"] },
+      { arti: "Terdengar suara seseorang.", potongan: ["だれか", "の", "こえ", "が", "します"] },
+      { arti: "Katanya obat ini manjur.", potongan: ["この", "くすり", "は", "よく", "きく", "そう", "です"] },
+    ],
+    pilih: [
+      {
+        arti: "Menurut prakiraan cuaca, katanya besok akan dingin.",
+        benar: "てんきよほうに よると、あしたは さむく なるそうです。",
+        salah: ["てんきよほうに よると、あしたは さむく なりそうです。", "てんきよほうに よると、あしたは さむく なるだそうです。", "てんきよほうで よると、あしたは さむく なるそうです。"],
+      },
+      {
+        arti: "Katanya Pulau Bali sangat indah.",
+        benar: "バリとうは とても きれいだそうです。",
+        salah: ["バリとうは とても きれいそうです。", "バリとうは とても きれいなそうです。", "バリとうは とても きれいのそうです。"],
+      },
+      {
+        arti: "Katanya Sdr. Miller akan menikah bulan depan.",
+        benar: "ミラーさんは らいげつ けっこんするそうです。",
+        salah: ["ミラーさんは らいげつ けっこんしそうです。", "ミラーさんは らいげつ けっこんするなそうです。", "ミラーさんは らいげつ けっこんしますそうです。"],
+      },
+      {
+        arti: "Katanya Sdri. Klara waktu kecil tinggal di Prancis.",
+        benar: "クララさんは こどもの とき、フランスに すんで いたそうです。",
+        salah: ["クララさんは こどもの とき、フランスに すんで いそうです。", "クララさんは こどもの とき、フランスに すんで いただそうです。", "クララさんは こどもの とき、フランスを すんで いたそうです。"],
+      },
+      {
+        arti: "Banyak orang berkumpul ya. ... Sepertinya ada kecelakaan.",
+        benar: "ひとが おおぜい あつまって いますね。……じこの ようですね。",
+        salah: ["ひとが おおぜい あつまって いますね。……じこな ようですね。", "ひとが おおぜい あつまって いますね。……じこ ようですね。", "ひとが おおぜい あつまって いますね。……じこだ ようですね。"],
+      },
+      {
+        arti: "Sepertinya (saya) masuk angin.",
+        benar: "どうも かぜを ひいた ようです。",
+        salah: ["どうも かぜを ひいたの ようです。", "どうも かぜを ひいて ようです。", "どうも かぜが ひいた ようです。"],
+      },
+      {
+        arti: "Sepertinya tidak ada siapa-siapa.",
+        benar: "だれも いない ようです。",
+        salah: ["だれも いないの ようです。", "だれも いなく ようです。", "だれか いない ようです。"],
+      },
+      {
+        arti: "Terdengar bunyi aneh.",
+        benar: "へんな おとが します。",
+        salah: ["へんな おとを します。", "へんな おとが あります します。", "へんに おとが します。"],
+      },
+      {
+        arti: "Tercium bau harum.",
+        benar: "いい においが します。",
+        salah: ["いい においを します。", "いい においで します。", "よく においが します。"],
+      },
+      {
+        arti: "Sup ini rasanya aneh.",
+        benar: "この スープは へんな あじが します。",
+        salah: ["この スープは へんな あじを します。", "この スープは へんな あじに します。", "この スープは へんの あじが します。"],
+      },
+      {
+        arti: "Katanya obat ini manjur.",
+        benar: "この くすりは よく きくそうです。",
+        salah: ["この くすりは よく ききそうです。", "この くすりは よく きくだそうです。", "この くすりは よく きくのそうです。"],
+      },
+      {
+        arti: "Sepertinya (dia) sedang sibuk.",
+        benar: "いそがしい ようです。",
+        salah: ["いそがしいの ようです。", "いそがしいな ようです。", "いそがしく ようです。"],
+      },
+    ],
+  },
 };
