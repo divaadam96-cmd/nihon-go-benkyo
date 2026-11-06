@@ -538,40 +538,52 @@
   function mcQuestion(prompt, promptJp, answer, wrong, instruction) {
     return { type: "pilih", prompt, promptJp, answer, choices: shuffle([answer, ...wrong]), instruction };
   }
+  /* Id kartu Hafalan (js/srs.js, format diperiksa srs_review() di server):
+     kata/kanji yang salah dijawab di tugas masuk ke "Ulangan hari ini" di
+     halaman Hafalan. Kalimat tidak punya kartu Hafalan, jadi tidak ikut. */
+  function denganKartu(question, srsId) {
+    question.srsId = srsId;
+    return question;
+  }
   function buildQuestions(bab, target) {
     pemakaian = { kali: new Map(), set: new Set() };
     if (target.startsWith("kotoba-")) {
       const items = kotobaItems(bab);
-      return shuffle(items).map((item) => {
-        if (target === "kotoba-jp-id") {
-          const wrong = distractors(bab, kotobaItems, item, (x) => x.id, (x) => norm(x.jp) === norm(item.jp));
-          return mcQuestion(item.jp, true, item.id, wrong, "Apa arti kata ini dalam bahasa Indonesia?");
-        }
-        const wrong = distractors(bab, kotobaItems, item, (x) => x.jp, (x) => norm(x.id) === norm(item.id));
-        return mcQuestion(item.id, false, item.jp, wrong, "Apa bahasa Jepangnya?");
-      });
+      return shuffle(items).map((item) => denganKartu(kotobaQuestion(bab, target, item), `hafalan:bab${bab}-kosakata:${item.jp}`));
     }
     if (target.startsWith("kanji-")) {
       const items = kanjiItems(bab);
-      return shuffle(items).map((item) => {
-        switch (target) {
-          case "kanji-kanji-kana":
-            return mcQuestion(item.kanji, true, item.kana,
-              pengecohKhusus(bab, item, item.kana, bacaanMirip(bab, item), (x) => x.kana, (x) => x.kanji === item.kanji),
-              "Bagaimana cara baca yang benar?");
-          case "kanji-kana-kanji":
-            return mcQuestion(item.kana, true, item.kanji,
-              pengecohKhusus(bab, item, item.kanji, kanjiMirip(bab, item), (x) => x.kanji, (x) => norm(x.kana) === norm(item.kana)),
-              "Mana tulisan kanji yang benar?");
-          case "kanji-kanji-id":
-            return mcQuestion(item.kanji, true, item.id,
-              distractors(bab, kanjiItems, item, (x) => x.id, (x) => x.kanji === item.kanji), "Apa arti kanji ini?");
-          default:
-            return mcQuestion(item.id, false, item.kanji,
-              distractors(bab, kanjiItems, item, (x) => x.kanji, (x) => norm(x.id) === norm(item.id)), "Mana kanjinya?");
-        }
-      });
+      return shuffle(items).map((item) => denganKartu(kanjiQuestion(bab, target, item), `hafalan:bab${bab}-kanji:${item.kanji}`));
     }
+    return kalimatQuestions(bab, target);
+  }
+  function kotobaQuestion(bab, target, item) {
+    if (target === "kotoba-jp-id") {
+      const wrong = distractors(bab, kotobaItems, item, (x) => x.id, (x) => norm(x.jp) === norm(item.jp));
+      return mcQuestion(item.jp, true, item.id, wrong, "Apa arti kata ini dalam bahasa Indonesia?");
+    }
+    const wrong = distractors(bab, kotobaItems, item, (x) => x.jp, (x) => norm(x.id) === norm(item.id));
+    return mcQuestion(item.id, false, item.jp, wrong, "Apa bahasa Jepangnya?");
+  }
+  function kanjiQuestion(bab, target, item) {
+    switch (target) {
+      case "kanji-kanji-kana":
+        return mcQuestion(item.kanji, true, item.kana,
+          pengecohKhusus(bab, item, item.kana, bacaanMirip(bab, item), (x) => x.kana, (x) => x.kanji === item.kanji),
+          "Bagaimana cara baca yang benar?");
+      case "kanji-kana-kanji":
+        return mcQuestion(item.kana, true, item.kanji,
+          pengecohKhusus(bab, item, item.kanji, kanjiMirip(bab, item), (x) => x.kanji, (x) => norm(x.kana) === norm(item.kana)),
+          "Mana tulisan kanji yang benar?");
+      case "kanji-kanji-id":
+        return mcQuestion(item.kanji, true, item.id,
+          distractors(bab, kanjiItems, item, (x) => x.id, (x) => x.kanji === item.kanji), "Apa arti kanji ini?");
+      default:
+        return mcQuestion(item.id, false, item.kanji,
+          distractors(bab, kanjiItems, item, (x) => x.kanji, (x) => norm(x.id) === norm(item.id)), "Mana kanjinya?");
+    }
+  }
+  function kalimatQuestions(bab, target) {
     const data = tugasKalimatData[bab];
     if (target === "kalimat-susun") {
       return shuffle(data.susun).slice(0, TUGAS_KALIMAT_JUMLAH).map((item) => {
@@ -685,6 +697,7 @@
     let index = 0;
     let correct = 0;
     const mistakes = [];
+    const keHafalan = new Set();
 
     function backToList() {
       renderList(container, bab, hooks);
@@ -748,7 +761,14 @@
     function answered(ok, given, answerText) {
       const q = questions[index];
       if (ok) correct++;
-      else mistakes.push({ prompt: q.prompt, given, answer: answerText });
+      else {
+        mistakes.push({ prompt: q.prompt, given, answer: answerText });
+        // "again" = jatuh tempo besok (lihat srsReview), lalu makin jarang kalau sudah hafal.
+        if (q.srsId && typeof srsReview === "function" && !keHafalan.has(q.srsId)) {
+          keHafalan.add(q.srsId);
+          srsReview(q.srsId, "again");
+        }
+      }
       const feedback = container.querySelector(".tugas-feedback");
       const last = index === questions.length - 1;
       feedback.innerHTML = `<p class="${ok ? "tugas-feedback-benar" : "tugas-feedback-salah"}">${ok ? "Benar!" : `Belum tepat. Jawaban benar: <span lang="ja">${esc(answerText)}</span>`}</p><button type="button" class="primary tugas-next">${last ? "Lihat hasil" : "Lanjut →"}</button>`;
@@ -778,6 +798,10 @@
         html += `<details class="tugas-mistakes"${lulus ? "" : " open"}><summary>Soal yang salah (${mistakes.length})</summary><ul>${mistakes
           .map((m) => `<li><b lang="ja">${esc(m.prompt)}</b><span>Jawabanmu: ${esc(m.given)}</span><span>Benar: <span lang="ja">${esc(m.answer)}</span></span></li>`)
           .join("")}</ul></details>`;
+      }
+      if (keHafalan.size) {
+        const jenis = target.startsWith("kanji-") ? "kanji" : "kata";
+        html += `<p class="tugas-hafalan-note">📌 ${keHafalan.size} ${jenis} yang salah masuk ke <b>Ulangan</b> di Hafalan dan muncul lagi besok. <a href="hafalan.html?ulangan=1">Buka Hafalan</a></p>`;
       }
       html += `<div class="tugas-result-actions"><button type="button" class="secondary" data-tugas-ulang>Kerjakan lagi (soal diacak)</button><button type="button" class="primary" data-tugas-kembali>Kembali ke daftar tugas</button></div></div>`;
       container.innerHTML = html;

@@ -472,6 +472,19 @@
   font-size: 11px;
   font-weight: 800;
 }
+.tugas-hafalan-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  color: #3a4252;
+  background: #eef1f6;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.tugas-hafalan-note a {
+  color: var(--navy);
+  font-weight: 800;
+}
 .tugas-mistakes {
   margin: 0 0 14px;
   font-size: 11px;
