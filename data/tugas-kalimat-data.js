@@ -4034,4 +4034,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  50: {
+    susun: [
+      { arti: "Bolehkah saya bawakan barangnya? (merendah)", potongan: ["にもつ", "を", "おもちしましょう", "か"] },
+      { arti: "Besok saya yang akan memandu. (merendah)", potongan: ["あした", "わたし", "が", "ごあんないします"] },
+      { arti: "Nama saya Miller. (merendah)", potongan: ["わたし", "は", "ミラー", "と", "もうします"] },
+      { arti: "Besok saya pergi ke Tokyo. (merendah)", potongan: ["わたし", "は", "あした", "とうきょう", "へ", "まいります"] },
+      { arti: "Saya berkunjung ke rumah direktur. (merendah)", potongan: ["しゃちょう", "の", "おたく", "に", "うかがいました"] },
+      { arti: "Saya sudah melihat foto Bapak guru. (merendah)", potongan: ["せんせい", "の", "しゃしん", "を", "はいけんしました"] },
+      { arti: "Saya kenal baik Sdr. Yamada. (merendah)", potongan: ["やまださん", "の", "こと", "は", "よく", "ぞんじて", "おります"] },
+      { arti: "Saya bertemu dengan direktur. (merendah)", potongan: ["しゃちょう", "に", "おめ", "に", "かかりました"] },
+      { arti: "Ayah sekarang ada di rumah. (merendah)", potongan: ["ちち", "は", "いま", "うち", "に", "おります"] },
+      { arti: "Saya akan menunggu di sini. (merendah)", potongan: ["こちら", "で", "おまちします"] },
+      { arti: "Saya terima kopinya. (merendah)", potongan: ["コーヒー", "を", "いただきます"] },
+      { arti: "Saya yang akan melakukan pekerjaan itu. (merendah)", potongan: ["その", "しごと", "は", "わたし", "が", "いたします"] },
+    ],
+    pilih: [
+      {
+        arti: "Bolehkah saya bawakan barangnya? (merendah)",
+        benar: "にもつを おもちしましょうか。",
+        salah: ["にもつを おもちに なりましょうか。", "にもつを おもってしましょうか。", "にもつを おもちしてましょうか。"],
+      },
+      {
+        arti: "Besok saya yang akan memandu. (merendah)",
+        benar: "あした わたしが ごあんないします。",
+        salah: ["あした わたしが おあんないします。", "あした わたしが ごあんないに なります。", "あした わたしが ごあんないされます。"],
+      },
+      {
+        arti: "Nama saya Miller. (merendah)",
+        benar: "わたしは ミラーと もうします。",
+        salah: ["わたしは ミラーと おっしゃいます。", "わたしは ミラーを もうします。", "わたしは ミラーと もうされます。"],
+      },
+      {
+        arti: "Besok saya pergi ke Tokyo. (merendah)",
+        benar: "わたしは あした とうきょうへ まいります。",
+        salah: ["わたしは あした とうきょうへ いらっしゃいます。", "わたしは あした とうきょうへ いかれます。", "わたしは あした とうきょうへ まいられます。"],
+      },
+      {
+        arti: "Saya sudah melihat foto Bapak guru. (merendah)",
+        benar: "せんせいの しゃしんを はいけんしました。",
+        salah: ["せんせいの しゃしんを ごらんに なりました。", "せんせいの しゃしんを はいけんに なりました。", "せんせいの しゃしんが はいけんしました。"],
+      },
+      {
+        arti: "Saya kenal baik Sdr. Yamada. (merendah)",
+        benar: "やまださんの ことは よく ぞんじて おります。",
+        salah: ["やまださんの ことは よく ごぞんじです。", "やまださんの ことは よく ぞんじって おります。", "やまださんの ことは よく ぞんじて いらっしゃいます。"],
+      },
+      {
+        arti: "Saya bertemu dengan direktur. (merendah)",
+        benar: "しゃちょうに おめに かかりました。",
+        salah: ["しゃちょうに おめが かかりました。", "しゃちょうを おめに かかりました。", "しゃちょうに おめに かけました。"],
+      },
+      {
+        arti: "Ayah sekarang ada di rumah. (merendah)",
+        benar: "ちちは いま うちに おります。",
+        salah: ["ちちは いま うちに いらっしゃいます。", "ちちは いま うちに おられます。", "ちちは いま うちを おります。"],
+      },
+      {
+        arti: "Saya terima kopinya. (merendah)",
+        benar: "コーヒーを いただきます。",
+        salah: ["コーヒーを めしあがります。", "コーヒーを いただかれます。", "コーヒーが いただきます。"],
+      },
+      {
+        arti: "Saya berkunjung ke rumah direktur. (merendah)",
+        benar: "しゃちょうの おたくに うかがいました。",
+        salah: ["しゃちょうの おたくに いらっしゃいました。", "しゃちょうの おたくに うかがわれました。", "しゃちょうの おたくを うかがいました。"],
+      },
+      {
+        arti: "Saya akan menunggu di sini. (merendah)",
+        benar: "こちらで おまちします。",
+        salah: ["こちらで おまちに なります。", "こちらで おまちされます。", "こちらに おまちします。"],
+      },
+      {
+        arti: "Apa kabar? (hormat)",
+        benar: "おげんきで いらっしゃいますか。",
+        salah: ["おげんきで おりますか。", "おげんきで まいりますか。", "おげんきに いらっしゃいますか。"],
+      },
+    ],
+  },
 };
