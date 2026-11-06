@@ -3410,4 +3410,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  42: {
+    susun: [
+      { arti: "Untuk memiliki toko sendiri, (saya) menabung.", potongan: ["じぶん", "の", "みせ", "を", "もつ", "ために", "ちょきんして", "います"] },
+      { arti: "Untuk pindah rumah, (saya) menyewa mobil.", potongan: ["ひっこし", "の", "ために", "くるま", "を", "かります"] },
+      { arti: "Demi kesehatan, setiap pagi (saya) berlari.", potongan: ["けんこう", "の", "ために", "まいあさ", "はしって", "います"] },
+      { arti: "Gunting ini dipakai untuk memotong bunga.", potongan: ["この", "はさみ", "は", "はな", "を", "きる", "のに", "つかいます"] },
+      { arti: "Kalkulator dipakai untuk menghitung.", potongan: ["でんたく", "は", "けいさんする", "のに", "つかいます"] },
+      { arti: "Furoshiki dipakai untuk membungkus barang.", potongan: ["ふろしき", "は", "もの", "を", "つつむ", "のに", "つかいます"] },
+      { arti: "(Saya) ingin bekerja demi perdamaian.", potongan: ["へいわ", "の", "ために", "はたらきたい", "です"] },
+      { arti: "Ceret ini praktis untuk merebus air.", potongan: ["この", "やかん", "は", "おゆ", "を", "わかす", "のに", "べんり", "です"] },
+      { arti: "Untuk membaca buku ini diperlukan 3 jam.", potongan: ["この", "ほん", "を", "よむ", "のに", "さんじかん", "かかりました"] },
+      { arti: "Untuk membangun rumah diperlukan 30 juta yen.", potongan: ["うち", "を", "たてる", "のに", "さんぜんまんえん", "ひつよう", "です"] },
+      { arti: "Tas ini praktis untuk bepergian.", potongan: ["この", "かばん", "は", "りょこう", "に", "べんり", "です"] },
+      { arti: "Kenapa (Anda) belajar bahasa Jepang?", potongan: ["なぜ", "にほんご", "を", "べんきょうして", "いる", "んです", "か"] },
+    ],
+    pilih: [
+      {
+        arti: "Untuk memiliki toko sendiri, (saya) menabung.",
+        benar: "じぶんの みせを もつ ために、ちょきんして います。",
+        salah: ["じぶんの みせを もてる ために、ちょきんして います。", "じぶんの みせを もった ために、ちょきんして います。", "じぶんの みせを もつの ために、ちょきんして います。"],
+      },
+      {
+        arti: "Untuk pindah rumah, (saya) menyewa mobil.",
+        benar: "ひっこしの ために、くるまを かります。",
+        salah: ["ひっこし ために、くるまを かります。", "ひっこしな ために、くるまを かります。", "ひっこしに ために、くるまを かります。"],
+      },
+      {
+        arti: "Demi kesehatan, setiap pagi (saya) berlari.",
+        benar: "けんこうの ために、まいあさ はしって います。",
+        salah: ["けんこうな ために、まいあさ はしって います。", "けんこう ために、まいあさ はしって います。", "けんこうの ために、まいあさ はしりて います。"],
+      },
+      {
+        arti: "Gunting ini dipakai untuk memotong bunga.",
+        benar: "この はさみは はなを きるのに つかいます。",
+        salah: ["この はさみは はなを きるに つかいます。", "この はさみは はなを きりのに つかいます。", "この はさみは はなを きるのを つかいます。"],
+      },
+      {
+        arti: "Kalkulator dipakai untuk menghitung.",
+        benar: "でんたくは けいさんするのに つかいます。",
+        salah: ["でんたくは けいさんしますのに つかいます。", "でんたくは けいさんのに つかいます。", "でんたくは けいさんするのが つかいます。"],
+      },
+      {
+        arti: "Ceret ini praktis untuk merebus air.",
+        benar: "この やかんは おゆを わかすのに べんりです。",
+        salah: ["この やかんは おゆを わかしのに べんりです。", "この やかんは おゆを わかすのを べんりです。", "この やかんは おゆを わかすに べんりです。"],
+      },
+      {
+        arti: "(Saya) ingin bekerja demi perdamaian.",
+        benar: "へいわの ために はたらきたいです。",
+        salah: ["へいわな ために はたらきたいです。", "へいわ ために はたらきたいです。", "へいわの ために はたらきたいでした。"],
+      },
+      {
+        arti: "Untuk membangun rumah diperlukan 30 juta yen.",
+        benar: "うちを たてるのに 3000まんえん ひつようです。",
+        salah: ["うちを たてたのに 3000まんえん ひつようです。", "うちを たてるのを 3000まんえん ひつようです。", "うちを たてりのに 3000まんえん ひつようです。"],
+      },
+      {
+        arti: "Tas ini praktis untuk bepergian.",
+        benar: "この かばんは りょこうに べんりです。",
+        salah: ["この かばんは りょこうを べんりです。", "この かばんは りょこうが べんりです。", "この かばんは りょこうで べんりです。"],
+      },
+      {
+        arti: "Untuk membaca buku ini diperlukan 3 jam.",
+        benar: "この ほんを よむのに 3じかん かかりました。",
+        salah: ["この ほんを よみのに 3じかん かかりました。", "この ほんを よむのを 3じかん かかりました。", "この ほんを よむのに 3じかん かけりました。"],
+      },
+      {
+        arti: "Daripada pena, pakailah pensil. (sebagai pengganti pena)",
+        benar: "ペンの かわりに えんぴつを つかって ください。",
+        salah: ["ペンを かわりに えんぴつを つかって ください。", "ペンが かわりに えんぴつを つかって ください。", "ペンの かわりで えんぴつを つかって ください。"],
+      },
+      {
+        arti: "Kenapa (Anda) belajar bahasa Jepang?",
+        benar: "なぜ にほんごを べんきょうして いるんですか。",
+        salah: ["なぜ にほんごを べんきょうして いるなんですか。", "なぜ にほんごに べんきょうして いるんですか。", "なぜ にほんごを べんきょうしって いるんですか。"],
+      },
+    ],
+  },
 };
