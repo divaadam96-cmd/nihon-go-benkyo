@@ -3644,4 +3644,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  45: {
+    susun: [
+      { arti: "Kalau tidak sempat ikut rapat, tolong hubungi (saya).", potongan: ["かいぎ", "に", "まにあわない", "ばあい", "は", "れんらくして", "ください"] },
+      { arti: "Kalau tidak ada kartu garansi, tidak bisa diperbaiki.", potongan: ["ほしょうしょ", "が", "ない", "ばあい", "は", "しゅうり", "が", "できません"] },
+      { arti: "Dalam hal kebakaran, jangan memakai lift.", potongan: ["かじ", "の", "ばあい", "は", "エレベーター", "を", "つかわないで", "ください"] },
+      { arti: "Kalau terjadi gempa bumi, berlindunglah di bawah meja.", potongan: ["じしん", "が", "おきた", "ばあい", "は", "つくえ", "の", "した", "に", "もぐって", "ください"] },
+      { arti: "Dalam keadaan darurat, tekanlah tombol ini.", potongan: ["きんきゅう", "の", "ばあい", "は", "この", "ボタン", "を", "おして", "ください"] },
+      { arti: "Padahal sudah berjanji, dia tidak datang.", potongan: ["やくそく", "を", "した", "のに", "かのじょ", "は", "きませんでした"] },
+      { arti: "Padahal hari ini hari Minggu, (saya) harus bekerja.", potongan: ["きょう", "は", "にちようび", "なのに", "はたらかなければ", "なりません"] },
+      { arti: "Padahal (saya) belajar setiap hari, (saya) tidak lulus ujian.", potongan: ["まいにち", "べんきょうした", "のに", "しけん", "に", "ごうかくしませんでした"] },
+      { arti: "Padahal jam beker berbunyi, (saya) tidak terbangun.", potongan: ["めざましとけい", "が", "なった", "のに", "め", "が", "さめませんでした"] },
+      { arti: "Padahal tidak ada waktu, keretanya tidak datang.", potongan: ["じかん", "が", "ない", "のに", "でんしゃ", "が", "きません"] },
+      { arti: "Padahal kamar ini sempit, harga sewanya mahal.", potongan: ["この", "へや", "は", "せまい", "のに", "やちん", "が", "たかい", "です"] },
+      { arti: "Sdr. Miller menjadi juara dalam lomba maraton.", potongan: ["ミラーさん", "は", "マラソン", "たいかい", "で", "ゆうしょうしました"] },
+    ],
+    pilih: [
+      {
+        arti: "Kalau tidak sempat ikut rapat, tolong hubungi (saya).",
+        benar: "かいぎに まにあわない ばあいは、れんらくして ください。",
+        salah: ["かいぎに まにあわないの ばあいは、れんらくして ください。", "かいぎに まにあわなくて ばあいは、れんらくして ください。", "かいぎに まにあいない ばあいは、れんらくして ください。"],
+      },
+      {
+        arti: "Dalam hal kebakaran, jangan memakai lift.",
+        benar: "かじの ばあいは、エレベーターを つかわないで ください。",
+        salah: ["かじ ばあいは、エレベーターを つかわないで ください。", "かじな ばあいは、エレベーターを つかわないで ください。", "かじの ばあいは、エレベーターを つかって ください。"],
+      },
+      {
+        arti: "Kalau tidak ada kartu garansi, tidak bisa diperbaiki.",
+        benar: "ほしょうしょが ない ばあいは、しゅうりが できません。",
+        salah: ["ほしょうしょが ないの ばあいは、しゅうりが できません。", "ほしょうしょが なく ばあいは、しゅうりが できません。", "ほしょうしょを ない ばあいは、しゅうりが できません。"],
+      },
+      {
+        arti: "Dalam keadaan darurat, tekanlah tombol ini.",
+        benar: "きんきゅうの ばあいは、この ボタンを おして ください。",
+        salah: ["きんきゅう ばあいは、この ボタンを おして ください。", "きんきゅうな ばあいは、この ボタンを おして ください。", "きんきゅうの ばあいは、この ボタンを おいて ください。"],
+      },
+      {
+        arti: "Padahal sudah berjanji, dia tidak datang.",
+        benar: "やくそくを したのに、かのじょは きませんでした。",
+        salah: ["やくそくを したなのに、かのじょは きませんでした。", "やくそくを しなのに、かのじょは きませんでした。", "やくそくを したのに、かのじょは きました。"],
+      },
+      {
+        arti: "Padahal hari ini hari Minggu, (saya) harus bekerja.",
+        benar: "きょうは にちようびなのに、はたらかなければ なりません。",
+        salah: ["きょうは にちようびのに、はたらかなければ なりません。", "きょうは にちようびだのに、はたらかなければ なりません。", "きょうは にちようびなのに、はたらかなくても いいです。"],
+      },
+      {
+        arti: "Padahal (saya) belajar setiap hari, (saya) tidak lulus ujian.",
+        benar: "まいにち べんきょうしたのに、しけんに ごうかくしませんでした。",
+        salah: ["まいにち べんきょうしたので、しけんに ごうかくしませんでした。", "まいにち べんきょうしたのに、しけんを ごうかくしませんでした。", "まいにち べんきょうしたなのに、しけんに ごうかくしませんでした。"],
+      },
+      {
+        arti: "Padahal jam beker berbunyi, (saya) tidak terbangun.",
+        benar: "めざましとけいが なったのに、めが さめませんでした。",
+        salah: ["めざましとけいが なりたのに、めが さめませんでした。", "めざましとけいを なったのに、めが さめませんでした。", "めざましとけいが なったので、めが さめませんでした。"],
+      },
+      {
+        arti: "Padahal kamar ini sempit, harga sewanya mahal.",
+        benar: "この へやは せまいのに、やちんが たかいです。",
+        salah: ["この へやは せまいなのに、やちんが たかいです。", "この へやは せまくのに、やちんが たかいです。", "この へやは ひろいのに、やちんが たかいです。"],
+      },
+      {
+        arti: "Padahal (kamar itu) tenang, (saya) tidak bisa tidur.",
+        benar: "しずかなのに、ねむれませんでした。",
+        salah: ["しずかのに、ねむれませんでした。", "しずかだのに、ねむれませんでした。", "しずかなので、ねむれませんでした。"],
+      },
+      {
+        arti: "Kalau terjadi gempa bumi, berlindunglah di bawah meja.",
+        benar: "じしんが おきた ばあいは、つくえの したに もぐって ください。",
+        salah: ["じしんが おきたの ばあいは、つくえの したに もぐって ください。", "じしんを おきた ばあいは、つくえの したに もぐって ください。", "じしんが おきた ばあいは、つくえの したに もぐりて ください。"],
+      },
+      {
+        arti: "Saya menantikannya. (dengan senang hati)",
+        benar: "たのしみに して います。",
+        salah: ["たのしみを して います。", "たのしいに して います。", "たのしく して います。"],
+      },
+    ],
+  },
 };
