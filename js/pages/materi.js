@@ -525,8 +525,12 @@ function initMaterialLessonPicker({
     }
   }
 
+  let mulaiTugas = null; // dari tautan ?tugas=..., dipakai sekali
   function renderTugas() {
+    const mulai = mulaiTugas;
+    mulaiTugas = null;
     TugasBab.renderPanel(tugasStudy, startNumber + activeIndex, {
+      mulai,
       onMateri: markUnderstood,
       onBukaMateri: () => {
         setMaterialStep("patterns");
@@ -777,6 +781,25 @@ function initMaterialLessonPicker({
   TugasBab.onChange(updateMaterialProgress);
   selectLesson(0);
   updateMaterialProgress();
+
+  /* Tautan langsung dari "Lanjutkan belajar" di Beranda:
+     materi.html?bab=12&tahap=tugas&tugas=kanji-kana-kanji */
+  const link = materiLinkParams();
+  if (link && link.bab >= startNumber && link.bab <= endNumber) {
+    selectLesson(link.bab - startNumber);
+    if (link.tahap === "examples" || link.tahap === "tugas") {
+      if (link.tahap === "tugas") mulaiTugas = link.tugas;
+      setMaterialStep(link.tahap);
+    }
+    requestAnimationFrame(() => reader.scrollIntoView({ block: "start" }));
+  }
+}
+
+function materiLinkParams() {
+  const params = new URLSearchParams(location.search);
+  const bab = Number(params.get("bab"));
+  if (!Number.isInteger(bab) || bab < 1 || bab > 50) return null;
+  return { bab, tahap: params.get("tahap"), tugas: params.get("tugas") };
 }
 
 initMaterialLessonPicker({
@@ -838,8 +861,11 @@ syncCurriculumDashboard();
     button.onclick = () => showBook(null);
   });
 
-  const savedBook = Number(sessionStorage.getItem("materiActiveBook"));
+  const link = materiLinkParams();
+  const savedBook = link ? (link.bab <= 25 ? 1 : 2) : Number(sessionStorage.getItem("materiActiveBook"));
   showBook(savedBook === 1 || savedBook === 2 ? savedBook : null);
+  // Muat ulang halaman tidak membuka tugas yang sama lagi.
+  if (link) history.replaceState(null, "", location.pathname);
 })();
 
 // === Mode fokus ===

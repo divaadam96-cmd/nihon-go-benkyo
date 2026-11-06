@@ -102,15 +102,12 @@
   }
 
   // === Status target & kunci ===
-  function targetsFor(bab) {
-    const list = ["materi", "kotoba-jp-id", "kotoba-id-jp", "kanji-kanji-kana", "kanji-kana-kanji", "kanji-kanji-id", "kanji-id-kanji"];
-    if (tugasLengkap(bab)) list.push("kalimat-susun", "kalimat-pilih");
-    return list;
-  }
-  /* Bab dengan tugas lengkap (termasuk soal kalimat) - tahap latihan lama
-     di Materi disembunyikan untuk bab ini. */
-  function tugasLengkap(bab) {
-    return typeof tugasKalimatData !== "undefined" && !!tugasKalimatData[bab];
+  /* Semua 50 bab punya target yang sama (data kalimat lengkap Bab 1-50),
+     jadi daftar ini tidak butuh data soal - Beranda bisa memakainya tanpa
+     memuat data/tugas-kalimat-data.js. */
+  const SEMUA_TARGET = ["materi", "kotoba-jp-id", "kotoba-id-jp", "kanji-kanji-kana", "kanji-kana-kanji", "kanji-kanji-id", "kanji-id-kanji", "kalimat-susun", "kalimat-pilih"];
+  function targetsFor() {
+    return SEMUA_TARGET;
   }
   function rowFor(bab, target) {
     return rows[`${bab}:${target}`] || null;
@@ -149,6 +146,27 @@
   function frontierBab() {
     for (let bab = 1; bab <= MAX_BAB; bab++) if (!isComplete(bab)) return bab;
     return MAX_BAB;
+  }
+
+  /* Langkah belajar berikutnya untuk tombol "Lanjutkan belajar" (Beranda):
+     bab terdepan yang belum tuntas, lalu hal pertama yang masih kurang di
+     bab itu - materi, tugas yang belum dikerjakan, atau tugas dengan skor
+     terbaik terendah kalau rata-rata belum cukup. */
+  const GRUP_LABEL = { kotoba: "Kotoba", kanji: "Kanji", kalimat: "Kalimat" };
+  function namaTugas(target) {
+    const info = TARGET_INFO[target];
+    return `${GRUP_LABEL[info.grup]}: ${info.judul}`;
+  }
+  function langkahBerikut() {
+    const bab = frontierBab();
+    const p = progress(bab);
+    if (isComplete(bab)) return { bab, jenis: "selesai", ...p };
+    if (!p.materi) return { bab, jenis: "materi", ...p };
+    const tugas = targetsFor(bab).filter((t) => t !== "materi");
+    const belum = tugas.find((t) => !rowFor(bab, t));
+    if (belum) return { bab, jenis: "tugas", target: belum, judul: namaTugas(belum), ...p };
+    const terendah = tugas.reduce((a, t) => (rowFor(bab, t).skor_terbaik < rowFor(bab, a).skor_terbaik ? t : a));
+    return { bab, jenis: "ulang", target: terendah, judul: namaTugas(terendah), skor: rowFor(bab, terendah).skor_terbaik, ...p };
   }
 
   // === Server ===
@@ -631,9 +649,15 @@
     return { cls: "ulang", text: `Skor terbaik ${row.skor_terbaik} · ulangi untuk menaikkan rata-rata` };
   }
 
-  /* hooks: { onMateri(): tandai materi dipahami, onBukaMateri(): ke tahap 1 } */
-  async function renderPanel(container, bab, hooks = {}) {
+  /* hooks: { onMateri(): tandai materi dipahami, onBukaMateri(): ke tahap 1,
+     mulai: target yang langsung dikerjakan (tautan "Lanjutkan belajar") } */
+  let renderToken = 0;
+  async function renderPanel(container, bab, { mulai, ...hooks } = {}) {
+    const token = ++renderToken;
     container.dataset.tugasBab = String(bab);
+    // Disimpan di container: panel bisa dirender ulang (mis. setelah sinkron
+    // server) sebelum data selesai dimuat, dan hanya render terakhir yang dipakai.
+    if (mulai) container.dataset.tugasMulaiNanti = `${bab}:${mulai}`;
     container.innerHTML = `<p class="tugas-loading">Memuat tugas Pelajaran ${bab}…</p>`;
     try {
       await ensureBabData();
@@ -641,8 +665,12 @@
       container.innerHTML = `<p class="tugas-error">${esc(error.message)} Periksa koneksi lalu buka tab ini lagi.</p>`;
       return;
     }
-    if (container.dataset.tugasBab !== String(bab)) return; // sudah pindah bab
+    if (token !== renderToken || container.dataset.tugasBab !== String(bab)) return; // sudah dirender ulang / pindah bab
     renderList(container, bab, hooks);
+    const [babNanti, nanti] = (container.dataset.tugasMulaiNanti || "").split(/:(.+)/);
+    delete container.dataset.tugasMulaiNanti;
+    const tombol = nanti && babNanti === String(bab) && container.querySelector(`[data-tugas-mulai="${CSS.escape(nanti)}"]`);
+    if (tombol && !tombol.disabled) tombol.click();
   }
 
   function renderList(container, bab, hooks) {
@@ -822,6 +850,7 @@
     kekurangan,
     isLocked,
     frontierBab,
+    langkahBerikut,
     recordMateri,
     renderPanel,
   };

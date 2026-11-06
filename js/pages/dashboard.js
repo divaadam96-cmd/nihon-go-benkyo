@@ -150,6 +150,62 @@ function initPage() {
   }
   window.renderDashboardActivity = renderDashboardActivity;
 
+  /* "Lanjutkan belajar": daftar langkah berikutnya supaya siswa tidak perlu
+     menebak harus membuka menu mana - ulangan Hafalan yang jatuh tempo
+     dulu (singkat, menjaga ingatan), lalu hal pertama yang masih kurang di
+     pelajaran terdepan (TugasBab.langkahBerikut, js/tugas-bab.js). */
+  function langkahBelajar() {
+    const langkah = [];
+    const due = srsDueCount("hafalan:");
+    if (due > 0)
+      langkah.push({
+        judul: `Ulangan Hafalan: ${due} kartu`,
+        ket: "Kata & kanji yang jadwal ulangnya hari ini, termasuk yang salah di tugas.",
+        href: "pages/hafalan.html?ulangan=1",
+      });
+    if (window.TugasBab) {
+      const l = TugasBab.langkahBerikut();
+      const materi = `pages/materi.html?bab=${l.bab}`;
+      if (l.jenis === "materi")
+        langkah.push({ judul: `Pelajaran ${l.bab}: baca & pahami materi`, ket: "Pelajari polanya, lalu tekan \"Sudah paham\" untuk membuka tugas.", href: materi });
+      else if (l.jenis === "tugas")
+        langkah.push({ judul: `Pelajaran ${l.bab}: ${l.judul}`, ket: `${l.dikerjakan} dari ${l.totalTugas} tugas sudah dikerjakan.`, href: `${materi}&tahap=tugas&tugas=${l.target}` });
+      else if (l.jenis === "ulang")
+        langkah.push({ judul: `Pelajaran ${l.bab}: ulangi ${l.judul}`, ket: `Rata-rata tugas ${l.rataRata}, perlu minimal ${TugasBab.KKM}. Skor terbaik tugas ini ${l.skor}.`, href: `${materi}&tahap=tugas&tugas=${l.target}` });
+      else
+        langkah.push({ judul: "Semua 50 pelajaran tuntas 🎉", ket: "Jaga ingatan dengan ulangan Hafalan setiap hari.", href: materi });
+    }
+    return langkah;
+  }
+  function esc(text) {
+    return String(text).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  }
+  function renderLanjutkan() {
+    const anchor = document.querySelector("#dashboard .overview");
+    if (!anchor) return;
+    let card = document.getElementById("continueCard");
+    if (!card) {
+      card = document.createElement("section");
+      card.id = "continueCard";
+      card.className = "card continue-card";
+      anchor.insertAdjacentElement("beforebegin", card);
+    }
+    const langkah = langkahBelajar();
+    if (!langkah.length) {
+      card.hidden = true;
+      return;
+    }
+    card.hidden = false;
+    card.innerHTML = `<div class="eyebrow">Lanjutkan belajar</div><ol class="continue-steps">${langkah
+      .map((l, i) => `<li><div><b>${esc(l.judul)}</b><span>${esc(l.ket)}</span></div><a class="${i === 0 ? "primary" : "secondary"} continue-go" href="${esc(l.href)}">${i === 0 ? "Mulai →" : "Buka"}</a></li>`)
+      .join("")}</ol>`;
+  }
+  if (window.TugasBab) {
+    TugasBab.onChange(renderLanjutkan);
+    TugasBab.init();
+  }
+  renderLanjutkan();
+
   sync();
 }
 window.initPage = initPage;
