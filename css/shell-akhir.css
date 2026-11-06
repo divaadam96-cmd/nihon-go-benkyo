@@ -20,3 +20,9 @@
   .kana-table .kana-cell:nth-child(1){animation-delay:0ms}.kana-table .kana-cell:nth-child(2){animation-delay:45ms}.kana-table .kana-cell:nth-child(3){animation-delay:90ms}.kana-table .kana-cell:nth-child(4){animation-delay:135ms}.kana-table .kana-cell:nth-child(5){animation-delay:180ms}
   @keyframes stagger-in{to{opacity:1;transform:none}}
 }
+/* Bilah "Versi baru aplikasi sudah siap" (js/pwa.js, showUpdateBar). Di HP
+   diangkat di atas .mobile-nav. */
+.app-update-bar{position:fixed;z-index:150;left:50%;bottom:18px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;max-width:calc(100% - 32px);padding:10px 12px 10px 16px;background:var(--navy);color:#f7f2e6;border:1px solid #caa45d77;border-radius:12px;box-shadow:0 10px 26px #0b162b55;font:600 13px "DM Sans"}
+.app-update-bar button{border:0;border-radius:8px;padding:7px 12px;font:700 12px "DM Sans";cursor:pointer;background:var(--gold);color:#fff}
+.app-update-bar .app-update-later{background:transparent;color:#cbd4df;padding:7px 8px}
+@media(max-width:700px){.app-update-bar{bottom:86px;width:calc(100% - 32px);justify-content:space-between}}
