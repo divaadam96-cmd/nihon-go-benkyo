@@ -3878,4 +3878,82 @@ const tugasKalimatData = {
       },
     ],
   },
+  48: {
+    susun: [
+      { arti: "Manajer menyuruh Sdr. Miller dinas ke Amerika.", potongan: ["ぶちょう", "は", "ミラーさん", "を", "アメリカ", "へ", "しゅっちょうさせます"] },
+      { arti: "Saya menyuruh anak perempuan belajar piano.", potongan: ["わたし", "は", "むすめ", "に", "ピアノ", "を", "ならわせます"] },
+      { arti: "Saya membiarkan anak bermain dengan bebas.", potongan: ["わたし", "は", "こども", "を", "じゆうに", "あそばせます"] },
+      { arti: "Ibu menyuruh saya makan sayur.", potongan: ["はは", "は", "わたし", "に", "やさい", "を", "たべさせました"] },
+      { arti: "Maaf, bolehkah saya istirahat sebentar?", potongan: ["すみません", "が", "ちょっと", "やすませて", "いただけません", "か"] },
+      { arti: "Bolehkah saya mengerjakan pekerjaan ini?", potongan: ["この", "しごと", "を", "わたし", "に", "やらせて", "いただけません", "か"] },
+      { arti: "Guru menyuruh murid menulis karangan.", potongan: ["せんせい", "は", "せいと", "に", "さくぶん", "を", "かかせました"] },
+      { arti: "(Saya) menyuruh anak membersihkan kamar.", potongan: ["こども", "に", "へや", "を", "そうじさせます"] },
+      { arti: "(Saya) ingin menyuruh anak laki-laki belajar ke luar negeri.", potongan: ["むすこ", "を", "りゅうがくさせたい", "です"] },
+      { arti: "(Saya) membuat adik perempuan menangis.", potongan: ["いもうと", "を", "なかせて", "しまいました"] },
+      { arti: "Setiap hari (saya) mengajak anjing jalan-jalan.", potongan: ["まいにち", "いぬ", "を", "さんぽさせます"] },
+      { arti: "Bolehkah saya pulang lebih cepat hari ini?", potongan: ["きょう", "は", "はやく", "かえらせて", "いただけません", "か"] },
+    ],
+    pilih: [
+      {
+        arti: "Manajer menyuruh Sdr. Miller dinas ke Amerika.",
+        benar: "ぶちょうは ミラーさんを アメリカへ しゅっちょうさせます。",
+        salah: ["ぶちょうは ミラーさんを アメリカへ しゅっちょうしせます。", "ぶちょうは ミラーさんを アメリカへ しゅっちょうされます。", "ぶちょうは ミラーさんが アメリカへ しゅっちょうさせます。"],
+      },
+      {
+        arti: "Saya menyuruh anak perempuan belajar piano.",
+        benar: "わたしは むすめに ピアノを ならわせます。",
+        salah: ["わたしは むすめに ピアノを ならいさせます。", "わたしは むすめに ピアノを ならせます。", "わたしは むすめが ピアノを ならわせます。"],
+      },
+      {
+        arti: "Saya membiarkan anak bermain dengan bebas.",
+        benar: "わたしは こどもを じゆうに あそばせます。",
+        salah: ["わたしは こどもを じゆうに あそびさせます。", "わたしは こどもを じゆうに あそべせます。", "わたしは こどもを じゆうに あそばれます。"],
+      },
+      {
+        arti: "Ibu menyuruh saya makan sayur.",
+        benar: "ははは わたしに やさいを たべさせました。",
+        salah: ["ははは わたしに やさいを たべせました。", "ははは わたしに やさいを たべられました。", "ははは わたしを やさいを たべさせました。"],
+      },
+      {
+        arti: "Maaf, bolehkah saya istirahat sebentar?",
+        benar: "すみませんが、ちょっと やすませて いただけませんか。",
+        salah: ["すみませんが、ちょっと やすみさせて いただけませんか。", "すみませんが、ちょっと やすまれて いただけませんか。", "すみませんが、ちょっと やすませて くださいませんでしたか。"],
+      },
+      {
+        arti: "Bolehkah saya mengerjakan pekerjaan ini?",
+        benar: "この しごとを わたしに やらせて いただけませんか。",
+        salah: ["この しごとを わたしに やりさせて いただけませんか。", "この しごとを わたしに やられて いただけませんか。", "この しごとを わたしが やらせて いただけませんか。"],
+      },
+      {
+        arti: "Guru menyuruh murid menulis karangan.",
+        benar: "せんせいは せいとに さくぶんを かかせました。",
+        salah: ["せんせいは せいとに さくぶんを かきさせました。", "せんせいは せいとに さくぶんを かかれました。", "せんせいは せいとを さくぶんを かかせました。"],
+      },
+      {
+        arti: "(Saya) menyuruh anak membersihkan kamar.",
+        benar: "こどもに へやを そうじさせます。",
+        salah: ["こどもに へやを そうじしせます。", "こどもに へやを そうじされます。", "こどもに へやが そうじさせます。"],
+      },
+      {
+        arti: "(Saya) membuat adik perempuan menangis.",
+        benar: "いもうとを なかせて しまいました。",
+        salah: ["いもうとを なきさせて しまいました。", "いもうとを なかれて しまいました。", "いもうとを なかせって しまいました。"],
+      },
+      {
+        arti: "Bolehkah saya pulang lebih cepat hari ini?",
+        benar: "きょうは はやく かえらせて いただけませんか。",
+        salah: ["きょうは はやく かえりさせて いただけませんか。", "きょうは はやく かえらせって いただけませんか。", "きょうは はやく かえられて いただけませんか。"],
+      },
+      {
+        arti: "Setiap hari (saya) mengajak anjing jalan-jalan.",
+        benar: "まいにち いぬを さんぽさせます。",
+        salah: ["まいにち いぬを さんぽしせます。", "まいにち いぬを さんぽされます。", "まいにち いぬが さんぽさせます。"],
+      },
+      {
+        arti: "Tidak apa-apa. (boleh)",
+        benar: "かまいません。",
+        salah: ["かまいませんでした。", "かまえません。", "かまわないません。"],
+      },
+    ],
+  },
 };
