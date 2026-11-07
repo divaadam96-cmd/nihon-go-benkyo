@@ -304,12 +304,14 @@
   // === Bahan soal ===
   /* Data soal (~1 MB) baru dimuat saat panel Tugas dibuka - halaman Materi
      dan Beranda tidak perlu mengunduh & memproses semuanya di awal. Tiap
-     berkas cukup dicek lewat salah satu konstanta globalnya. */
+     berkas cukup dicek lewat salah satu konstanta globalnya. Isi yang
+     disunting Operator (js/konten-bab.js) lalu menimpa isi bawaannya. */
   const DATA_SOAL = [
     ["bab-data.js", () => typeof babKosakataData !== "undefined" && typeof babKanjiData !== "undefined"],
     ["tugas-kalimat-data.js", () => typeof tugasKalimatData !== "undefined"],
     ["tugas-kategori-data.js", () => typeof tugasKategoriKata !== "undefined"],
     ["kanji-mirip-data.js", () => typeof kanjiMiripData !== "undefined"],
+    ["../js/konten-bab.js", () => typeof KontenBab !== "undefined"],
   ];
   const muatData = {};
   function muatSkrip(nama) {
@@ -325,8 +327,18 @@
       document.head.appendChild(script);
     }));
   }
-  function ensureBabData() {
-    return Promise.all(DATA_SOAL.filter(([, ada]) => !ada()).map(([nama]) => muatSkrip(nama)));
+  let versiKonten = 0;
+  async function ensureBabData() {
+    await Promise.all(DATA_SOAL.filter(([, ada]) => !ada()).map(([nama]) => muatSkrip(nama)));
+    const versi = await KontenBab.muat();
+    if (versi !== versiKonten) {
+      // Isi berubah -> buang semua hasil olahan data lama.
+      versiKonten = versi;
+      cacheItems.kotoba = {};
+      cacheItems.kanji = {};
+      indeksKata = null;
+      indeksBacaan = null;
+    }
   }
   // Dibentuk sekali per bab lalu disimpan (dipindai berulang saat memilih pengecoh).
   const cacheItems = { kotoba: {}, kanji: {} };

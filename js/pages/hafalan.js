@@ -105,20 +105,27 @@ function initPage() {
   /* Hafalan per Bab (Minna no Nihongo), lengkap Bab 1-50. Kosakata = SEMUA
      kata di bab itu (baik ada kanji maupun tidak). Kanji = subset kata yang
      ada tulisan kanjinya, ditambahkan juga di sini khusus untuk latihan
-     cara baca. */
+     cara baca. Isi yang disunting Operator (js/konten-bab.js) menimpa isi
+     bawaan: salinan tersimpan dipasang langsung, isi terbaru dari server
+     menyusul dan kartu dibangun ulang kalau ada yang berubah. */
   const MAX_BAB_LOADED = 50;
-  for (let n = 1; n <= MAX_BAB_LOADED; n++) {
-    deck["bab" + n + "-kosakata"] = (babKosakataData[n] || []).map((item) => [
-      item[0],
-      item[1],
-      "",
-    ]);
-    deck["bab" + n + "-kanji"] = (babKanjiData[n] || []).map((item) => [
-      item[0],
-      item[2],
-      item[1],
-    ]);
+  const muatKonten = KontenBab.muat();
+  let versiKonten = KontenBab.versi;
+  function bangunDeck() {
+    for (let n = 1; n <= MAX_BAB_LOADED; n++) {
+      deck["bab" + n + "-kosakata"] = (babKosakataData[n] || []).map((item) => [
+        item[0],
+        item[1],
+        "",
+      ]);
+      deck["bab" + n + "-kanji"] = (babKanjiData[n] || []).map((item) => [
+        item[0],
+        item[2],
+        item[1],
+      ]);
+    }
   }
+  bangunDeck();
 
   /* Mode "Ulangan": semua kartu Hafalan (lintas bab) yang jatuh tempo hari
      ini - dari kartu yang ditandai "Belum ingat" di sini maupun kata/kanji
@@ -483,5 +490,11 @@ function initPage() {
 
   applyBabCategory();
   showHafalanPanel(ulanganDariTugas ? "flash" : sessionStorage.getItem("hafalanPanel") || null);
+  muatKonten.then((versi) => {
+    if (versi === versiKonten) return;
+    versiKonten = versi;
+    bangunDeck();
+    applyBabCategory();
+  });
 }
 window.initPage = initPage;
