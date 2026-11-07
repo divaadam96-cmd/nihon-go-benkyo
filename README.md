@@ -354,6 +354,20 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
     lalu kelompok makna, sinonim, kanji mirip & bacaan keliru. Kanji mirip
     tidak boleh berbunyi sama dengan jawabannya (mis. 製/制 = せい), dan
     arti kata tidak boleh memuat kana jawabannya.
+  - **Ujian ulang tiap 5 bab** (`supabase/add-ujian-ulang.sql`, target
+    `ujian-ulang` di Bab 5, 10, ..., 50): 30 soal campuran dari 5 bab
+    terakhir, lulus >= 80, wajib untuk membuka bab berikutnya. Siswa yang
+    sudah punya hasil di bab sesudahnya tidak dikunci ulang.
+  - Kata/kanji yang salah di tugas masuk SRS Hafalan (`srsReview(...,
+    "again")`) dan muncul di mode **Ulangan** Hafalan; dicatat juga ke
+    `bab_kesalahan` (`supabase/add-pantau-bab.sql`) untuk Pantau Siswa per
+    bab (`pantau_bab_ringkas()`, `pantau_bab_detail()`).
+  - Latihan tambahan tidak dinilai (Isi partikel, Mendengar lewat
+    `speechSynthesis`) dan mode Ketik Hafalan memakai `js/kana-ketik.js`
+    (romaji/kana). Penjelasan saat salah dibuat otomatis (`jelaskan()`).
+  - Data soal (`bab-data`, `tugas-kalimat`, `tugas-kategori`,
+    `kanji-mirip`) dimuat saat panel Tugas dibuka (`ensureBabData()`), bukan
+    di `<script>` halaman Materi.
 - **Password minimal 10 karakter, huruf + angka** - dicek di form, di
   Edge Function `create-user`, dan di pengaturan Supabase Auth.
 - **Paket ujian dikelola di database, tanpa ubah kode.** Daftar paket

@@ -548,3 +548,69 @@
     font-size: 26px;
   }
 }
+
+/* Ujian ulang tiap 5 bab */
+.tugas-ujian .tugas-card {
+  border-color: #c9a45c;
+}
+.tugas-quiz-bab {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: #f1e6cc;
+  color: #7a5a1c;
+  font-weight: 800;
+}
+
+/* Latihan tambahan (tidak dinilai) */
+.tugas-latihan .tugas-card {
+  border-style: dashed;
+}
+.tugas-isi-kalimat {
+  margin: 0 0 12px;
+  font-size: 20px;
+  line-height: 1.7;
+}
+.tugas-isi-kosong {
+  display: inline-block;
+  min-width: 2.2em;
+  margin: 0 4px;
+  border-bottom: 2px solid var(--navy);
+  color: var(--navy);
+  font-weight: 800;
+  text-align: center;
+}
+.tugas-audio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.tugas-audio-teks {
+  font-size: 22px;
+}
+.tugas-audio small {
+  color: var(--muted);
+}
+
+/* Penjelasan singkat saat salah */
+.tugas-sebab {
+  margin: 6px 0 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: #fff8e6;
+  color: #5c4a1f;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.tugas-sebab mark {
+  padding: 0 2px;
+  border-radius: 3px;
+  background: #f6d98c;
+  color: inherit;
+}
+.tugas-mistakes li .tugas-sebab {
+  display: block;
+  margin: 4px 0 0;
+}

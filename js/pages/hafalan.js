@@ -52,6 +52,55 @@ function initPage() {
   document.getElementById("again").onclick = () => nextCard(false);
   document.getElementById("known").onclick = () => nextCard(true);
 
+  /* Cara latihan: "Balik kartu" (mengenali) atau "Ketik jawaban" (mengingat
+     sendiri). Mode Ketik: kartu kosakata menampilkan arti -> ketik kata
+     Jepangnya; kartu kanji menampilkan kanji -> ketik cara bacanya. Boleh
+     romaji atau kana (js/kana-ketik.js). Hasilnya masuk SRS seperti biasa. */
+  let latihan = sessionStorage.getItem("hafalanLatihan") === "ketik" ? "ketik" : "balik";
+  const controlsEl = document.querySelector(".flash-controls");
+  const ketikForm = document.createElement("form");
+  ketikForm.className = "ketik-form";
+  ketikForm.innerHTML =
+    '<label class="ketik-label" for="ketikInput">Ketik jawaban (kana atau romaji)</label><div class="ketik-row"><input id="ketikInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" lang="ja"><button type="submit" class="primary">Periksa</button></div><p class="ketik-feedback" aria-live="polite"></p>';
+  controlsEl.insertAdjacentElement("afterend", ketikForm);
+  const ketikInput = ketikForm.querySelector("input");
+  const ketikFeedback = ketikForm.querySelector(".ketik-feedback");
+  const ketikSubmit = ketikForm.querySelector("button");
+  let ketikHasil = null; // null = belum diperiksa, true/false = hasil
+  function kartuKanji(card) {
+    return category === ULANGAN ? card[3].includes("-kanji:") : babMode === "kanji";
+  }
+  function jawabanKetik(card) {
+    return kartuKanji(card) ? card[2] : card[0];
+  }
+  ketikForm.onsubmit = (event) => {
+    event.preventDefault();
+    const card = deck[category]?.[index];
+    if (!card) return;
+    if (ketikHasil !== null) {
+      const ok = ketikHasil;
+      ketikHasil = null;
+      nextCard(ok);
+      return;
+    }
+    if (!ketikInput.value.trim()) return;
+    ketikHasil = KanaKetik.cocokKetik(ketikInput.value, jawabanKetik(card));
+    ketikInput.readOnly = true;
+    flash.classList.add("flipped");
+    ketikFeedback.className = "ketik-feedback " + (ketikHasil ? "benar" : "salah");
+    ketikFeedback.textContent = ketikHasil
+      ? "Benar! " + jawabanKetik(card)
+      : "Belum tepat. Jawaban: " + jawabanKetik(card) + " (kamu: " + KanaKetik.normalKetik(ketikInput.value) + ")";
+    ketikSubmit.textContent = "Lanjut →";
+    ketikSubmit.focus();
+  };
+  function applyLatihan() {
+    controlsEl.hidden = latihan === "ketik";
+    ketikForm.hidden = latihan !== "ketik";
+    document.querySelectorAll("[data-latihan]").forEach((b) => b.classList.toggle("active", b.dataset.latihan === latihan));
+    sessionStorage.setItem("hafalanLatihan", latihan);
+  }
+
 
   /* Hafalan per Bab (Minna no Nihongo), lengkap Bab 1-50. Kosakata = SEMUA
      kata di bab itu (baik ada kanji maupun tidak). Kanji = subset kata yang
@@ -283,7 +332,7 @@ function initPage() {
   filterBox2.innerHTML =
     '<span class="study-section-label">Hafalan per Bab (Minna no Nihongo)</span><div class="bab-filter-row"><select id="babSelect" class="bab-select" aria-label="Pilih Bab">' +
     babOptions +
-    '</select><button class="filter active" data-mode="kosakata">Kosakata</button><button class="filter" data-mode="kanji">Kanji</button><button class="filter filter-ulangan" data-mode="ulangan">Ulangan <span class="ulangan-count"></span></button></div><p class="bab-total-info" id="babTotalInfo"></p>';
+    '</select><button class="filter active" data-mode="kosakata">Kosakata</button><button class="filter" data-mode="kanji">Kanji</button><button class="filter filter-ulangan" data-mode="ulangan">Ulangan <span class="ulangan-count"></span></button></div><p class="bab-total-info" id="babTotalInfo"></p><div class="latihan-row"><span>Cara latihan:</span><button class="filter" data-latihan="balik">Balik kartu</button><button class="filter" data-latihan="ketik">Ketik jawaban</button></div>';
   const babSelectEl = filterBox2.querySelector("#babSelect");
   const babTotalInfoEl = filterBox2.querySelector("#babTotalInfo");
   const savedBab = sessionStorage.getItem("hafalanBab");
@@ -330,6 +379,14 @@ function initPage() {
     }
   }
   babSelectEl.onchange = applyBabCategory;
+  filterBox2.querySelectorAll("[data-latihan]").forEach((button) => {
+    button.onclick = () => {
+      latihan = button.dataset.latihan;
+      applyLatihan();
+      renderCard();
+    };
+  });
+  applyLatihan();
   filterBox2.querySelectorAll("[data-mode]").forEach(
     (button) =>
       (button.onclick = () => {
@@ -348,7 +405,12 @@ function initPage() {
     const ulangan = category === ULANGAN;
     const modeLabel = babMode === "kanji" ? "Kanji" : "Kosakata";
     const label = ulangan ? "Ulangan" : "Bab " + babSelectEl.value + " · " + modeLabel;
-    document.getElementById("again").disabled = document.getElementById("known").disabled = !list.length;
+    document.getElementById("again").disabled = document.getElementById("known").disabled = ketikSubmit.disabled = ketikInput.disabled = !list.length;
+    ketikHasil = null;
+    ketikInput.value = "";
+    ketikInput.readOnly = false;
+    ketikFeedback.textContent = "";
+    ketikSubmit.textContent = "Periksa";
     if (!list.length) {
       document.getElementById("front").textContent = ulangan ? "🎉" : "—";
       document.getElementById("back").textContent = ulangan
@@ -360,9 +422,14 @@ function initPage() {
       return;
     }
     const c = list[index];
-    document.getElementById("front").textContent = c[0];
-    document.getElementById("back").textContent = c[1];
-    document.getElementById("reading").textContent = c[2] || "";
+    const ketik = latihan === "ketik";
+    // Mode Ketik kartu kosakata: arti di depan, kata Jepang di belakang.
+    const depanArti = ketik && !kartuKanji(c);
+    document.getElementById("front").textContent = depanArti ? c[1] : c[0];
+    document.getElementById("back").textContent = depanArti ? c[0] : c[1];
+    document.getElementById("reading").textContent = depanArti ? "" : c[2] || "";
+    document.getElementById("front").classList.toggle("is-arti", depanArti);
+    if (ketik && document.activeElement !== document.body) ketikInput.focus({ preventScroll: true });
     document.getElementById("cardCount").textContent = ulangan
       ? "Sisa " + list.length + " kartu · " + c[4]
       : "Kartu " + (index + 1) + " dari " + list.length + " · " + label;
