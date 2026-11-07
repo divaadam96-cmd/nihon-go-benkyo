@@ -1,0 +1,186 @@
+/* Kelola Materi (Operator) - memakai gaya dasar Kelola Soal (kelola-soal.css)
+   ditambah kisi pelajaran & baris isi di bawah ini. */
+.km-bab-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 8px;
+}
+@media (max-width: 960px) {
+  .km-bab-grid {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .km-bab-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+.km-bab {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 7px 2px 5px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--navy);
+  font: inherit;
+  cursor: pointer;
+}
+.km-bab:hover {
+  border-color: var(--gold);
+}
+.km-bab.active {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: #fff;
+}
+.km-bab b {
+  font-size: 13px;
+}
+.km-bab span {
+  display: flex;
+  gap: 3px;
+  min-height: 7px;
+}
+.km-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.km-dot.diubah {
+  background: var(--blue);
+}
+.km-dot.draft {
+  background: var(--gold);
+}
+.km-bab.active .km-dot.diubah {
+  background: #9fc0f0;
+}
+.km-legend {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.ks-tabs button.km-tab-diubah::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+  vertical-align: middle;
+}
+.km-bawaan {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.km-badge-diubah {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #e8eef8;
+  color: var(--blue);
+  font-weight: 700;
+}
+.km-catatan {
+  margin-top: 0;
+}
+
+.km-rows {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+.km-row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+}
+.km-row.has-error {
+  border-color: var(--red);
+  box-shadow: inset 3px 0 0 var(--red);
+}
+.km-row.has-warning {
+  box-shadow: inset 3px 0 0 var(--gold);
+}
+.km-num {
+  padding-top: 22px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: right;
+}
+.km-fields {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.km-rows-kosakata .km-fields {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+}
+.km-rows-kanji .km-fields {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr);
+}
+.km-fields .km-msgs,
+.km-fields .km-preview {
+  grid-column: 1 / -1;
+}
+@media (max-width: 640px) {
+  .km-rows-kosakata .km-fields,
+  .km-rows-kanji .km-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .km-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .km-num {
+    display: none;
+  }
+}
+.km-benar input {
+  border-color: var(--green);
+}
+.km-salah input {
+  border-style: dashed;
+}
+.km-preview {
+  margin: 0;
+  color: var(--navy);
+  font-size: 13px;
+}
+.km-preview:empty {
+  display: none;
+}
+.km-msgs {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 12px;
+}
+.km-msgs:empty {
+  display: none;
+}
+.km-msgs .err {
+  color: var(--red);
+}
+.km-msgs .warn {
+  color: #8a6225;
+  list-style: none;
+  margin-left: -16px;
+}
+.km-tools {
+  display: flex;
+  gap: 4px;
+  padding-top: 18px;
+}

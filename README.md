@@ -38,6 +38,8 @@ pages/                   halaman lain, masing-masing dokumen HTML sendiri
   pantau.html              panel Sensei/Operator: pantau progres siswa
   admin.html               panel Operator: kelola akun
   kelola-soal.html         panel Operator: editor soal Tes Kemampuan
+  kelola-materi.html       panel Operator: editor kosakata, kanji & soal
+                           kalimat per pelajaran (Hafalan + Tugas)
 
 css/
   base.css                 variabel warna (:root), @font-face DM Sans
@@ -53,6 +55,7 @@ css/
   pages/latihan.css        gaya konten khusus halaman Tes Kemampuan
   pages/pantau.css         gaya panel ringkasan progres Pantau Siswa
   pages/admin.css          gaya konten khusus Panel Admin
+  pages/kelola-materi.css  gaya Kelola Materi (di atas kelola-soal.css)
 
 js/
   app-shell.js             login-screen + header + sidebar + mobile-nav -
@@ -71,11 +74,16 @@ js/
   assignments.js           kartu "Tugas dari Sensei" + pengingat harian
   tugas-bab.js             target & tugas per Bab + kunci bab berurutan
                            (tahap 4 "Tugas & target" di Materi)
+  konten-bab.js            isi pelajaran hasil suntingan Operator (tabel
+                           konten_bab) menimpa isi bawaan berkas data -
+                           dipakai Tugas & Hafalan, disalin ke localStorage
+                           untuk offline
   pwa.js                   install prompt (service worker didaftarkan di sini,
                            setelah event load)
   pages/                   1 file JS per halaman di atas (dashboard.js,
                            materi.js, hafalan.js, kanji.js, latihan.js,
-                           pantau.js, admin.js) - isinya dibungkus
+                           pantau.js, admin.js, kelola-soal.js,
+                           kelola-materi.js) - isinya dibungkus
                            initPage(), dipanggil auth.js setelah login
 
 data/                     dataset murni (tanpa kode render), dimuat halaman
@@ -350,8 +358,9 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
     tidak ada di data dicatat di `bacaanSahLainData` (ketiganya di
     `data/kanji-mirip-data.js`).
   - Kelima puluh bab sudah punya tugas lengkap (tahap lama "Kerjakan
-    latihan" sudah dihapus). Mengubah soal: edit `data/tugas-kalimat-data.js`
-    lalu kelompok makna, sinonim, kanji mirip & bacaan keliru. Kanji mirip
+    latihan" sudah dihapus). Kosakata, kanji & soal kalimat bisa diubah
+    Operator dari menu **Kelola Materi** (lihat di bawah) tanpa ubah kode.
+    Lewat kode: edit `data/tugas-kalimat-data.js` lalu kelompok makna, sinonim, kanji mirip & bacaan keliru. Kanji mirip
     tidak boleh berbunyi sama dengan jawabannya (mis. 製/制 = せい), dan
     arti kata tidak boleh memuat kana jawabannya.
   - **Ujian ulang tiap 5 bab** (`supabase/add-ujian-ulang.sql`, target
@@ -388,6 +397,21 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   yang sedang tes, dan menyimpan versi lama. Operator tidak bisa menulis
   tabel soal/paket langsung. Impor massal lewat SQL Editor tetap bisa
   (contoh: `supabase/contoh-tambah-paket.sql`).
+- **Editor isi pelajaran untuk Operator: halaman Kelola Materi**
+  (`pages/kelola-materi.html`, menu "Kelola Materi"; database:
+  `supabase/add-editor-konten.sql`). Tahap 1: kosakata, kanji, soal susun &
+  pilih kalimat per Pelajaran 1-50. Isi bawaan tetap di berkas data; tabel
+  `konten_bab` hanya menyimpan bagian (kosakata/kanji/kalimat) yang BERBEDA
+  dari bawaan, dan `js/konten-bab.js` menimpakannya di halaman siswa.
+  Alurnya sama dengan Kelola Soal: draft (`konten_bab_draft`, menolak
+  menimpa simpanan Operator lain) -> `konten_publish` memvalidasi ulang di
+  server (`validate_konten_bab`) -> versi lama di `konten_bab_versi`
+  (pulihkan dari tab Riwayat versi). "Kembalikan ke isi bawaan" menghapus
+  suntingan satu bagian. Catatan: progres Hafalan disimpan per tulisan
+  kata (`hafalan:bab{N}-kosakata:{kata}`), jadi mengganti tulisan kata/kanji
+  memutus progres kata lama - editor memperingatkan sebelum terbit. Kalau
+  berkas data diubah lewat kode, bagian yang sudah disunting Operator tetap
+  memakai versi suntingan sampai dikembalikan ke isi bawaan.
 
 ## Testing
 
