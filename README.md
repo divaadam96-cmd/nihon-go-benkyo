@@ -38,8 +38,9 @@ pages/                   halaman lain, masing-masing dokumen HTML sendiri
   pantau.html              panel Sensei/Operator: pantau progres siswa
   admin.html               panel Operator: kelola akun
   kelola-soal.html         panel Operator: editor soal Tes Kemampuan
-  kelola-materi.html       panel Operator: editor kosakata, kanji & soal
-                           kalimat per pelajaran (Hafalan + Tugas)
+  kelola-materi.html       panel Operator: editor tata bahasa, kosakata,
+                           kanji & soal kalimat per pelajaran (Materi,
+                           Hafalan, Tugas)
 
 css/
   base.css                 variabel warna (:root), @font-face DM Sans
@@ -76,8 +77,10 @@ js/
                            (tahap 4 "Tugas & target" di Materi)
   konten-bab.js            isi pelajaran hasil suntingan Operator (tabel
                            konten_bab) menimpa isi bawaan berkas data -
-                           dipakai Tugas & Hafalan, disalin ke localStorage
-                           untuk offline
+                           dipakai Materi, Tugas & Hafalan, disalin ke
+                           localStorage untuk offline
+  materi-render.js         buildLessonHtml(): render tata bahasa (halaman
+                           Materi + pratinjau Kelola Materi)
   pwa.js                   install prompt (service worker didaftarkan di sini,
                            setelah event load)
   pages/                   1 file JS per halaman di atas (dashboard.js,
@@ -400,7 +403,13 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
 - **Editor isi pelajaran untuk Operator: halaman Kelola Materi**
   (`pages/kelola-materi.html`, menu "Kelola Materi"; database:
   `supabase/add-editor-konten.sql`). Tahap 1: kosakata, kanji, soal susun &
-  pilih kalimat per Pelajaran 1-50. Isi bawaan tetap di berkas data; tabel
+  pilih kalimat; Tahap 2: teks tata bahasa (pola, penjelasan, contoh,
+  tabel, catatan, keterangan gambar) per Pelajaran 1-50. HTML tata bahasa
+  dibatasi allowlist `is_safe_question_html` yang sama dengan Kelola Soal
+  (server) dan disaring ulang `sanitizeQuestionHtml` sebelum dirender.
+  Urutan pola dikunci: progres "sudah paham" disimpan per nomor pola
+  (`data-pola` di `.grammar-point`), jadi pola lama hanya bisa
+  disembunyikan (`hidden`, nomornya tetap) dan pola baru ditambah di akhir. Isi bawaan tetap di berkas data; tabel
   `konten_bab` hanya menyimpan bagian (kosakata/kanji/kalimat) yang BERBEDA
   dari bawaan, dan `js/konten-bab.js` menimpakannya di halaman siswa.
   Alurnya sama dengan Kelola Soal: draft (`konten_bab_draft`, menolak

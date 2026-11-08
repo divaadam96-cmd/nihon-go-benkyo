@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Kelola Materi — Nihon GO Benkyo</title>
-  <meta name="description" content="Editor isi pelajaran Nihon GO Benkyo untuk Operator: kosakata, kanji, dan soal kalimat per pelajaran.">
+  <meta name="description" content="Editor isi pelajaran Nihon GO Benkyo untuk Operator: tata bahasa, kosakata, kanji, dan soal kalimat per pelajaran.">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap"></noscript>
@@ -15,13 +15,14 @@
   <link rel="stylesheet" href="../css/shell.css">
   <link rel="stylesheet" href="../css/auth.css">
   <link rel="stylesheet" href="../css/pages/kelola-soal.css">
+  <link rel="stylesheet" href="../css/pages/materi.css">
   <link rel="stylesheet" href="../css/pages/kelola-materi.css">
   <link rel="stylesheet" href="../css/shell-akhir.css">
 </head>
 <body class="auth-checking">
 <main class="main" id="pageMain">
   <div data-role-only="operator" hidden>
-    <div class="head"><div><div class="eyebrow">Mode operator</div><h1>Kelola Materi.</h1><p>Edit kosakata, kanji, dan soal kalimat tiap pelajaran. Isi ini dipakai Hafalan dan Tugas &amp; target. Perubahan tersimpan sebagai draft dan baru tampil ke siswa setelah diterbitkan.</p></div></div>
+    <div class="head"><div><div class="eyebrow">Mode operator</div><h1>Kelola Materi.</h1><p>Edit teks tata bahasa, kosakata, kanji, dan soal kalimat tiap pelajaran. Isi ini dipakai Materi, Hafalan, dan Tugas &amp; target. Perubahan tersimpan sebagai draft dan baru tampil ke siswa setelah diterbitkan.</p></div></div>
     <div class="ks-layout">
       <aside class="card ks-sidebar">
         <h3>Pelajaran</h3>
@@ -37,6 +38,9 @@
 <script defer src="../js/pwa.js"></script>
 <script defer src="../data/bab-data.js"></script>
 <script defer src="../data/tugas-kalimat-data.js"></script>
+<script defer src="../data/materi-grammar-data.js"></script>
+<script defer src="../js/soal-html.js"></script>
+<script defer src="../js/materi-render.js"></script>
 <script defer src="../js/srs.js"></script>
 <script defer src="../js/app-effects.js"></script>
 <script defer src="../js/app-sidebar.js"></script>

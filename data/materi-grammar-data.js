@@ -1,7 +1,11 @@
 /* Data Keterangan Tata Bahasa Pelajaran 1-50 untuk halaman Materi -
    isinya ditranskripsi kata demi kata dari bagian "IV. Keterangan Tata
    Bahasa" buku sumber per pelajaran. File ini HANYA data; dirender oleh
-   buildLessonHtml()/installMateriGrammarContent() di js/pages/materi.js.
+   buildLessonHtml() (js/materi-render.js) lewat installMateriGrammarContent()
+   di js/pages/materi.js. Operator bisa menimpa isi satu pelajaran dari
+   Kelola Materi (js/konten-bab.js); HTML di sini harus tetap memenuhi
+   allowlist is_safe_question_html (tag b/i/u/br/sub/span..., atribut hanya
+   class) supaya pelajaran itu bisa disunting & diterbitkan.
    Mau tambah/ubah 1 pelajaran? Cukup ubah 1 entri array di bawah.
 
    Bentuk tiap item pola:
@@ -22,7 +26,10 @@
    - table {headers:[...], rows:[[...], ...]}: pola yang di buku berupa
      tabel referensi (mis. Pelajaran 3 pola 5 "Daftar こ／そ／あ／ど").
    - contoh bertanda "×" (contoh pemakaian salah) boleh tanpa arti; tetap
-     tampil di Tahap 2 tapi tidak dipakai sebagai soal Tahap 3. */
+     tampil di Tahap 2 tapi tidak dipakai sebagai soal Tahap 3.
+   - hidden: pola yang "dihapus" Operator di Kelola Materi - tidak tampil,
+     tetapi tempatnya (nomor urut) tetap ada supaya progres siswa per pola
+     (materi:book{N}:{pelajaran}:{pola}) tidak bergeser. */
 
 const MATERI_BOOK1_LESSONS = [
   {
@@ -1689,10 +1696,10 @@ const MATERI_BOOK1_LESSONS = [
             text: "Jika menyatakan dengan objek langsung sebagai topik, maka partikel を dihilangkan kemudian membubuhkan partikel は, lalu diletakkan paling di depan dalam kalimat.",
             examples: [
               ["ここに　荷物を　置かないで　ください。", "Jangan letakkan barang di sini."],
-              ["荷物<span style=\"font-size:.65em\">を</span>は　ここに　置かないで　ください。", ""],
+              ["荷物<span class=\"grammar-kecil\">を</span>は　ここに　置かないで　ください。", ""],
               ["⑤　荷物<u>は</u>　　ここに　置かないで　ください。", "Barangnya jangan diletakkan di sini."],
               ["会社の　食堂で　昼ごはんを　食べます。", "Makan siang di kantin perusahaan."],
-              ["昼ごはん<span style=\"font-size:.65em\">を</span>は　会社の　食堂で　食べます。", ""],
+              ["昼ごはん<span class=\"grammar-kecil\">を</span>は　会社の　食堂で　食べます。", ""],
               ["⑥　昼ごはん<u>は</u>　　会社の　食堂で　食べます。", "Makan siangnya makan di kantin perusahaan."],
             ],
           },

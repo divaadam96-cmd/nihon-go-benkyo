@@ -2,25 +2,13 @@
    (26-50), pembaca per-pelajaran (mode fokus, tahap pahami/contoh/tugas),
    dan progres. Dibungkus initPage(), dijalankan auth.js setelah login.
    Data teks pelajaran ada di data/materi-grammar-data.js; file ini yang
-   merendernya (buildLessonHtml). syncCurriculumDashboard() menyimpan
+   merendernya (buildLessonHtml, js/materi-render.js). syncCurriculumDashboard() menyimpan
    progres ke localStorage untuk dibaca Dashboard - lihat
    renderCurriculumSummary() di js/pages/dashboard.js. */
-// === Render konten pelajaran (data: data/materi-grammar-data.js) ===
-function buildLessonHtml(number, title, items) {
-  /* Bentuk item pola: lihat komentar di atas data/materi-grammar-data.js. */
-  const renderExample = ([contoh, arti]) =>
-    `<div class="grammar-example"><span class="grammar-jp">${contoh}</span><span class="grammar-meaning">${arti}</span></div>`;
-  const renderTable = (table) =>
-    `<table class="grammar-table"><thead><tr><th></th>${table.headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${table.rows.map((row) => `<tr>${row.map((cell, i) => `<${i === 0 ? "th" : "td"}>${cell}</${i === 0 ? "th" : "td"}>`).join("")}</tr>`).join("")}</tbody></table>`;
-  const renderBlock = (b) =>
-    `<div class="grammar-block">${b.label ? `<p class="grammar-subhead">${b.label}</p>` : ""}${b.text ? `<p>${b.text}</p>` : ""}${b.figure ? `<figure class="grammar-figure"><img src="../${b.figure.src}" alt="${b.figure.alt}" loading="lazy"></figure>` : ""}${b.table ? renderTable(b.table) : ""}${(b.examples || []).map(renderExample).join("")}${b.note ? `<p class="grammar-important-note">${b.note}</p>` : ""}</div>`;
-  const renderPoint = (item, i) => {
-    const heading = `<h3><span class="grammar-pola-number">${i + 1}. </span><span class="${item.noBox ? "grammar-pola-plain" : "grammar-pola-box"}">${item.title}</span>${item.suffix ? `<span class="grammar-pola-suffix"> ${item.suffix}</span>` : ""}</h3>`;
-    return `<div class="grammar-point">${heading}${item.blocks.map(renderBlock).join("")}</div>`;
-  };
-  return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${title}</summary><div class="html-content">${items.map(renderPoint).join("")}</div></details>`;
-}
-
+// === Render konten pelajaran ===
+/* buildLessonHtml() ada di js/materi-render.js (dipakai juga pratinjau
+   Kelola Materi). Isi pelajaran = data/materi-grammar-data.js, ditimpa isi
+   suntingan Operator lewat js/konten-bab.js sebelum dirender. */
 function installMateriGrammarContent() {
   document.getElementById("materials").innerHTML =
     `<div class="head"><div><div class="eyebrow">Materi pembelajaran HTML lengkap</div><h1>Dasar — Buku 1: Keterangan Tata Bahasa Pelajaran 1–25</h1><p>Setiap pelajaran memuat seluruh poin inti tata bahasa dalam penulisan ulang yang terstruktur untuk web.</p></div></div><div class="html-course"></div>`;
@@ -38,11 +26,14 @@ function installMateriGrammarContent() {
   bookTwo.querySelector(".html-course").innerHTML = MATERI_BOOK2_LESSONS.map((l, i) => buildLessonHtml(i + 26, l.title, l.items)).join("");
 }
 
-function initPage() {
+async function initPage() {
 // Status target bab (kunci pelajaran) dimuat dari server di latar; daftar
 // pelajaran diperbarui otomatis lewat TugasBab.onChange setelah selesai.
 TugasBab.init();
 // === Pasang konten pelajaran Buku 1 & 2 ===
+// Isi suntingan Operator dipasang dulu (salinan tersimpan langsung, isi
+// terbaru dari server ditunggu paling lama beberapa detik).
+await KontenBab.muat();
 installMateriGrammarContent();
 
 structureGrammarPoints();
@@ -295,7 +286,7 @@ function addMaterialFurigana(element, directTextOnly = false) {
 /* Query mandiri (bukan dari closure initMaterialLessonPicker) supaya
    dashboard bisa hitung progres Buku 1/2 kapan saja tanpa bergantung
    urutan pemanggilan initMaterialLessonPicker. Jumlah pola per pelajaran
-   dihitung langsung dari DOM (sama seperti patternCounts di
+   dihitung langsung dari DOM (sama seperti patternIndexes di
    initMaterialLessonPicker), lalu diagregasi lewat srsLessonStatus yang
    sama supaya kedua tempat selalu konsisten. */
 function materiStatusesForBook(bookNumber) {
@@ -303,9 +294,7 @@ function materiStatusesForBook(bookNumber) {
   const courseEl = document.getElementById(viewId)?.querySelector(".html-course");
   const lessonEls = courseEl ? Array.from(courseEl.querySelectorAll(":scope > .html-lesson")) : [];
   return Array.from({ length: 25 }, (_, index) => {
-    const patternCount =
-      lessonEls[index]?.querySelectorAll(".grammar-point").length || 0;
-    return srsLessonStatus(bookNumber, index, patternCount);
+    return srsLessonStatus(bookNumber, index, grammarPatternIndexes(lessonEls[index]));
   });
 }
 
@@ -352,9 +341,7 @@ function initMaterialLessonPicker({
   /* Dihitung SEKALI di sini, sebelum selectLesson() mulai memindah-mindah
      .html-content antara lessons[] dan reader - supaya jumlah pola per
      pelajaran tetap akurat berapa pun lesson yang sedang aktif. */
-  const patternCounts = lessons.map(
-    (lesson) => lesson.querySelectorAll(".grammar-point").length,
-  );
+  const patternIndexes = lessons.map(grammarPatternIndexes);
 
   const picker = document.createElement("section");
   picker.className = "material-picker";
@@ -396,7 +383,7 @@ function initMaterialLessonPicker({
      beberapa pola berbeda. Rating per-pola sendiri ada di setiap
      .grammar-point (lihat createRatingControls, app-effects.js). */
   function lessonStatusFor(index) {
-    return srsLessonStatus(bookNumber, index, patternCounts[index]);
+    return srsLessonStatus(bookNumber, index, patternIndexes[index]);
   }
   const buttons = [];
   let activeIndex = -1;
@@ -560,8 +547,8 @@ function initMaterialLessonPicker({
     const points = content
       ? Array.from(content.querySelectorAll(".grammar-point"))
       : [];
-    points.forEach((point, patternIndex) => {
-      const id = materiSrsId(index, patternIndex);
+    points.forEach((point, i) => {
+      const id = materiSrsId(index, Number(point.dataset.pola ?? i));
       srsReview(id, outcome);
       if (typeof refreshPatternStatus === "function") refreshPatternStatus(point, id);
     });

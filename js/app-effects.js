@@ -137,7 +137,8 @@ function structureGrammarPoints() {
           }
         });
 
-        const patternId = `materi:book${book}:${lessonIndex}:${patternIndex}`;
+        // data-pola = nomor asli pola (tetap walau ada pola yang disembunyikan).
+        const patternId = `materi:book${book}:${lessonIndex}:${point.dataset.pola ?? patternIndex}`;
         if (!point.querySelector(".grammar-rating")) {
           point.appendChild(createRatingControls(patternId, point, book));
         }

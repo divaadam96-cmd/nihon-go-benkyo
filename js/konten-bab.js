@@ -3,7 +3,10 @@
      kosakata -> babKosakataData[bab]   (data/bab-data.js)
      kanji    -> babKanjiData[bab]      (data/bab-data.js)
      kalimat  -> tugasKalimatData[bab]  (data/tugas-kalimat-data.js)
-   Dipakai Hafalan & Tugas (js/tugas-bab.js). Jalankan SETELAH berkas data
+     materi   -> MATERI_BOOK1_LESSONS / MATERI_BOOK2_LESSONS
+                 (data/materi-grammar-data.js; HTML-nya disaring ulang di
+                 sini dengan sanitizeQuestionHtml, js/soal-html.js)
+   Dipakai Hafalan, Tugas (js/tugas-bab.js) & Materi. Jalankan SETELAH berkas data
    yang bersangkutan dimuat; berkas yang belum dimuat dilewati dan diterapkan
    saat terapkan() dipanggil lagi.
 
@@ -15,12 +18,57 @@
 (function () {
   const CACHE_KEY = "nihonKontenBabV1";
   const BATAS_TUNGGU_MS = 5000;
+  /* Tiap jenis: data() = wadah global (null kalau berkasnya belum dimuat),
+     get/set isi satu bab di wadah itu. */
+  const perBab = (ambil) => ({
+    data: ambil,
+    get: (data, bab) => data[bab],
+    set: (data, bab, isi) => {
+      if (isi === undefined) delete data[bab];
+      else data[bab] = isi;
+    },
+  });
   const sumber = {
-    kosakata: () => (typeof babKosakataData !== "undefined" ? babKosakataData : null),
-    kanji: () => (typeof babKanjiData !== "undefined" ? babKanjiData : null),
-    kalimat: () => (typeof tugasKalimatData !== "undefined" ? tugasKalimatData : null),
+    kosakata: perBab(() => (typeof babKosakataData !== "undefined" ? babKosakataData : null)),
+    kanji: perBab(() => (typeof babKanjiData !== "undefined" ? babKanjiData : null)),
+    kalimat: perBab(() => (typeof tugasKalimatData !== "undefined" ? tugasKalimatData : null)),
+    materi: {
+      data: () => (typeof MATERI_BOOK1_LESSONS !== "undefined" && typeof MATERI_BOOK2_LESSONS !== "undefined"
+        ? [MATERI_BOOK1_LESSONS, MATERI_BOOK2_LESSONS] : null),
+      get: ([b1, b2], bab) => (bab <= 25 ? b1[bab - 1] : b2[bab - 26]),
+      set: ([b1, b2], bab, isi) => {
+        if (isi === undefined) return; // pelajaran 1-50 selalu ada
+        if (bab <= 25) b1[bab - 1] = isi;
+        else b2[bab - 26] = isi;
+      },
+      saring: saringMateri,
+    },
   };
-  const bawaan = { kosakata: {}, kanji: {}, kalimat: {} }; // isi asli bab yang pernah ditimpa
+  const bawaan = { kosakata: {}, kanji: {}, kalimat: {}, materi: {} }; // isi asli bab yang pernah ditimpa
+
+  /* Lapisan kedua (server sudah memvalidasi dengan allowlist yang sama):
+     semua teks materi disaring sebelum dirender sebagai HTML. */
+  function saringMateri(isi) {
+    const saring = typeof window.sanitizeQuestionHtml === "function" ? window.sanitizeQuestionHtml : null;
+    if (!saring) return null; // tanpa penyaring, isi suntingan tidak dipakai
+    const h = (v) => (typeof v === "string" ? saring(v) : v);
+    return {
+      title: String(isi.title || ""),
+      items: (isi.items || []).map((it) => ({
+        ...it,
+        title: h(it.title),
+        suffix: h(it.suffix),
+        blocks: (it.blocks || []).map((b) => ({
+          ...b,
+          label: h(b.label),
+          text: h(b.text),
+          note: h(b.note),
+          table: b.table ? { headers: b.table.headers.map(h), rows: b.table.rows.map((r) => r.map(h)) } : undefined,
+          examples: b.examples ? b.examples.map((e) => e.map(h)) : undefined,
+        })),
+      })),
+    };
+  }
   let baris = []; // [{bab, isi}] isi terbit terakhir yang diketahui
   let diterapkan = ""; // tanda isi yang sedang terpasang di data global
   let versi = 0;
@@ -45,20 +93,19 @@
   /* Pasang `baris` ke data global: kembalikan dulu semua bab yang pernah
      ditimpa ke isi aslinya, lalu timpa dengan isi terbit. */
   function terapkan() {
-    const tanda = JSON.stringify([baris, Object.keys(sumber).map((jenis) => !!sumber[jenis]())]);
+    const tanda = JSON.stringify([baris, Object.keys(sumber).map((jenis) => !!sumber[jenis].data())]);
     if (tanda === diterapkan) return false;
-    Object.keys(sumber).forEach((jenis) => {
-      const data = sumber[jenis]();
+    Object.entries(sumber).forEach(([jenis, s]) => {
+      const data = s.data();
       if (!data) return;
-      Object.entries(bawaan[jenis]).forEach(([bab, asli]) => {
-        if (asli === undefined) delete data[bab];
-        else data[bab] = asli;
-      });
+      Object.entries(bawaan[jenis]).forEach(([bab, asli]) => s.set(data, Number(bab), asli));
       bawaan[jenis] = {};
       baris.forEach(({ bab, isi }) => {
         if (!isi || isi[jenis] === undefined) return;
-        bawaan[jenis][bab] = data[bab];
-        data[bab] = isi[jenis];
+        const baru = s.saring ? s.saring(isi[jenis]) : isi[jenis];
+        if (baru == null) return;
+        bawaan[jenis][bab] = s.get(data, bab);
+        s.set(data, bab, baru);
       });
     });
     diterapkan = tanda;
