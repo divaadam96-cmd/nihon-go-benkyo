@@ -314,6 +314,106 @@
   font-size: 13px;
   line-height: 1.6;
 }
+.lesson-lapor {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px dashed #c4ae84;
+}
+.lesson-lapor button {
+  width: auto;
+  font-size: 12px;
+}
+.lapor-dialog {
+  width: min(520px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  padding: 0;
+  border: 1px solid #bfa678;
+  border-radius: 12px;
+  background: #fffdf8;
+  color: #13243e;
+}
+.lapor-dialog::backdrop {
+  background: #10203780;
+}
+.lapor-form {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+}
+.lapor-form h3 {
+  margin: 0;
+}
+.lapor-form label {
+  display: grid;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.lapor-form select,
+.lapor-form textarea {
+  width: 100%;
+  font: inherit;
+  font-weight: 400;
+}
+.lapor-konteks,
+.lapor-catatan {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.lapor-status {
+  margin: 0;
+  font-size: 13px;
+}
+.lapor-status:empty {
+  display: none;
+}
+.lapor-status.gagal {
+  color: var(--red);
+}
+.lapor-status.berhasil {
+  color: #2e8068;
+  font-weight: 700;
+}
+.lapor-aksi {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.lapor-aksi button {
+  width: auto;
+}
+.lapor-riwayat summary {
+  cursor: pointer;
+  font-size: 13px;
+}
+.lapor-daftar,
+.lapor-tanggapan-box ul {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 12px;
+}
+.lapor-daftar li span {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.lapor-tanggapan {
+  color: #2e8068;
+}
+.lapor-tanggapan-box {
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  border-left: 4px solid #2e8068;
+}
+.lapor-tanggapan-box h3 {
+  margin: 0;
+}
+.lapor-tanggapan-box button {
+  width: auto;
+}
 .material-choice.done {
   border-color: #a9c8bb;
   background: linear-gradient(145deg, #f7fbf8, #e8f2ed);

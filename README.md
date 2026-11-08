@@ -81,6 +81,8 @@ js/
                            localStorage untuk offline
   materi-render.js         buildLessonHtml(): render tata bahasa (halaman
                            Materi + pratinjau Kelola Materi)
+  lapor-konten.js          dialog "Laporkan" siswa (Materi & soal Tugas) +
+                           kotak tanggapan Operator (laporan_konten)
   pwa.js                   install prompt (service worker didaftarkan di sini,
                            setelah event load)
   pages/                   1 file JS per halaman di atas (dashboard.js,
@@ -430,6 +432,14 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   pelajaran selama 30 hari. Terbit tanpa catatan = perbaikan kecil, siswa
   tidak diberi tanda. Siswa hanya bisa membaca kolom `bab`,
   `diperbarui_at`, dan `catatan`.
+  Laporan siswa (`supabase/add-laporan-konten.sql`): tombol "Laporkan" di
+  akhir tiap pelajaran (pilih pola) dan di bawah umpan balik soal Tugas
+  mengirim laporan lewat `lapor_konten` (maks. 10 per 24 jam per akun,
+  laporan sama yang masih terbuka tidak digandakan). Operator menanganinya
+  di Kelola Materi -> "Laporan siswa" (status baru / diproses / selesai /
+  ditolak + tanggapan; titik hijau di pelajaran yang punya laporan
+  terbuka). Siswa melihat tanggapan di halaman Materi dan di "Laporan saya";
+  siswa hanya bisa membaca laporannya sendiri.
 
 ## Testing
 

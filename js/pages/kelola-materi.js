@@ -9,6 +9,8 @@
    (masih sesuai keadaan di Jepang); yang > TINJAU_HARI atau belum pernah
    ditinjau ditandai. Saat terbit, Operator bisa menulis catatan pembaruan
    yang tampil ke siswa di halaman Materi (konten_info).
+   Laporan siswa (supabase/add-laporan-konten.sql): antrian laporan dari
+   tombol "Laporkan" di Materi/Tugas, dengan status & tanggapan.
    Teks dari pengguna selalu dimasukkan lewat textContent/value.
    Dibungkus initPage(), dijalankan auth.js setelah login. */
 function initPage() {
@@ -27,6 +29,8 @@ const TINJAU_HARI = 365; // pelajaran perlu ditinjau ulang setelah 12 bulan
 const CATATAN_MAKS = 300;
 
 let ringkasan = []; // baris konten_list()
+let laporanPerBab = {}; // bab -> {baru, terbuka} dari laporan_ringkas()
+let laporanFilter = { status: "terbuka", bab: null };
 /* current: { bab, isi: {kosakata, kanji, kalimat} lengkap (bawaan + suntingan),
    terbit, base, source, updatedBy, dirty, tab, serverErrors } */
 let current = null;
@@ -239,13 +243,15 @@ function renderList() {
     const r = byBab[bab] || {};
     const diubah = (r.diubah || []).map((j) => NAMA_JENIS[j] || j);
     const tinjau = perluTinjau(r);
+    const lapor = laporanPerBab[bab];
     const title = [
+      lapor ? `${lapor.terbuka} laporan siswa terbuka` : "",
       `Pelajaran ${bab}`,
       diubah.length ? `diubah: ${diubah.join(", ")}` : "isi bawaan",
       r.has_draft ? `ada draft (${r.draft_updated_by || "Operator"})` : "",
       r.ditinjau_at ? `ditinjau ${tanggal(r.ditinjau_at)}${tinjau ? " - perlu ditinjau ulang" : ""}` : "belum pernah ditinjau",
     ].filter(Boolean).join(" · ");
-    return `<button type="button" class="km-bab${current && current.bab === bab ? " active" : ""}" data-bab="${bab}" title="${escapeHtml(title)}"><b>${bab}</b><span>${diubah.length ? '<i class="km-dot diubah"></i>' : ""}${r.has_draft ? '<i class="km-dot draft"></i>' : ""}${tinjau ? '<i class="km-dot tinjau"></i>' : ""}</span></button>`;
+    return `<button type="button" class="km-bab${current && current.bab === bab ? " active" : ""}" data-bab="${bab}" title="${escapeHtml(title)}"><b>${bab}</b><span>${diubah.length ? '<i class="km-dot diubah"></i>' : ""}${r.has_draft ? '<i class="km-dot draft"></i>' : ""}${tinjau ? '<i class="km-dot tinjau"></i>' : ""}${lapor ? '<i class="km-dot lapor"></i>' : ""}</span></button>`;
   }).join("");
   const lama = ringkasan.filter((r) => r.ditinjau_at && perluTinjau(r)).length;
   const belum = ringkasan.filter((r) => !r.ditinjau_at).length;
@@ -358,8 +364,11 @@ function paintTinjau() {
     ? `<p class="muted">Pembaruan terakhir yang tampil ke siswa: <b>${escapeHtml(tanggal(r.diperbarui_at))}</b>${r.catatan ? ` - ${escapeHtml(r.catatan)}` : ""}</p>`
     : "";
   el.className = `km-tinjau${perlu ? " perlu" : ""}`;
-  el.innerHTML = `<div><p>${status}</p>${umum}</div><button type="button" class="secondary" id="kmTandaiTinjau">✔ Tandai sudah ditinjau</button>`;
+  const lapor = laporanPerBab[current.bab];
+  const laporHtml = lapor ? `<p>📮 ${lapor.terbuka} laporan siswa terbuka untuk pelajaran ini · <button type="button" class="ks-link" id="kmLihatLaporan">Lihat laporan</button></p>` : "";
+  el.innerHTML = `<div><p>${status}</p>${umum}${laporHtml}</div><button type="button" class="secondary" id="kmTandaiTinjau">✔ Tandai sudah ditinjau</button>`;
   $("kmTandaiTinjau").onclick = tandaiDitinjau;
+  if (lapor) $("kmLihatLaporan").onclick = () => bukaLaporan({ bab: current.bab, status: "terbuka" });
 }
 async function tandaiDitinjau() {
   const pesan = [`Tandai isi Pelajaran ${current.bab} yang SEDANG TERBIT sudah ditinjau dan masih sesuai dengan keadaan di Jepang sekarang?`];
@@ -1117,6 +1126,105 @@ async function reload(tab) {
   await openBab(bab, { paksa: true, tab: tab || current.tab });
 }
 
+// ---------- Laporan siswa ----------
+const JENIS_LAPORAN = { tidak_sesuai: "Sudah tidak sesuai dengan keadaan di Jepang", salah: "Ada yang salah", kurang_jelas: "Penjelasan kurang jelas", lainnya: "Lainnya" };
+const STATUS_LAPORAN = { baru: "Baru", diproses: "Diproses", selesai: "Selesai (sudah diperbaiki)", ditolak: "Ditolak (tidak diubah)" };
+const FILTER_LAPORAN = [["terbuka", "Terbuka"], ["baru", "Baru"], ["diproses", "Diproses"], ["selesai", "Selesai"], ["ditolak", "Ditolak"], [null, "Semua"]];
+const lokasiLabel = (lokasi) => (lokasi === "materi" ? "Materi" : `Soal tugas (${lokasi.replace(/^tugas-/, "")})`);
+/* Tab editor yang paling dekat dengan bagian yang dilaporkan. */
+function tabUntuk(lokasi) {
+  if (/kotoba|dengar/.test(lokasi)) return "kosakata";
+  if (/kanji/.test(lokasi)) return "kanji";
+  if (/kalimat-susun/.test(lokasi)) return "susun";
+  if (/kalimat-pilih|partikel/.test(lokasi)) return "pilih";
+  return "materi";
+}
+async function loadLaporanRingkas() {
+  const { data, error } = await supa.rpc("laporan_ringkas");
+  if (error) {
+    $("kmLaporanJumlah").textContent = "";
+    return;
+  }
+  laporanPerBab = Object.fromEntries((data || []).map((r) => [r.bab, r]));
+  const baru = (data || []).reduce((n, r) => n + r.baru, 0);
+  $("kmLaporanJumlah").innerHTML = baru ? `<b>${baru} baru</b>` : "";
+  renderList();
+  if (current) paintTinjau();
+}
+function bukaLaporan(filter) {
+  if (!confirmLeaveDirty()) return;
+  current = null;
+  laporanFilter = { ...laporanFilter, ...filter };
+  renderList();
+  renderLaporan();
+}
+async function renderLaporan() {
+  const { status, bab } = laporanFilter;
+  editorEl.innerHTML = `
+    <header class="ks-editor-head"><div><div class="eyebrow">Masukan siswa</div><h2>Laporan siswa</h2>
+      <p class="ks-status">Laporan dari tombol "Laporkan" di Materi dan soal Tugas. Tanggapan Anda dibaca siswa pelapor.</p></div></header>
+    <div class="ks-feedback" id="kmFeedback" hidden></div>
+    <nav class="ks-tabs">${FILTER_LAPORAN.map(([id, nama]) => `<button type="button" data-status="${id ?? ""}" class="${status === id ? "active" : ""}">${nama}</button>`).join("")}</nav>
+    ${bab ? `<p class="muted">Hanya Pelajaran ${bab} · <button type="button" class="ks-link" id="kmLaporanSemuaBab">Tampilkan semua pelajaran</button></p>` : ""}
+    <ul class="km-laporan-list" id="kmLaporanList"><li class="muted">Memuat…</li></ul>`;
+  editorEl.querySelectorAll(".ks-tabs button").forEach((b) => (b.onclick = () => bukaLaporan({ status: b.dataset.status || null })));
+  if (bab) $("kmLaporanSemuaBab").onclick = () => bukaLaporan({ bab: null });
+  const { data, error } = await supa.rpc("laporan_list", { p_status: status });
+  const list = $("kmLaporanList");
+  if (!list) return; // sudah pindah ke halaman lain
+  if (error) {
+    list.innerHTML = `<li class="login-error">Gagal memuat laporan: ${escapeHtml(errorMessage(error))}. Operator perlu menjalankan supabase/add-laporan-konten.sql.</li>`;
+    return;
+  }
+  const rows = (data || []).filter((r) => !bab || r.bab === bab);
+  if (!rows.length) {
+    list.innerHTML = '<li class="muted">Tidak ada laporan di sini.</li>';
+    return;
+  }
+  list.replaceChildren(...rows.map(kartuLaporan));
+}
+function kartuLaporan(r) {
+  const li = document.createElement("li");
+  li.className = `km-laporan ${r.status}`;
+  const teks = (kelas, isi) => Object.assign(document.createElement("p"), { className: kelas, textContent: isi });
+  const pilih = document.createElement("select");
+  Object.entries(STATUS_LAPORAN).forEach(([value, nama]) => pilih.append(new Option(nama, value, false, value === r.status)));
+  const tanggapan = Object.assign(document.createElement("textarea"), {
+    rows: 2, maxLength: 500, value: r.tanggapan || "",
+    placeholder: "Tanggapan untuk siswa (opsional), mis. \"Sudah diperbaiki, terima kasih!\"",
+  });
+  const simpan = Object.assign(document.createElement("button"), { type: "button", className: "primary", textContent: "Simpan" });
+  const buka = Object.assign(document.createElement("button"), { type: "button", className: "secondary", textContent: `Buka Pelajaran ${r.bab}` });
+  const tombol = document.createElement("div");
+  tombol.append(simpan, buka);
+  const aksi = document.createElement("div");
+  aksi.className = "km-laporan-aksi";
+  aksi.append(pilih, tanggapan, tombol);
+  const peran = r.pelapor_peran ? ` (${r.pelapor_peran})` : "";
+  const ditangani = r.ditangani_at ? ` · ditangani ${tanggal(r.ditangani_at)}${r.ditangani_nama ? ` oleh ${r.ditangani_nama}` : ""}` : "";
+  li.append(
+    teks("km-laporan-meta", `Pelajaran ${r.bab} · ${lokasiLabel(r.lokasi)} · ${waktu(r.created_at)} · ${r.pelapor_nama}${peran}${ditangani}`),
+    Object.assign(document.createElement("b"), { textContent: JENIS_LAPORAN[r.jenis] || r.jenis }),
+    ...(r.rujukan ? [teks("km-laporan-rujukan", r.rujukan)] : []),
+    teks("", r.pesan),
+    aksi);
+  simpan.onclick = async () => {
+    simpan.disabled = true;
+    const { error } = await supa.rpc("laporan_tangani", { p_id: r.id, p_status: pilih.value, p_tanggapan: tanggapan.value });
+    simpan.disabled = false;
+    if (error) {
+      showFeedback("error", `Gagal menyimpan laporan: ${errorMessage(error)}`);
+      return;
+    }
+    await loadLaporanRingkas();
+    await renderLaporan();
+    showFeedback("success", `Laporan Pelajaran ${r.bab} disimpan sebagai "${STATUS_LAPORAN[pilih.value]}".`);
+  };
+  buka.onclick = () => openBab(r.bab, { tab: tabUntuk(r.lokasi) });
+  return li;
+}
+$("kmLaporanBtn").onclick = () => bukaLaporan({ bab: null });
+
 // ---------- Jaga perubahan yang belum disimpan ----------
 window.addEventListener("beforeunload", (event) => {
   if (current && current.dirty) {
@@ -1141,6 +1249,6 @@ if (window.IdleSession) {
   });
 }
 
-loadList();
+loadList().then(loadLaporanRingkas);
 }
 window.initPage = initPage;

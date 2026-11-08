@@ -614,3 +614,16 @@
   display: block;
   margin: 4px 0 0;
 }
+/* Tautan "Laporkan soal ini" di bawah umpan balik (js/lapor-konten.js). */
+.tugas-lapor {
+  display: block;
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
