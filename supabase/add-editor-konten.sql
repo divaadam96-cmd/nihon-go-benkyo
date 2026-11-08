@@ -1,16 +1,21 @@
--- Editor isi pelajaran untuk Operator (pages/kelola-materi.html), Tahap 1:
--- kosakata, kanji, dan soal kalimat (susun & pilih) per Pelajaran 1-50.
--- Jalankan SETELAH fix-1-operator-mfa.sql dan fix-6-riwayat-perubahan-soal.sql
--- (require_operator), di SQL Editor Supabase
--- (atau `supabase db query --linked -f supabase/add-editor-konten.sql`).
--- Aman dijalankan ulang.
+-- Editor isi pelajaran untuk Operator (pages/kelola-materi.html):
+-- kosakata, kanji, soal kalimat (susun & pilih) [Tahap 1] dan teks Materi
+-- tata bahasa [Tahap 2] per Pelajaran 1-50.
+-- Jalankan SETELAH fix-1-operator-mfa.sql, fix-6-riwayat-perubahan-soal.sql
+-- (require_operator) dan add-editor-soal.sql (is_safe_question_html), di SQL
+-- Editor Supabase (atau `supabase db query --linked -f supabase/add-editor-konten.sql`).
+-- Aman dijalankan ulang - versi baru file ini cukup dijalankan ulang seluruhnya.
 --
 -- Isi bawaan tetap di berkas data/bab-data.js & data/tugas-kalimat-data.js.
 -- Tabel ini hanya menyimpan bagian yang DIUBAH Operator, per pelajaran:
 --   isi = { "kosakata": [[jp, arti], ...],
 --           "kanji":    [[kanji, kana, arti], ...],
 --           "kalimat":  { "susun": [{arti, potongan: [...], alt?: [...]}],
---                         "pilih": [{arti, benar, salah: [3 pengecoh]}] } }
+--                         "pilih": [{arti, benar, salah: [3 pengecoh]}] },
+--           "materi":   { "title": "...", "items": [pola, ...] } }
+-- Bentuk pola sama dengan data/materi-grammar-data.js (+ "hidden": pola yang
+-- disembunyikan; urutan pola tidak boleh berubah karena progres siswa
+-- disimpan per nomor pola - dijaga halaman editor).
 -- Kunci yang tidak ada = memakai isi bawaan. Halaman siswa (js/konten-bab.js)
 -- menimpa isi bawaan dengan isi terbit ini. Alurnya sama dengan Kelola Soal:
 -- draft -> terbitkan (divalidasi di server) -> versi lama disimpan di riwayat.
@@ -73,6 +78,141 @@ as $$
     and (p #>> '{}') !~ '[<>\r\n]', false);
 $$;
 
+-- Teks berformat (Materi): string, panjang min..maks, HTML hanya tag & atribut
+-- yang diizinkan is_safe_question_html (sama dengan soal Tes Kemampuan).
+create or replace function public.konten_html_ok(p jsonb, p_min int, p_maks int)
+returns boolean
+language sql
+immutable
+set search_path = public
+as $$
+  select coalesce(jsonb_typeof(p) = 'string'
+    and length(btrim(p #>> '{}')) between p_min and p_maks
+    and public.is_safe_question_html(p #>> '{}'), false);
+$$;
+
+-- Validasi bagian "materi" -> daftar pesan "Materi pola N: ...".
+create or replace function public.validate_konten_materi(x jsonb)
+returns text[]
+language plpgsql
+immutable
+set search_path = public
+as $$
+declare
+  e text[] := '{}';
+  it jsonb;
+  b jsonb;
+  t jsonb;
+  r jsonb;
+  n int := 0;
+  m int;
+  v_kolom int;
+  v_isi boolean;
+  p text;
+begin
+  if jsonb_typeof(x) <> 'object'
+     or exists (select 1 from jsonb_object_keys(x) k where k not in ('title', 'items')) then
+    return array['Format materi tidak sah.'];
+  end if;
+  if not public.konten_teks_ok(x -> 'title', 100) then
+    e := e || 'Materi: judul pelajaran wajib diisi (maks. 100 karakter, tanpa < >).'::text;
+  end if;
+  if jsonb_typeof(x -> 'items') is distinct from 'array' or jsonb_array_length(x -> 'items') not between 1 and 30 then
+    return e || 'Materi: harus berisi 1-30 pola.'::text;
+  end if;
+  for it in select value from jsonb_array_elements(x -> 'items') loop
+    n := n + 1;
+    p := format('Materi pola %s: ', n);
+    if jsonb_typeof(it) <> 'object'
+       or exists (select 1 from jsonb_object_keys(it) k where k not in ('title', 'suffix', 'noBox', 'hidden', 'blocks')) then
+      e := e || (p || 'format tidak sah.');
+      continue;
+    end if;
+    if not public.konten_html_ok(it -> 'title', 1, 500) then e := e || (p || 'judul pola wajib diisi (maks. 500 karakter, HTML terbatas).'); end if;
+    if it ? 'suffix' and not public.konten_html_ok(it -> 'suffix', 0, 300) then e := e || (p || 'keterangan judul maks. 300 karakter (HTML terbatas).'); end if;
+    if it ? 'noBox' and jsonb_typeof(it -> 'noBox') <> 'boolean' then e := e || (p || 'pilihan tanpa kotak tidak sah.'); end if;
+    if it ? 'hidden' and jsonb_typeof(it -> 'hidden') <> 'boolean' then e := e || (p || 'pilihan sembunyikan tidak sah.'); end if;
+    if jsonb_typeof(it -> 'blocks') is distinct from 'array'
+       or jsonb_array_length(it -> 'blocks') > 20
+       or (jsonb_array_length(it -> 'blocks') = 0 and coalesce(it -> 'hidden' = 'true'::jsonb, false) = false) then
+      e := e || (p || 'harus punya 1-20 bagian penjelasan.');
+      continue;
+    end if;
+    m := 0;
+    for b in select value from jsonb_array_elements(it -> 'blocks') loop
+      m := m + 1;
+      if jsonb_typeof(b) <> 'object'
+         or exists (select 1 from jsonb_object_keys(b) k where k not in ('label', 'text', 'figure', 'table', 'examples', 'note')) then
+        e := e || format('%sbagian %s: format tidak sah.', p, m);
+        continue;
+      end if;
+      v_isi := false;
+      if b ? 'label' then
+        if not public.konten_html_ok(b -> 'label', 1, 1000) then e := e || format('%sbagian %s: sub-judul maks. 1000 karakter (HTML terbatas).', p, m); end if;
+        v_isi := true;
+      end if;
+      if b ? 'text' then
+        if not public.konten_html_ok(b -> 'text', 1, 6000) then e := e || format('%sbagian %s: penjelasan maks. 6000 karakter (HTML terbatas).', p, m); end if;
+        v_isi := true;
+      end if;
+      if b ? 'note' then
+        if not public.konten_html_ok(b -> 'note', 1, 4000) then e := e || format('%sbagian %s: catatan maks. 4000 karakter (HTML terbatas).', p, m); end if;
+        v_isi := true;
+      end if;
+      if b ? 'figure' then
+        t := b -> 'figure';
+        if jsonb_typeof(t) <> 'object'
+           or exists (select 1 from jsonb_object_keys(t) k where k not in ('src', 'alt'))
+           or coalesce(t ->> 'src', '') !~ '^assets/images/materi/[A-Za-z0-9_-]+[.](webp|png|jpe?g)$'
+           or jsonb_typeof(t -> 'alt') is distinct from 'string'
+           or length(t ->> 'alt') > 300 or (t ->> 'alt') ~ '[<>"]' then
+          e := e || format('%sbagian %s: gambar tidak sah (keterangan maks. 300 karakter, tanpa < > ").', p, m);
+        end if;
+        v_isi := true;
+      end if;
+      if b ? 'table' then
+        t := b -> 'table';
+        if jsonb_typeof(t) <> 'object'
+           or exists (select 1 from jsonb_object_keys(t) k where k not in ('headers', 'rows'))
+           or jsonb_typeof(t -> 'headers') is distinct from 'array' or jsonb_array_length(t -> 'headers') not between 1 and 10
+           or jsonb_typeof(t -> 'rows') is distinct from 'array' or jsonb_array_length(t -> 'rows') not between 1 and 50 then
+          e := e || format('%sbagian %s: tabel harus punya 1-10 kolom dan 1-50 baris.', p, m);
+        else
+          v_kolom := jsonb_array_length(t -> 'headers') + 1;
+          if exists (select 1 from jsonb_array_elements(t -> 'headers') h where not public.konten_html_ok(h, 0, 300)) then
+            e := e || format('%sbagian %s: judul kolom tabel maks. 300 karakter (HTML terbatas).', p, m);
+          end if;
+          for r in select value from jsonb_array_elements(t -> 'rows') loop
+            if jsonb_typeof(r) <> 'array' or jsonb_array_length(r) <> v_kolom
+               or exists (select 1 from jsonb_array_elements(r) c where not public.konten_html_ok(c, 0, 500)) then
+              e := e || format('%sbagian %s: setiap baris tabel harus berisi %s sel (maks. 500 karakter, HTML terbatas).', p, m, v_kolom);
+              exit;
+            end if;
+          end loop;
+        end if;
+        v_isi := true;
+      end if;
+      if b ? 'examples' then
+        if jsonb_typeof(b -> 'examples') is distinct from 'array' or jsonb_array_length(b -> 'examples') > 40 then
+          e := e || format('%sbagian %s: maks. 40 contoh.', p, m);
+        else
+          if exists (select 1 from jsonb_array_elements(b -> 'examples') c
+                     where jsonb_typeof(c) <> 'array' or jsonb_array_length(c) <> 2
+                        or not public.konten_html_ok(c -> 0, 1, 600) or not public.konten_html_ok(c -> 1, 0, 600)) then
+            e := e || format('%sbagian %s: setiap contoh wajib berisi kalimat (maks. 600 karakter) dan arti (boleh kosong), HTML terbatas.', p, m);
+          end if;
+          if jsonb_array_length(b -> 'examples') > 0 then v_isi := true; end if;
+        end if;
+      end if;
+      if not v_isi then
+        e := e || format('%sbagian %s: kosong - isi minimal satu dari sub-judul, penjelasan, tabel, contoh, atau catatan.', p, m);
+      end if;
+    end loop;
+  end loop;
+  return e;
+end;
+$$;
+
 -- Daftar pesan kesalahan (kosong = sah). Format pesan "Kosakata no. N: ..."
 -- dipakai halaman editor untuk melompat ke baris yang salah.
 create or replace function public.validate_konten_bab(p_isi jsonb)
@@ -97,7 +237,7 @@ begin
     return array['Isi terlalu besar.'];
   end if;
   for k in select jsonb_object_keys(p_isi) loop
-    if k not in ('kosakata', 'kanji', 'kalimat') then
+    if k not in ('kosakata', 'kanji', 'kalimat', 'materi') then
       e := e || format('Bagian "%s" tidak dikenal.', k);
     end if;
   end loop;
@@ -203,6 +343,9 @@ begin
         end if;
       end loop;
     end if;
+  end if;
+  if p_isi ? 'materi' then
+    e := e || public.validate_konten_materi(p_isi -> 'materi');
   end if;
   return e;
 end;
@@ -421,6 +564,8 @@ revoke execute on function public.konten_snapshot(int, text) from public, anon, 
 revoke execute on function public.konten_set_terbit(int, jsonb) from public, anon, authenticated;
 revoke execute on function public.konten_teks_ok(jsonb, int) from public, anon;
 revoke execute on function public.validate_konten_bab(jsonb) from public, anon;
+revoke execute on function public.konten_html_ok(jsonb, int, int) from public, anon;
+revoke execute on function public.validate_konten_materi(jsonb) from public, anon;
 revoke execute on function public.konten_list() from public, anon;
 revoke execute on function public.konten_load(int) from public, anon;
 revoke execute on function public.konten_save_draft(int, jsonb, timestamptz) from public, anon;
@@ -430,6 +575,8 @@ revoke execute on function public.konten_versions(int) from public, anon;
 revoke execute on function public.konten_restore(bigint) from public, anon;
 grant execute on function public.konten_teks_ok(jsonb, int) to authenticated;
 grant execute on function public.validate_konten_bab(jsonb) to authenticated;
+grant execute on function public.konten_html_ok(jsonb, int, int) to authenticated;
+grant execute on function public.validate_konten_materi(jsonb) to authenticated;
 grant execute on function public.konten_list() to authenticated;
 grant execute on function public.konten_load(int) to authenticated;
 grant execute on function public.konten_save_draft(int, jsonb, timestamptz) to authenticated;

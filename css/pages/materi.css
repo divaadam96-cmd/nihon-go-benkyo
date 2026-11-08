@@ -844,6 +844,10 @@
    Benda)" Pelajaran 18 pola 2) yang di buku sumber dicetak polos, lebih
    kecil - beda dari kalimat Jepang tebal di atasnya. Dibuang dari teks
    kartu contoh Tahap 2 (lihat getAllExamplesData, materi.js). */
+/* Huruf kecil di contoh koreksi (mis. 荷物をは: を yang dicoret kecil). */
+.grammar-kecil {
+  font-size: 0.65em;
+}
 .grammar-annotation {
   display: block;
   font: 400 12px "DM Sans";

@@ -16,8 +16,8 @@ const escapeHtml = window.escapeHtml;
 const listEl = $("kmBabList");
 const editorEl = $("kmEditor");
 const MAX_BAB = 50;
-const JENIS = ["kosakata", "kanji", "kalimat"];
-const NAMA_JENIS = { kosakata: "Kosakata", kanji: "Kanji", kalimat: "Soal kalimat" };
+const JENIS = ["materi", "kosakata", "kanji", "kalimat"];
+const NAMA_JENIS = { materi: "Tata bahasa", kosakata: "Kosakata", kanji: "Kanji", kalimat: "Soal kalimat" };
 const JUMLAH_TUGAS = 10; // TUGAS_KALIMAT_JUMLAH di js/tugas-bab.js
 
 let ringkasan = []; // baris konten_list()
@@ -29,6 +29,7 @@ let filterText = "";
 const salin = (v) => JSON.parse(JSON.stringify(v));
 const sama = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 function bawaan(jenis, bab) {
+  if (jenis === "materi") return salin(bab <= 25 ? MATERI_BOOK1_LESSONS[bab - 1] : MATERI_BOOK2_LESSONS[bab - 26]);
   if (jenis === "kosakata") return salin(babKosakataData[bab] || []);
   if (jenis === "kanji") return salin(babKanjiData[bab] || []);
   return salin(tugasKalimatData[bab] || { susun: [], pilih: [] });
@@ -96,9 +97,54 @@ function daftarFor(tab) {
   if (tab === "susun" || tab === "pilih") return current.isi.kalimat[tab];
   return current.isi[tab];
 }
+/* Tata bahasa (cermin validate_konten_materi di server). Hasil per pola:
+   [{ errors, warnings }]; kesalahan tingkat pelajaran di index -1. */
+const htmlOk = (v, min, maks) =>
+  typeof v === "string" && v.trim().length >= min && v.trim().length <= maks && window.isSafeQuestionHtml(v);
+function cekPola(item) {
+  const errors = [], warnings = [];
+  if (!htmlOk(item.title, 1, 500)) errors.push("Judul pola wajib diisi (maks. 500 karakter, HTML terbatas).");
+  if (item.suffix && !htmlOk(item.suffix, 0, 300)) errors.push("Keterangan judul maks. 300 karakter (HTML terbatas).");
+  if (item.hidden) return { errors, warnings };
+  if (!item.blocks.length || item.blocks.length > 20) errors.push("Harus ada 1–20 bagian penjelasan.");
+  item.blocks.forEach((b, k) => {
+    const p = `bagian ${k + 1}: `;
+    const ada = (v) => typeof v === "string" && v.trim() !== "";
+    if (!ada(b.label) && !ada(b.text) && !ada(b.note) && !b.table && !b.figure && !(b.examples || []).length) errors.push(`${p}kosong - isi minimal satu dari sub-judul, penjelasan, tabel, contoh, atau catatan.`);
+    if (ada(b.label) && !htmlOk(b.label, 1, 1000)) errors.push(`${p}sub-judul maks. 1000 karakter (HTML terbatas).`);
+    if (ada(b.text) && !htmlOk(b.text, 1, 6000)) errors.push(`${p}penjelasan maks. 6000 karakter (HTML terbatas).`);
+    if (ada(b.note) && !htmlOk(b.note, 1, 4000)) errors.push(`${p}catatan maks. 4000 karakter (HTML terbatas).`);
+    if (b.figure && (b.figure.alt.length > 300 || /[<>"]/.test(b.figure.alt))) errors.push(`${p}keterangan gambar maks. 300 karakter, tanpa < > ".`);
+    if (b.table) {
+      const { headers, rows } = b.table;
+      if (!headers.length || headers.length > 10 || !rows.length || rows.length > 50) errors.push(`${p}tabel harus punya 1–10 kolom dan 1–50 baris.`);
+      if (headers.some((h) => !htmlOk(h, 0, 300)) || rows.some((r) => r.some((c) => !htmlOk(c, 0, 500)))) errors.push(`${p}isi sel tabel memakai HTML yang tidak diizinkan atau terlalu panjang.`);
+    }
+    const ex = b.examples || [];
+    if (ex.length > 40) errors.push(`${p}maks. 40 contoh.`);
+    ex.forEach(([jp, arti], j) => {
+      if (!htmlOk(jp, 1, 600)) errors.push(`${p}contoh ${j + 1}: kalimat wajib diisi (maks. 600 karakter, HTML terbatas).`);
+      if (!htmlOk(arti, 0, 600)) errors.push(`${p}contoh ${j + 1}: arti maks. 600 karakter (HTML terbatas).`);
+      if (jp.trim() && !arti.trim() && !/×/.test(jp)) warnings.push(`${p}contoh ${j + 1} belum punya arti (contoh tanpa arti tidak dipakai di latihan).`);
+    });
+  });
+  return { errors, warnings };
+}
+function cekMateri(materi) {
+  const errors = [], warnings = [];
+  if (!teksOk(materi.title, 100)) errors.push({ tab: "materi", index: -1, message: "Materi: judul pelajaran wajib diisi (maks. 100 karakter, tanpa < >)." });
+  if (!materi.items.length || materi.items.length > 30) errors.push({ tab: "materi", index: -1, message: "Materi: harus berisi 1–30 pola." });
+  materi.items.forEach((item, i) => {
+    const r = cekPola(item);
+    r.errors.forEach((m) => errors.push({ tab: "materi", index: i, message: `Materi pola ${i + 1}: ${m}` }));
+    r.warnings.forEach((m) => warnings.push({ tab: "materi", index: i, message: `Materi pola ${i + 1}: ${m}` }));
+  });
+  return { errors, warnings };
+}
+
 /* Semua kesalahan & peringatan: [{tab, index, message}] */
 function semuaCek() {
-  const errors = [], warnings = [];
+  const { errors, warnings } = cekMateri(current.isi.materi);
   Object.keys(CEK).forEach((tab) => {
     const list = daftarFor(tab);
     if (!list.length) errors.push({ tab, index: -1, message: `${LABEL_BARIS[tab]}: daftar tidak boleh kosong.` });
@@ -114,8 +160,34 @@ function semuaCek() {
 }
 
 // ---------- Isi untuk disimpan: hanya bagian yang beda dari bawaan ----------
+/* Spasi ASCII di tepi dibuang; spasi lebar Jepang (　) sengaja dipertahankan. */
+const rapiTepi = (s) => String(s ?? "").replace(/^[ \t\r\n]+|[ \t\r\n]+$/g, "");
+function rapikanMateri(m) {
+  const h = (s) => rapiTepi(s).replace(/\r?\n/g, "<br>");
+  return {
+    title: rapiTepi(m.title),
+    items: m.items.map((it) => {
+      const item = { title: h(it.title) };
+      if (h(it.suffix)) item.suffix = h(it.suffix);
+      if (it.noBox) item.noBox = true;
+      if (it.hidden) item.hidden = true;
+      item.blocks = it.blocks.map((b) => {
+        const blok = {};
+        if (h(b.label)) blok.label = h(b.label);
+        if (h(b.text)) blok.text = h(b.text);
+        if (b.figure) blok.figure = { src: b.figure.src, alt: rapiTepi(b.figure.alt) };
+        if (b.table) blok.table = { headers: b.table.headers.map(h), rows: b.table.rows.map((r) => r.map(h)) };
+        if ((b.examples || []).length) blok.examples = b.examples.map(([jp, arti]) => [h(jp), h(arti)]);
+        if (h(b.note)) blok.note = h(b.note);
+        return blok;
+      });
+      return item;
+    }),
+  };
+}
 function rapikan(jenis, v) {
   const t = (s) => String(s ?? "").trim();
+  if (jenis === "materi") return rapikanMateri(v);
   if (jenis === "kosakata") return v.map(([a, b]) => [t(a), t(b)]);
   if (jenis === "kanji") return v.map(([a, b, c]) => [t(a), t(b), t(c)]);
   return {
@@ -188,10 +260,12 @@ async function openBab(bab, { paksa = false, tab = null } = {}) {
     terbitAt: data.terbit_at || null,
     terbitBy: data.terbit_by || null,
     dirty: false,
-    tab: tab || (current && current.tab !== "riwayat" ? current.tab : "kosakata"),
+    tab: tab || (current && current.tab !== "riwayat" ? current.tab : "materi"),
     serverErrors: [],
   };
   filterText = "";
+  polaTerbuka = new Set();
+  pratinjau = new Set();
   renderList();
   renderEditor();
 }
@@ -205,13 +279,14 @@ function statusText() {
   return "Menampilkan isi bawaan (belum pernah disunting).";
 }
 const TABS = [
+  ["materi", "Tata bahasa", () => current.isi.materi.items.filter((x) => !x.hidden).length],
   ["kosakata", "Kosakata", () => current.isi.kosakata.length],
   ["kanji", "Kanji", () => current.isi.kanji.length],
   ["susun", "Susun kalimat", () => current.isi.kalimat.susun.length],
   ["pilih", "Pilih kalimat", () => current.isi.kalimat.pilih.length],
   ["riwayat", "Riwayat versi", null],
 ];
-const JENIS_TAB = { kosakata: "kosakata", kanji: "kanji", susun: "kalimat", pilih: "kalimat" };
+const JENIS_TAB = { materi: "materi", kosakata: "kosakata", kanji: "kanji", susun: "kalimat", pilih: "kalimat" };
 function renderEditor() {
   if (!current) return;
   editorEl.innerHTML = `
@@ -236,6 +311,7 @@ function renderEditor() {
   $("kmDiscard").onclick = discardDraft;
   if (current.serverErrors.length) showFeedback("error", "Belum bisa diterbitkan:", current.serverErrors);
   if (current.tab === "riwayat") renderHistoryTab();
+  else if (current.tab === "materi") renderMateriTab();
   else renderDaftarTab();
 }
 function markDirty() {
@@ -257,10 +333,15 @@ function showFeedback(kind, title, items) {
     const li = document.createElement("li");
     li.textContent = message;
     const match = /^(Kosakata|Kanji|Susun|Pilih) no\. (\d+):/.exec(message);
+    const pola = /^Materi pola (\d+):/.exec(message);
     if (match) {
       li.className = "ks-jump";
       li.title = "Buka baris ini";
       li.onclick = () => lompat(match[1].toLowerCase(), Number(match[2]) - 1);
+    } else if (pola) {
+      li.className = "ks-jump";
+      li.title = "Buka pola ini";
+      li.onclick = () => lompatPola(Number(pola[1]) - 1);
     }
     ul.appendChild(li);
   });
@@ -459,6 +540,382 @@ editorEl.addEventListener("click", (event) => {
   renderEditor();
   if (action !== "delete") lompat(current.tab, action === "up" ? i - 1 : i + 1);
 });
+
+// ---------- Tab Tata bahasa ----------
+/* Isi disimpan sebagai HTML terbatas; di kotak isian <br> ditampilkan sebagai
+   baris baru (Enter) dan dikembalikan saat diketik. Urutan pola DIKUNCI:
+   progres siswa disimpan per nomor pola, jadi pola lama hanya bisa
+   disembunyikan dan pola baru hanya ditambah di akhir. */
+let polaTerbuka = new Set();
+let pratinjau = new Set();
+let fieldTerakhir = null;
+const keTeks = (html) => String(html ?? "").replace(/<br\s*\/?>/gi, "\n");
+const keHtml = (teks) => String(teks).replace(/\r?\n/g, "<br>");
+/* Jumlah pola yang sudah pernah ada (bawaan / terbit) - pola di posisi ini
+   tidak boleh dihapus, hanya disembunyikan. */
+function polaTerkunci() {
+  return Math.max(bawaan("materi", current.bab).items.length, current.terbit.materi?.items.length || 0);
+}
+function ambilPath(path) {
+  return path.split(".").reduce((obj, k) => obj?.[k], current.isi.materi);
+}
+function setPath(path, value) {
+  const keys = path.split(".");
+  const last = keys.pop();
+  const obj = keys.reduce((o, k) => o[k], current.isi.materi);
+  obj[last] = value;
+}
+function renderMateriTab() {
+  const body = $("kmTabBody");
+  const m = current.isi.materi;
+  const ubah = diubahDariBawaan("materi");
+  body.innerHTML = `
+    <p class="ks-hint">Keterangan tata bahasa yang dibaca siswa di Materi (tahap 1 "Pahami semua pola"); contoh kalimatnya juga dipakai tahap 2 "Pelajari contoh". <b>Urutan pola dikunci</b> karena progres "sudah paham" siswa disimpan per nomor pola: pola lama hanya bisa <b>disembunyikan</b>, pola baru ditambahkan di akhir. Bagian, contoh, dan baris tabel di dalam pola boleh ditambah, dihapus, dan diurutkan.</p>
+    <div class="ks-toolbar km-materi-bar">
+      <label class="ks-field km-judul">Judul pelajaran<input data-path="title" maxlength="100" autocomplete="off"></label>
+      <span class="km-bawaan">${ubah ? `<span class="km-badge-diubah">Sudah diubah dari isi bawaan</span><button type="button" class="ks-link" data-mact="reset">Kembalikan tata bahasa ke isi bawaan</button>` : '<span class="muted">Sama dengan isi bawaan</span>'}</span>
+    </div>
+    <div class="km-format" role="toolbar" aria-label="Format teks">
+      <span>Format teks terpilih:</span>
+      <button type="button" data-fmt="u" title="Garis bawah"><u>U</u> garis bawah</button>
+      <button type="button" data-fmt="sub" title="Huruf kecil di bawah (Kata Benda₁)">X<sub>1</sub> subskrip</button>
+      <button type="button" data-fmt="i" title="Miring"><i>I</i> miring</button>
+      <button type="button" data-fmt="kotak" title="Kotak pola kalimat">▭ kotak pola</button>
+      <small>Enter = baris baru. HTML yang boleh: ${window.QUESTION_HTML_TAGS.slice(0, 15).join(", ")} (atribut hanya class).</small>
+    </div>
+    <div class="km-pola-list" id="kmPolaList"></div>
+    <button type="button" class="secondary ks-add" data-mact="add-pola">+ Tambah pola baru (di akhir)</button>`;
+  body.querySelector('[data-path="title"]').value = m.title;
+  paintPolaList();
+}
+function paintPolaList() {
+  const list = $("kmPolaList");
+  if (!list) return;
+  const terkunci = polaTerkunci();
+  list.replaceChildren(...current.isi.materi.items.map((item, i) => kartuPola(item, i, i >= terkunci)));
+}
+function kartuPola(item, i, baru) {
+  const hasil = cekPola(item);
+  const card = document.createElement("article");
+  card.className = `ks-q km-pola${polaTerbuka.has(i) ? " open" : ""}${hasil.errors.length ? " has-error" : ""}${item.hidden ? " km-pola-hidden" : ""}`;
+  card.id = `kmPola${i}`;
+  card.dataset.index = String(i);
+  const ringkas = document.createElement("div");
+  ringkas.innerHTML = window.sanitizeQuestionHtml(item.title || "");
+  const judul = ringkas.textContent.replace(/\s+/g, " ").trim() || "(judul kosong)";
+  card.innerHTML = `
+    <header class="ks-q-head">
+      <button type="button" class="ks-q-toggle" data-mact="toggle" aria-expanded="${polaTerbuka.has(i)}"><span class="ks-q-num">Pola ${i + 1}</span><span class="ks-q-sum"></span>${item.hidden ? '<span class="ks-badge off">Disembunyikan</span>' : ""}${baru ? '<span class="ks-badge new">Baru</span>' : ""}${hasil.errors.length ? `<span class="ks-q-err">${hasil.errors.length} perlu diperbaiki</span>` : ""}</button>
+      <div class="ks-q-tools">
+        ${item.hidden ? "" : `<button type="button" data-mact="preview">${pratinjau.has(i) ? "Tutup pratinjau" : "Pratinjau"}</button>`}
+        ${baru ? '<button type="button" data-mact="del-pola">Hapus</button>' : `<button type="button" data-mact="hide">${item.hidden ? "Tampilkan lagi" : "Sembunyikan"}</button>`}
+      </div>
+    </header>`;
+  card.querySelector(".ks-q-sum").textContent = judul;
+  if (pratinjau.has(i) && !item.hidden) {
+    const pv = document.createElement("div");
+    pv.className = "km-pratinjau material-reader-body";
+    pv.innerHTML = buildGrammarPointHtml(saringPola(item), i);
+    card.appendChild(pv);
+  }
+  if (!polaTerbuka.has(i)) return card;
+  const body = document.createElement("div");
+  body.className = "km-pola-body";
+  const p = `items.${i}`;
+  if (item.hidden) {
+    body.innerHTML = '<p class="ks-hint">Pola ini tidak tampil untuk siswa. Nomor polanya tetap disimpan supaya progres pola lain tidak bergeser. Tekan "Tampilkan lagi" untuk memunculkannya kembali.</p>';
+    card.appendChild(body);
+    return card;
+  }
+  body.append(
+    isian("Judul pola (isi kotak pola)", `${p}.title`, item.title, { rows: 2 }),
+    isian("Keterangan di luar kotak (opsional, mis. (kalimat tanya))", `${p}.suffix`, item.suffix || "", { single: true }),
+  );
+  const noBox = document.createElement("label");
+  noBox.className = "ks-check";
+  noBox.innerHTML = `<input type="checkbox" data-path="${p}.noBox"> Tanpa kotak (judul sub-bagian biasa, bukan pola kalimat)`;
+  noBox.querySelector("input").checked = !!item.noBox;
+  body.appendChild(noBox);
+  item.blocks.forEach((b, k) => body.appendChild(kartuBagian(b, `${p}.blocks.${k}`, k, item.blocks.length)));
+  const tambah = document.createElement("button");
+  tambah.type = "button";
+  tambah.className = "secondary km-small";
+  tambah.dataset.mact = "add-blok";
+  tambah.textContent = "+ Tambah bagian";
+  const errs = document.createElement("ul");
+  errs.className = "km-msgs";
+  errs.append(
+    ...hasil.errors.map((m) => Object.assign(document.createElement("li"), { textContent: m, className: "err" })),
+    ...hasil.warnings.map((m) => Object.assign(document.createElement("li"), { textContent: `⚠ ${m}`, className: "warn" })),
+  );
+  body.append(tambah, errs);
+  card.appendChild(body);
+  return card;
+}
+function kartuBagian(b, p, k, total) {
+  const box = document.createElement("fieldset");
+  box.className = "km-bagian";
+  box.dataset.path = p;
+  const legend = document.createElement("legend");
+  legend.innerHTML = `Bagian ${k + 1} <span class="km-tools-inline"><button type="button" data-mact="up" ${k === 0 ? "disabled" : ""} title="Naikkan">↑</button><button type="button" data-mact="down" ${k === total - 1 ? "disabled" : ""} title="Turunkan">↓</button><button type="button" data-mact="del" title="Hapus bagian">✕</button></span>`;
+  box.appendChild(legend);
+  box.append(
+    isian("Sub-judul (mis. 1) …)", `${p}.label`, b.label || "", { rows: 2 }),
+    isian("Penjelasan", `${p}.text`, b.text || "", { rows: 4 }),
+  );
+  if (b.figure) {
+    const fig = document.createElement("div");
+    fig.className = "km-figure";
+    fig.innerHTML = `<img alt="" src="../${MATERI_FIGURE_SRC.test(b.figure.src) ? b.figure.src : ""}" loading="lazy">`;
+    fig.appendChild(isian("Keterangan gambar (alt)", `${p}.figure.alt`, b.figure.alt || "", { single: true, plain: true }));
+    box.appendChild(fig);
+  }
+  if (b.table) box.appendChild(editorTabel(b.table, `${p}.table`));
+  const ex = document.createElement("div");
+  ex.className = "km-contoh";
+  ex.innerHTML = `<div class="km-sub">Contoh kalimat (${(b.examples || []).length})</div>`;
+  (b.examples || []).forEach((e, j) => {
+    const row = document.createElement("div");
+    row.className = "km-contoh-row";
+    row.dataset.path = `${p}.examples.${j}`;
+    row.append(
+      isian(`Contoh ${j + 1}`, `${p}.examples.${j}.0`, e[0], { rows: 1, lang: "ja" }),
+      isian("Arti", `${p}.examples.${j}.1`, e[1], { rows: 1 }),
+    );
+    const tools = document.createElement("span");
+    tools.className = "km-tools-inline";
+    tools.innerHTML = `<button type="button" data-mact="up" ${j === 0 ? "disabled" : ""} title="Naikkan">↑</button><button type="button" data-mact="down" ${j === b.examples.length - 1 ? "disabled" : ""} title="Turunkan">↓</button><button type="button" data-mact="del" title="Hapus contoh">✕</button>`;
+    row.appendChild(tools);
+    ex.appendChild(row);
+  });
+  const aksi = document.createElement("div");
+  aksi.className = "km-aksi";
+  aksi.innerHTML = `<button type="button" class="ks-link" data-mact="add-contoh">+ contoh</button>${b.table ? "" : '<button type="button" class="ks-link" data-mact="add-tabel">+ tabel</button>'}`;
+  ex.appendChild(aksi);
+  box.append(ex, isian("Catatan / [Perhatian] (opsional)", `${p}.note`, b.note || "", { rows: 2 }));
+  return box;
+}
+function editorTabel(table, p) {
+  const wrap = document.createElement("div");
+  wrap.className = "km-tabel";
+  wrap.dataset.path = p;
+  wrap.innerHTML = `<div class="km-sub">Tabel (${table.headers.length} kolom × ${table.rows.length} baris; kolom pertama = judul baris)</div>`;
+  const grid = document.createElement("div");
+  grid.className = "km-tabel-grid";
+  grid.style.gridTemplateColumns = `repeat(${table.headers.length + 1}, minmax(90px, 1fr))`;
+  const sel = (path, value, ph) => {
+    const el = document.createElement("textarea");
+    el.rows = 1;
+    el.dataset.path = path;
+    el.dataset.html = "1";
+    el.value = keTeks(value);
+    el.placeholder = ph;
+    el.lang = "ja";
+    return el;
+  };
+  grid.appendChild(Object.assign(document.createElement("span"), { className: "km-tabel-pojok", textContent: "—" }));
+  table.headers.forEach((h, c) => grid.appendChild(sel(`${p}.headers.${c}`, h, `Kolom ${c + 1}`)));
+  table.rows.forEach((row, r) => row.forEach((cell, c) => grid.appendChild(sel(`${p}.rows.${r}.${c}`, cell, c === 0 ? `Baris ${r + 1}` : ""))));
+  wrap.appendChild(grid);
+  const aksi = document.createElement("div");
+  aksi.className = "km-aksi";
+  aksi.innerHTML = '<button type="button" class="ks-link" data-mact="tabel-baris+">+ baris</button><button type="button" class="ks-link" data-mact="tabel-baris-">− baris terakhir</button><button type="button" class="ks-link" data-mact="tabel-kolom+">+ kolom</button><button type="button" class="ks-link" data-mact="tabel-kolom-">− kolom terakhir</button><button type="button" class="ks-link danger" data-mact="tabel-hapus">Hapus tabel</button>';
+  wrap.appendChild(aksi);
+  return wrap;
+}
+function isian(label, path, value, { rows = 2, single = false, plain = false, lang = "" } = {}) {
+  const wrap = document.createElement("label");
+  wrap.className = "ks-field";
+  wrap.append(document.createTextNode(label));
+  const el = document.createElement(single ? "input" : "textarea");
+  if (!single) el.rows = rows;
+  el.dataset.path = path;
+  if (!plain) el.dataset.html = "1";
+  el.value = plain ? value ?? "" : keTeks(value);
+  if (lang) el.lang = lang;
+  el.autocomplete = "off";
+  wrap.appendChild(el);
+  return wrap;
+}
+/* Pratinjau memakai penyaring yang sama dengan halaman siswa. */
+function saringPola(item) {
+  const h = (v) => (typeof v === "string" ? window.sanitizeQuestionHtml(v) : v);
+  return {
+    ...item,
+    title: h(item.title),
+    suffix: h(item.suffix),
+    blocks: item.blocks.map((b) => ({
+      ...b,
+      label: h(b.label),
+      text: h(b.text),
+      note: h(b.note),
+      table: b.table ? { headers: b.table.headers.map(h), rows: b.table.rows.map((r) => r.map(h)) } : undefined,
+      examples: (b.examples || []).map((e) => e.map(h)),
+    })),
+  };
+}
+function lompatPola(i) {
+  if (current.tab !== "materi") {
+    current.tab = "materi";
+    renderEditor();
+  }
+  polaTerbuka.add(i);
+  paintPolaList();
+  $(`kmPola${i}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function segarkanPola(i) {
+  const lama = $(`kmPola${i}`);
+  if (!lama) return;
+  lama.replaceWith(kartuPola(current.isi.materi.items[i], i, i >= polaTerkunci()));
+}
+editorEl.addEventListener("focusin", (event) => {
+  if (event.target.dataset?.html) fieldTerakhir = event.target;
+});
+editorEl.addEventListener("input", (event) => {
+  const el = event.target;
+  if (!current || current.tab !== "materi" || !el.dataset.path) return;
+  const value = el.type === "checkbox" ? el.checked : el.dataset.html ? keHtml(el.value) : el.value;
+  setPath(el.dataset.path, value);
+  markDirty();
+  // Perbarui ringkasan kesalahan & pratinjau pola tanpa merender ulang isian yang sedang diketik.
+  const card = el.closest(".km-pola");
+  if (!card) return;
+  const i = Number(card.dataset.index);
+  const item = current.isi.materi.items[i];
+  const hasil = cekPola(item);
+  card.classList.toggle("has-error", hasil.errors.length > 0);
+  const ul = card.querySelector(".km-pola-body > .km-msgs");
+  if (ul) ul.replaceChildren(
+    ...hasil.errors.map((m) => Object.assign(document.createElement("li"), { textContent: m, className: "err" })),
+    ...hasil.warnings.map((m) => Object.assign(document.createElement("li"), { textContent: `⚠ ${m}`, className: "warn" })),
+  );
+  const pv = card.querySelector(".km-pratinjau");
+  if (pv) pv.innerHTML = buildGrammarPointHtml(saringPola(item), i);
+});
+editorEl.addEventListener("change", (event) => {
+  if (current?.tab === "materi" && event.target.type === "checkbox" && event.target.dataset.path) {
+    event.target.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+});
+editorEl.addEventListener("click", (event) => {
+  const fmt = event.target.closest("[data-fmt]");
+  if (fmt && current?.tab === "materi") {
+    bungkusFormat(fmt.dataset.fmt);
+    return;
+  }
+  const button = event.target.closest("[data-mact]");
+  if (!button || !current || current.tab !== "materi") return;
+  const act = button.dataset.mact;
+  const m = current.isi.materi;
+  if (act === "reset") {
+    if (!window.confirm(`Kembalikan tata bahasa Pelajaran ${current.bab} ke isi bawaan? Suntingan di bagian ini dihapus dari draft (isi terbit baru berubah setelah diterbitkan).`)) return;
+    current.isi.materi = bawaan("materi", current.bab);
+    markDirty();
+    renderEditor();
+    return;
+  }
+  if (act === "add-pola") {
+    m.items.push({ title: "", blocks: [{ label: "", text: "", examples: [["", ""]] }] });
+    const i = m.items.length - 1;
+    polaTerbuka.add(i);
+    markDirty();
+    renderEditor();
+    lompatPola(i);
+    return;
+  }
+  const card = button.closest(".km-pola");
+  if (!card) return;
+  const i = Number(card.dataset.index);
+  const item = m.items[i];
+  if (act === "toggle") {
+    if (polaTerbuka.has(i)) polaTerbuka.delete(i);
+    else polaTerbuka.add(i);
+    segarkanPola(i);
+    return;
+  }
+  if (act === "preview") {
+    if (pratinjau.has(i)) pratinjau.delete(i);
+    else pratinjau.add(i);
+    segarkanPola(i);
+    return;
+  }
+  if (act === "hide") {
+    if (!item.hidden && !window.confirm(`Sembunyikan pola ${i + 1} dari siswa? Isinya tetap tersimpan dan bisa ditampilkan lagi.`)) return;
+    item.hidden = !item.hidden;
+    if (!item.hidden) delete item.hidden;
+  } else if (act === "del-pola") {
+    if (!window.confirm(`Hapus pola baru ${i + 1}?`)) return;
+    m.items.splice(i, 1);
+    polaTerbuka = new Set([...polaTerbuka].filter((x) => x !== i).map((x) => (x > i ? x - 1 : x)));
+    pratinjau = new Set([...pratinjau].filter((x) => x !== i).map((x) => (x > i ? x - 1 : x)));
+    markDirty();
+    renderEditor();
+    return;
+  } else if (act === "add-blok") {
+    item.blocks.push({ label: "", text: "" });
+  } else {
+    // Aksi di dalam bagian / contoh / tabel: path wadah terdekat.
+    const wadah = button.closest("[data-path]");
+    const path = wadah?.dataset.path;
+    if (!path) return;
+    if (!aksiDalam(act, path)) return;
+  }
+  markDirty();
+  segarkanPola(i);
+  const tabBtn = editorEl.querySelector('.ks-tabs [data-tab="materi"]');
+  if (tabBtn) tabBtn.textContent = `Tata bahasa (${m.items.filter((x) => !x.hidden).length})`;
+});
+/* Tambah/hapus/urutkan bagian, contoh, dan isi tabel. path = elemen terdekat
+   (items.I.blocks.K, items.I.blocks.K.examples.J, atau ...table). */
+function aksiDalam(act, path) {
+  const keys = path.split(".");
+  if (act === "up" || act === "down" || act === "del") {
+    const idx = Number(keys.pop());
+    const arr = ambilPath(keys.join("."));
+    if (act === "del") {
+      if (!window.confirm(keys[keys.length - 1] === "blocks" ? "Hapus bagian ini beserta contohnya?" : "Hapus contoh ini?")) return false;
+      arr.splice(idx, 1);
+    } else {
+      const j = act === "up" ? idx - 1 : idx + 1;
+      if (j < 0 || j >= arr.length) return false;
+      [arr[idx], arr[j]] = [arr[j], arr[idx]];
+    }
+    return true;
+  }
+  const blok = ambilPath(path.replace(/\.table$/, ""));
+  if (act === "add-contoh") (blok.examples ||= []).push(["", ""]);
+  else if (act === "add-tabel") blok.table = { headers: ["", ""], rows: [["", "", ""]] };
+  else if (act === "tabel-hapus") {
+    if (!window.confirm("Hapus tabel ini?")) return false;
+    delete blok.table;
+  } else if (act === "tabel-baris+") blok.table.rows.push(Array(blok.table.headers.length + 1).fill(""));
+  else if (act === "tabel-baris-") {
+    if (blok.table.rows.length <= 1) return false;
+    blok.table.rows.pop();
+  } else if (act === "tabel-kolom+") {
+    blok.table.headers.push("");
+    blok.table.rows.forEach((r) => r.push(""));
+  } else if (act === "tabel-kolom-") {
+    if (blok.table.headers.length <= 1) return false;
+    blok.table.headers.pop();
+    blok.table.rows.forEach((r) => r.pop());
+  } else return false;
+  return true;
+}
+const FORMAT = { u: ["<u>", "</u>"], sub: ["<sub>", "</sub>"], i: ["<i>", "</i>"], kotak: ['<span class="grammar-pola-box">', "</span>"] };
+function bungkusFormat(jenis) {
+  const el = fieldTerakhir;
+  if (!el || !document.body.contains(el)) {
+    showFeedback("warning", "Klik dulu kotak isian, pilih teksnya, lalu tekan tombol format.");
+    return;
+  }
+  const [buka, tutup] = FORMAT[jenis];
+  const { selectionStart: a, selectionEnd: b, value } = el;
+  el.value = value.slice(0, a) + buka + value.slice(a, b) + tutup + value.slice(b);
+  el.focus();
+  el.setSelectionRange(a + buka.length, b + buka.length);
+  el.dispatchEvent(new Event("input", { bubbles: true }));
+}
 
 // ---------- Tab Riwayat ----------
 async function renderHistoryTab() {

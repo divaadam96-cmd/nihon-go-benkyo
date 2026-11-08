@@ -224,11 +224,14 @@ function srsMasteredCount(prefix) {
    sudah direview dan tidak ada yang due; "repeat" kalau ada yang due
    ATAU baru sebagian pola yang dikerjakan (mendorong siswa lanjutkan);
    "new" kalau belum ada satu pola pun yang disentuh. */
-function srsLessonStatus(book, lessonIndex, patternCount) {
-  if (!patternCount) return "new";
+/* patterns = daftar nomor pola yang tampil (grammarPatternIndexes,
+   js/materi-render.js) atau jumlah pola (0..n-1). */
+function srsLessonStatus(book, lessonIndex, patterns) {
+  const list = Array.isArray(patterns) ? patterns : Array.from({ length: patterns || 0 }, (_, i) => i);
+  if (!list.length) return "new";
   let anyReviewed = false;
   let allDoneNotDue = true;
-  for (let pattern = 0; pattern < patternCount; pattern++) {
+  for (const pattern of list) {
     const id = `materi:book${book}:${lessonIndex}:${pattern}`;
     const item = srsGet(id);
     if (item.reviews) anyReviewed = true;
