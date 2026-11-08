@@ -59,6 +59,9 @@
 .km-dot.tinjau {
   background: var(--red);
 }
+.km-dot.lapor {
+  background: #2e8068;
+}
 .km-bab.active .km-dot.diubah {
   background: #9fc0f0;
 }
@@ -98,6 +101,77 @@
 }
 .km-catatan small {
   font-weight: 400;
+}
+.km-laporan-btn {
+  width: 100%;
+  margin-top: 12px;
+}
+.km-laporan-btn b {
+  margin-left: 4px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+}
+.km-laporan-list {
+  display: grid;
+  gap: 12px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.km-laporan {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+}
+.km-laporan.baru {
+  border-left-color: var(--red);
+}
+.km-laporan.diproses {
+  border-left-color: var(--gold);
+}
+.km-laporan.selesai {
+  border-left-color: #2e8068;
+}
+.km-laporan p {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.km-laporan-meta,
+.km-laporan-rujukan {
+  color: var(--muted);
+  font-size: 12px;
+}
+.km-laporan-aksi {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  margin-top: 4px;
+}
+.km-laporan-aksi textarea {
+  width: 100%;
+  font: inherit;
+}
+.km-laporan-aksi div {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.km-laporan-aksi button {
+  width: auto;
+}
+@media (max-width: 520px) {
+  .km-laporan-aksi {
+    grid-template-columns: 1fr;
+  }
 }
 .km-legend {
   margin: 10px 0 0;

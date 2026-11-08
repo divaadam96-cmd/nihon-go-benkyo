@@ -1099,7 +1099,15 @@
       }
       const feedback = container.querySelector(".tugas-feedback");
       const last = index === questions.length - 1;
-      feedback.innerHTML = `<p class="${ok ? "tugas-feedback-benar" : "tugas-feedback-salah"}">${ok ? "Benar!" : `Belum tepat. Jawaban benar: <span lang="ja">${esc(answerText)}</span>`}</p>${sebab ? `<p class="tugas-sebab">💡 ${sebab}</p>` : ""}<button type="button" class="primary tugas-next">${last ? "Lihat hasil" : "Lanjut →"}</button>`;
+      feedback.innerHTML = `<p class="${ok ? "tugas-feedback-benar" : "tugas-feedback-salah"}">${ok ? "Benar!" : `Belum tepat. Jawaban benar: <span lang="ja">${esc(answerText)}</span>`}</p>${sebab ? `<p class="tugas-sebab">💡 ${sebab}</p>` : ""}<button type="button" class="primary tugas-next">${last ? "Lihat hasil" : "Lanjut →"}</button>${window.LaporKonten ? '<button type="button" class="tugas-lapor">⚑ Laporkan soal ini</button>' : ""}`;
+      const laporButton = feedback.querySelector(".tugas-lapor");
+      if (laporButton) {
+        laporButton.onclick = () => window.LaporKonten.buka({
+          bab: q.asal || q.bab || bab,
+          lokasi: `tugas-${q.jenis || target}`,
+          rujukan: `Soal: ${q.prompt} · Jawaban: ${answerText}`,
+        });
+      }
       const nextButton = feedback.querySelector(".tugas-next");
       nextButton.focus({ preventScroll: true });
       nextButton.onclick = () => {

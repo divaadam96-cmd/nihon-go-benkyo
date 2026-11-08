@@ -803,6 +803,8 @@ initMaterialLessonPicker({
 });
 syncCurriculumDashboard();
 muatInfoPembaruan();
+pasangTombolLapor();
+LaporKonten.cekTanggapan(document.getElementById("materials"));
 
 /* Siswa pilih Buku 1 atau Buku 2 dulu, baru diarahkan ke materi buku itu
    - bukan langsung menampilkan semua materi sekaligus. Seluruh konten
@@ -913,6 +915,29 @@ function muatInfoPembaruan() {
       tampilkanInfoPembaruan(data || []);
     })
     .catch((error) => console.warn("Info pembaruan pelajaran belum bisa dimuat.", error));
+}
+
+// === Laporkan isi (js/lapor-konten.js) ===
+/* Tombol di akhir setiap pelajaran: siswa melaporkan isi yang salah atau
+   sudah tidak sesuai dengan keadaan di Jepang; pilihan "Bagian" = daftar
+   pola yang tampil di pelajaran itu. */
+function pasangTombolLapor() {
+  document.querySelectorAll(".html-content[data-bab]").forEach((content) => {
+    const bab = Number(content.dataset.bab);
+    const wadah = document.createElement("div");
+    wadah.className = "lesson-lapor";
+    const tombol = document.createElement("button");
+    tombol.type = "button";
+    tombol.className = "secondary";
+    tombol.textContent = "⚑ Ada yang salah atau sudah tidak sesuai dengan keadaan di Jepang? Laporkan";
+    tombol.onclick = () => {
+      const bagian = Array.from(content.querySelectorAll(".grammar-point > h3"), (h) =>
+        `Pola ${h.textContent.replace(/\s+/g, " ").trim()}`);
+      LaporKonten.buka({ bab, lokasi: "materi", bagian });
+    };
+    wadah.append(tombol);
+    content.append(wadah);
+  });
 }
 
 // === Mode fokus ===
