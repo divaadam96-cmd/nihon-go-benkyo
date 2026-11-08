@@ -802,6 +802,7 @@ initMaterialLessonPicker({
   progressKey: "nihonBenkyoLessonStatusV2",
 });
 syncCurriculumDashboard();
+muatInfoPembaruan();
 
 /* Siswa pilih Buku 1 atau Buku 2 dulu, baru diarahkan ke materi buku itu
    - bukan langsung menampilkan semua materi sekaligus. Seluruh konten
@@ -854,6 +855,65 @@ syncCurriculumDashboard();
   // Muat ulang halaman tidak membuka tugas yang sama lagi.
   if (link) history.replaceState(null, "", location.pathname);
 })();
+
+// === Tanda "Diperbarui" ===
+/* Saat menerbitkan isi pelajaran (Kelola Materi), Operator bisa menulis
+   catatan pembaruan (tabel konten_info). Catatan tampil di atas isi
+   pelajaran; pelajaran yang diperbarui dalam BARU_HARI terakhir juga diberi
+   tanda di daftar pelajaran. Salinan terakhir disimpan di localStorage
+   supaya tetap tampil saat offline. Teks catatan dari server dipasang lewat
+   textContent. */
+function tampilkanInfoPembaruan(rows) {
+  const BARU_HARI = 30;
+  document.querySelectorAll(".lesson-update-note, .material-choice-baru").forEach((el) => el.remove());
+  rows.forEach((r) => {
+    const bab = Number(r && r.bab);
+    const kapan = new Date(r && r.diperbarui_at);
+    if (!Number.isInteger(bab) || bab < 1 || bab > 50 || Number.isNaN(kapan.getTime())) return;
+    const content = document.querySelector(`.html-content[data-bab="${bab}"]`);
+    if (content) {
+      const note = document.createElement("p");
+      note.className = "lesson-update-note";
+      const judul = document.createElement("strong");
+      judul.textContent = `Diperbarui ${kapan.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}`;
+      note.append(judul);
+      if (typeof r.catatan === "string" && r.catatan) note.append(` - ${r.catatan}`);
+      content.prepend(note);
+    }
+    const button = document.getElementById(`materialChoice-${bab <= 25 ? "materials" : "book2"}-${bab}`);
+    if (button && Date.now() - kapan.getTime() <= BARU_HARI * 864e5) {
+      const tanda = document.createElement("small");
+      tanda.className = "material-choice-baru";
+      tanda.textContent = "Baru diperbarui";
+      button.append(tanda);
+    }
+  });
+}
+function muatInfoPembaruan() {
+  const CACHE_KEY = "nihonKontenInfoV1";
+  try {
+    const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "[]");
+    if (Array.isArray(cache)) tampilkanInfoPembaruan(cache);
+  } catch {
+    // Salinan rusak/tidak tersedia - tunggu data dari server.
+  }
+  const client = window.supabaseClient;
+  if (!client || !window.currentProfile) return;
+  client
+    .from("konten_info")
+    .select("bab, diperbarui_at, catatan")
+    .not("diperbarui_at", "is", null)
+    .then(({ data, error }) => {
+      if (error) throw error;
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data || []));
+      } catch {
+        // Penyimpanan penuh - tanda tetap tampil selama halaman terbuka.
+      }
+      tampilkanInfoPembaruan(data || []);
+    })
+    .catch((error) => console.warn("Info pembaruan pelajaran belum bisa dimuat.", error));
+}
 
 // === Mode fokus ===
 /* Mode fokus untuk pembaca materi (Buku 1 dan Buku 2 berbagi fungsi yang sama). */

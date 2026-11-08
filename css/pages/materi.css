@@ -294,6 +294,26 @@
   color: var(--muted);
   font-size: 9px;
 }
+.material-choice-baru {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #2e8068;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+}
+.lesson-update-note {
+  margin: 0 0 18px;
+  padding: 10px 14px;
+  border-left: 3px solid #2e8068;
+  border-radius: 6px;
+  background: #e8f2ed;
+  color: #1f4d3f;
+  font-size: 13px;
+  line-height: 1.6;
+}
 .material-choice.done {
   border-color: #a9c8bb;
   background: linear-gradient(145deg, #f7fbf8, #e8f2ed);
