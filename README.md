@@ -421,6 +421,15 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   memutus progres kata lama - editor memperingatkan sebelum terbit. Kalau
   berkas data diubah lewat kode, bagian yang sudah disunting Operator tetap
   memakai versi suntingan sampai dikembalikan ke isi bawaan.
+  Tinjauan berkala (tabel `konten_info`): tiap pelajaran mencatat kapan
+  terakhir ditinjau (tombol "Tandai sudah ditinjau", atau otomatis saat
+  terbit/pulihkan); editor menandai pelajaran yang belum pernah atau sudah
+  lebih dari 12 bulan tidak ditinjau. Saat terbit, Operator bisa menulis
+  catatan pembaruan (maks. 300 karakter) yang tampil ke siswa di atas isi
+  pelajaran di halaman Materi, plus tanda "Baru diperbarui" di daftar
+  pelajaran selama 30 hari. Terbit tanpa catatan = perbaikan kecil, siswa
+  tidak diberi tanda. Siswa hanya bisa membaca kolom `bab`,
+  `diperbarui_at`, dan `catatan`.
 
 ## Testing
 

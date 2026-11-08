@@ -56,8 +56,48 @@
 .km-dot.draft {
   background: var(--gold);
 }
+.km-dot.tinjau {
+  background: var(--red);
+}
 .km-bab.active .km-dot.diubah {
   background: #9fc0f0;
+}
+.km-tinjau-ringkas {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.km-tinjau {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  margin: 0 0 10px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+}
+.km-tinjau p {
+  margin: 0;
+}
+.km-tinjau.perlu {
+  border-color: var(--red);
+  background: #fbefed;
+}
+.km-tinjau button {
+  width: auto;
+}
+.km-catatan {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.km-catatan small {
+  font-weight: 400;
 }
 .km-legend {
   margin: 10px 0 0;

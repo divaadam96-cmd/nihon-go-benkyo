@@ -1,6 +1,7 @@
 -- Editor isi pelajaran untuk Operator (pages/kelola-materi.html):
 -- kosakata, kanji, soal kalimat (susun & pilih) [Tahap 1] dan teks Materi
--- tata bahasa [Tahap 2] per Pelajaran 1-50.
+-- tata bahasa [Tahap 2] per Pelajaran 1-50, plus tinjauan berkala & catatan
+-- pembaruan untuk siswa (konten_info).
 -- Jalankan SETELAH fix-1-operator-mfa.sql, fix-6-riwayat-perubahan-soal.sql
 -- (require_operator) dan add-editor-soal.sql (is_safe_question_html), di SQL
 -- Editor Supabase (atau `supabase db query --linked -f supabase/add-editor-konten.sql`).
@@ -64,6 +65,31 @@ drop policy if exists "konten_bab_versi_operator_select" on public.konten_bab_ve
 create policy "konten_bab_versi_operator_select"
   on public.konten_bab_versi for select
   using (public.current_user_role() = 'operator');
+
+-- Tinjauan & pembaruan per pelajaran (terpisah dari isi, karena tetap
+-- berlaku walau isinya kembali ke bawaan):
+--   ditinjau_at   = terakhir Operator memastikan isi masih sesuai keadaan di
+--                   Jepang (tombol "Tandai sudah ditinjau", atau saat terbit).
+--                   Halaman editor menandai pelajaran yang > 12 bulan / belum
+--                   pernah ditinjau.
+--   diperbarui_at = terakhir terbit DENGAN catatan untuk siswa. Perbaikan
+--   + catatan       kecil (tanpa catatan) tidak mengubahnya, jadi siswa tidak
+--                   diberi tanda "Diperbarui" untuk salah ketik.
+-- Siswa hanya boleh membaca bab, diperbarui_at, dan catatan.
+create table if not exists public.konten_info (
+  bab int primary key check (bab between 1 and 50),
+  diperbarui_at timestamptz,
+  catatan text check (catatan is null or length(catatan) <= 300),
+  ditinjau_at timestamptz,
+  ditinjau_by uuid
+);
+alter table public.konten_info enable row level security;
+drop policy if exists "konten_info_select_login" on public.konten_info;
+create policy "konten_info_select_login"
+  on public.konten_info for select
+  using (auth.uid() is not null);
+revoke all on public.konten_info from anon, authenticated;
+grant select (bab, diperbarui_at, catatan) on public.konten_info to authenticated;
 
 -- 2. Validasi ---------------------------------------------------------------
 -- Teks satu baris: string, 1..maks karakter (tanpa spasi tepi), tanpa < > dan
@@ -352,9 +378,11 @@ end;
 $$;
 
 -- 3. Fungsi editor (khusus Operator) -----------------------------------------
--- Ringkasan 50 pelajaran: bagian yang sudah diubah & status draft.
-create or replace function public.konten_list()
-returns table (bab int, diubah text[], has_draft boolean, draft_updated_at timestamptz, draft_updated_by text)
+-- Ringkasan 50 pelajaran: bagian yang sudah diubah, status draft, tinjauan.
+drop function if exists public.konten_list();
+create function public.konten_list()
+returns table (bab int, diubah text[], has_draft boolean, draft_updated_at timestamptz, draft_updated_by text,
+               ditinjau_at timestamptz, ditinjau_by text, diperbarui_at timestamptz, catatan text)
 language plpgsql
 stable
 security definer
@@ -365,11 +393,15 @@ begin
   perform public.require_operator();
   return query
   select b, coalesce((select array_agg(k order by k) from jsonb_object_keys(t.isi) k), '{}'::text[]),
-         d.bab is not null, d.updated_at, p.full_name
+         d.bab is not null, d.updated_at, p.full_name,
+         i.ditinjau_at, coalesce(pt.full_name, case when i.ditinjau_at is not null then 'Operator' end),
+         i.diperbarui_at, i.catatan
   from generate_series(1, 50) b
   left join public.konten_bab t on t.bab = b
   left join public.konten_bab_draft d on d.bab = b
   left join public.profiles p on p.id = d.updated_by
+  left join public.konten_info i on i.bab = b
+  left join public.profiles pt on pt.id = i.ditinjau_by
   order by b;
 end;
 $$;
@@ -466,6 +498,19 @@ as $$
   returning id;
 $$;
 
+-- Catat bahwa isi pelajaran ini sudah ditinjau sekarang (internal).
+create or replace function public.konten_catat_tinjau(p_bab int)
+returns timestamptz
+language sql
+security definer
+set search_path = public
+as $$
+  insert into public.konten_info (bab, ditinjau_at, ditinjau_by)
+  values (p_bab, now(), auth.uid())
+  on conflict (bab) do update set ditinjau_at = excluded.ditinjau_at, ditinjau_by = excluded.ditinjau_by
+  returning ditinjau_at;
+$$;
+
 -- Ganti isi terbit ({} / null = kembali ke isi bawaan seluruhnya) (internal).
 create or replace function public.konten_set_terbit(p_bab int, p_isi jsonb)
 returns void
@@ -482,13 +527,17 @@ begin
     on conflict (bab) do update
       set isi = excluded.isi, updated_at = excluded.updated_at, updated_by = excluded.updated_by;
   end if;
+  -- Isi yang baru diterbitkan/dipulihkan dianggap sudah ditinjau.
+  perform public.konten_catat_tinjau(p_bab);
 end;
 $$;
 
 -- Terbitkan draft: validasi -> simpan versi lama -> ganti isi terbit -> hapus
--- draft. Mengembalikan {"ok": true, "version_id": ...} atau
--- {"ok": false, "errors": [...]}.
-create or replace function public.konten_publish(p_bab int, p_base_updated_at timestamptz)
+-- draft. p_catatan (opsional, maks. 300 karakter) = catatan pembaruan untuk
+-- siswa; kosong = perbaikan kecil, tanda "Diperbarui" siswa tidak berubah.
+-- Mengembalikan {"ok": true, "version_id": ...} atau {"ok": false, "errors": [...]}.
+drop function if exists public.konten_publish(int, timestamptz);
+create or replace function public.konten_publish(p_bab int, p_base_updated_at timestamptz, p_catatan text default null)
 returns jsonb
 language plpgsql
 security definer
@@ -498,8 +547,13 @@ declare
   d public.konten_bab_draft;
   v_errors text[];
   v_version bigint;
+  v_catatan text := nullif(btrim(coalesce(p_catatan, '')), '');
 begin
   perform public.require_operator();
+  if v_catatan is not null and (length(v_catatan) > 300 or v_catatan ~ '[<>\r\n]') then
+    return jsonb_build_object('ok', false, 'errors', jsonb_build_array(
+      'Catatan untuk siswa maks. 300 karakter, satu baris, tanpa < >.'));
+  end if;
   select * into d from public.konten_bab_draft where bab = p_bab for update;
   if not found then
     return jsonb_build_object('ok', false, 'errors', jsonb_build_array('Tidak ada draft - simpan draft dulu.'));
@@ -515,6 +569,9 @@ begin
   v_version := public.konten_snapshot(p_bab, 'Sebelum diterbitkan dari editor');
   perform public.konten_set_terbit(p_bab, d.isi);
   delete from public.konten_bab_draft where bab = p_bab;
+  if v_catatan is not null then
+    update public.konten_info set diperbarui_at = now(), catatan = v_catatan where bab = p_bab;
+  end if;
   return jsonb_build_object('ok', true, 'version_id', v_version);
 end;
 $$;
@@ -559,9 +616,26 @@ begin
 end;
 $$;
 
+-- Tandai isi terbit pelajaran ini sudah ditinjau & masih sesuai.
+create or replace function public.konten_tandai_ditinjau(p_bab int)
+returns timestamptz
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  perform public.require_operator();
+  if p_bab is null or p_bab not between 1 and 50 then
+    raise exception 'Pelajaran tidak valid.' using errcode = '22023';
+  end if;
+  return public.konten_catat_tinjau(p_bab);
+end;
+$$;
+
 -- 4. Hak eksekusi -------------------------------------------------------------
 revoke execute on function public.konten_snapshot(int, text) from public, anon, authenticated;
 revoke execute on function public.konten_set_terbit(int, jsonb) from public, anon, authenticated;
+revoke execute on function public.konten_catat_tinjau(int) from public, anon, authenticated;
 revoke execute on function public.konten_teks_ok(jsonb, int) from public, anon;
 revoke execute on function public.validate_konten_bab(jsonb) from public, anon;
 revoke execute on function public.konten_html_ok(jsonb, int, int) from public, anon;
@@ -570,7 +644,8 @@ revoke execute on function public.konten_list() from public, anon;
 revoke execute on function public.konten_load(int) from public, anon;
 revoke execute on function public.konten_save_draft(int, jsonb, timestamptz) from public, anon;
 revoke execute on function public.konten_discard_draft(int) from public, anon;
-revoke execute on function public.konten_publish(int, timestamptz) from public, anon;
+revoke execute on function public.konten_publish(int, timestamptz, text) from public, anon;
+revoke execute on function public.konten_tandai_ditinjau(int) from public, anon;
 revoke execute on function public.konten_versions(int) from public, anon;
 revoke execute on function public.konten_restore(bigint) from public, anon;
 grant execute on function public.konten_teks_ok(jsonb, int) to authenticated;
@@ -581,6 +656,7 @@ grant execute on function public.konten_list() to authenticated;
 grant execute on function public.konten_load(int) to authenticated;
 grant execute on function public.konten_save_draft(int, jsonb, timestamptz) to authenticated;
 grant execute on function public.konten_discard_draft(int) to authenticated;
-grant execute on function public.konten_publish(int, timestamptz) to authenticated;
+grant execute on function public.konten_publish(int, timestamptz, text) to authenticated;
+grant execute on function public.konten_tandai_ditinjau(int) to authenticated;
 grant execute on function public.konten_versions(int) to authenticated;
 grant execute on function public.konten_restore(bigint) to authenticated;

@@ -5,6 +5,10 @@
    BERBEDA dari bawaan (supabase/add-editor-konten.sql), lalu halaman siswa
    menimpanya lewat js/konten-bab.js. Alur: draft -> terbitkan (divalidasi
    ulang di server) -> versi lama di Riwayat versi.
+   Tinjauan berkala: tiap pelajaran mencatat kapan terakhir ditinjau
+   (masih sesuai keadaan di Jepang); yang > TINJAU_HARI atau belum pernah
+   ditinjau ditandai. Saat terbit, Operator bisa menulis catatan pembaruan
+   yang tampil ke siswa di halaman Materi (konten_info).
    Teks dari pengguna selalu dimasukkan lewat textContent/value.
    Dibungkus initPage(), dijalankan auth.js setelah login. */
 function initPage() {
@@ -19,6 +23,8 @@ const MAX_BAB = 50;
 const JENIS = ["materi", "kosakata", "kanji", "kalimat"];
 const NAMA_JENIS = { materi: "Tata bahasa", kosakata: "Kosakata", kanji: "Kanji", kalimat: "Soal kalimat" };
 const JUMLAH_TUGAS = 10; // TUGAS_KALIMAT_JUMLAH di js/tugas-bab.js
+const TINJAU_HARI = 365; // pelajaran perlu ditinjau ulang setelah 12 bulan
+const CATATAN_MAKS = 300;
 
 let ringkasan = []; // baris konten_list()
 /* current: { bab, isi: {kosakata, kanji, kalimat} lengkap (bawaan + suntingan),
@@ -38,6 +44,9 @@ function errorMessage(error) {
   return (error && (error.message || error.error_description)) || String(error || "Terjadi kesalahan.");
 }
 const waktu = (iso) => new Date(iso).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
+const tanggal = (iso) => new Date(iso).toLocaleDateString("id-ID", { dateStyle: "medium" });
+const infoBab = (bab) => ringkasan.find((r) => r.bab === bab) || {};
+const perluTinjau = (r) => !r.ditinjau_at || Date.now() - new Date(r.ditinjau_at).getTime() > TINJAU_HARI * 864e5;
 
 // ---------- Validasi (cermin validate_konten_bab di server) + peringatan ----------
 const tanpaSpasi = (t) => String(t).replace(/\s/g, "");
@@ -221,6 +230,7 @@ async function loadList() {
   }
   ringkasan = data || [];
   renderList();
+  if (current) paintTinjau();
 }
 function renderList() {
   const byBab = Object.fromEntries(ringkasan.map((r) => [r.bab, r]));
@@ -228,9 +238,20 @@ function renderList() {
     const bab = i + 1;
     const r = byBab[bab] || {};
     const diubah = (r.diubah || []).map((j) => NAMA_JENIS[j] || j);
-    const title = [`Pelajaran ${bab}`, diubah.length ? `diubah: ${diubah.join(", ")}` : "isi bawaan", r.has_draft ? `ada draft (${r.draft_updated_by || "Operator"})` : ""].filter(Boolean).join(" · ");
-    return `<button type="button" class="km-bab${current && current.bab === bab ? " active" : ""}" data-bab="${bab}" title="${escapeHtml(title)}"><b>${bab}</b><span>${diubah.length ? '<i class="km-dot diubah"></i>' : ""}${r.has_draft ? '<i class="km-dot draft"></i>' : ""}</span></button>`;
+    const tinjau = perluTinjau(r);
+    const title = [
+      `Pelajaran ${bab}`,
+      diubah.length ? `diubah: ${diubah.join(", ")}` : "isi bawaan",
+      r.has_draft ? `ada draft (${r.draft_updated_by || "Operator"})` : "",
+      r.ditinjau_at ? `ditinjau ${tanggal(r.ditinjau_at)}${tinjau ? " - perlu ditinjau ulang" : ""}` : "belum pernah ditinjau",
+    ].filter(Boolean).join(" · ");
+    return `<button type="button" class="km-bab${current && current.bab === bab ? " active" : ""}" data-bab="${bab}" title="${escapeHtml(title)}"><b>${bab}</b><span>${diubah.length ? '<i class="km-dot diubah"></i>' : ""}${r.has_draft ? '<i class="km-dot draft"></i>' : ""}${tinjau ? '<i class="km-dot tinjau"></i>' : ""}</span></button>`;
   }).join("");
+  const lama = ringkasan.filter((r) => r.ditinjau_at && perluTinjau(r)).length;
+  const belum = ringkasan.filter((r) => !r.ditinjau_at).length;
+  $("kmTinjauRingkas").textContent = lama + belum
+    ? `Perlu ditinjau: ${lama + belum} pelajaran (${[belum ? `${belum} belum pernah` : "", lama ? `${lama} lebih dari 12 bulan` : ""].filter(Boolean).join(", ")}).`
+    : "Semua pelajaran sudah ditinjau dalam 12 bulan terakhir.";
 }
 listEl.addEventListener("click", (event) => {
   const button = event.target.closest(".km-bab");
@@ -260,6 +281,7 @@ async function openBab(bab, { paksa = false, tab = null } = {}) {
     terbitAt: data.terbit_at || null,
     terbitBy: data.terbit_by || null,
     dirty: false,
+    catatan: "",
     tab: tab || (current && current.tab !== "riwayat" ? current.tab : "materi"),
     serverErrors: [],
   };
@@ -299,6 +321,11 @@ function renderEditor() {
         <button type="button" class="ks-link danger" id="kmDiscard" ${current.source === "draft" ? "" : "hidden"}>Buang draft</button>
       </div>
     </header>
+    <div class="km-tinjau" id="kmTinjau"></div>
+    <label class="km-catatan">Catatan pembaruan untuk siswa <small>(opsional, dikirim saat Terbitkan)</small>
+      <input type="text" id="kmCatatan" maxlength="${CATATAN_MAKS}" placeholder="mis. Contoh percakapan di konbini disesuaikan dengan kasir mandiri">
+      <small class="muted">Tampil di halaman Materi bersama tanda "Diperbarui". Kosongkan untuk perbaikan kecil seperti salah ketik.</small>
+    </label>
     <div class="ks-feedback" id="kmFeedback" hidden></div>
     <nav class="ks-tabs">${TABS.map(([id, name, n]) => {
       const ubah = JENIS_TAB[id] && diubahDariBawaan(JENIS_TAB[id]) ? " km-tab-diubah" : "";
@@ -309,10 +336,42 @@ function renderEditor() {
   $("kmSave").onclick = saveDraft;
   $("kmPublish").onclick = publish;
   $("kmDiscard").onclick = discardDraft;
+  $("kmCatatan").value = current.catatan;
+  $("kmCatatan").oninput = (event) => (current.catatan = event.target.value);
+  paintTinjau();
   if (current.serverErrors.length) showFeedback("error", "Belum bisa diterbitkan:", current.serverErrors);
   if (current.tab === "riwayat") renderHistoryTab();
   else if (current.tab === "materi") renderMateriTab();
   else renderDaftarTab();
+}
+/* Baris tinjauan: kapan terakhir isi pelajaran ini dipastikan masih sesuai,
+   dan catatan pembaruan terakhir yang dilihat siswa. */
+function paintTinjau() {
+  const el = $("kmTinjau");
+  if (!el) return;
+  const r = infoBab(current.bab);
+  const perlu = perluTinjau(r);
+  const status = r.ditinjau_at
+    ? `Terakhir ditinjau ${escapeHtml(tanggal(r.ditinjau_at))} oleh ${escapeHtml(r.ditinjau_by || "Operator")}${perlu ? " - sudah lebih dari 12 bulan, perlu ditinjau ulang." : "."}`
+    : "Belum pernah ditinjau.";
+  const umum = r.diperbarui_at
+    ? `<p class="muted">Pembaruan terakhir yang tampil ke siswa: <b>${escapeHtml(tanggal(r.diperbarui_at))}</b>${r.catatan ? ` - ${escapeHtml(r.catatan)}` : ""}</p>`
+    : "";
+  el.className = `km-tinjau${perlu ? " perlu" : ""}`;
+  el.innerHTML = `<div><p>${status}</p>${umum}</div><button type="button" class="secondary" id="kmTandaiTinjau">✔ Tandai sudah ditinjau</button>`;
+  $("kmTandaiTinjau").onclick = tandaiDitinjau;
+}
+async function tandaiDitinjau() {
+  const pesan = [`Tandai isi Pelajaran ${current.bab} yang SEDANG TERBIT sudah ditinjau dan masih sesuai dengan keadaan di Jepang sekarang?`];
+  if (current.dirty || current.source === "draft") pesan.push("\nDraft yang belum diterbitkan tidak ikut dihitung - terbitkan dulu kalau ada yang perlu diubah.");
+  if (!window.confirm(pesan.join("\n"))) return;
+  const { error } = await supa.rpc("konten_tandai_ditinjau", { p_bab: current.bab });
+  if (error) {
+    showFeedback("error", `Gagal menandai: ${errorMessage(error)}`);
+    return;
+  }
+  await loadList();
+  showFeedback("success", `Pelajaran ${current.bab} ditandai sudah ditinjau.`);
 }
 function markDirty() {
   if (!current.dirty) {
@@ -1010,16 +1069,24 @@ async function publish() {
     showFeedback("error", "Perbaiki dulu sebelum diterbitkan:", errors.map((e) => e.message));
     return;
   }
+  const catatan = current.catatan.trim();
+  if (catatan.length > CATATAN_MAKS || /[<>]/.test(catatan)) {
+    showFeedback("error", `Catatan untuk siswa maks. ${CATATAN_MAKS} karakter, tanpa < >.`);
+    return;
+  }
   if (current.dirty || current.source !== "draft") {
     if (!(await saveDraft())) return;
   }
   const hilang = kataHilang();
   const pesan = [`Terbitkan isi Pelajaran ${current.bab}? Siswa mendapat isi ini saat membuka Hafalan/Tugas berikutnya.`];
+  pesan.push(catatan
+    ? `\nSiswa melihat tanda "Diperbarui" dengan catatan: ${catatan}`
+    : '\nTanpa catatan - dianggap perbaikan kecil, siswa tidak diberi tanda "Diperbarui".');
   if (hilang.length) pesan.push(`\nPerhatian: ${hilang.length} kata/kanji diganti atau dihapus (${hilang.slice(0, 8).join("、")}${hilang.length > 8 ? "…" : ""}). Progres Hafalan siswa untuk kata lama itu tidak terbawa ke kata baru.`);
   if (!window.confirm(pesan.join("\n"))) return;
   const button = $("kmPublish");
   button.disabled = true;
-  const { data, error } = await supa.rpc("konten_publish", { p_bab: current.bab, p_base_updated_at: current.base });
+  const { data, error } = await supa.rpc("konten_publish", { p_bab: current.bab, p_base_updated_at: current.base, ...(catatan ? { p_catatan: catatan } : {}) });
   button.disabled = false;
   if (error) {
     showFeedback("error", `Gagal menerbitkan: ${errorMessage(error)}`);

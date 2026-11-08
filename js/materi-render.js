@@ -33,7 +33,7 @@ function buildGrammarPointHtml(item, i, { imageRoot = "../" } = {}) {
 function buildLessonHtml(number, title, items) {
   /* Bentuk item pola: lihat komentar di atas data/materi-grammar-data.js. */
   const points = items.map((item, i) => (item.hidden ? "" : buildGrammarPointHtml(item, i))).join("");
-  return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${escapeAttr(title)}</summary><div class="html-content">${points}</div></details>`;
+  return `<details class="html-lesson"><summary><span class="lesson-number">${number}</span>Pelajaran ${number}: ${escapeAttr(title)}</summary><div class="html-content" data-bab="${number}">${points}</div></details>`;
 }
 
 /* Nomor pola (data-pola) yang tampil di sebuah elemen pelajaran - dipakai
