@@ -139,7 +139,7 @@ function cekPola(item) {
     if (ada(b.label) && !htmlOk(b.label, 1, 1000)) errors.push(`${p}sub-judul maks. 1000 karakter (HTML terbatas).`);
     if (ada(b.text) && !htmlOk(b.text, 1, 6000)) errors.push(`${p}penjelasan maks. 6000 karakter (HTML terbatas).`);
     if (ada(b.note) && !htmlOk(b.note, 1, 4000)) errors.push(`${p}catatan maks. 4000 karakter (HTML terbatas).`);
-    if (b.figure && (b.figure.alt.length > 300 || /[<>"]/.test(b.figure.alt))) errors.push(`${p}keterangan gambar maks. 300 karakter, tanpa < > ".`);
+    if (b.figure && (!String(b.figure.alt || "").trim() || b.figure.alt.length > 300 || /[<>"]/.test(b.figure.alt))) errors.push(`${p}keterangan gambar wajib diisi (maks. 300 karakter, tanpa < > ").`);
     if (b.table) {
       const { headers, rows } = b.table;
       if (!headers.length || headers.length > 10 || !rows.length || rows.length > 50) errors.push(`${p}tabel harus punya 1–10 kolom dan 1–50 baris.`);
@@ -993,6 +993,7 @@ function renderMateriTab() {
       <button type="button" data-fmt="kotak" title="Kotak pola kalimat">▭ kotak pola</button>
       <small>Enter = baris baru. HTML yang boleh: ${window.QUESTION_HTML_TAGS.slice(0, 15).join(", ")} (atribut hanya class).</small>
     </div>
+    <p class="ks-hint km-gambar-hint">Gambar: pakai <b>+ gambar</b> / <b>Ganti gambar</b> di tiap bagian. Foto otomatis diperkecil (lebar maks. 1200 px), diubah ke WebP maks. 1 MB, dan data lokasi/kamera di foto dibuang. <button type="button" class="ks-link" data-mact="gambar-bersihkan">🧹 Bersihkan gambar tak terpakai</button></p>
     <div class="km-pola-list" id="kmPolaList"></div>
     <button type="button" class="secondary ks-add" data-mact="add-pola">+ Tambah pola baru (di akhir)</button>`;
   body.querySelector('[data-path="title"]').value = m.title;
@@ -1076,8 +1077,15 @@ function kartuBagian(b, p, k, total) {
   if (b.figure) {
     const fig = document.createElement("div");
     fig.className = "km-figure";
-    fig.innerHTML = `<img alt="" src="../${MATERI_FIGURE_SRC.test(b.figure.src) ? b.figure.src : ""}" loading="lazy">`;
-    fig.appendChild(isian("Keterangan gambar (alt)", `${p}.figure.alt`, b.figure.alt || "", { single: true, plain: true }));
+    const img = Object.assign(document.createElement("img"), { alt: "", loading: "lazy" });
+    if (String(b.figure.src).startsWith("materi-gambar/")) img.crossOrigin = "anonymous";
+    img.src = materiFigureUrl(b.figure.src, "../");
+    fig.appendChild(img);
+    fig.appendChild(isian("Keterangan gambar (wajib, untuk pembaca layar)", `${p}.figure.alt`, b.figure.alt || "", { single: true, plain: true }));
+    const aksiGambar = document.createElement("span");
+    aksiGambar.className = "km-aksi";
+    aksiGambar.innerHTML = '<button type="button" class="ks-link" data-mact="gambar-pilih">Ganti gambar</button><button type="button" class="ks-link danger" data-mact="gambar-hapus">Hapus gambar</button>';
+    fig.appendChild(aksiGambar);
     box.appendChild(fig);
   }
   if (b.table) box.appendChild(editorTabel(b.table, `${p}.table`));
@@ -1100,7 +1108,7 @@ function kartuBagian(b, p, k, total) {
   });
   const aksi = document.createElement("div");
   aksi.className = "km-aksi";
-  aksi.innerHTML = `<button type="button" class="ks-link" data-mact="add-contoh">+ contoh</button>${b.table ? "" : '<button type="button" class="ks-link" data-mact="add-tabel">+ tabel</button>'}`;
+  aksi.innerHTML = `<button type="button" class="ks-link" data-mact="add-contoh">+ contoh</button>${b.table ? "" : '<button type="button" class="ks-link" data-mact="add-tabel">+ tabel</button>'}${b.figure ? "" : '<button type="button" class="ks-link" data-mact="gambar-pilih">+ gambar</button>'}`;
   ex.appendChild(aksi);
   box.append(ex, isian("Catatan / [Perhatian] (opsional)", `${p}.note`, b.note || "", { rows: 2 }));
   return box;
@@ -1224,6 +1232,10 @@ editorEl.addEventListener("click", (event) => {
     renderEditor();
     return;
   }
+  if (act === "gambar-bersihkan") {
+    bersihkanGambar();
+    return;
+  }
   if (act === "add-pola") {
     m.items.push({ title: "", blocks: [{ label: "", text: "", examples: [["", ""]] }] });
     const i = m.items.length - 1;
@@ -1263,6 +1275,12 @@ editorEl.addEventListener("click", (event) => {
     return;
   } else if (act === "add-blok") {
     item.blocks.push({ label: "", text: "" });
+  } else if (act === "gambar-pilih") {
+    pilihGambar(button.closest(".km-bagian").dataset.path, i);
+    return;
+  } else if (act === "gambar-hapus") {
+    if (!window.confirm("Hapus gambar dari bagian ini? (File-nya tetap tersimpan sampai dibersihkan.)")) return;
+    delete ambilPath(button.closest(".km-bagian").dataset.path).figure;
   } else {
     // Aksi di dalam bagian / contoh / tabel: path wadah terdekat.
     const wadah = button.closest("[data-path]");
@@ -1275,6 +1293,85 @@ editorEl.addEventListener("click", (event) => {
   const tabBtn = editorEl.querySelector('.ks-tabs [data-tab="materi"]');
   if (tabBtn) tabBtn.textContent = `Tata bahasa (${m.items.filter((x) => !x.hidden).length})`;
 });
+/* ---------- Unggah gambar (supabase/add-materi-gambar.sql) ----------
+   Foto dikecilkan di browser (maks. 1200 x 1600 px) lalu diubah ke WebP
+   <= 1 MB lewat canvas - sekalian membuang EXIF (lokasi GPS, kamera). Nama
+   file acak, jadi isi file di alamat yang sama tidak pernah berubah. */
+const GAMBAR_MAKS = 1048576;
+function hexAcak() {
+  return Array.from(crypto.getRandomValues(new Uint8Array(16)), (x) => x.toString(16).padStart(2, "0")).join("");
+}
+async function kecilkanGambar(file) {
+  if (!file.type.startsWith("image/") || file.type === "image/svg+xml") throw new Error("Pilih file foto/gambar (JPG, PNG, atau WebP).");
+  let bitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    throw new Error("Format gambar ini tidak bisa dibuka browser. Simpan ulang sebagai JPG atau PNG lalu coba lagi.");
+  }
+  const skala = Math.min(1, 1200 / bitmap.width, 1600 / bitmap.height);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(bitmap.width * skala));
+  canvas.height = Math.max(1, Math.round(bitmap.height * skala));
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#ffffff"; // latar putih untuk PNG transparan
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close?.();
+  for (const mutu of [0.82, 0.7, 0.55, 0.4]) {
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", mutu));
+    if (!blob || blob.type !== "image/webp") throw new Error("Browser ini belum bisa membuat gambar WebP. Pakai Chrome, Edge, atau Firefox versi terbaru.");
+    if (blob.size <= GAMBAR_MAKS) return blob;
+  }
+  throw new Error("Gambar masih lebih dari 1 MB setelah dikompres. Potong atau perkecil gambar dulu.");
+}
+function pilihGambar(path, i) {
+  const pemilih = Object.assign(document.createElement("input"), { type: "file", accept: "image/jpeg,image/png,image/webp,image/*" });
+  pemilih.onchange = async () => {
+    const file = pemilih.files[0];
+    if (!file || !current) return;
+    const bab = current.bab;
+    showFeedback("warning", "Memproses & mengunggah gambar…");
+    try {
+      const blob = await kecilkanGambar(file);
+      const nama = `pelajaran-${bab}/${hexAcak()}.webp`;
+      const { error } = await supa.storage.from("materi-gambar").upload(nama, blob, { contentType: "image/webp", cacheControl: "31536000", upsert: false });
+      if (error) throw error;
+      if (!current || current.bab !== bab) return; // Operator sudah pindah pelajaran.
+      const blok = ambilPath(path);
+      blok.figure = { src: `materi-gambar/${nama}`, alt: blok.figure?.alt || "" };
+      markDirty();
+      polaTerbuka.add(i);
+      segarkanPola(i);
+      showFeedback("success", `Gambar diunggah (${Math.round(blob.size / 1024)} KB). Isi keterangan gambar, lalu simpan draft.`);
+      editorEl.querySelector(`[data-path="${path}.figure.alt"]`)?.focus();
+    } catch (error) {
+      const pesan = errorMessage(error);
+      showFeedback("error", `Gagal mengunggah gambar: ${pesan}${/bucket|policy|row-level/i.test(pesan) ? " (Operator perlu menjalankan supabase/add-materi-gambar.sql.)" : ""}`);
+    }
+  };
+  pemilih.click();
+}
+async function bersihkanGambar() {
+  const { data, error } = await supa.rpc("materi_gambar_tak_terpakai");
+  if (error) {
+    showFeedback("error", `Gagal memeriksa gambar: ${errorMessage(error)}`);
+    return;
+  }
+  if (!data.length) {
+    showFeedback("success", "Tidak ada gambar tak terpakai. (Gambar yang diunggah kurang dari 1 hari lalu tidak dihitung.)");
+    return;
+  }
+  const kb = Math.round(data.reduce((n, r) => n + Number(r.ukuran || 0), 0) / 1024);
+  if (!window.confirm(`${data.length} gambar (${kb} KB) tidak dipakai di isi terbit, draft, maupun Riwayat versi mana pun. Hapus permanen? Ini tidak bisa dibatalkan.`)) return;
+  const { error: hapus } = await supa.storage.from("materi-gambar").remove(data.map((r) => r.name));
+  if (hapus) {
+    showFeedback("error", `Gagal menghapus: ${errorMessage(hapus)}`);
+    return;
+  }
+  showFeedback("success", `${data.length} gambar tak terpakai dihapus (${kb} KB).`);
+}
+
 /* Tambah/hapus/urutkan bagian, contoh, dan isi tabel. path = elemen terdekat
    (items.I.blocks.K, items.I.blocks.K.examples.J, atau ...table). */
 function aksiDalam(act, path) {

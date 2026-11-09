@@ -3,7 +3,7 @@
 // dari cache ke user yang sudah install. Saat versi naik, file yang TIDAK
 // berubah tidak diunduh ulang penuh: install memakai cache: 'no-cache'
 // (revalidasi ETag -> cukup 304 kalau isinya sama).
-const CACHE_NAME = 'nihon-go-benkyo-v310';
+const CACHE_NAME = 'nihon-go-benkyo-v311';
 // Gambar soal, ilustrasi materi & aset CDN (URL berversi) di-cache saat
 // pertama kali dipakai - tidak ikut di-precache dan tidak dihapus saat
 // CACHE_NAME naik, karena isinya praktis tidak pernah berubah.
@@ -93,6 +93,13 @@ self.addEventListener('fetch', event => {
       return;
     }
     event.respondWith(caches.match(request).then(hit => hit || fetch(request)));
+    return;
+  }
+
+  // Gambar Materi unggahan Operator (Supabase Storage, nama file acak = tidak
+  // pernah berubah isinya) disimpan untuk offline.
+  if (url.hostname === 'twoerfizembbpuvlzzmt.supabase.co' && url.pathname.startsWith('/storage/v1/object/public/materi-gambar/')) {
+    event.respondWith(cacheFirst(request, RUNTIME_CACHE));
     return;
   }
 

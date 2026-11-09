@@ -17,6 +17,8 @@
 --           "pengecoh": { "kelompok":   { "<kata>": "<kata acuan>@<pelajaran>" },
 --                         "sinonim":    { "<kata>": ["<kata lain yang artinya sama>", ...] },
 --                         "kanjiMirip": { "<kanji>": ["<kanji mirip>", ...] } } }
+-- Gambar (figure.src): berkas repo assets/images/materi/... atau unggahan
+-- Operator materi-gambar/pelajaran-N/<hex>.webp (supabase/add-materi-gambar.sql).
 -- Bentuk pola sama dengan data/materi-grammar-data.js (+ "hidden": pola yang
 -- disembunyikan; urutan pola tidak boleh berubah karena progres siswa
 -- disimpan per nomor pola - dijaga halaman editor).
@@ -192,10 +194,11 @@ begin
         t := b -> 'figure';
         if jsonb_typeof(t) <> 'object'
            or exists (select 1 from jsonb_object_keys(t) k where k not in ('src', 'alt'))
-           or coalesce(t ->> 'src', '') !~ '^assets/images/materi/[A-Za-z0-9_-]+[.](webp|png|jpe?g)$'
+           or (coalesce(t ->> 'src', '') !~ '^assets/images/materi/[A-Za-z0-9_-]+[.](webp|png|jpe?g)$'
+               and coalesce(t ->> 'src', '') !~ '^materi-gambar/pelajaran-([1-9]|[1-4][0-9]|50)/[0-9a-f]{32}[.]webp$')
            or jsonb_typeof(t -> 'alt') is distinct from 'string'
-           or length(t ->> 'alt') > 300 or (t ->> 'alt') ~ '[<>"]' then
-          e := e || format('%sbagian %s: gambar tidak sah (keterangan maks. 300 karakter, tanpa < > ").', p, m);
+           or length(btrim(t ->> 'alt')) not between 1 and 300 or (t ->> 'alt') ~ '[<>"]' then
+          e := e || format('%sbagian %s: gambar tidak sah (keterangan wajib diisi, maks. 300 karakter, tanpa < > ").', p, m);
         end if;
         v_isi := true;
       end if;
