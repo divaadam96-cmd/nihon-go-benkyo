@@ -35,6 +35,7 @@ pages/                   halaman lain, masing-masing dokumen HTML sendiri
   hafalan.html             flashcard per Bab + materi Hiragana/Katakana
   kanji.html               belajar Kanji (grid, papan goresan, kuis)
   latihan.html             simulasi Tes Kemampuan (JLPT/JFT)
+  prestasi.html            papan peringkat & poin prestasi (semua peran)
   pantau.html              panel Sensei/Operator: pantau progres siswa
   admin.html               panel Operator: kelola akun
   kelola-soal.html         panel Operator: editor soal Tes Kemampuan
@@ -323,6 +324,18 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   `assignment-files` (folder `{siswa_id}/{assignment_id}/`, maks 5 MB,
   foto/PDF/audio) dan dibuka lewat signed URL 1 jam. Menggantikan
   `mark_assignment_done()` (fungsi itu dihapus oleh migrasi ini).
+- **Prestasi** (`pages/prestasi.html`, `supabase/add-prestasi.sql`): poin
+  dihitung di server (`prestasi_rincian`) = skor terbaik tiap tugas + 200
+  per pelajaran tuntas + 150 per Ujian ulang lulus + 10 per pola materi
+  "sudah paham" di pelajaran yang tuntas. Trigger di `bab_targets` dan
+  `srs_progress` (materi:*) mencatat selisih total ke `prestasi_log`
+  sehingga papan "Minggu ini" (sejak Senin 00:00 WIB) bisa dihitung;
+  menjalankan ulang file menyamakan total tanpa masuk poin minggu ini.
+  `prestasi_papan(jenis, periode)`: poin minggu ini / sepanjang waktu,
+  naik peringkat minggu ini, streak. Siswa melihat 10 besar (nama depan,
+  tanpa id) + posisinya sendiri + rincian poinnya; staf melihat semua
+  dengan nama lengkap. Skor tugas dikirim browser (`catat_target_bab`) -
+  risiko nilai palsu diterima untuk sementara.
 - **Progres saya (Beranda siswa)**: kartu "Peta 50 pelajaran" di index.html
   (`renderProgresSaya` di js/pages/dashboard.js) - status tiap pelajaran
   (tuntas / sedang dikerjakan / sudah dimulai / terkunci) dari

@@ -1,0 +1,153 @@
+/* Halaman Prestasi (pages/prestasi.html, js/pages/prestasi.js). */
+.pr-saya {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.8fr) 1.2fr;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.pr-saya-total small {
+  display: block;
+  color: var(--muted);
+}
+.pr-saya-total b {
+  display: block;
+  margin: 4px 0;
+  color: var(--rose);
+  font-size: 40px;
+  letter-spacing: -1px;
+}
+.pr-saya-total span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.pr-saya-rincian {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pr-saya-rincian li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--wash);
+  font-size: 13px;
+}
+.pr-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pr-tabs button {
+  width: auto;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--navy);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.pr-tabs button.active {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: #fff;
+}
+.pr-ket {
+  margin: 12px 0;
+  font-size: 13px;
+}
+.pr-daftar {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pr-daftar li {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid #eeeae3;
+  border-radius: 10px;
+  background: var(--wash);
+}
+.pr-daftar li.juara {
+  border-color: #e2c98f;
+  background: #fbf3df;
+}
+.pr-daftar li.saya {
+  border-color: var(--navy);
+  box-shadow: inset 4px 0 0 var(--navy);
+}
+.pr-posisi-no {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: center;
+}
+.pr-nama {
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pr-nama a {
+  color: var(--navy);
+}
+.pr-nama em {
+  color: var(--muted);
+  font-weight: 400;
+}
+.pr-nilai {
+  font-weight: 700;
+  color: var(--navy);
+  text-align: right;
+  white-space: nowrap;
+}
+.pr-nilai small {
+  color: var(--muted);
+  font-weight: 400;
+}
+.pr-posisi {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  border: 1px dashed var(--navy);
+  border-radius: 10px;
+  font-size: 14px;
+}
+.pr-cara {
+  margin-top: 14px;
+}
+.pr-cara h2 {
+  margin-top: 0;
+}
+.pr-cara ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.pr-cara b {
+  color: var(--navy);
+}
+@media (max-width: 700px) {
+  .pr-saya {
+    grid-template-columns: 1fr;
+  }
+  .pr-daftar li {
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    padding: 9px 10px;
+  }
+}

@@ -3,7 +3,7 @@
 // dari cache ke user yang sudah install. Saat versi naik, file yang TIDAK
 // berubah tidak diunduh ulang penuh: install memakai cache: 'no-cache'
 // (revalidasi ETag -> cukup 304 kalau isinya sama).
-const CACHE_NAME = 'nihon-go-benkyo-v309';
+const CACHE_NAME = 'nihon-go-benkyo-v310';
 // Gambar soal, ilustrasi materi & aset CDN (URL berversi) di-cache saat
 // pertama kali dipakai - tidak ikut di-precache dan tidak dihapus saat
 // CACHE_NAME naik, karena isinya praktis tidak pernah berubah.
@@ -25,6 +25,7 @@ const APP_FILES = [
   'pages/admin.html', 'css/pages/admin.css', 'js/pages/admin.js',
   'pages/kelola-soal.html', 'css/pages/kelola-soal.css', 'js/pages/kelola-soal.js',
   'pages/kelola-materi.html', 'css/pages/kelola-materi.css', 'js/pages/kelola-materi.js',
+  'pages/prestasi.html', 'css/pages/prestasi.css', 'js/pages/prestasi.js',
 ];
 // Aset CDN yang di-cache saat dipakai (supabase-js berversi, font Google).
 const CDN_HOSTS = ['cdn.jsdelivr.net', 'fonts.googleapis.com', 'fonts.gstatic.com'];
