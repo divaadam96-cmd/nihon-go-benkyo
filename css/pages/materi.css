@@ -1149,3 +1149,8 @@ body.focus-mode .material-reader {
     grid-template-columns: 1fr;
   }
 }
+/* Huruf yang dicoret di pola buku sumber (mis. Kata Benda ～だ: だ dihilangkan). */
+.grammar-coret {
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
