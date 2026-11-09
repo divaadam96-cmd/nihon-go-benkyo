@@ -69,34 +69,13 @@ function initPage() {
     } catch {
       // Cache rusak/tidak tersedia - tampil 0% saja, tidak fatal.
     }
-    const targetMetric = document.querySelector("#dashboard .overview .metric:nth-child(3)");
-    if (targetMetric) {
-      const targetLabel = targetMetric.querySelector("small");
-      const targetValue = targetMetric.querySelector("b");
-      const targetCopy = targetMetric.querySelector("p");
-      if (targetLabel) targetLabel.textContent = "Progres keseluruhan";
-      if (targetValue) targetValue.textContent = `${summary.totalPercent}%`;
-      if (targetCopy)
-        targetCopy.textContent = `${summary.totalDone} dari 50 pelajaran dipahami`;
-    }
-    const levels = document.querySelectorAll("#dashboard .levels .level");
-    const progressData = [
-      ["Buku 1", summary.bookOnePercent],
-      ["Buku 2", summary.bookTwoPercent],
-    ];
-    levels.forEach((level, index) => {
-      if (!progressData[index]) return;
-      const [label, percent] = progressData[index];
-      const name = level.querySelector("b");
-      const fill = level.querySelector(".fill");
-      const value = level.querySelector("span");
-      if (name) name.textContent = label;
-      if (fill) fill.style.width = `${percent}%`;
-      if (value) value.textContent = `${percent}%`;
+    document.getElementById("totalPercent").textContent = `${summary.totalPercent}%`;
+    document.getElementById("totalPercentNote").textContent = `${summary.totalDone} dari 50 pelajaran dipahami`;
+    const percents = [summary.bookOnePercent, summary.bookTwoPercent];
+    document.querySelectorAll("#dashboard .levels .level").forEach((level, index) => {
+      level.querySelector(".fill").style.width = `${percents[index]}%`;
+      level.querySelector("span").textContent = `${percents[index]}%`;
     });
-    const levelsHeading = document.querySelector("#dashboard .levels")
-      ?.parentElement?.querySelector("h2");
-    if (levelsHeading) levelsHeading.textContent = "Progres materi";
   }
   window.renderCurriculumSummary = renderCurriculumSummary;
 
@@ -210,11 +189,88 @@ function initPage() {
       .map((l, i) => `<li><div><b>${esc(l.judul)}</b><span>${esc(l.ket)}</span></div><a class="${i === 0 ? "primary" : "secondary"} continue-go" href="${esc(l.href)}">${i === 0 ? "Mulai →" : "Buka"}</a></li>`)
       .join("")}</ol>`;
   }
+  /* Peta 50 pelajaran (siswa): status tiap pelajaran dari TugasBab
+     (nilai tugas di server, aturan kunci yang sama dengan halaman Materi),
+     angka ringkas, rincian nilai pelajaran yang diklik, dan nilai rata-rata
+     tugas per pelajaran. */
+  let babDipilih = null; // null = ikut pelajaran saat ini
+  function statusBab(bab, sekarang) {
+    if (TugasBab.isComplete(bab)) return "tuntas";
+    if (bab === sekarang) return "sekarang";
+    if (TugasBab.isLocked(bab)) return "kunci";
+    const p = TugasBab.progress(bab);
+    return p.materi || p.dikerjakan ? "mulai" : "buka";
+  }
+  const NAMA_STATUS = { tuntas: "Tuntas", sekarang: "Sedang dikerjakan", mulai: "Sudah dimulai", buka: "Terbuka", kunci: "Terkunci" };
+  function renderRincian() {
+    const el = document.getElementById("progresRincian");
+    const bab = babDipilih || TugasBab.frontierBab();
+    const r = TugasBab.rincian(bab);
+    const status = statusBab(bab, TugasBab.frontierBab());
+    if (status === "kunci") {
+      el.innerHTML = `<div class="progres-rincian-head"><h3>Pelajaran ${bab}</h3><span>Terkunci</span></div><p class="muted">Terbuka setelah Pelajaran ${bab - 1} tuntas.</p>`;
+      return;
+    }
+    const kurang = TugasBab.isComplete(bab) ? [] : TugasBab.kekurangan(bab);
+    const nilai = (v) => (v === null ? '<span class="muted">belum</span>' : `<b class="${v >= TugasBab.KKM ? "lulus" : "kurang"}">${v}</b>`);
+    el.innerHTML = `<div class="progres-rincian-head"><h3>Pelajaran ${bab}</h3><span>${esc(NAMA_STATUS[status])}</span><a class="secondary" href="pages/materi.html?bab=${bab}">Buka pelajaran →</a></div>
+      <ul class="progres-tugas"><li><span>Materi ditandai paham</span>${r.materi ? '<b class="lulus">✔</b>' : '<span class="muted">belum</span>'}</li>${r.tugas.map((t) => `<li><span>${esc(t.judul)}</span>${nilai(t.skor)}${t.percobaan ? `<small>${t.percobaan}x</small>` : ""}</li>`).join("")}${r.ujian ? `<li><span>Ujian ulang Pel. ${esc(r.ujian.rentang)}${r.ujian.wajib ? "" : " (tidak wajib)"}</span>${nilai(r.ujian.skor)}</li>` : ""}</ul>
+      ${kurang.length ? `<p class="progres-kurang">Yang masih kurang: ${kurang.map(esc).join("; ")}.</p>` : ""}`;
+  }
+  function renderProgresSaya() {
+    const kartu = document.getElementById("progresSaya");
+    if (!kartu || !window.TugasBab || window.currentProfile?.role !== "siswa") return;
+    const max = TugasBab.MAX_BAB;
+    const sekarang = TugasBab.frontierBab();
+    const status = Array.from({ length: max }, (_, i) => statusBab(i + 1, sekarang));
+    const dengan = Array.from({ length: max }, (_, i) => i + 1).filter((b) => TugasBab.progress(b).dikerjakan > 0);
+    // Rata-rata skor terbaik semua tugas yang sudah dikerjakan (sama dengan Ringkasan kelas staf).
+    const skor = dengan.flatMap((b) => TugasBab.rincian(b).tugas.map((t) => t.skor).filter((v) => v !== null));
+    const rata = skor.length ? Math.round(skor.reduce((n, v) => n + v, 0) / skor.length) : null;
+    const angka = [
+      ["Pelajaran saat ini", sekarang],
+      ["Pelajaran tuntas", `${status.filter((s) => s === "tuntas").length} / ${max}`],
+      ["Rata-rata nilai tugas", rata ?? "–"],
+      ["Pola materi dipahami", srsMasteredCount("materi:")],
+      ["Kata dikuasai", srsMasteredCount("hafalan:")],
+      ["Kanji dikuasai", srsMasteredCount("kanji:")],
+    ];
+    document.getElementById("progresAngka").innerHTML = angka.map(([k, v]) => `<div><small>${esc(k)}</small><b>${esc(v)}</b></div>`).join("");
+    document.getElementById("progresPeta").innerHTML = status.map((s, i) => {
+      const bab = i + 1;
+      const p = TugasBab.progress(bab);
+      const ket = `Pelajaran ${bab}: ${NAMA_STATUS[s]}${p.dikerjakan ? `, rata-rata ${p.rataRata}` : ""}`;
+      return `<button type="button" role="listitem" class="progres-bab ${s}${bab === (babDipilih || sekarang) ? " dipilih" : ""}" data-bab="${bab}" title="${esc(ket)}" aria-label="${esc(ket)}"><b>${bab}</b>${p.dikerjakan ? `<small>${p.rataRata}</small>` : ""}</button>`;
+    }).join("");
+    document.getElementById("progresNilai").innerHTML = dengan.length
+      ? `<div class="progres-bar-wrap" style="--kkm-angka:${TugasBab.KKM / 100}">${dengan.map((b) => {
+          const v = TugasBab.progress(b).rataRata;
+          return `<div class="progres-bar ${v >= TugasBab.KKM ? "lulus" : "kurang"}" title="Pelajaran ${b}: ${v}"><span style="height:${Math.max(4, v)}%"></span><small>${b}</small></div>`;
+        }).join("")}</div><p class="muted progres-ket">Garis putus-putus = KKM ${TugasBab.KKM}. Nilai dihitung dari skor terbaik 8 tugas tiap pelajaran.</p>`
+      : '<p class="muted">Belum ada tugas yang dikerjakan.</p>';
+    renderRincian();
+    kartu.hidden = false;
+  }
+  document.getElementById("progresPeta")?.addEventListener("click", (event) => {
+    const tombol = event.target.closest(".progres-bab");
+    if (!tombol) return;
+    babDipilih = Number(tombol.dataset.bab);
+    document.querySelectorAll(".progres-bab").forEach((b) => b.classList.toggle("dipilih", b === tombol));
+    renderRincian();
+  });
+
+  /* Sapaan memakai nama depan akun yang login. */
+  const greeting = document.getElementById("dashboardGreeting");
+  const namaDepan = String(window.currentProfile?.full_name || "").trim().split(/\s+/)[0];
+  if (greeting && namaDepan) greeting.textContent = `Selamat datang kembali, ${namaDepan}.`;
+
   if (window.TugasBab) {
     TugasBab.onChange(renderLanjutkan);
+    TugasBab.onChange(renderProgresSaya);
     TugasBab.init();
   }
   renderLanjutkan();
+  renderProgresSaya();
 
   sync();
 }
