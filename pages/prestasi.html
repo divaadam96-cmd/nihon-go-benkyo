@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Prestasi — Nihon GO Benkyo</title>
+  <meta name="description" content="Papan peringkat dan poin prestasi siswa Nihon GO Benkyo dari tugas dan pemahaman materi.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&display=swap"></noscript>
+  <meta name="theme-color" content="#142945">
+  <link rel="manifest" href="../nihon-go-benkyo.webmanifest">
+  <link rel="icon" type="image/png" href="../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/shell.css">
+  <link rel="stylesheet" href="../css/auth.css">
+  <link rel="stylesheet" href="../css/pages/prestasi.css">
+  <link rel="stylesheet" href="../css/shell-akhir.css">
+</head>
+<body class="auth-checking">
+<main class="main" id="pageMain">
+  <div class="head"><div><div class="eyebrow">Papan prestasi</div><h1>Prestasi.</h1><p>Poin dari nilai tugas, pelajaran yang tuntas, ujian ulang, dan pola materi yang dipahami. Papan "Minggu ini" mulai lagi dari nol setiap Senin.</p></div></div>
+  <section class="card pr-saya" id="prSaya" data-role-only="siswa" hidden></section>
+  <section class="card pr-papan">
+    <nav class="pr-tabs" id="prJenis" aria-label="Jenis papan">
+      <button type="button" data-jenis="poin" data-periode="minggu" class="active">🏆 Poin minggu ini</button>
+      <button type="button" data-jenis="poin" data-periode="semua">🏆 Poin sepanjang waktu</button>
+      <button type="button" data-jenis="naik" data-periode="minggu">📈 Naik peringkat minggu ini</button>
+      <button type="button" data-jenis="streak" data-periode="semua">🔥 Streak belajar</button>
+    </nav>
+    <p class="pr-ket muted" id="prKet"></p>
+    <ol class="pr-daftar" id="prDaftar"><li class="muted">Memuat…</li></ol>
+    <p class="pr-posisi" id="prPosisi" hidden></p>
+  </section>
+  <section class="card pr-cara">
+    <h2>Cara mendapat poin</h2>
+    <ul>
+      <li><b>Nilai tugas</b>: skor terbaik tiap tugas (0–100). Mengulang tugas hanya menaikkan skor terbaik, tidak menambah poin berkali-kali.</li>
+      <li><b>+200</b> setiap pelajaran tuntas (materi dipahami + 8 tugas + rata-rata minimal 80).</li>
+      <li><b>+150</b> setiap Ujian ulang yang lulus.</li>
+      <li><b>+10</b> setiap pola materi yang ditandai "sudah paham" di pelajaran yang sudah tuntas.</li>
+    </ul>
+  </section>
+</main>
+<script defer src="../js/pwa.js"></script>
+<script defer src="../js/srs.js"></script>
+<script defer src="../js/quiz-results.js"></script>
+<script defer src="../js/app-effects.js"></script>
+<script defer src="../js/app-sidebar.js"></script>
+<script defer src="../js/app-shell.js"></script>
+<script defer src="../js/pages/prestasi.js"></script>
+<script defer fetchpriority="low" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
+<script defer src="../js/sesi-idle.js"></script>
+<script defer src="../js/auth.js"></script>
+</body></html>

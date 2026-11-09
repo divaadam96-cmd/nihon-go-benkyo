@@ -793,3 +793,10 @@ a.continue-go.secondary {
     grid-template-columns: 1fr;
   }
 }
+.progres-prestasi {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+}
