@@ -659,9 +659,15 @@
   function buildUjian(bab) {
     const babs = [bab - 4, bab - 3, bab - 2, bab - 1, bab];
     const dariBab = (question, b) => Object.assign(question, { bab: b });
-    const kotoba = shuffle(babs.flatMap((b) => kotobaItems(b))).slice(0, UJIAN_SUSUNAN.kotoba).map((item) =>
+    // Kata yang muncul di dua pelajaran dalam satu blok (mis. じぶん di Pel. 27
+    // & 28) hanya diambil sekali, supaya ujian tidak berisi soal kembar.
+    const sekali = (items, kunci) => {
+      const ada = new Set();
+      return items.filter((item) => !ada.has(norm(kunci(item))) && ada.add(norm(kunci(item))));
+    };
+    const kotoba = sekali(shuffle(babs.flatMap((b) => kotobaItems(b))), (item) => item.jp).slice(0, UJIAN_SUSUNAN.kotoba).map((item) =>
       dariBab(denganKartu(kotobaQuestion(item.bab, acak(["kotoba-jp-id", "kotoba-id-jp"]), item), `hafalan:bab${item.bab}-kosakata:${item.jp}`), item.bab));
-    const kanji = shuffle(babs.flatMap((b) => kanjiItems(b))).slice(0, UJIAN_SUSUNAN.kanji).map((item) =>
+    const kanji = sekali(shuffle(babs.flatMap((b) => kanjiItems(b))), (item) => item.kanji).slice(0, UJIAN_SUSUNAN.kanji).map((item) =>
       dariBab(denganKartu(kanjiQuestion(item.bab, acak(KANJI_ARAH), item), `hafalan:bab${item.bab}-kanji:${item.kanji}`), item.bab));
     const kalimat = babs.flatMap((b) => [
       dariBab(kalimatQuestions(b, "kalimat-pilih")[0], b),
