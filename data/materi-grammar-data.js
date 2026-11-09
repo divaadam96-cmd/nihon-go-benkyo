@@ -2794,8 +2794,10 @@ const MATERI_BOOK2_LESSONS = [
               ["④ 今月の 予定は カレンダーに 書いて あります。", "Rencana bulan ini ditulis pada kalender."],
             ],
           },
+          // Di buku, [Perhatian] ini tampil SEBELUM contoh ⑤⑥ - dibuat bagian
+          // sendiri karena catatan selalu dirender di akhir bagian.
+          { note: "[Perhatian] Perbedaan antara Kata Kerja Bentuk て います dan Kata Kerja Bentuk て あります." },
           {
-            note: "[Perhatian] Perbedaan antara Kata Kerja Bentuk て います dan Kata Kerja Bentuk て あります.",
             examples: [
               ["⑤ 窓が 閉まって います。", "Jendela tertutup."],
               ["⑥ 窓が 閉めて あります。", "Jendela ditutup."],
