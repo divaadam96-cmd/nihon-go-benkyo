@@ -423,3 +423,143 @@ a.continue-go.secondary {
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
+
+/* === Ringkasan kelas (Sensei/Operator, js/pages/ringkasan-kelas.js) === */
+.rk-grid {
+  align-items: start;
+}
+.rk-ket {
+  margin: 0 0 10px;
+  font-size: 13px;
+}
+.rk-perhatian {
+  display: grid;
+  gap: 10px;
+  max-height: 340px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.rk-perhatian li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eeeae3;
+}
+.rk-perhatian li span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.rk-perhatian li small {
+  grid-column: 1 / -1;
+  color: var(--red);
+}
+.rk-perhatian a,
+.rk-tabel a {
+  color: var(--navy);
+  font-weight: 700;
+}
+.rk-sebaran {
+  display: grid;
+  gap: 7px;
+}
+.rk-bar {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) 28px;
+  gap: 10px;
+  align-items: center;
+  font-size: 13px;
+}
+.rk-bar b {
+  text-align: right;
+}
+.rk-tersulit {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding-left: 20px;
+}
+.rk-tersulit li span {
+  margin-left: 8px;
+  color: var(--red);
+}
+.rk-tersulit li small {
+  display: block;
+  color: var(--muted);
+}
+.rk-tabel-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.rk-tabel-head h2 {
+  flex: 1 1 auto;
+  margin: 0;
+}
+.rk-tabel-head input,
+.rk-tabel-head select {
+  width: auto;
+  min-width: 0;
+}
+.rk-tabel-wrap {
+  max-height: 420px;
+  margin-top: 10px;
+  overflow: auto;
+}
+.rk-tabel {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.rk-tabel th,
+.rk-tabel td {
+  padding: 7px 8px;
+  border-bottom: 1px solid #eeeae3;
+  text-align: left;
+  white-space: nowrap;
+}
+.rk-tabel thead th {
+  position: sticky;
+  top: 0;
+  background: var(--wash);
+  color: var(--muted);
+  font-weight: 600;
+}
+.rk-tabel tr.rk-perlu th::before {
+  content: "●";
+  margin-right: 6px;
+  color: var(--red);
+  font-size: 9px;
+}
+@media (max-width: 900px) {
+  .rk-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.rk-kolom {
+  display: grid;
+  gap: 14px;
+}
+.rk-tabel-card {
+  margin-top: 14px;
+}
+.rk-tabel-wrap {
+  max-height: 520px;
+}
+#rkAngka .metric:nth-child(2) b {
+  color: var(--navy);
+}
+#rkAngka .metric:nth-child(2) p {
+  display: block;
+  margin: 8px 0 0;
+  padding: 0;
+  background: none;
+  color: var(--muted);
+  font-weight: 400;
+}
+.rk-perhatian {
+  max-height: 560px;
+}

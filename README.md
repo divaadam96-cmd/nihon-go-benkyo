@@ -323,6 +323,14 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   `assignment-files` (folder `{siswa_id}/{assignment_id}/`, maks 5 MB,
   foto/PDF/audio) dan dibuka lewat signed URL 1 jam. Menggantikan
   `mark_assignment_done()` (fungsi itu dihapus oleh migrasi ini).
+- **Ringkasan kelas untuk Sensei/Operator** (`supabase/add-ringkasan-kelas.sql`,
+  `js/pages/ringkasan-kelas.js`): halaman Ringkasan (index.html) untuk staf
+  menampilkan siswa aktif, rata-rata pelajaran tuntas & nilai tugas, siswa
+  yang perlu perhatian (tidak aktif >= 7 hari, rata-rata pelajaran saat ini
+  di bawah KKM, >= 3 tugas dicoba 3x tanpa mencapai KKM), sebaran posisi
+  pelajaran, pelajaran tersulit, dan tabel semua siswa. "Tuntas" dan
+  "pelajaran saat ini" dihitung sama dengan `isComplete()`/`frontierBab()`
+  di js/tugas-bab.js. Nama siswa membuka `pages/pantau.html?siswa=<id>`.
 - **Pantau Siswa dihitung di server** (`supabase/add-pantau-siswa.sql`).
   `pantau_ringkasan()` (kartu semua siswa), `pantau_detail()` (aktivitas
   6 minggu, progres per pelajaran/bab, item lemah, riwayat tes & reset) dan

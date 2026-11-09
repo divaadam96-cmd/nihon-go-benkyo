@@ -3,7 +3,7 @@
 // dari cache ke user yang sudah install. Saat versi naik, file yang TIDAK
 // berubah tidak diunduh ulang penuh: install memakai cache: 'no-cache'
 // (revalidasi ETag -> cukup 304 kalau isinya sama).
-const CACHE_NAME = 'nihon-go-benkyo-v307';
+const CACHE_NAME = 'nihon-go-benkyo-v308';
 // Gambar soal, ilustrasi materi & aset CDN (URL berversi) di-cache saat
 // pertama kali dipakai - tidak ikut di-precache dan tidak dihapus saat
 // CACHE_NAME naik, karena isinya praktis tidak pernah berubah.
@@ -12,7 +12,7 @@ const APP_FILES = [
   'index.html',
   'css/base.css', 'css/shell.css', 'css/auth.css', 'css/shell-akhir.css',
   'js/app-shell.js', 'js/app-sidebar.js', 'js/app-effects.js', 'js/soal-html.js', 'js/quiz-results.js', 'js/srs.js', 'js/kana-ketik.js', 'js/sesi-idle.js', 'js/auth.js', 'js/assignments.js', 'js/pwa.js',
-  'js/pages/dashboard.js', 'css/pages/dashboard.css',
+  'js/pages/dashboard.js', 'js/pages/ringkasan-kelas.js', 'css/pages/dashboard.css',
   'nihon-go-benkyo.webmanifest',
   'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable-512.png',
   'assets/images/japan-paper-background.webp', 'assets/images/logo.webp',
