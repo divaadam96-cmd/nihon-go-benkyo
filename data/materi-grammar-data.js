@@ -863,7 +863,7 @@ const MATERI_BOOK1_LESSONS = [
         title: "どんな Kata Benda",
         blocks: [
           {
-            text: "Cara menjawab untuk kalimat tanya dengan menggunakan どんな, selain cara menjawab yang telah dipelajari pada Pelajaran 8, dapat dijawab juga dengan memberikan nama secara kongkret.",
+            text: "Cara menjawab untuk kalimat tanya dengan menggunakan どんな, selain cara menjawab yang telah dipelajari pada Pelajaran 8, dapat dijawab juga dengan memberikan nama secara konkret.",
             examples: [["④ どんな スポーツが 好きですか。<br>……サッカーが 好きです。", "Suka olahraga apa?<br>……Suka sepak bola."]],
           },
         ],
@@ -3341,7 +3341,7 @@ const MATERI_BOOK2_LESSONS = [
         title: "Kata Kerja<sub>1</sub> Bentuk Kamus<br>Kata Kerja<sub>1</sub>（Bentuk ない）ない｝ように、Kata Kerja<sub>2</sub>",
         blocks: [
           {
-            text: "ように menunjukan objek dari Kata Kerja<sub>2</sub> untuk mencapai keadaan yang dinyatakan oleh～ように. Sebelum ように, digunakan Kata Kerja yang bukan keinginan Bentuk Kamus (①) (Contoh: Kata Kerja Potensial, わかります, みえます, きこえます, なります dan lain-lain), atau Kata Kerja Bentuk Negatif (②).",
+            text: "ように menunjukkan objek dari Kata Kerja<sub>2</sub> untuk mencapai keadaan yang dinyatakan oleh～ように. Sebelum ように, digunakan Kata Kerja yang bukan keinginan Bentuk Kamus (①) (Contoh: Kata Kerja Potensial, わかります, みえます, きこえます, なります dan lain-lain), atau Kata Kerja Bentuk Negatif (②).",
             examples: [
               ["① 速く 泳げるように、毎日 練習して います。", "Setiap hari (saya) berlatih agar bisa berenang dengan cepat."],
               ["② 忘れないように、メモして ください。", "Tolong dicatat supaya tidak lupa."],
@@ -3374,7 +3374,7 @@ const MATERI_BOOK2_LESSONS = [
         blocks: [
           {
             label: "1) ～ように して います",
-            text: "Menyatakan bahwa berusaha untuk melakukan suatu aksi secara kebiasan.",
+            text: "Menyatakan bahwa berusaha untuk melakukan suatu aksi secara kebiasaan.",
             examples: [
               ["⑦ 毎日 運動して、何でも 食べるように して います。", "Setiap hari berolahraga dan berusaha untuk makan apa saja."],
               ["⑧ 歯に 悪いですから、甘い 物を 食べないように して います。", "Karena tidak baik untuk gigi, maka berusaha tidak makan makanan manis."],
@@ -3434,7 +3434,7 @@ const MATERI_BOOK2_LESSONS = [
         title: "Kata Benda<sub>1</sub>（orang<sub>1</sub>）は Kata Benda<sub>2</sub>（orang<sub>2</sub>）に Kata Kerja Pasif",
         blocks: [
           {
-            text: "Pola kalimat yang perbuatan yang dilakukan oleh orang<sub>2</sub> terhadap orang<sub>1</sub> mengekspresikan dari pihak yang menerika perbuatan (orang<sub>1</sub>).<br>Menyatakan dengan cara bahwa orang<sub>1</sub> diangkat sebagai topik, kemudian pelaku (orang<sub>2</sub>) dibubuhkan Kata Bantu に.",
+            text: "Pola kalimat yang perbuatan yang dilakukan oleh orang<sub>2</sub> terhadap orang<sub>1</sub> mengekspresikan dari pihak yang menerima perbuatan (orang<sub>1</sub>).<br>Menyatakan dengan cara bahwa orang<sub>1</sub> diangkat sebagai topik, kemudian pelaku (orang<sub>2</sub>) dibubuhkan Kata Bantu に.",
             examples: [
               ["先生が <u>わたし</u>を 褒めました。", "Guru yang memuji saya."],
               ["① <u>わたし</u>は 先生に 褒められました。", "Saya dipuji oleh guru."],
@@ -3475,7 +3475,7 @@ const MATERI_BOOK2_LESSONS = [
         title: "Kata Benda（benda/hal）が／は Kata Kerja Pasif",
         blocks: [
           {
-            text: "Ketika kejelaskan suatu prihal dan tidak mempersoalkan orang yang melakukan perbuatan, maka adakalanya untuk mengekspresikan dengan memakai Kata Kerja Pasif yang benda atau prihal dijadikan sebagai subjek atau topik.",
+            text: "Ketika menjelaskan suatu perihal dan tidak mempersoalkan orang yang melakukan perbuatan, maka adakalanya untuk mengekspresikan dengan memakai Kata Kerja Pasif yang benda atau perihal dijadikan sebagai subjek atau topik.",
             examples: [
               ["⑦ 大阪で 展覧会が 開かれました。", "Di Osaka diadakan pameran."],
               ["⑧ 電話は 19世紀に 発明されました。", "Telepon ditemukan pada abad kesembilan belas."],
@@ -3544,7 +3544,7 @@ const MATERI_BOOK2_LESSONS = [
             ],
           },
           {
-            text: "Pola kalimat Kata Kerja Bentuk Kamus の sebagai topik yang ditandai dengan は. Kata Sifat yang sering digunakan untuk pola kalimat ini, yaitu むずかしい, やさしい, おもしろい, たのしい, たいへん［な］ dan lain-lain.<br>Dibandingkan dengan kalimat ① yang tidak memakai の, kalimat ② dan ③ yang memakai の secara kongkret menjelaskan hal bermain tenis dan hal menonton tenis adalah hal yang menarik.",
+            text: "Pola kalimat Kata Kerja Bentuk Kamus の sebagai topik yang ditandai dengan は. Kata Sifat yang sering digunakan untuk pola kalimat ini, yaitu むずかしい, やさしい, おもしろい, たのしい, たいへん［な］ dan lain-lain.<br>Dibandingkan dengan kalimat ① yang tidak memakai の, kalimat ② dan ③ yang memakai の secara konkret menjelaskan hal bermain tenis dan hal menonton tenis adalah hal yang menarik.",
           },
         ],
       },
@@ -3575,7 +3575,7 @@ const MATERI_BOOK2_LESSONS = [
             ],
           },
           {
-            text: "Contoh Kata Kerja Bentuk Kamus の yang ditandai dengan を. Menjelaskan isi mengenai hal yang dilupakan secara kongkret.",
+            text: "Contoh Kata Kerja Bentuk Kamus の yang ditandai dengan を. Menjelaskan isi mengenai hal yang dilupakan secara konkret.",
           },
         ],
       },
@@ -3584,7 +3584,7 @@ const MATERI_BOOK2_LESSONS = [
         suffix: "Apakah Anda tahu...?",
         blocks: [
           {
-            text: "Contoh Kata Kerja Bentuk Biasa の yang ditandai dengan を. Digunakan ketika menanyakan bahwa apakah tahu atau tidak mengenai isi kalimat secara kongkret.",
+            text: "Contoh Kata Kerja Bentuk Biasa の yang ditandai dengan を. Digunakan ketika menanyakan bahwa apakah tahu atau tidak mengenai isi kalimat secara konkret.",
             examples: [["⑩ 鈴木さんが 来月 結婚するのを 知って いますか。", "Apakah Anda tahu sdr. Suzuki akan menikah pada bulan depan?"]],
             note: "[Perhatian] Perbedaan antara しりません dan しりませんでした:",
           },
@@ -3595,12 +3595,12 @@ const MATERI_BOOK2_LESSONS = [
             ],
           },
           {
-            text: "Pada ⑪, lawan bicara tidak memiliki informasi bahwa bayi telah lahir, tetapi dengan pertanyaan dia mendapatkan informasinya, maka menjawab dengan しりませんでした. Sedangankan pada ⑫, sebelum pertanyaan dan dengan pertanyaan pun, tidak mempunyai informasi maka menjawab dengan しりません.",
+            text: "Pada ⑪, lawan bicara tidak memiliki informasi bahwa bayi telah lahir, tetapi dengan pertanyaan dia mendapatkan informasinya, maka menjawab dengan しりませんでした. Sedangkan pada ⑫, sebelum pertanyaan dan dengan pertanyaan pun, tidak mempunyai informasi maka menjawab dengan しりません.",
           },
         ],
       },
       {
-        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda<sub>1</sub>｝Bentuk Biasa ～だ→～な｝のは Kata Benda<sub>2</sub> です",
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda<sub>1</sub>｝Bentuk Biasa ～<span class=\"grammar-coret\">だ</span>→～な｝のは Kata Benda<sub>2</sub> です",
         blocks: [
           {
             text: "Pola kalimat sebagai cara ungkapan untuk menekankan Kata Benda<sub>2</sub>.",
@@ -3628,7 +3628,7 @@ const MATERI_BOOK2_LESSONS = [
             text: "Pada Pelajaran 16 dan Pelajaran 34 telah dipelajari pola kalimat mengenai～て（で）、～. Di sini kita belajar cara penggunaan untuk menyatakan sebab atau alasan yang dikarenakan oleh hal di bagian depan kalimat (bagian～て（で）), kemudian menyatakan akibat yang didatangkan oleh hal di bagian belakang kalimat yang disebabkan oleh hal di bagian depan kalimat. Pada bagian belakang tidak digunakan ekspresi keinginan atau keadaan.",
           },
           {
-            label: "1) <span class=\"grammar-pola-box\">Kata Kerja Bentuk て<br>Kata Kerja（Bentuk ない）なくて<br>Kata Sifat い（～い）→～くて<br>Kata Sifat な［な］→で｝、～</span>",
+            label: "1) <span class=\"grammar-pola-box\">Kata Kerja Bentuk て<br>Kata Kerja（Bentuk ない）なくて<br>Kata Sifat い（～<span class=\"grammar-coret\">い</span>）→～くて<br>Kata Sifat な［<span class=\"grammar-coret\">な</span>］→で｝、～</span>",
             text: "Untuk hal di bagian belakang kalimat kebanyakan terletak ekspresi sebagai berikut;",
           },
           {
@@ -3665,7 +3665,7 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
       {
-        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ→～な｝ので、～",
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～<span class=\"grammar-coret\">だ</span>→～な｝ので、～",
         blocks: [
           {
             text: "Sama halnya dengan～から yang telah dipelajari pada Pelajaran 9,～ので juga menyatakan sebab atau alasan. ので sebenarnya menyatakan hubungan sebab akibat, kemudian bersifat untuk menjelaskan akibat yang dituntun oleh sebab, maka cocok untuk memperlembut ekspresi alasan meminta izin atau pengertian.",
@@ -3694,7 +3694,7 @@ const MATERI_BOOK2_LESSONS = [
     title: "Kalimat tanya di dalam kalimat",
     items: [
       {
-        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ｝か、～",
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～<span class=\"grammar-coret\">だ</span>｝か、～",
         blocks: [
           {
             text: "Pola kalimat ini digunakan jika Kalimat Tanya yang mengandung Kata Tanya dimasukkan ke dalam kalimat lain.",
@@ -3710,7 +3710,7 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
       {
-        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ｝か どうか、～",
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～<span class=\"grammar-coret\">だ</span>｝か どうか、～",
         blocks: [
           {
             text: "Pola kalimat ini digunakan jika Kalimat Tanya yang tidak mengandung Kata Tanya dimasukkan ke dalam kalimat. Berhati-hatilah karena di belakang Bentuk Biasa か perlu どうか.",
@@ -3742,7 +3742,7 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
       {
-        title: "Kata Sifat い（～い）→～さ",
+        title: "Kata Sifat い（～<span class=\"grammar-coret\">い</span>）→～さ",
         blocks: [
           {
             text: "Kata Sifat い dengan mengubah い ke さ pada akhir kata, dapat membuat Kata Benda.<br>Contoh: 高い → 高さ　　長い → 長さ　　速い → 速さ",
