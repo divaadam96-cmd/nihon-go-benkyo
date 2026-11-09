@@ -432,6 +432,16 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   pelajaran selama 30 hari. Terbit tanpa catatan = perbaikan kecil, siswa
   tidak diberi tanda. Siswa hanya bisa membaca kolom `bab`,
   `diperbarui_at`, dan `catatan`.
+  Pengecoh soal Tugas: tiap baris Kosakata/Kanji punya panel "⋯ Pengecoh"
+  untuk menunjuk kata "sekelompok dengan" (masuk kelompok makna kata itu),
+  kata yang "artinya sama dengan" (sinonim, tidak pernah jadi pengecoh satu
+  sama lain), dan kanji mirip untuk huruf kanji yang belum ada di
+  `data/kanji-mirip-data.js`; tombol "Contoh soal" membuat soal persis
+  seperti Tugas (`TugasBab.contohSoal`). Disimpan sebagai bagian `pengecoh`
+  di `konten_bab` (divalidasi `validate_konten_pengecoh`) dan ditambahkan di
+  atas data bawaan oleh `KontenBab.gabungPengecoh`. Editor memperingatkan
+  kata baru tanpa kelompok, arti yang mirip dengan anggota sekelompok, dan
+  kanji tanpa daftar mirip.
   Laporan siswa (`supabase/add-laporan-konten.sql`): tombol "Laporkan" di
   akhir tiap pelajaran (pilih pola) dan di bawah umpan balik soal Tugas
   mengirim laporan lewat `lapor_konten` (maks. 10 per 24 jam per akun,

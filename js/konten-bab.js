@@ -6,6 +6,10 @@
      materi   -> MATERI_BOOK1_LESSONS / MATERI_BOOK2_LESSONS
                  (data/materi-grammar-data.js; HTML-nya disaring ulang di
                  sini dengan sanitizeQuestionHtml, js/soal-html.js)
+     pengecoh -> tugasKategoriKata, tugasSinonim (data/tugas-kategori-
+                 data.js) & kanjiMiripData (data/kanji-mirip-data.js) -
+                 data ini lintas pelajaran, jadi pengecoh SEMUA pelajaran
+                 digabung sekaligus ke salinan isi bawaannya (gabungPengecoh)
    Dipakai Hafalan, Tugas (js/tugas-bab.js) & Materi. Jalankan SETELAH berkas data
    yang bersangkutan dimuat; berkas yang belum dimuat dilewati dan diterapkan
    saat terapkan() dipanggil lagi.
@@ -45,6 +49,68 @@
     },
   };
   const bawaan = { kosakata: {}, kanji: {}, kalimat: {}, materi: {} }; // isi asli bab yang pernah ditimpa
+
+  /* Gabungkan bagian "pengecoh" dari baris-baris [{bab, isi}] ke SALINAN
+     data pengecoh bawaan `asli` = {kategori, sinonim, mirip}:
+       kelompok   {kata: "acuan@babAcuan"} -> kata@bab masuk kelompok makna
+                  kata acuan (kalau acuan belum berkelompok, keduanya jadi
+                  kelompok baru "operator:acuan@babAcuan")
+       sinonim    {kata: [kata lain]}      -> pasangan tugasSinonim
+       kanjiMirip {kanji: [kanji mirip]}   -> ditambahkan ke kanjiMiripData
+     Dipakai juga pratinjau "Contoh soal" di Kelola Materi. */
+  function gabungPengecoh(asli, rows) {
+    const kategori = JSON.parse(JSON.stringify(asli.kategori));
+    const sinonim = JSON.parse(JSON.stringify(asli.sinonim));
+    const mirip = JSON.parse(JSON.stringify(asli.mirip));
+    // Kelompok kata acuan: entri khusus bab ("kata@bab") didahulukan.
+    const grupDari = (entri) => {
+      const kata = entri.split("@")[0];
+      const daftar = Object.entries(kategori);
+      return (daftar.find(([, isi]) => isi.includes(entri)) || daftar.find(([, isi]) => isi.includes(kata)) || [null])[0];
+    };
+    rows.forEach(({ bab, isi }) => {
+      const p = isi && isi.pengecoh;
+      if (!p || typeof p !== "object") return;
+      Object.entries(p.kelompok || {}).forEach(([kata, acuan]) => {
+        if (typeof acuan !== "string" || !acuan.includes("@")) return;
+        let nama = grupDari(acuan);
+        if (!nama) {
+          nama = `operator:${acuan}`;
+          kategori[nama] ||= [acuan];
+        }
+        // Keluarkan dulu dari kelompok lain di bab ini (kalau pernah dimasukkan).
+        Object.values(kategori).forEach((isiGrup) => {
+          const i = isiGrup.indexOf(`${kata}@${bab}`);
+          if (i >= 0) isiGrup.splice(i, 1);
+        });
+        kategori[nama].push(`${kata}@${bab}`);
+      });
+      Object.entries(p.sinonim || {}).forEach(([kata, lain]) => {
+        if (Array.isArray(lain)) lain.forEach((l) => typeof l === "string" && sinonim.push([kata, l]));
+      });
+      Object.entries(p.kanjiMirip || {}).forEach(([kanji, daftar]) => {
+        if (Array.isArray(daftar)) mirip[kanji] = [...new Set([...(mirip[kanji] || []), ...daftar.filter((k) => typeof k === "string" && k !== kanji)])];
+      });
+    });
+    return { kategori, sinonim, mirip };
+  }
+  /* Data pengecoh dideklarasikan `const` di berkas data, jadi isinya
+     diganti di tempat (objek/array yang sama), dari salinan aslinya. */
+  let pengecohAsli = null;
+  function pasangPengecoh(rows) {
+    if (typeof tugasKategoriKata === "undefined" || typeof tugasSinonim === "undefined" || typeof kanjiMiripData === "undefined") return false;
+    pengecohAsli ||= JSON.parse(JSON.stringify({ kategori: tugasKategoriKata, sinonim: tugasSinonim, mirip: kanjiMiripData }));
+    const baru = gabungPengecoh(pengecohAsli, rows);
+    const ganti = (wadah, isi) => {
+      Object.keys(wadah).forEach((k) => delete wadah[k]);
+      Object.assign(wadah, isi);
+    };
+    ganti(tugasKategoriKata, baru.kategori);
+    ganti(kanjiMiripData, baru.mirip);
+    tugasSinonim.length = 0;
+    tugasSinonim.push(...baru.sinonim);
+    return true;
+  }
 
   /* Lapisan kedua (server sudah memvalidasi dengan allowlist yang sama):
      semua teks materi disaring sebelum dirender sebagai HTML. */
@@ -93,7 +159,8 @@
   /* Pasang `baris` ke data global: kembalikan dulu semua bab yang pernah
      ditimpa ke isi aslinya, lalu timpa dengan isi terbit. */
   function terapkan() {
-    const tanda = JSON.stringify([baris, Object.keys(sumber).map((jenis) => !!sumber[jenis].data())]);
+    const adaPengecoh = typeof tugasKategoriKata !== "undefined" && typeof tugasSinonim !== "undefined" && typeof kanjiMiripData !== "undefined";
+    const tanda = JSON.stringify([baris, Object.keys(sumber).map((jenis) => !!sumber[jenis].data()), adaPengecoh]);
     if (tanda === diterapkan) return false;
     Object.entries(sumber).forEach(([jenis, s]) => {
       const data = s.data();
@@ -108,6 +175,7 @@
         s.set(data, bab, baru);
       });
     });
+    pasangPengecoh(baris);
     diterapkan = tanda;
     versi++;
     return true;
@@ -146,6 +214,7 @@
   window.KontenBab = {
     muat,
     terapkan,
+    gabungPengecoh,
     get versi() {
       return versi;
     },

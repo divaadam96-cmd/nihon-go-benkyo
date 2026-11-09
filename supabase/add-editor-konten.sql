@@ -1,7 +1,7 @@
 -- Editor isi pelajaran untuk Operator (pages/kelola-materi.html):
--- kosakata, kanji, soal kalimat (susun & pilih) [Tahap 1] dan teks Materi
--- tata bahasa [Tahap 2] per Pelajaran 1-50, plus tinjauan berkala & catatan
--- pembaruan untuk siswa (konten_info).
+-- kosakata, kanji, soal kalimat (susun & pilih) [Tahap 1], teks Materi
+-- tata bahasa [Tahap 2] dan data pengecoh soal [langkah 4] per Pelajaran
+-- 1-50, plus tinjauan berkala & catatan pembaruan untuk siswa (konten_info).
 -- Jalankan SETELAH fix-1-operator-mfa.sql, fix-6-riwayat-perubahan-soal.sql
 -- (require_operator) dan add-editor-soal.sql (is_safe_question_html), di SQL
 -- Editor Supabase (atau `supabase db query --linked -f supabase/add-editor-konten.sql`).
@@ -13,7 +13,10 @@
 --           "kanji":    [[kanji, kana, arti], ...],
 --           "kalimat":  { "susun": [{arti, potongan: [...], alt?: [...]}],
 --                         "pilih": [{arti, benar, salah: [3 pengecoh]}] },
---           "materi":   { "title": "...", "items": [pola, ...] } }
+--           "materi":   { "title": "...", "items": [pola, ...] },
+--           "pengecoh": { "kelompok":   { "<kata>": "<kata acuan>@<pelajaran>" },
+--                         "sinonim":    { "<kata>": ["<kata lain yang artinya sama>", ...] },
+--                         "kanjiMirip": { "<kanji>": ["<kanji mirip>", ...] } } }
 -- Bentuk pola sama dengan data/materi-grammar-data.js (+ "hidden": pola yang
 -- disembunyikan; urutan pola tidak boleh berubah karena progres siswa
 -- disimpan per nomor pola - dijaga halaman editor).
@@ -239,6 +242,70 @@ begin
 end;
 $$;
 
+-- Validasi bagian "pengecoh" (data tambahan untuk pilihan salah soal Tugas,
+-- dipakai js/tugas-bab.js lewat js/konten-bab.js). Kata = cara baca/tulisan
+-- kata seperti di daftar kosakata (tanpa < > @).
+create or replace function public.validate_konten_pengecoh(x jsonb)
+returns text[]
+language plpgsql
+immutable
+set search_path = public
+as $$
+declare
+  e text[] := '{}';
+  r record;
+  v_kata text := '^[^<>@\r\n]{1,60}$';
+  v_kanji text := '^[\u4e00-\u9fff\u3400-\u4dbf々]$';
+begin
+  if jsonb_typeof(x) <> 'object'
+     or exists (select 1 from jsonb_object_keys(x) k where k not in ('kelompok', 'sinonim', 'kanjiMirip')) then
+    return array['Format pengecoh tidak sah.'];
+  end if;
+  if x ? 'kelompok' then
+    if jsonb_typeof(x -> 'kelompok') <> 'object' or (select count(*) from jsonb_object_keys(x -> 'kelompok')) > 300 then
+      e := e || 'Pengecoh: format kelompok tidak sah (maks. 300 kata).'::text;
+    else
+      for r in select key, value from jsonb_each(x -> 'kelompok') loop
+        if r.key !~ v_kata or jsonb_typeof(r.value) <> 'string'
+           or (r.value #>> '{}') !~ '^[^<>@\r\n]{1,60}@([1-9]|[1-4][0-9]|50)$' then
+          e := e || format('Pengecoh: kelompok untuk "%s" tidak sah.', left(r.key, 60));
+        end if;
+      end loop;
+    end if;
+  end if;
+  if x ? 'sinonim' then
+    if jsonb_typeof(x -> 'sinonim') <> 'object' or (select count(*) from jsonb_object_keys(x -> 'sinonim')) > 300 then
+      e := e || 'Pengecoh: format sinonim tidak sah (maks. 300 kata).'::text;
+    else
+      for r in select key, value from jsonb_each(x -> 'sinonim') loop
+        if r.key !~ v_kata or jsonb_typeof(r.value) <> 'array'
+           or jsonb_array_length(r.value) not between 1 and 10
+           or exists (select 1 from jsonb_array_elements(r.value) v
+                      where jsonb_typeof(v) <> 'string' or (v #>> '{}') !~ v_kata or (v #>> '{}') = r.key) then
+          e := e || format('Pengecoh: sinonim untuk "%s" harus 1-10 kata lain.', left(r.key, 60));
+        end if;
+      end loop;
+    end if;
+  end if;
+  if x ? 'kanjiMirip' then
+    if jsonb_typeof(x -> 'kanjiMirip') <> 'object' or (select count(*) from jsonb_object_keys(x -> 'kanjiMirip')) > 100 then
+      e := e || 'Pengecoh: format kanji mirip tidak sah (maks. 100 kanji).'::text;
+    else
+      for r in select key, value from jsonb_each(x -> 'kanjiMirip') loop
+        if r.key !~ v_kanji or jsonb_typeof(r.value) <> 'array'
+           or jsonb_array_length(r.value) not between 1 and 6
+           or exists (select 1 from jsonb_array_elements(r.value) v
+                      where jsonb_typeof(v) <> 'string' or (v #>> '{}') !~ v_kanji or (v #>> '{}') = r.key)
+           or (select count(distinct v) from jsonb_array_elements_text(r.value) v) <> jsonb_array_length(r.value) then
+          e := e || format('Pengecoh: kanji mirip untuk "%s" harus 1-6 huruf kanji lain yang berbeda.', left(r.key, 10));
+        end if;
+      end loop;
+    end if;
+  end if;
+  return e;
+end;
+$$;
+
 -- Daftar pesan kesalahan (kosong = sah). Format pesan "Kosakata no. N: ..."
 -- dipakai halaman editor untuk melompat ke baris yang salah.
 create or replace function public.validate_konten_bab(p_isi jsonb)
@@ -263,7 +330,7 @@ begin
     return array['Isi terlalu besar.'];
   end if;
   for k in select jsonb_object_keys(p_isi) loop
-    if k not in ('kosakata', 'kanji', 'kalimat', 'materi') then
+    if k not in ('kosakata', 'kanji', 'kalimat', 'materi', 'pengecoh') then
       e := e || format('Bagian "%s" tidak dikenal.', k);
     end if;
   end loop;
@@ -372,6 +439,9 @@ begin
   end if;
   if p_isi ? 'materi' then
     e := e || public.validate_konten_materi(p_isi -> 'materi');
+  end if;
+  if p_isi ? 'pengecoh' then
+    e := e || public.validate_konten_pengecoh(p_isi -> 'pengecoh');
   end if;
   return e;
 end;
@@ -640,6 +710,7 @@ revoke execute on function public.konten_teks_ok(jsonb, int) from public, anon;
 revoke execute on function public.validate_konten_bab(jsonb) from public, anon;
 revoke execute on function public.konten_html_ok(jsonb, int, int) from public, anon;
 revoke execute on function public.validate_konten_materi(jsonb) from public, anon;
+revoke execute on function public.validate_konten_pengecoh(jsonb) from public, anon;
 revoke execute on function public.konten_list() from public, anon;
 revoke execute on function public.konten_load(int) from public, anon;
 revoke execute on function public.konten_save_draft(int, jsonb, timestamptz) from public, anon;
@@ -652,6 +723,7 @@ grant execute on function public.konten_teks_ok(jsonb, int) to authenticated;
 grant execute on function public.validate_konten_bab(jsonb) to authenticated;
 grant execute on function public.konten_html_ok(jsonb, int, int) to authenticated;
 grant execute on function public.validate_konten_materi(jsonb) to authenticated;
+grant execute on function public.validate_konten_pengecoh(jsonb) to authenticated;
 grant execute on function public.konten_list() to authenticated;
 grant execute on function public.konten_load(int) to authenticated;
 grant execute on function public.konten_save_draft(int, jsonb, timestamptz) to authenticated;

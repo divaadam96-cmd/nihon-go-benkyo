@@ -9,6 +9,13 @@
    (masih sesuai keadaan di Jepang); yang > TINJAU_HARI atau belum pernah
    ditinjau ditandai. Saat terbit, Operator bisa menulis catatan pembaruan
    yang tampil ke siswa di halaman Materi (konten_info).
+   Pengecoh (bagian ⋯ Pengecoh di baris Kosakata/Kanji): kata bisa
+   ditunjuk "sekelompok dengan" kata lain dan "artinya sama dengan" kata
+   lain; kanji yang belum punya data kanji mirip bisa diisi. Data pengecoh
+   bawaan (data/tugas-kategori-data.js, data/kanji-mirip-data.js) tidak
+   diubah - suntingan ditambahkan di atasnya (KontenBab.gabungPengecoh).
+   Isi global data di halaman ini selalu isi BAWAAN (konten-bab.js hanya
+   dipakai fungsinya, tidak dimuat), kecuali sesaat saat "Contoh soal".
    Laporan siswa (supabase/add-laporan-konten.sql): antrian laporan dari
    tombol "Laporkan" di Materi/Tugas, dengan status & tanggapan.
    Teks dari pengguna selalu dimasukkan lewat textContent/value.
@@ -22,8 +29,8 @@ const escapeHtml = window.escapeHtml;
 const listEl = $("kmBabList");
 const editorEl = $("kmEditor");
 const MAX_BAB = 50;
-const JENIS = ["materi", "kosakata", "kanji", "kalimat"];
-const NAMA_JENIS = { materi: "Tata bahasa", kosakata: "Kosakata", kanji: "Kanji", kalimat: "Soal kalimat" };
+const JENIS = ["materi", "kosakata", "kanji", "kalimat", "pengecoh"];
+const NAMA_JENIS = { materi: "Tata bahasa", kosakata: "Kosakata", kanji: "Kanji", kalimat: "Soal kalimat", pengecoh: "Pengecoh" };
 const JUMLAH_TUGAS = 10; // TUGAS_KALIMAT_JUMLAH di js/tugas-bab.js
 const TINJAU_HARI = 365; // pelajaran perlu ditinjau ulang setelah 12 bulan
 const CATATAN_MAKS = 300;
@@ -42,6 +49,7 @@ function bawaan(jenis, bab) {
   if (jenis === "materi") return salin(bab <= 25 ? MATERI_BOOK1_LESSONS[bab - 1] : MATERI_BOOK2_LESSONS[bab - 26]);
   if (jenis === "kosakata") return salin(babKosakataData[bab] || []);
   if (jenis === "kanji") return salin(babKanjiData[bab] || []);
+  if (jenis === "pengecoh") return {};
   return salin(tugasKalimatData[bab] || { susun: [], pilih: [] });
 }
 function errorMessage(error) {
@@ -99,9 +107,13 @@ function cekPilih(item) {
   }
   return { errors, warnings };
 }
+const gabungCek = (a, b) => ({ errors: [...a.errors, ...b.errors], warnings: [...a.warnings, ...b.warnings] });
 const CEK = {
-  kosakata: (list) => list.map((x, i) => cekKosakata(x, i, list)),
-  kanji: (list) => list.map((x, i) => cekKanji(x, i, list)),
+  kosakata: (list) => {
+    const ef = pengecohEfektif();
+    return list.map((x, i) => gabungCek(cekKosakata(x, i, list), cekPengecohKata(x, ef)));
+  },
+  kanji: (list) => list.map((x, i) => gabungCek(cekKanji(x, i, list), cekPengecohKanji(x))),
   susun: (list) => list.map(cekSusun),
   pilih: (list) => list.map(cekPilih),
 };
@@ -198,9 +210,25 @@ function rapikanMateri(m) {
     }),
   };
 }
+/* Pengecoh: hanya entri untuk kata/kanji yang masih ada di pelajaran ini,
+   kunci diurutkan supaya perbandingan dengan bawaan ({}) stabil. */
+function rapikanPengecoh(p) {
+  const kata = new Set([...current.isi.kosakata.map((x) => String(x[0]).trim()), ...current.isi.kanji.map((x) => String(x[1]).trim())]);
+  const kanji = new Set(current.isi.kanji.flatMap((x) => [...String(x[0])]));
+  const urut = (o, saring) => Object.fromEntries(Object.entries(o || {}).filter(saring).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
+  const hasil = {};
+  const kelompok = urut(p.kelompok, ([k, v]) => kata.has(k) && v);
+  const sinonim = urut(p.sinonim, ([k, v]) => kata.has(k) && v && v.length);
+  const kanjiMirip = urut(p.kanjiMirip, ([k, v]) => kanji.has(k) && v && v.length);
+  if (Object.keys(kelompok).length) hasil.kelompok = kelompok;
+  if (Object.keys(sinonim).length) hasil.sinonim = sinonim;
+  if (Object.keys(kanjiMirip).length) hasil.kanjiMirip = kanjiMirip;
+  return hasil;
+}
 function rapikan(jenis, v) {
   const t = (s) => String(s ?? "").trim();
   if (jenis === "materi") return rapikanMateri(v);
+  if (jenis === "pengecoh") return rapikanPengecoh(v);
   if (jenis === "kosakata") return v.map(([a, b]) => [t(a), t(b)]);
   if (jenis === "kanji") return v.map(([a, b, c]) => [t(a), t(b), t(c)]);
   return {
@@ -292,6 +320,7 @@ async function openBab(bab, { paksa = false, tab = null } = {}) {
     serverErrors: [],
   };
   filterText = "";
+  pengecohTerbuka = new Set();
   polaTerbuka = new Set();
   pratinjau = new Set();
   renderList();
@@ -463,11 +492,13 @@ function renderDaftarTab() {
     <p class="ks-hint">${escapeHtml(PETUNJUK[tab])}</p>
     <div class="ks-toolbar"><input type="search" id="kmFilter" placeholder="Cari…"><span class="km-bawaan">${ubah ? `<span class="km-badge-diubah">Sudah diubah dari isi bawaan</span><button type="button" class="ks-link" id="kmReset">Kembalikan ${escapeHtml(NAMA_JENIS[jenis].toLowerCase())} ke isi bawaan</button>` : '<span class="muted">Sama dengan isi bawaan</span>'}</span></div>
     ${tab === "susun" || tab === "pilih" ? '<p class="ks-hint km-catatan">Soal kalimat (susun &amp; pilih) disimpan bersama: mengembalikan ke isi bawaan berlaku untuk keduanya.</p>' : ""}
+    ${tab === "kosakata" || tab === "kanji" ? '<p class="ks-hint">Buka <b>⋯ Pengecoh</b> di tiap baris untuk mengatur pilihan salah soal Tugas: tunjuk kata sejenis, tandai kata yang artinya sama, isi kanji mirip untuk kanji baru, lalu coba <b>🎲 Contoh soal</b>.</p>' : ""}
     <div id="kmRows" class="km-rows km-rows-${tab}"></div>
     <button type="button" class="secondary ks-add" id="kmAdd">+ Tambah ${tab === "kosakata" ? "kata" : tab === "kanji" ? "kanji" : "soal"}</button>`;
   const filterEl = $("kmFilter");
   filterEl.value = filterText;
   filterEl.oninput = () => { filterText = filterEl.value; paintRows(); };
+  if (tab === "kosakata" || tab === "kanji") siapkanDaftarKata();
   const reset = $("kmReset");
   if (reset) reset.onclick = () => {
     if (!window.confirm(`Kembalikan ${NAMA_JENIS[jenis].toLowerCase()} Pelajaran ${current.bab} ke isi bawaan? Suntingan di bagian ini dihapus dari draft (isi terbit baru berubah setelah diterbitkan).`)) return;
@@ -491,6 +522,7 @@ function paintRows() {
   const tab = current.tab;
   const list = daftarFor(tab);
   const hasil = CEK[tab](list);
+  const ef = KOLOM[tab] ? pengecohEfektif() : null; // dihitung sekali untuk semua panel Pengecoh
   container.replaceChildren();
   list.forEach((item, i) => {
     if (!cocok(tab, item)) return;
@@ -505,6 +537,7 @@ function paintRows() {
     fields.className = "km-fields";
     if (KOLOM[tab]) {
       KOLOM[tab].forEach(([label, key, ph]) => fields.appendChild(input(label, String(key), item[key], { placeholder: ph, lang: key === 0 || (tab === "kanji" && key === 1) ? "ja" : "" })));
+      fields.appendChild(panelPengecoh(tab, i, ef));
     } else if (tab === "susun") {
       fields.append(
         input("Arti (bahasa Indonesia)", "arti", item.arti, { placeholder: "mis. Saya mahasiswa." }),
@@ -590,6 +623,9 @@ editorEl.addEventListener("input", (event) => {
   // Duplikat bisa memengaruhi baris lain, jadi pesan semua baris yang tampil diperbarui.
   const hasil = CEK[tab](list);
   document.querySelectorAll("#kmRows .km-row").forEach((r) => paintPesan(r, list[Number(r.dataset.index)], hasil[Number(r.dataset.index)]));
+  // Kata/kanji/cara baca berubah -> panel ⋯ Pengecoh baris ini ikut berubah.
+  const panel = row.querySelector(".km-pengecoh");
+  if (panel && KOLOM[tab][Number(f)] && Number(f) !== KOLOM[tab].length - 1) gantiPanel(row, panelPengecoh(tab, i));
 });
 editorEl.addEventListener("click", (event) => {
   const button = event.target.closest(".km-tools button[data-action]");
@@ -608,6 +644,312 @@ editorEl.addEventListener("click", (event) => {
   renderEditor();
   if (action !== "delete") lompat(current.tab, action === "up" ? i - 1 : i + 1);
 });
+
+// ---------- Pengecoh (⋯ Pengecoh di baris Kosakata & Kanji) ----------
+const normKata = (t) => String(t).toLowerCase().replace(/\s+/g, "");
+const KANJI_SATU = /^[\u4e00-\u9fff\u3400-\u4dbf々]$/;
+let pengecohTerbuka = new Set(); // "tab:index" panel yang sedang dibuka
+let daftarKata = null; // { label -> "kata@bab", acuan -> label }
+/* Kunci pengecoh baris: kata (kosakata) atau cara baca (kanji) - sama
+   dengan kunci kelompok makna di js/tugas-bab.js. */
+const kunciBaris = (tab, item) => String(tab === "kanji" ? item[1] : item[0]).trim();
+/* Kelompok makna efektif = bawaan + suntingan pelajaran ini.
+   Mengembalikan fungsi grupOf(kata, bab) dan anggotaGrup(nama). */
+function pengecohEfektif() {
+  const gabung = KontenBab.gabungPengecoh({ kategori: tugasKategoriKata, sinonim: tugasSinonim, mirip: {} }, [{ bab: current.bab, isi: { pengecoh: current.isi.pengecoh } }]);
+  const index = {};
+  Object.entries(gabung.kategori).forEach(([nama, isi]) => isi.forEach((k) => {
+    const [kata, bab] = k.split("@");
+    index[bab ? `${normKata(kata)}@${bab}` : normKata(kata)] = nama;
+  }));
+  const sinonim = new Map();
+  gabung.sinonim.forEach((grup) => grup.forEach((k) => {
+    const set = sinonim.get(normKata(k)) || new Set();
+    grup.forEach((lain) => lain !== k && set.add(normKata(lain)));
+    sinonim.set(normKata(k), set);
+  }));
+  return {
+    grupOf: (kata, bab) => index[`${normKata(kata)}@${bab}`] || index[normKata(kata)] || null,
+    anggota: (nama) => gabung.kategori[nama] || [],
+    sinonimOf: (kata) => sinonim.get(normKata(kata)) || new Set(),
+  };
+}
+const namaGrup = (nama) => (nama.startsWith("operator:") ? `sekelompok dengan ${nama.slice(9).replace("@", " (Pel. ")})` : nama);
+/* Arti kata acuan "kata@bab" (atau tanpa bab: bab pertama yang memuatnya). */
+function artiKata(entri) {
+  const [kata, bab] = entri.split("@");
+  const babs = bab ? [Number(bab)] : Array.from({ length: MAX_BAB }, (_, i) => i + 1);
+  for (const b of babs) {
+    const list = b === current.bab ? current.isi.kosakata : babKosakataData[b] || [];
+    const x = list.find((k) => String(k[0]).trim() === kata);
+    if (x) return { arti: String(x[1]).trim(), bab: b };
+  }
+  return null;
+}
+function siapkanDaftarKata() {
+  daftarKata = { label: new Map(), acuan: new Map() };
+  const opsi = [];
+  for (let b = 1; b <= MAX_BAB; b++) {
+    (b === current.bab ? current.isi.kosakata : babKosakataData[b] || []).forEach(([jp, arti]) => {
+      const kata = String(jp).trim();
+      if (!kata || kata.includes("@")) return;
+      const label = `${kata} — ${String(arti).trim()} (Pel. ${b})`;
+      if (daftarKata.label.has(label)) return;
+      daftarKata.label.set(label, `${kata}@${b}`);
+      daftarKata.acuan.set(`${kata}@${b}`, label);
+      opsi.push(new Option(label, label));
+    });
+  }
+  let dl = $("kmDaftarKata");
+  if (!dl) {
+    dl = document.createElement("datalist");
+    dl.id = "kmDaftarKata";
+    document.body.appendChild(dl);
+  }
+  dl.replaceChildren(...opsi);
+}
+const kataBaru = (tab, item) => !bawaan(tab, current.bab).some((x) => String(x[0]).trim() === String(item[0]).trim());
+function cekPengecohKata(item, ef) {
+  const warnings = [];
+  const kata = String(item[0]).trim();
+  if (!kata || !kataBaru("kosakata", item)) return { errors: [], warnings };
+  const grup = ef.grupOf(kata, current.bab);
+  if (!grup) {
+    warnings.push("Kata baru belum punya kelompok - pengecohnya hanya berdasarkan bentuk kata. Atur di ⋯ Pengecoh.");
+    return { errors: [], warnings };
+  }
+  // Anggota sekelompok yang artinya mirip tapi belum ditandai sinonim.
+  const arti = normKata(item[1]);
+  const sudah = ef.sinonimOf(kata);
+  ef.anggota(grup).forEach((entri) => {
+    const lain = entri.split("@")[0];
+    if (normKata(lain) === normKata(kata) || sudah.has(normKata(lain))) return;
+    const a = artiKata(entri);
+    const b = a && normKata(a.arti);
+    if (b && arti.length >= 3 && b.length >= 3 && (b.includes(arti) || arti.includes(b)))
+      warnings.push(`Artinya mirip dengan ${lain} ("${a.arti}"). Kalau artinya sama, tandai "Artinya sama dengan" di ⋯ Pengecoh supaya soal tidak punya dua jawaban benar.`);
+  });
+  return { errors: [], warnings };
+}
+const kanjiTanpaMirip = (item) => [...new Set([...String(item[0])].filter((ch) => KANJI_SATU.test(ch) && !kanjiMiripData[ch]))];
+function cekPengecohKanji(item) {
+  const kurang = kanjiTanpaMirip(item).filter((ch) => !(current.isi.pengecoh.kanjiMirip || {})[ch]);
+  return { errors: [], warnings: kurang.length ? [`Kanji ${kurang.join("、")} belum punya daftar kanji mirip - pengecoh Hiragana → Kanji kurang menjebak. Isi di ⋯ Pengecoh.`] : [] };
+}
+function panelPengecoh(tab, i, ef = pengecohEfektif()) {
+  const item = daftarFor(tab)[i];
+  const kunci = kunciBaris(tab, item);
+  const p = current.isi.pengecoh;
+  const det = document.createElement("details");
+  det.className = "km-pengecoh";
+  det.open = pengecohTerbuka.has(`${tab}:${i}`);
+  det.ontoggle = () => (det.open ? pengecohTerbuka.add(`${tab}:${i}`) : pengecohTerbuka.delete(`${tab}:${i}`));
+  const grup = kunci ? ef.grupOf(kunci, current.bab) : null;
+  const ringkas = document.createElement("summary");
+  ringkas.textContent = `⋯ Pengecoh · ${grup ? `kelompok: ${namaGrup(grup)}` : "belum berkelompok"}`;
+  det.appendChild(ringkas);
+  if (!kunci) {
+    det.append(Object.assign(document.createElement("p"), { className: "muted", textContent: tab === "kanji" ? "Isi cara baca dulu." : "Isi kata Jepang dulu." }));
+    return det;
+  }
+  const status = document.createElement("p");
+  status.className = "km-pg-status";
+  if (grup) {
+    const lain = ef.anggota(grup).map((e) => e.split("@")[0]).filter((k) => normKata(k) !== normKata(kunci));
+    status.textContent = `Pengecoh diambil dari kelompok "${namaGrup(grup)}": ${[...new Set(lain)].slice(0, 8).join("、")}${lain.length > 8 ? "…" : ""}`;
+  } else status.textContent = "Belum berkelompok: pengecohnya kata lain yang bentuknya mirip. Tunjuk satu kata yang sejenis supaya pilihan salahnya lebih masuk akal.";
+  det.appendChild(status);
+
+  const acuan = (p.kelompok || {})[kunci] || "";
+  const kel = document.createElement("label");
+  kel.className = "ks-field";
+  kel.append(document.createTextNode(`Sekelompok dengan (${tab === "kanji" ? "berlaku untuk cara baca " + kunci : "kata sejenis"})`));
+  const kelIn = Object.assign(document.createElement("input"), { value: acuan ? daftarKata.acuan.get(acuan) || acuan : "", placeholder: "ketik lalu pilih kata, mis. げんきん", autocomplete: "off" });
+  kelIn.setAttribute("list", "kmDaftarKata");
+  kelIn.dataset.p = "kelompok";
+  kel.appendChild(kelIn);
+  det.appendChild(kel);
+
+  const sin = document.createElement("div");
+  sin.className = "ks-field";
+  sin.append(document.createTextNode("Artinya sama dengan (tidak akan muncul bersamaan di satu soal)"));
+  const chips = document.createElement("div");
+  chips.className = "km-pg-chips";
+  ((p.sinonim || {})[kunci] || []).forEach((k) => {
+    const chip = Object.assign(document.createElement("button"), { type: "button", className: "km-pg-chip", textContent: `${k} ✕`, title: `Hapus ${k}` });
+    chip.dataset.pAksi = "hapus-sinonim";
+    chip.dataset.v = k;
+    chips.appendChild(chip);
+  });
+  const sinIn = Object.assign(document.createElement("input"), { placeholder: "ketik lalu pilih kata, mis. トイレ", autocomplete: "off" });
+  sinIn.setAttribute("list", "kmDaftarKata");
+  sinIn.dataset.p = "sinonim";
+  sin.append(chips, sinIn);
+  det.appendChild(sin);
+
+  if (tab === "kanji") {
+    const draft = p.kanjiMirip || {};
+    const huruf = [...new Set([...String(item[0])].filter((ch) => KANJI_SATU.test(ch) && (!kanjiMiripData[ch] || draft[ch])))];
+    huruf.forEach((ch) => {
+      const lab = document.createElement("label");
+      lab.className = "ks-field";
+      lab.append(document.createTextNode(`Kanji mirip untuk ${ch} (1-6 huruf, mis. bentuk yang sering tertukar)`));
+      const inp = Object.assign(document.createElement("input"), { value: (draft[ch] || []).join(""), placeholder: "mis. 健建", autocomplete: "off", lang: "ja" });
+      inp.dataset.p = "mirip";
+      inp.dataset.ch = ch;
+      lab.appendChild(inp);
+      det.appendChild(lab);
+    });
+    if (!huruf.length) det.append(Object.assign(document.createElement("p"), { className: "muted", textContent: "Semua huruf kanji di sini sudah punya daftar kanji mirip." }));
+  }
+  const pesan = document.createElement("p");
+  pesan.className = "km-pg-pesan";
+  pesan.setAttribute("aria-live", "polite");
+  const contoh = Object.assign(document.createElement("button"), { type: "button", className: "secondary", textContent: "🎲 Contoh soal" });
+  contoh.dataset.pAksi = "contoh";
+  const hasil = document.createElement("div");
+  hasil.className = "km-pg-contoh";
+  det.append(pesan, contoh, hasil);
+  return det;
+}
+/* Ganti panel ⋯ Pengecoh tanpa menutupnya kalau sedang terbuka. */
+function gantiPanel(row, baru) {
+  const lama = row.querySelector(".km-pengecoh");
+  if (lama.open) {
+    baru.open = true;
+    pengecohTerbuka.add(`${current.tab}:${row.dataset.index}`);
+  }
+  lama.replaceWith(baru);
+}
+function segarkanPanel(row) {
+  const tab = current.tab;
+  const i = Number(row.dataset.index);
+  gantiPanel(row, panelPengecoh(tab, i));
+  const hasil = CEK[tab](daftarFor(tab));
+  document.querySelectorAll("#kmRows .km-row").forEach((r) => paintPesan(r, daftarFor(tab)[Number(r.dataset.index)], hasil[Number(r.dataset.index)]));
+}
+function ubahPengecoh(bagian, kunci, nilai) {
+  const p = current.isi.pengecoh;
+  p[bagian] ||= {};
+  if (nilai == null || (Array.isArray(nilai) && !nilai.length)) delete p[bagian][kunci];
+  else p[bagian][kunci] = nilai;
+  markDirty();
+}
+editorEl.addEventListener("change", (event) => {
+  const target = event.target;
+  if (!current || !target.dataset.p) return;
+  const row = target.closest(".km-row");
+  const item = daftarFor(current.tab)[Number(row.dataset.index)];
+  const kunci = kunciBaris(current.tab, item);
+  const pesan = row.querySelector(".km-pg-pesan");
+  const v = target.value.trim();
+  pesan.textContent = "";
+  if (target.dataset.p === "kelompok") {
+    if (!v) {
+      ubahPengecoh("kelompok", kunci, null);
+    } else {
+      const acuan = daftarKata.label.get(v);
+      if (!acuan) {
+        pesan.textContent = "Pilih kata dari daftar yang muncul saat mengetik.";
+        return;
+      }
+      if (acuan === `${kunci}@${current.bab}`) {
+        pesan.textContent = "Pilih kata lain, bukan kata ini sendiri.";
+        return;
+      }
+      ubahPengecoh("kelompok", kunci, acuan);
+    }
+  } else if (target.dataset.p === "sinonim") {
+    const acuan = daftarKata.label.get(v);
+    if (!acuan) {
+      pesan.textContent = "Pilih kata dari daftar yang muncul saat mengetik.";
+      return;
+    }
+    const lain = acuan.split("@")[0];
+    const sekarang = (current.isi.pengecoh.sinonim || {})[kunci] || [];
+    if (lain === kunci || sekarang.includes(lain)) return;
+    if (sekarang.length >= 10) {
+      pesan.textContent = "Maksimal 10 kata.";
+      return;
+    }
+    ubahPengecoh("sinonim", kunci, [...sekarang, lain]);
+  } else if (target.dataset.p === "mirip") {
+    const ch = target.dataset.ch;
+    const daftar = [...new Set([...v].filter((c) => KANJI_SATU.test(c) && c !== ch))];
+    if (daftar.length > 6) {
+      pesan.textContent = "Maksimal 6 kanji mirip.";
+      return;
+    }
+    if ([...v].some((c) => !KANJI_SATU.test(c) && c.trim())) pesan.textContent = "Selain huruf kanji diabaikan.";
+    ubahPengecoh("kanjiMirip", ch, daftar.length ? daftar : null);
+  }
+  const teks = pesan.textContent;
+  segarkanPanel(row);
+  row.querySelector(".km-pg-pesan").textContent = teks;
+});
+editorEl.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-p-aksi]");
+  if (!button || !current) return;
+  const row = button.closest(".km-row");
+  const item = daftarFor(current.tab)[Number(row.dataset.index)];
+  const kunci = kunciBaris(current.tab, item);
+  if (button.dataset.pAksi === "hapus-sinonim") {
+    ubahPengecoh("sinonim", kunci, ((current.isi.pengecoh.sinonim || {})[kunci] || []).filter((k) => k !== button.dataset.v));
+    segarkanPanel(row);
+  } else if (button.dataset.pAksi === "contoh") {
+    tampilkanContoh(row, item);
+  }
+});
+/* Pasang isi draft pelajaran ini ke data global sesaat, buat soal persis
+   seperti di Tugas siswa (TugasBab.contohSoal), lalu kembalikan. */
+function tampilkanContoh(row, item) {
+  const wadah = row.querySelector(".km-pg-contoh");
+  const tab = current.tab;
+  const kunci = String(item[0]).trim();
+  if (!window.TugasBab || !kunci) return;
+  const bab = current.bab;
+  const asliKos = babKosakataData[bab], asliKan = babKanjiData[bab];
+  const cadangan = salin({ kategori: tugasKategoriKata, sinonim: tugasSinonim, mirip: kanjiMiripData });
+  const ganti = (wadahData, isi) => {
+    Object.keys(wadahData).forEach((k) => delete wadahData[k]);
+    Object.assign(wadahData, isi);
+  };
+  const pasang = (isi) => {
+    ganti(tugasKategoriKata, isi.kategori);
+    ganti(kanjiMiripData, isi.mirip);
+    tugasSinonim.length = 0;
+    tugasSinonim.push(...isi.sinonim);
+  };
+  const targets = tab === "kanji" ? ["kanji-kana-kanji", "kanji-kanji-kana", "kanji-kanji-id"] : ["kotoba-jp-id", "kotoba-id-jp"];
+  let soal = [];
+  try {
+    babKosakataData[bab] = rapikan("kosakata", current.isi.kosakata);
+    babKanjiData[bab] = rapikan("kanji", current.isi.kanji);
+    pasang(KontenBab.gabungPengecoh(cadangan, [{ bab, isi: { pengecoh: current.isi.pengecoh } }]));
+    soal = targets.map((t) => TugasBab.contohSoal(bab, t, kunci)).filter(Boolean);
+  } catch (error) {
+    console.warn(error);
+  } finally {
+    babKosakataData[bab] = asliKos;
+    babKanjiData[bab] = asliKan;
+    pasang(cadangan);
+  }
+  if (!soal.length) {
+    wadah.textContent = "Contoh soal belum bisa dibuat - lengkapi isi baris ini dulu.";
+    return;
+  }
+  wadah.replaceChildren(...soal.map((q) => {
+    const box = document.createElement("div");
+    box.className = "km-contoh";
+    const judul = document.createElement("p");
+    judul.append(Object.assign(document.createElement("small"), { textContent: q.instruction }), " ", Object.assign(document.createElement("b"), { textContent: q.prompt, lang: "ja" }));
+    const ol = document.createElement("ol");
+    ol.type = "A";
+    q.choices.forEach((c) => ol.appendChild(Object.assign(document.createElement("li"), { textContent: c === q.answer ? `${c} ✔` : c, className: c === q.answer ? "benar" : "", lang: "ja" })));
+    box.append(judul, ol);
+    return box;
+  }));
+}
 
 // ---------- Tab Tata bahasa ----------
 /* Isi disimpan sebagai HTML terbatas; di kotak isian <br> ditampilkan sebagai

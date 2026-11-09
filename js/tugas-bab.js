@@ -338,6 +338,8 @@
       cacheItems.kanji = {};
       indeksKata = null;
       indeksBacaan = null;
+      kategoriIndex = null;
+      sinonimIndex = null;
     }
   }
   // Dibentuk sekali per bab lalu disimpan (dipindai berulang saat memilih pengecoh).
@@ -1168,7 +1170,34 @@
     container.scrollIntoView({ block: "start" });
   }
 
+  /* Pratinjau "Contoh soal" di Kelola Materi: satu soal pilihan ganda untuk
+     kata/kanji `kunci` di bab itu. Data global dianggap sudah berisi isi
+     yang mau dicoba (pemanggil memasang lalu mengembalikannya), jadi semua
+     olahan data dibuang sebelum dan sesudahnya. */
+  function contohSoal(bab, target, kunci) {
+    const buang = () => {
+      cacheItems.kotoba = {};
+      cacheItems.kanji = {};
+      indeksKata = null;
+      indeksBacaan = null;
+      kategoriIndex = null;
+      sinonimIndex = null;
+    };
+    buang();
+    try {
+      pemakaian = { kali: new Map(), set: new Set() };
+      const kotoba = target.startsWith("kotoba-");
+      const item = (kotoba ? kotobaItems(bab) : kanjiItems(bab)).find((x) => (kotoba ? x.jp : x.kanji) === kunci);
+      if (!item) return null;
+      const q = kotoba ? kotobaQuestion(bab, target, item) : kanjiQuestion(bab, target, item);
+      return { prompt: q.prompt, answer: q.answer, choices: q.choices, instruction: q.instruction };
+    } finally {
+      buang();
+    }
+  }
+
   window.TugasBab = {
+    contohSoal,
     KKM: TUGAS_KKM,
     init,
     onChange: (fn) => listeners.push(fn),
