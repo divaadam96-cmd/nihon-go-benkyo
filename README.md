@@ -323,6 +323,13 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   `assignment-files` (folder `{siswa_id}/{assignment_id}/`, maks 5 MB,
   foto/PDF/audio) dan dibuka lewat signed URL 1 jam. Menggantikan
   `mark_assignment_done()` (fungsi itu dihapus oleh migrasi ini).
+- **Progres saya (Beranda siswa)**: kartu "Peta 50 pelajaran" di index.html
+  (`renderProgresSaya` di js/pages/dashboard.js) - status tiap pelajaran
+  (tuntas / sedang dikerjakan / sudah dimulai / terkunci) dari
+  `TugasBab.isComplete/isLocked/frontierBab`, angka ringkas, rincian nilai
+  pelajaran yang diklik (`TugasBab.rincian`), dan grafik nilai rata-rata
+  tugas per pelajaran. Sapaan memakai nama depan akun; kartu angka tidak
+  lagi berisi angka contoh statis.
 - **Ringkasan kelas untuk Sensei/Operator** (`supabase/add-ringkasan-kelas.sql`,
   `js/pages/ringkasan-kelas.js`): halaman Ringkasan (index.html) untuk staf
   menampilkan siswa aktif, rata-rata pelajaran tuntas & nilai tugas, siswa

@@ -563,3 +563,233 @@ a.continue-go.secondary {
 .rk-perhatian {
   max-height: 560px;
 }
+
+/* === Progres saya (siswa): peta 50 pelajaran === */
+.progres-saya {
+  margin-top: 14px;
+}
+.progres-saya-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  align-items: end;
+  justify-content: space-between;
+}
+.progres-saya-head h2 {
+  margin: 4px 0 0;
+}
+.progres-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.progres-legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  border-radius: 3px;
+  vertical-align: -1px;
+}
+.progres-legend i.tuntas,
+.progres-bab.tuntas {
+  background: #2e8068;
+  border-color: #2e8068;
+  color: #fff;
+}
+.progres-legend i.sekarang {
+  background: var(--navy);
+}
+.progres-legend i.mulai,
+.progres-bab.mulai {
+  background: #f3e2d3;
+  border-color: #d1a17e;
+}
+.progres-legend i.kunci {
+  background: #e4e1da;
+}
+.progres-angka {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+.progres-angka div {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--wash);
+}
+.progres-angka small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.progres-angka b {
+  font-size: 22px;
+  color: var(--navy);
+}
+.progres-peta {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 6px;
+}
+.progres-bab {
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  min-height: 46px;
+  padding: 6px 2px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--navy);
+  font: inherit;
+  cursor: pointer;
+}
+.progres-bab b {
+  font-size: 14px;
+}
+.progres-bab small {
+  font-size: 10px;
+  opacity: 0.8;
+}
+.progres-bab.sekarang {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+.progres-bab.kunci {
+  background: #e4e1da;
+  color: #9a968d;
+}
+.progres-bab.dipilih {
+  outline: 3px solid var(--gold);
+  outline-offset: 1px;
+}
+.progres-rincian {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--wash);
+}
+.progres-rincian p {
+  margin: 0;
+}
+.progres-rincian-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  align-items: center;
+}
+.progres-rincian-head h3 {
+  margin: 0;
+}
+.progres-rincian-head span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.progres-rincian-head a {
+  margin-left: auto;
+  width: auto;
+}
+.progres-tugas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 24px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.progres-tugas li {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  padding: 4px 0;
+  border-bottom: 1px solid #eeeae3;
+}
+.progres-tugas li span:first-child {
+  flex: 1 1 auto;
+}
+.progres-tugas small {
+  color: var(--muted);
+}
+.progres-tugas .lulus {
+  color: #2e8068;
+}
+.progres-tugas .kurang {
+  color: var(--red);
+}
+.progres-kurang {
+  margin-top: 10px !important;
+  color: var(--red);
+  font-size: 13px;
+}
+.progres-sub {
+  margin: 18px 0 8px;
+  font-size: 15px;
+}
+.progres-bar-wrap {
+  position: relative;
+  display: flex;
+  gap: 3px;
+  align-items: end;
+  height: 140px;
+  padding-bottom: 16px;
+  overflow-x: auto;
+}
+.progres-bar-wrap::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: calc(16px + (124px * var(--kkm-angka, 0.8)));
+  left: 0;
+  border-top: 2px dashed var(--gold);
+}
+.progres-bar {
+  position: relative;
+  display: flex;
+  flex: 0 0 18px;
+  flex-direction: column;
+  justify-content: end;
+  height: 124px;
+}
+.progres-bar span {
+  display: block;
+  border-radius: 4px 4px 0 0;
+  background: #2e8068;
+}
+.progres-bar.kurang span {
+  background: var(--red);
+}
+.progres-bar small {
+  position: absolute;
+  bottom: -16px;
+  left: 0;
+  width: 100%;
+  color: var(--muted);
+  font-size: 9px;
+  text-align: center;
+}
+.progres-ket {
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+@media (max-width: 900px) {
+  .progres-angka {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .progres-peta {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .progres-angka {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .progres-tugas {
+    grid-template-columns: 1fr;
+  }
+}

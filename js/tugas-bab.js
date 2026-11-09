@@ -158,6 +158,17 @@
   function isComplete(bab) {
     return tugasSelesai(bab) && (!ujianWajib(bab) || isPassed(bab, UJIAN));
   }
+  /* Rincian nilai satu bab untuk peta pelajaran di Beranda siswa. */
+  function rincian(bab) {
+    return {
+      materi: isPassed(bab, "materi"),
+      tugas: targetsFor(bab).filter((t) => t !== "materi").map((t) => ({
+        target: t, judul: TARGET_INFO[t].judul, grup: TARGET_INFO[t].grup,
+        skor: rowFor(bab, t)?.skor_terbaik ?? null, percobaan: rowFor(bab, t)?.percobaan ?? 0,
+      })),
+      ujian: adaUjian(bab) ? { wajib: ujianWajib(bab), rentang: rentangUjian(bab), skor: rowFor(bab, UJIAN)?.skor_terbaik ?? null, lulus: isPassed(bab, UJIAN) } : null,
+    };
+  }
   /* Kalimat singkat apa yang masih kurang, untuk pemberitahuan kunci. */
   function kekurangan(bab) {
     const p = progress(bab);
@@ -1198,6 +1209,8 @@
 
   window.TugasBab = {
     contohSoal,
+    rincian,
+    MAX_BAB,
     KKM: TUGAS_KKM,
     init,
     onChange: (fn) => listeners.push(fn),
