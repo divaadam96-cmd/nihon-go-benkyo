@@ -7,6 +7,14 @@
    pages/kanji.html+js/pages/kanji.js), dan bagian shell (login/header/sidebar/
    mobile-nav/open()) sekarang di js/app-shell.js supaya sama di semua halaman. */
 function initPage() {
+  /* Sensei/Operator: Ringkasan berisi progres seluruh siswa
+     (js/pages/ringkasan-kelas.js), bukan dashboard belajar pribadi. */
+  if (["sensei", "operator"].includes(window.currentProfile?.role) && window.RingkasanKelas) {
+    const pribadi = document.getElementById("dashboard");
+    pribadi.hidden = true;
+    pribadi.classList.remove("active");
+    window.RingkasanKelas.muat();
+  }
   function format(n) {
     return n.toLocaleString("id-ID");
   }

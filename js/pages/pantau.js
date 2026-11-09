@@ -375,6 +375,16 @@ async function loadMonitorPanel() {
     return;
   }
   renderMonitorList();
+  // Tautan dari Ringkasan kelas (index.html): pages/pantau.html?siswa=<id>.
+  const dariTautan = new URLSearchParams(location.search).get("siswa");
+  if (dariTautan) {
+    history.replaceState(null, "", location.pathname);
+    const student = monitorStudents.find((s) => s.id === dariTautan);
+    if (student) {
+      monitorSelectedId = student.id;
+      renderMonitorDetail(student);
+    }
+  }
 }
 
 /* === Tugas & target per pelajaran (supabase/add-pantau-bab.sql) ===
