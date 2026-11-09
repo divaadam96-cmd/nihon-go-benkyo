@@ -470,6 +470,16 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   atas data bawaan oleh `KontenBab.gabungPengecoh`. Editor memperingatkan
   kata baru tanpa kelompok, arti yang mirip dengan anggota sekelompok, dan
   kanji tanpa daftar mirip.
+  Gambar Materi (`supabase/add-materi-gambar.sql`): di tab Tata bahasa
+  Operator bisa menambah/mengganti/menghapus gambar per bagian. Browser
+  mengecilkan foto (maks. 1200x1600 px) dan mengubahnya ke WebP <= 1 MB
+  (EXIF/GPS ikut terbuang), lalu mengunggah ke bucket publik `materi-gambar`
+  (pelajaran-N/<32 hex>.webp; hanya Operator yang boleh menulis). Di isi
+  pelajaran ditulis `materi-gambar/...` dan dirender lewat
+  `materiFigureUrl()` (js/materi-render.js); CSP `img-src` mengizinkan host
+  Supabase dan service worker menyimpan gambar ini untuk offline.
+  Keterangan gambar wajib. Tombol "Bersihkan gambar tak terpakai" menghapus
+  file > 1 hari yang tidak dipakai isi terbit, draft, maupun Riwayat versi.
   Laporan siswa (`supabase/add-laporan-konten.sql`): tombol "Laporkan" di
   akhir tiap pelajaran (pilih pola) dan di bawah umpan balik soal Tugas
   mengirim laporan lewat `lapor_konten` (maks. 10 per 24 jam per akun,
