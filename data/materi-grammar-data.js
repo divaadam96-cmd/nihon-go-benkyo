@@ -2384,7 +2384,7 @@ const MATERI_BOOK2_LESSONS = [
     title: "Meminta bantuan dan menjelaskan alasan",
     items: [
       {
-        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ→～な｝んです",
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～<span class=\"grammar-coret\">だ</span>→～な｝んです",
         blocks: [
           {
             text: "～んです dipakai dalam bahasa lisan, sedangkan dalam bahasa tertulis bentuknya menjadi～のです.<br>～んです dipakai seperti berikut;",
@@ -2529,7 +2529,7 @@ const MATERI_BOOK2_LESSONS = [
         title: "見えます dan 聞こえます",
         blocks: [
           {
-            text: "みえます, きこえます dengan tidak sengaja menyatakan suatu objek yang dapat ditangkap di dalam wawasan secara alami, atau bunyi yang tercapai di telinga secara alami. Objek tersebut dinyatakan dengan が. みえます, きこえます tidak dapat dipakai untuk hal yang memperhatikan secara sengaja, dan untuk itu dipakai Kata Kerja Potensional.",
+            text: "みえます, きこえます dengan tidak sengaja menyatakan suatu objek yang dapat ditangkap di dalam wawasan secara alami, atau bunyi yang tercapai di telinga secara alami. Objek tersebut dinyatakan dengan が. みえます, きこえます tidak dapat dipakai untuk hal yang memperhatikan secara sengaja, dan untuk itu dipakai Kata Kerja Potensial.",
             examples: [
               ["⑦ 新幹線から 富士山が 見えます。", "Dari <i>Shinkansen</i> terlihat Gunung Fuji."],
               ["⑧ ラジオの 音が 聞こえます。", "Terdengar suara radio."],
@@ -2569,7 +2569,7 @@ const MATERI_BOOK2_LESSONS = [
           {
             text: "Selain menyatakan topik, は berfungsi untuk menyatakan perbandingan.",
             examples: [
-              ["⑮ ワインは 飲みますが、ビールは 飲みません。", "(Saya) Minum aggur, tetapi tidak minum bir."],
+              ["⑮ ワインは 飲みますが、ビールは 飲みません。", "(Saya) Minum anggur, tetapi tidak minum bir."],
               ["⑯ きのうは 山が 見えましたが、きょうは 見えません。", "Kemarin gunung terlihat, tetapi hari ini tidak terlihat."],
             ],
           },
@@ -2794,8 +2794,10 @@ const MATERI_BOOK2_LESSONS = [
               ["④ 今月の 予定は カレンダーに 書いて あります。", "Rencana bulan ini ditulis pada kalender."],
             ],
           },
+          // Di buku, [Perhatian] ini tampil SEBELUM contoh ⑤⑥ - dibuat bagian
+          // sendiri karena catatan selalu dirender di akhir bagian.
+          { note: "[Perhatian] Perbedaan antara Kata Kerja Bentuk て います dan Kata Kerja Bentuk て あります." },
           {
-            note: "[Perhatian] Perbedaan antara Kata Kerja Bentuk て います dan Kata Kerja Bentuk て あります.",
             examples: [
               ["⑤ 窓が 閉まって います。", "Jendela tertutup."],
               ["⑥ 窓が 閉めて あります。", "Jendela ditutup."],
@@ -2896,7 +2898,7 @@ const MATERI_BOOK2_LESSONS = [
           {
             label: "1) Merupakan Bentuk Biasa dari～ましょう, digunakan dalam kalimat Bentuk Biasa.",
             examples: [
-              ["① ちょっと 休まない？<br>……うん、休もう。", "Bagaima kalau beristirahat sebentar?<br>……Ya, mari beristirahat."],
+              ["① ちょっと 休まない？<br>……うん、休もう。", "Bagaimana kalau beristirahat sebentar?<br>……Ya, mari beristirahat."],
               ["② 手伝おうか。", "Mari saya bantu!"],
               ["③ 傘を 持って 行こうか。", "Apa sebaiknya bawa payung?"],
             ],
@@ -2989,7 +2991,7 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
       {
-        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ｝でしょう",
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～<span class=\"grammar-coret\">だ</span>｝でしょう",
         blocks: [
           {
             text: "～でしょう digunakan jika menjelaskan pikiran si pembicara secara tidak pasti terhadap hal untuk masa depan atau hal yang tidak tentu.",
@@ -3001,7 +3003,7 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
       {
-        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ｝かも しれません",
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～<span class=\"grammar-coret\">だ</span>｝かも しれません",
         blocks: [
           {
             text: "～かもしれません dapat menggunakan ketika ingin berkata bahwa ada kemungkinan walaupun sedikit.",
@@ -3055,7 +3057,7 @@ const MATERI_BOOK2_LESSONS = [
         blocks: [
           {
             label: "1) Cara membuat Bentuk Imperatif (Lihat Buku Induk Pel.33 Latihan A1)",
-            text: "Kelompok I: Bunyi dari kolom い sebagai bunyi terakhir dari Bentuk ます diubah menjadi bunyi kolom え.<br>か<u>き</u>－ます → か<u>け</u>　　いそ<u>ぎ</u>－ます → いそ<u>げ</u><br>よ<u>み</u>－ます → よ<u>め</u>　　あそ<u>び</u>－ます → あそ<u>べ</u><br>Kelompok II: Dibubuhi ろ pada Bentuk ます.<br>たべ－ます → たべ－ろ　　み－ます → み－ろ<br>Pengecualian: くれ－ます → くれろ<br>Kelompok III: し－ます → しろ　　き－ます → こい",
+            text: "Kelompok I: Bunyi dari kolom い sebagai bunyi terakhir dari Bentuk ます diubah menjadi bunyi kolom え.<br>か<u>き</u>－ます → か<u>け</u>　　いそ<u>ぎ</u>－ます → いそ<u>げ</u><br>よ<u>み</u>－ます → よ<u>め</u>　　あそ<u>び</u>－ます → あそ<u>べ</u><br>Kelompok II: Dibubuhi ろ pada Bentuk ます.<br>たべ－ます → たべ－ろ　　み－ます → み－ろ<br>Pengecualian: くれ－ます → くれ<span class=\"grammar-coret\">ろ</span><br>Kelompok III: し－ます → しろ　　き－ます → こい",
             note: "[Perhatian] Kata Kerja Keadaan seperti ある, できる, わかる dan sebagainya tidak memiliki Bentuk Imperatif.",
           },
           {
@@ -3069,7 +3071,7 @@ const MATERI_BOOK2_LESSONS = [
         noBox: true,
         blocks: [
           {
-            text: "Bentuk Imperatif dipakai jika memaksa suatu aksi, dan Bentuk Larangan dipakai jika memerintah untuk tidak melakukan suatu aksi kepada lawan biacara. Ini mempunyai nada paksaan serta kedengaran sangat keras sehingga adegan pemakaiannya sangat terbatas jika memakainya pada akhir kalimat. Kemudian yang menggunakannya secara lisan, kebanyakan kasus hanya terbatas bagi kaum pria. Bentuk Imperatif atau Bentuk Larangan yang dipakai pada akhir kalimat adalah kasus di bawah berikut ini;",
+            text: "Bentuk Imperatif dipakai jika memaksa suatu aksi, dan Bentuk Larangan dipakai jika memerintah untuk tidak melakukan suatu aksi kepada lawan bicara. Ini mempunyai nada paksaan serta kedengaran sangat keras sehingga adegan pemakaiannya sangat terbatas jika memakainya pada akhir kalimat. Kemudian yang menggunakannya secara lisan, kebanyakan kasus hanya terbatas bagi kaum pria. Bentuk Imperatif atau Bentuk Larangan yang dipakai pada akhir kalimat adalah kasus di bawah berikut ini;",
           },
           {
             label: "1) Pria yang posisi atau usianya dari atas ke bawah, atau ayah memakainya kepada anak.",
@@ -3093,7 +3095,7 @@ const MATERI_BOOK2_LESSONS = [
             ],
           },
           {
-            label: "4) Ketika memberi perintah pada saat latihan berkelompok, atau mata pelajaran olah raga, kurikulum ektra di bidang kegiatan olah raga di sekolah.",
+            label: "4) Ketika memberi perintah pada saat latihan berkelompok, atau mata pelajaran olah raga, kurikulum ekstra di bidang kegiatan olah raga di sekolah.",
             examples: [
               ["⑦ 休め。", "Beristirahat!"],
               ["⑧ 休むな。", "Jangan beristirahat!"],
@@ -3164,7 +3166,7 @@ const MATERI_BOOK2_LESSONS = [
             text: "Memakai jika meminta pesan secara halus.",
             examples: [
               ["⑳ ワンさんに「あとで 電話を ください」と 伝えて いただけませんか。", "Tolong sampaikan kepada sdr. Wang bahwa “Minta ditelepon nanti”."],
-              ["㉑ すみませんが、渡辺さんに あしたの パーティーは 6時からだと 伝えて いただけませんか。", "Maaf; tolong sampaikan kepada sdri. Watanabe bahwa pesta besok dari pukul enam."],
+              ["㉑ すみませんが、渡辺さんに あしたの パーティーは 6時からだと 伝えて いただけませんか。", "Maaf, tolong sampaikan kepada sdri. Watanabe bahwa pesta besok dari pukul enam."],
             ],
           },
         ],
@@ -3179,7 +3181,7 @@ const MATERI_BOOK2_LESSONS = [
         blocks: [
           {
             label: "1) <span class=\"grammar-pola-box\">Kata Kerja<sub>1</sub> Bentuk た とおりに、Kata Kerja<sub>2</sub></span>",
-            text: "Menyatakan bahwa melakukan Kata Kerja<sub>2</sub> dengan keadaan atau cara yang sama dengan Kata Kerja<sub>1</sub>,",
+            text: "Menyatakan bahwa melakukan Kata Kerja<sub>2</sub> dengan keadaan atau cara yang sama dengan Kata Kerja<sub>1</sub>.",
             examples: [
               ["① わたしが やった とおりに、やって ください。", "Silakan lakukan sama seperti yang saya buat!"],
               ["② 見た とおりに、話して ください。", "Silakan berbicara sama seperti yang Anda lihat!"],
@@ -3210,7 +3212,7 @@ const MATERI_BOOK2_LESSONS = [
             ],
           },
           {
-            text: "Jika dibandingkan dengan Kata Kerja Bentuk て から yang menyatakan arti yang sama (Lihat Pel.16), menggunakannya jika mengfokuskan hubungan waktu yang pra dan pasca. Kemudian berbeda dengan Kata Kerja Bentuk て から, Kata Kerja<sub>1</sub> atau Kata Benda tidak bernuansa sebagai dasar pikiran atau aksi persiapan utuk Kata Kerja<sub>2</sub>.",
+            text: "Jika dibandingkan dengan Kata Kerja Bentuk て から yang menyatakan arti yang sama (Lihat Pel.16), menggunakannya jika memfokuskan hubungan waktu yang pra dan pasca. Kemudian berbeda dengan Kata Kerja Bentuk て から, Kata Kerja<sub>1</sub> atau Kata Benda tidak bernuansa sebagai dasar pikiran atau aksi persiapan untuk Kata Kerja<sub>2</sub>.",
           },
         ],
       },
@@ -3258,7 +3260,7 @@ const MATERI_BOOK2_LESSONS = [
               ["① ボタンを 押せば、窓が 開きます。", "Kalau menekan tombol, jendelanya terbuka."],
               ["② 彼が 行けば、わたしも 行きます。", "Kalau dia pergi, saya juga pergi."],
               ["③ あした 都合が よければ、来て ください。", "Jika besok ada waktu, silakan datang."],
-              ["④ いい 天気なら、向こうに 島が 見えます。", "Kalau cuaca baik, terlihat pulau di selebah sana."],
+              ["④ いい 天気なら、向こうに 島が 見えます。", "Kalau cuaca baik, terlihat pulau di sebelah sana."],
             ],
           },
           {
@@ -3269,14 +3271,14 @@ const MATERI_BOOK2_LESSONS = [
             ],
           },
           {
-            text: "Pada dasarnya, dalam hal bagian belakang (klausa pokok) tidak akan diletakkan ekspresi mengenai keinginan, harapan, perintah, permintaan dan lain-lainya, tetapi jika subjek antara hal awal dan belakangnya berbeda (②), atau predikat dari hal awal secara keadaan (③ dan ⑤) dapat digunakan ekspresi tersebut.",
+            text: "Pada dasarnya, dalam hal bagian belakang (klausa pokok) tidak akan diletakkan ekspresi mengenai keinginan, harapan, perintah, permintaan dan lain-lainnya, tetapi jika subjek antara hal awal dan belakangnya berbeda (②), atau predikat dari hal awal secara keadaan (③ dan ⑤) dapat digunakan ekspresi tersebut.",
           },
           {
             text: "[Referensi] Perbandingan dengan ekspresi mirip yang telah dipelajari sampai dengan pelajaran ini",
           },
           {
             label: "1) ～と (Pel.23)",
-            text: "～と menyatakan bahwa jika terjadi aksi atau situasi di depan と, secara pasti mencapai keadaan, aksi yang dinyatakan oleh klausa pokok yang disusulkanya di belakang, fenomena atau situasi. Pada bagian belakang (kalimat pokok) tidak digunakan ekspresi keinginan, harapan, perintah, permintaan dan lain-lain.",
+            text: "～と menyatakan bahwa jika terjadi aksi atau situasi di depan と, secara pasti mencapai keadaan, aksi yang dinyatakan oleh klausa pokok yang disusulkannya di belakang, fenomena atau situasi. Pada bagian belakang (kalimat pokok) tidak digunakan ekspresi keinginan, harapan, perintah, permintaan dan lain-lain.",
             examples: [["⑦ ここを 押すと、ドアが 開きます。", "Kalau menekan di sini, pintunya terbuka."]],
           },
           {
@@ -3285,12 +3287,12 @@ const MATERI_BOOK2_LESSONS = [
           },
           {
             label: "2) ～たら (Pel.25)",
-            text: "～たら mempunyai dua cara penggunaan yaitu, (1) cara penggunaan untuk menyatakan syarat pengandaian, dan (2) cara penggunanan untuk jika sebelumnya jelas bahwa akan mencapai Kata Kerja Bentuk たら, setelah tercapai yang tersebut, akan mencapai aksi atau keadaan pada kalimat pokok yang menyusulinya. Untuk hal di belakang (kalimat pokok) dapat menggunakan ekspresi keinginan, harapan, perintah dan permintaan.",
+            text: "～たら mempunyai dua cara penggunaan yaitu, (1) cara penggunaan untuk menyatakan syarat pengandaian, dan (2) cara penggunaan untuk jika sebelumnya jelas bahwa akan mencapai Kata Kerja Bentuk たら, setelah tercapai yang tersebut, akan mencapai aksi atau keadaan pada kalimat pokok yang menyusulinya. Untuk hal di belakang (kalimat pokok) dapat menggunakan ekspresi keinginan, harapan, perintah dan permintaan.",
             examples: [
               ["⑨ 東京へ 来たら、ぜひ 連絡して ください。", "Kalau datang ke Tokyo, silakan hubungi (saya)."],
               ["×東京へ 来ると、ぜひ 連絡して ください。", ""],
               ["×東京へ 来れば、ぜひ 連絡して ください。", ""],
-              ["⑩ 田中さんが 東京へ 来れば、［わたしは］ 会いに 行きます。", "Kalau sdr.Tanaka datang ke Tokyo, saya pergi bertemu."],
+              ["⑩ 田中さんが 東京へ 来れば、［わたしは］ 会いに 行きます。", "Kalau sdr. Tanaka datang ke Tokyo, saya pergi bertemu."],
             ],
           },
           {
