@@ -3772,7 +3772,7 @@ const MATERI_BOOK2_LESSONS = [
         noBox: true,
         blocks: [
           {
-            text: "Pada Pelajaran 7 dan Pelajaran 24 telah mempelajari ungkapan pemberian dan penerimaan untuk barang atau perbuatan. Selanjutnya pada pelajaran ini mempelajari ungkapan pemberian dan penerimaan yang mencerminkan hubungan antara pemberi dan penerimaya.",
+            text: "Pada Pelajaran 7 dan Pelajaran 24 telah mempelajari ungkapan pemberian dan penerimaan untuk barang atau perbuatan. Selanjutnya pada pelajaran ini mempelajari ungkapan pemberian dan penerimaan yang mencerminkan hubungan antara pemberi dan penerimanya.",
           },
           {
             label: "1) <span class=\"grammar-pola-box\">Kata Benda<sub>1</sub>（orang）に Kata Benda<sub>2</sub> を いただきます</span>",
@@ -3795,7 +3795,7 @@ const MATERI_BOOK2_LESSONS = [
           },
           {
             label: "3) <span class=\"grammar-pola-box\">Kata Benda<sub>1</sub> に Kata Benda<sub>2</sub> を やります</span>",
-            text: "Jika pembicara memberi barang (Kata Benda<sub>2</sub>) terhadap tumbuhan dan fauna (Kata Benda<sub>1</sub>), sesungguhnya menggunakan やります. Tetapi, akhir-akhir ini banyak orang menggunkan あげます karena merasa lebih sopan daripada やります.",
+            text: "Jika pembicara memberi barang (Kata Benda<sub>2</sub>) terhadap tumbuhan dan fauna (Kata Benda<sub>1</sub>), sesungguhnya menggunakan やります. Tetapi, akhir-akhir ini banyak orang menggunakan あげます karena merasa lebih sopan daripada やります.",
             figure: { src: "assets/images/materi/p41-yarimasu.webp", alt: "Diagram: ［わたしは］ memberi ［部長に］ dengan さしあげます, ［友達に］ dengan あげます, ［子どもに］［犬／花に］ dengan やります（あげます）" },
             examples: [
               ["⑤ わたしは 息子に お菓子を やりました（あげました）。", "Saya memberikan anak laki-laki saya kue."],
@@ -3839,8 +3839,8 @@ const MATERI_BOOK2_LESSONS = [
           {
             text: "Dibandingkan dengan～て ください, ungkapan ini permintaan yang sikap halusnya lebih kuat. Akan tetapi, sikap halusnya kurang daripada～て いただけませんか yang telah dipelajari pada Pelajaran 26.",
             examples: [
-              ["⑭ コピー機の 使い方を 教えて くださいませんか。", "Tolong ajarkan (saya) cara pemakaian mesin fotocopy."],
-              ["⑮ コピー機の 使い方を 教えて いただけませんか。", "Apakah (Anda) bisa mengajarkan saya cara pemakaian mesin fotocopy? (Pel.26)"],
+              ["⑭ コピー機の 使い方を 教えて くださいませんか。", "Tolong ajarkan (saya) cara pemakaian mesin fotokopi."],
+              ["⑮ コピー機の 使い方を 教えて いただけませんか。", "Apakah (Anda) bisa mengajarkan saya cara pemakaian mesin fotokopi? (Pel.26)"],
             ],
           },
         ],
@@ -3849,9 +3849,9 @@ const MATERI_BOOK2_LESSONS = [
         title: "Kata Benda に Kata Kerja",
         blocks: [
           {
-            text: "Kata Bantu に yang digukanan dalam contoh kalimat di bawah ini menyatakan arti “sebagai tanda～” atau “sebagai kenang-kenangan～”.",
+            text: "Kata Bantu に yang digunakan dalam contoh kalimat di bawah ini menyatakan arti “sebagai tanda～” atau “sebagai kenang-kenangan～”.",
             examples: [
-              ["⑯ 田中さんが 結婚祝いに この お皿を くださいました。", "Srd. Tanaka memberikan saya piring ini sebagai tanda ucapan selamat atas pernikahan (saya)."],
+              ["⑯ 田中さんが 結婚祝いに この お皿を くださいました。", "Sdr. Tanaka memberikan saya piring ini sebagai tanda ucapan selamat atas pernikahan (saya)."],
               ["⑰ 北海道旅行の お土産に 人形を 買いました。", "(Saya) Membeli boneka ini sebagai oleh-oleh perjalanan ke Hokkaido."],
             ],
           },
@@ -3882,7 +3882,7 @@ const MATERI_BOOK2_LESSONS = [
               ["① 自分の 店を 持つ ために、貯金して います。", "Saya menabung uang untuk memiliki toko sendiri."],
               ["⑤ 自分の 店が 持てるように、貯金して います。", "Saya menabung uang agar dapat memiliki toko sendiri."],
             ],
-            note: "[Perhatian 2] なります terdapat dua macam cara penggunaan, yaitu segabai Kata Kerja Keinginan dan Kata Kerja Non Keinginan.",
+            note: "[Perhatian 2] なります terdapat dua macam cara penggunaan, yaitu sebagai Kata Kerja Keinginan dan Kata Kerja Non Keinginan.",
           },
           {
             examples: [
@@ -3942,14 +3942,14 @@ const MATERI_BOOK2_LESSONS = [
             ],
           },
           {
-            label: "2) <span class=\"grammar-pola-box\">Kata Sifat い（～い）<br>Kata Sifat な［な］｝そうです</span>",
-            text: "Cara ungkapan untuk menjelaskan sifat dari pandangan/pengelihatan luar dengan menduga tanpa mengechek sesungguhnya.",
+            label: "2) <span class=\"grammar-pola-box\">Kata Sifat い（～<span class=\"grammar-coret\">い</span>）<br>Kata Sifat な［<span class=\"grammar-coret\">な</span>］｝そうです</span>",
+            text: "Cara ungkapan untuk menjelaskan sifat dari pandangan/penglihatan luar dengan menduga tanpa mengecek sesungguhnya.",
             examples: [
               ["④ この 料理は 辛そうです。", "Rupanya masakan ini pedas."],
               ["⑤ 彼女は 頭が よさそうです。", "Rupanya dia pintar."],
               ["⑥ この 机は 丈夫そうです。", "Rupanya meja ini kuat."],
             ],
-            note: "[Perhatian] Ketika menyatakan perasaan orang, Kata Sifat yang menyatakan perasaan (うれしい, かなしい, さびしい dan lain-lainnya) tidak dapat digunakan langsung. Digunakan cara ungkapan setelah membubuhkan そうです dengan menduga dari pandangan/pengelihatan luar.",
+            note: "[Perhatian] Ketika menyatakan perasaan orang, Kata Sifat yang menyatakan perasaan (うれしい, かなしい, さびしい dan lain-lainnya) tidak dapat digunakan langsung. Digunakan cara ungkapan setelah membubuhkan そうです dengan menduga dari pandangan/penglihatan luar.",
           },
           {
             examples: [["⑦ うれしそうですね。<br>……ええ、実は きのう 結婚を 申し込まれたんです。", "Kelihatan senang, ya.<br>…… Ya, soalnya kemarin dilamar."]],
@@ -3960,7 +3960,7 @@ const MATERI_BOOK2_LESSONS = [
         title: "Kata Kerja Bentuk て 来ます",
         blocks: [
           {
-            label: "1) Kata Kerja Bentuk て きます menyatakan arti bahwa pergi ke suatu tempat, dan melakulan suatu aksi, kemudian kembali.",
+            label: "1) Kata Kerja Bentuk て きます menyatakan arti bahwa pergi ke suatu tempat, dan melakukan suatu aksi, kemudian kembali.",
             examples: [["⑧ ちょっと たばこを 買って 来ます。", "Pergi beli rokok sebentar."]],
           },
           {
@@ -3976,7 +3976,7 @@ const MATERI_BOOK2_LESSONS = [
           },
           {
             label: "2) Kata Benda（tempat）へ 行って 来ます",
-            text: "Sebelum きます memakai Kata Kerja いきます Bentuk て menyatakan arti untuk pergi ke suatu tempat kemudian kembali. Mengenai aksi yang dilakukan di tempat dimana pergi digunakan jika tidak diungkapkan secara khusus.",
+            text: "Sebelum きます memakai Kata Kerja いきます Bentuk て menyatakan arti untuk pergi ke suatu tempat kemudian kembali. Mengenai aksi yang dilakukan di tempat di mana pergi digunakan jika tidak diungkapkan secara khusus.",
             examples: [["⑪ 郵便局へ 行って 来ます。", "Pergi ke kantor pos."]],
           },
           {
@@ -4002,7 +4002,7 @@ const MATERI_BOOK2_LESSONS = [
     title: "Terlalu, mudah, sulit, dan mengubah",
     items: [
       {
-        title: "Kata Kerja Bentuk ます<br>Kata Sifat い（～い）<br>Kata Sifat な［な］｝すぎます",
+        title: "Kata Kerja Bentuk ます<br>Kata Sifat い（～<span class=\"grammar-coret\">い</span>）<br>Kata Sifat な［<span class=\"grammar-coret\">な</span>］｝すぎます",
         blocks: [
           {
             text: "～すぎます menunjuk bahwa tingkat dari perbuatan atau keadaan kelewatan. Biasanya digunakan jika perbuatan atau kondisinya tidak menyenangkan.",
@@ -4031,12 +4031,12 @@ const MATERI_BOOK2_LESSONS = [
             ],
           },
           {
-            text: "⑤ menyatakan bahwa PC memilili sifat untuk mudah dipakai, dan ⑥ menyatakan bahwa kota yang namanya Tokyo melibatkan kesulitan untuk didiami.",
+            text: "⑤ menyatakan bahwa PC memiliki sifat untuk mudah dipakai, dan ⑥ menyatakan bahwa kota yang namanya Tokyo melibatkan kesulitan untuk didiami.",
           },
           {
             label: "2) Jika Kata Kerja Bentuk ます adalah bukan Kata Kerja secara keinginan,～やすい menyatakan akan terjadi aksi itu dengan mudah, dan～にくい menyatakan bahwa aksi itu jarang terjadi.",
             examples: [
-              ["⑦ 白い シャツは 汚れやすいです。", "Kemaja putih mudah kotor."],
+              ["⑦ 白い シャツは 汚れやすいです。", "Kemeja putih mudah kotor."],
               ["⑧ 雨の 日は 洗濯物が 乾きにくいです。", "Pada hari yang hujan, cucian sulit mengering."],
             ],
             note: "[Perhatian]～やすい,～にくい dikonjugasi sama seperti Kata Sifat い.",
@@ -4050,12 +4050,12 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
       {
-        title: "Kata Benda<sub>1</sub> を｛Kata Sifat い（～い）→～く<br>　　　　　　　Kata Sifat な［な］→～に<br>　　　　　　　Kata Benda<sub>2</sub> に｝します",
+        title: "Kata Benda<sub>1</sub> を｛Kata Sifat い（～<span class=\"grammar-coret\">い</span>）→～く<br>　　　　　　　Kata Sifat な［<span class=\"grammar-coret\">な</span>］→～に<br>　　　　　　　Kata Benda<sub>2</sub> に｝します",
         blocks: [
           {
-            text: "～く／～に なります yang telah dipelajari pada Pelajaran 19 adalah ungkapan untuk menyatakan perubahan unsur pokok, sedangkan～く／～に します adalah ungkapan untuk menyatakan mengubah obyek (Kata Benda<sub>1</sub>).",
+            text: "～く／～に なります yang telah dipelajari pada Pelajaran 19 adalah ungkapan untuk menyatakan perubahan unsur pokok, sedangkan～く／～に します adalah ungkapan untuk menyatakan mengubah objek (Kata Benda<sub>1</sub>).",
             examples: [
-              ["⑪ 音を 大きく します。", "Mengeras bunyi."],
+              ["⑪ 音を 大きく します。", "Mengeraskan bunyi."],
               ["⑫ 部屋を きれいに します。", "Membersihkan kamar."],
               ["⑬ 塩の 量を 半分に しました。", "Mengurangi jumlah garam sampai setengah."],
             ],
@@ -4095,7 +4095,7 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
       {
-        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～だ→～な｝のに、～",
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa ～<span class=\"grammar-coret\">だ</span>→～な｝のに、～",
         blocks: [
           {
             text: "のに digunakan jika hal yang berbeda dengan dugaan sesungguhnya dari hal di bagian depan kalimat diletakkan di bagian hal belakang kalimat.<br>Kebanyakan kasus menjelaskan perasaan di luar dugaan atau ketidakpuasan.",
@@ -4105,7 +4105,7 @@ const MATERI_BOOK2_LESSONS = [
             ],
           },
           {
-            text: "Misalnya, untuk ⑥ menyatakan perasaan dikhianati sebab dari hal di bagian depan kalimat yakini “sudah berjanji” dapat terduga dugaan “datang”. Kemudian, untuk ⑦ dari hal di bagian depan kalimat diyakini “hari Minggu”, sesungguhnya akan diakibatkan untuk “dapat berlibur”, tetapi harus bekerja, maka menyatakan perasaan tidak puas dengan menggunakan のに.",
+            text: "Misalnya, untuk ⑥ menyatakan perasaan dikhianati sebab dari hal di bagian depan kalimat yakni “sudah berjanji” dapat terduga dugaan “datang”. Kemudian, untuk ⑦ dari hal di bagian depan kalimat diyakini “hari Minggu”, sesungguhnya akan diakibatkan untuk “dapat berlibur”, tetapi harus bekerja, maka menyatakan perasaan tidak puas dengan menggunakan のに.",
             note: "[Perhatian 1] Perbedaan antara～のに dan～が<br>Jika のに pada ⑥ dan ⑦ diganti dengan が, maka tidak dapat menyatakan perasaan di luar dugaan atau ketidakpuasan.",
           },
           {
