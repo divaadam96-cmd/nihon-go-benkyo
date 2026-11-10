@@ -4205,7 +4205,7 @@ const MATERI_BOOK2_LESSONS = [
               ["② クララさんは 子どもの とき、フランスに 住んで いたそうです。", "Katanya ketika sdri. Klara masih kecil, dia tinggal di Prancis."],
               ["③ バリは とても きれいだそうです。", "Katanya Bali sangat indah."],
             ],
-            note: "[Perhatian 1] Perlu hati-hati karena cara menyambung serta juga maknanya berbeda dengan～そうです yang telah dipelajari pada Pelajaran 43. Mari perbandingkan contoh di bawa ini;",
+            note: "[Perhatian 1] Perlu hati-hati karena cara menyambung serta juga maknanya berbeda dengan～そうです yang telah dipelajari pada Pelajaran 43. Mari bandingkan contoh di bawah ini;",
           },
           {
             examples: [
@@ -4228,13 +4228,13 @@ const MATERI_BOOK2_LESSONS = [
         ],
       },
       {
-        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な　Bentuk Biasa ～だ→～な<br>Kata Benda　Bentuk Biasa ～だ→～の｝ようです",
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な　Bentuk Biasa ～<span class=\"grammar-coret\">だ</span>→～な<br>Kata Benda　Bentuk Biasa ～<span class=\"grammar-coret\">だ</span>→～の｝ようです",
         suffix: "Rupanya.../ Kelihatannya...",
         blocks: [
           {
             text: "～ようです adalah ungkapan yang menyatakan hal yang diputuskan oleh si pembicara dari kondisi setempat. Adakalanya disertakan Kata Keterangan どうも yang berarti “tidak menyimpulkan secara pasti, tetapi”.",
             examples: [
-              ["⑩ 人が 大勢 集まって いますね。<br>……事故のようですね。パトカーと 救急車が 来て いますよ。", "Orang berkumpul banyak, ya.<br>…… Rupanya kecelakaan. Mobil patrol dan ambulan sudah datang."],
+              ["⑩ 人が 大勢 集まって いますね。<br>……事故のようですね。パトカーと 救急車が 来て いますよ。", "Orang berkumpul banyak, ya.<br>…… Rupanya kecelakaan. Mobil patroli dan ambulans sudah datang."],
               ["⑪ せきも 出るし、頭も 痛い。どうも かぜを ひいたようだ。", "Berbatuk dan sakit kepala juga. Rupanya masuk angin."],
             ],
             note: "[Perhatian] Perbedaan antara～そうです (Pel.43) dan～ようです",
@@ -4376,19 +4376,19 @@ const MATERI_BOOK2_LESSONS = [
             text: "Sama bentuknya dengan Kata Kerja Pasif, dikonjugasi sebagai Kata Kerja Kelompok II.<br>Contoh: かかれます　かかれる　かかれ(ない)　かかれて",
             examples: [
               ["① 中村さんは 7時に 来られます。", "Sdri. Nakamura akan datang pada pukul tujuh."],
-              ["② お酒を やめられたんですか。", "Apakah sudah berhenti mimun sake?"],
+              ["② お酒を やめられたんですか。", "Apakah sudah berhenti minum sake?"],
             ],
           },
           {
             label: "(2) お Kata Kerja（Bentuk ます）に なります",
-            text: "Bentuk ini pada umumnya dianggap lebih halus daripada Kata Kerja Hormat pada (1). Tidak terdapat pada Kata Kerja yang terdiri dari satu suku kata yang berbentuk ます seperti みます, ねます dan lain-lain serta Kata Kerja Kelompok III. Dengan catatan bahwa apabila Kata Kerja yang terdapat Kata Hormat Khusus yang diangkat pada (3) di bawah, maka dibunakan itu.",
+            text: "Bentuk ini pada umumnya dianggap lebih halus daripada Kata Kerja Hormat pada (1). Tidak terdapat pada Kata Kerja yang terdiri dari satu suku kata yang berbentuk ます seperti みます, ねます dan lain-lain serta Kata Kerja Kelompok III. Dengan catatan bahwa apabila Kata Kerja yang terdapat Kata Hormat Khusus yang diangkat pada (3) di bawah, maka digunakan itu.",
             examples: [["③ 社長は もう お帰りに なりました。", "Direktur sudah pulang."]],
           },
           {
             label: "(3) Kata Hormat Khusus (Lihat Buku Induk Pel.49 Latihan A4)",
             text: "Beberapa Kata Kerja memiliki Kata Hormat Khusus. Menyatakan rasa hormat setingkat (2).",
             examples: [
-              ["④ ワット先生は 研究室に いらっしゃいます。", "Apakah Bapak Watt ada di laboratori?"],
+              ["④ ワット先生は 研究室に いらっしゃいます。", "Apakah Bapak Watt ada di laboratorium?"],
               ["⑤ どうぞ 召し上がって ください。", "Silakan dimakan!"],
             ],
             note: "[Perhatian 1] いらっしゃいます (Bentuk Kamus: いらっしゃる), なさいます (Bentuk Kamus: なさる), くださいます (Bentuk Kamus: くださる), おっしゃいます (Bentuk Kamus: おっしゃる) adalah Kata Kerja Kelompok I, tetapi perlu hati-hati untuk konjugasi.<br>Contoh: いらっしゃ<u>い</u>ます (×いらっしゃ<u>り</u>ます)　いらっしゃる<br>　　　　いらっしゃ<u>ら</u>ない　いらっしゃった　いらっしゃらなかった",
@@ -4407,7 +4407,7 @@ const MATERI_BOOK2_LESSONS = [
           },
           {
             label: "2) Kata Benda, Kata Sifat, Kata Keterangan",
-            text: "Membubuhkan お atau ご pada Kata Benda, Kata Sifat dan Kata Keterangan untuk menyatakan rasa hormat kepada pemilik Kata Benda tersebut, atau orang yang sedang dalam keadaan tersebut.<br>Antara お dan ご, yang mana yang harus dibubuhkan itu ditentukan dari setiap kata. pada umumnya, kebanyakan お dibubuhkan pada kata asli bahasa Jepang, sedangkan ご dibubuhkan pada kata yang berasal dari bahasa Tionghua.",
+            text: "Membubuhkan お atau ご pada Kata Benda, Kata Sifat dan Kata Keterangan untuk menyatakan rasa hormat kepada pemilik Kata Benda tersebut, atau orang yang sedang dalam keadaan tersebut.<br>Antara お dan ご, yang mana yang harus dibubuhkan itu ditentukan dari setiap kata. Pada umumnya, kebanyakan お dibubuhkan pada kata asli bahasa Jepang, sedangkan ご dibubuhkan pada kata yang berasal dari bahasa Tionghoa.",
             table: {
               headers: ["Contoh untuk kata yang dibubuhkan お", "Contoh untuk kata yang dibubuhkan ご"],
               rows: [
@@ -4439,7 +4439,7 @@ const MATERI_BOOK2_LESSONS = [
         blocks: [
           {
             text: "Jika ingin berbicara dengan halus, adakalanya Kata Kerja Bentuk て diubah menjadi Kata Kerja (Bentuk ます) まして.",
-            examples: [["⑪ ハンスが ゆうべ 熱を 出しまして、けさも まだ 下がらないんです。", "Tadi malam Hans deman, dan pagi ini demam belum turun juga."]],
+            examples: [["⑪ ハンスが ゆうべ 熱を 出しまして、けさも まだ 下がらないんです。", "Tadi malam Hans demam, dan pagi ini demam belum turun juga."]],
           },
         ],
       },
@@ -4448,7 +4448,7 @@ const MATERI_BOOK2_LESSONS = [
         blocks: [
           {
             text: "Apabila Bentuk Biasa ので ingin dijadikan lebih halus, adakalanya dipakai Bentuk Sopan ので.",
-            examples: [["⑫ きょうは 学校を 休ませますので、先生に よろしく お伝え ください。", "Tolong sampaikan salam kepada guru karena hari ini saya menyuruh anak saya untuk tidak masu sekolah!"]],
+            examples: [["⑫ きょうは 学校を 休ませますので、先生に よろしく お伝え ください。", "Tolong sampaikan salam kepada guru karena hari ini saya menyuruh anak saya untuk tidak masuk sekolah!"]],
           },
         ],
       },
@@ -4486,7 +4486,7 @@ const MATERI_BOOK2_LESSONS = [
             ],
           },
           {
-            text: "Bentuk ini digunakan untuk Kata Kerja Kelompok III. Selain contoh Kata Kerja di atas, terdapat しょうかいします, しょうたいします, そうだんします, れんらくします dan lain-lainya. Akan tetapi, sebagai luar contoh, でんわします, やくそくします dan lain-lainnya dibubuhkan お, tetapi tidak dibubuhkan ご.",
+            text: "Bentuk ini digunakan untuk Kata Kerja Kelompok III. Selain contoh Kata Kerja di atas, terdapat しょうかいします, しょうたいします, そうだんします, れんらくします dan lain-lainnya. Akan tetapi, sebagai luar contoh, でんわします, やくそくします dan lain-lainnya dibubuhkan お, tetapi tidak dibubuhkan ご.",
           },
           {
             label: "2) Kata Merendahkan Diri Khusus (Lihat Buku Induk Pel.50 Latihan A3)",
@@ -4503,7 +4503,7 @@ const MATERI_BOOK2_LESSONS = [
         noBox: true,
         blocks: [
           {
-            text: "Cara ungkapan untuk menjelaskan aksi pembicara atau orang pihak pembicara teradap lawan bicara secara halus.",
+            text: "Cara ungkapan untuk menjelaskan aksi pembicara atau orang pihak pembicara terhadap lawan bicara secara halus.",
             examples: [
               ["⑧ 私は ミラーと 申します。", "Saya Miller."],
               ["⑨ アメリカから 参りました。", "Datang dari Amerika Serikat."],
