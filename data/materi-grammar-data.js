@@ -3091,7 +3091,7 @@ const MATERI_BOOK2_LESSONS = [
             label: "3) Ketika memberi petunjuk saat bekerja sama di pabrik, atau jika tidak ada peluang untuk cara ungkap terhadap lawan bicara karena saat darurat seperti kebakaran, gempa bumi. Untuk kasus itu pun, kebanyakan dipakai oleh pria yang posisi atau usianya atas saja.",
             examples: [
               ["⑤ 逃げろ。", "Berlarilah!"],
-              ["⑥ エレベーターを 使うな。", "Jangan gunakan tangga berjalan!"],
+              ["⑥ エレベーターを 使うな。", "Jangan gunakan lift!"],
             ],
           },
           {
@@ -3789,7 +3789,7 @@ const MATERI_BOOK2_LESSONS = [
           },
           {
             examples: [
-              ["③ 娘は 部長に お土産を いただきました。", "Anak perempuan saya menerima oleh-oleh dari direktur."],
+              ["③ 娘は 部長に お土産を いただきました。", "Anak perempuan saya menerima oleh-oleh dari kepala bagian."],
               ["④ 部長が 娘に お土産を くださいました。", "Kepala bagian memberikan anak perempuan saya oleh-oleh."],
             ],
           },
@@ -3828,7 +3828,7 @@ const MATERI_BOOK2_LESSONS = [
             examples: [
               ["⑪ わたしは 息子に 紙飛行機を 作って やりました（あげました）。", "Saya membuat pesawat-pesawatan dari kertas untuk anak laki-laki. (membuatkan anak laki-laki)"],
               ["⑫ わたしは 犬を 散歩に 連れて 行って やりました。", "Saya membawa anjing jalan-jalan."],
-              ["⑬ わたしは 娘の 宿題を 見て やりました（あげました）。", "Saya membantu adik saya untuk membuat PR-nya."],
+              ["⑬ わたしは 娘の 宿題を 見て やりました（あげました）。", "Saya membantu anak perempuan saya membuat PR-nya."],
             ],
           },
         ],
@@ -3991,7 +3991,7 @@ const MATERI_BOOK2_LESSONS = [
         suffix: "Apakah (Anda) dapat ～ untuk ... ?",
         blocks: [
           {
-            text: "Ungkapan permintaan yang lebih halus daripada～て ください, namun kurang halus daripada～て いただけませんか (Pel.26) atau～て くださいませんか (Pel.46). Ungkapan yang cocok untuk dipakai kepada orang yang setaraf atau di bawah dari diri sendiri.",
+            text: "Ungkapan permintaan yang lebih halus daripada～て ください, namun kurang halus daripada～て いただけませんか (Pel.26) atau～て くださいませんか (Pel.41). Ungkapan yang cocok untuk dipakai kepada orang yang setaraf atau di bawah dari diri sendiri.",
             examples: [["⑬ コンビニへ 行って 来ます。<br>……じゃ、お弁当を 買って 来て くれませんか。", "Pergi ke toko 24 jam.<br>…… Kalau begitu, tolong belikan saya bekal?"]],
           },
         ],
@@ -4388,7 +4388,7 @@ const MATERI_BOOK2_LESSONS = [
             label: "(3) Kata Hormat Khusus (Lihat Buku Induk Pel.49 Latihan A4)",
             text: "Beberapa Kata Kerja memiliki Kata Hormat Khusus. Menyatakan rasa hormat setingkat (2).",
             examples: [
-              ["④ ワット先生は 研究室に いらっしゃいます。", "Apakah Bapak Watt ada di laboratorium?"],
+              ["④ ワット先生は 研究室に いらっしゃいます。", "Bapak Watt ada di laboratorium."],
               ["⑤ どうぞ 召し上がって ください。", "Silakan dimakan!"],
             ],
             note: "[Perhatian 1] いらっしゃいます (Bentuk Kamus: いらっしゃる), なさいます (Bentuk Kamus: なさる), くださいます (Bentuk Kamus: くださる), おっしゃいます (Bentuk Kamus: おっしゃる) adalah Kata Kerja Kelompok I, tetapi perlu hati-hati untuk konjugasi.<br>Contoh: いらっしゃ<u>い</u>ます (×いらっしゃ<u>り</u>ます)　いらっしゃる<br>　　　　いらっしゃ<u>ら</u>ない　いらっしゃった　いらっしゃらなかった",
