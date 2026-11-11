@@ -145,6 +145,9 @@ const MATERI_BOOK1_LESSONS = [
               ["④ あの 方は どなたですか。", "Siapakah beliau?"],
             ],
           },
+          {
+            figure: { src: "assets/images/materi/p2-kore-sore-are.webp", alt: "Ilustrasi: これ／この かばん (tas di dekat pembicara), それ／その かばん (tas di dekat lawan bicara), あれ／あの かばん (tas yang jauh dari keduanya)" },
+          },
         ],
       },
       {
@@ -230,8 +233,14 @@ const MATERI_BOOK1_LESSONS = [
             text: "ここ, そこ, あそこ menunjukkan tempat. ここ menunjukkan tempat di mana si pembicara berada, そこ menunjukkan tempat di mana lawan bicara berada, dan あそこ menunjukkan tempat yang jauh dari kedua-duanya.",
           },
           {
+            figure: { src: "assets/images/materi/p3-koko-soko-asoko-1.webp", alt: "Ilustrasi: pembicara berdiri di ここ, lawan bicara di そこ, dan あそこ jauh dari keduanya" },
+          },
+          {
             text: "こちら, そちら, あちら menunjukkan arah, tetapi juga dapat dipakai untuk menunjukkan tempat yang dapat dilihat oleh mata yang digantikan dengan ここ, そこ, あそこ. Dalam hal ini こちら, そちら, あちら menyatakan perasaan yang lebih sopan.",
             note: "[Perhatian] Jika si pembicara menganggap bahwa lawan bicara berada di daerah yang sama, maka tempat di mana kedua-duanya berada dikatakan ここ, tempat yang sedikit jauh dikatakan そこ, dan tempat yang jauh dikatakan あそこ.",
+          },
+          {
+            figure: { src: "assets/images/materi/p3-koko-soko-asoko-2.webp", alt: "Ilustrasi: pembicara dan lawan bicara berdiri bersama di ここ, tempat yang sedikit jauh そこ, dan tempat yang jauh あそこ" },
           },
         ],
       },
@@ -271,7 +280,7 @@ const MATERI_BOOK1_LESSONS = [
         title: "Kata Benda<sub>1</sub> の Kata Benda<sub>2</sub>",
         blocks: [
           {
-            text: "Jika Kata Benda<sub>1</sub> adalah nama negara dan Kata Benda<sub>2</sub> adalah produknya, maka Kata Benda<sub>1</sub> の berarti buatan dari negara tersebut. Kalau Kata Benda<sub>1</sub> adalah nama perusahaan, dan Kata Benda<sub>2</sub> adalah produkunya, Kata Benda<sub>1</sub> の berarti buatan perusahaan tersebut. Untuk kedua pertanyaan digunakan Kata Tanya どこ.",
+            text: "Jika Kata Benda<sub>1</sub> adalah nama negara dan Kata Benda<sub>2</sub> adalah produknya, maka Kata Benda<sub>1</sub> の berarti buatan dari negara tersebut. Kalau Kata Benda<sub>1</sub> adalah nama perusahaan, dan Kata Benda<sub>2</sub> adalah produknya, Kata Benda<sub>1</sub> の berarti buatan perusahaan tersebut. Untuk kedua pertanyaan digunakan Kata Tanya どこ.",
             examples: [
               ["⑧ これは どこの コンピューターですか。<br>……日本の コンピューターです。<br>……パワー電気の コンピューターです。", "Ini komputer buatan mana?<br>……Komputer buatan Jepang.<br>……Komputer Power Elektronik."],
             ],
@@ -342,7 +351,7 @@ const MATERI_BOOK1_LESSONS = [
             ],
           },
           {
-            label: "3) Kalimat Tanya tidak mengubah susunan kata, tetapi dibubuhkan か pada akhir kalimat. Kata Tanya diletakkan dibagian yang ingin tanyakan.",
+            label: "3) Kalimat Tanya tidak mengubah susunan kata, tetapi dibubuhkan か pada akhir kalimat. Kata Tanya diletakkan di bagian yang ingin ditanyakan.",
             text: "Untuk jawabannya, menjawab dengan mengulang Kata Kerja yang terdapat di dalam kalimat tanya. そうです, ちがいます（Lihat Pel.2）tidak dapat digunakan sebagai jawaban untuk kalimat tanya dari kalimat verbal.",
             examples: [
               ["⑥ きのう 勉強しましたか。<br>……はい、勉強しました。<br>……いいえ、勉強しませんでした。", "Kemarin belajar?<br>……Ya, belajar.<br>……Tidak, tidak belajar."],
@@ -401,7 +410,7 @@ const MATERI_BOOK1_LESSONS = [
         blocks: [
           {
             text: "Jika menyambung Kata Benda secara setaraf, Kata Benda dan Kata Benda disambung dengan と.",
-            examples: [["⑰ 銀行の 休みは 土曜日と 日曜日です。", "Hari libur bank adalah hari Sabut dan hari Minggu."]],
+            examples: [["⑰ 銀行の 休みは 土曜日と 日曜日です。", "Hari libur bank adalah hari Sabtu dan hari Minggu."]],
           },
         ],
       },
@@ -440,7 +449,7 @@ const MATERI_BOOK1_LESSONS = [
         title: "どこ［へ］も 行きません／行きませんでした",
         blocks: [
           {
-            text: "Apabila ingin menyangkal hal yang ditanyakan oleh Kata Tanya secara total, pembentukkan Kata Kerja negatif dengan membubuhkan partikel も pada Kata Tanya.",
+            text: "Apabila ingin menyangkal hal yang ditanyakan oleh Kata Tanya secara total, pembentukan Kata Kerja negatif dengan membubuhkan partikel も pada Kata Tanya.",
             examples: [
               ["④ どこ［へ］も 行きません。", "Tidak pergi ke mana-mana."],
               ["⑤ 何も 食べません。", "Tidak makan apa-apa."],

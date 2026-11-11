@@ -1018,8 +1018,9 @@
    halaman sehingga diagram menyatu, garisnya tetap gelap. */
 .grammar-figure img {
   display: block;
-  width: 100%;
-  max-width: 640px;
+  /* Tampil seukuran aslinya (diagram kecil di buku tetap kecil), maks. 640px. */
+  width: auto;
+  max-width: min(100%, 640px);
   height: auto;
   margin: 0 auto;
   mix-blend-mode: multiply;
