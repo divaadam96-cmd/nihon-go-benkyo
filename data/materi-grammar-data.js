@@ -596,7 +596,7 @@ const MATERI_BOOK1_LESSONS = [
           {
             label: "[Perhatian]",
             text: "Selain bertanya tentang sarana, なんで digunakan untuk menanyakan alasan juga. Adakalanya dikatakan なにで jika ingin menunjukkan lebih jelas untuk menanyakan sarana.",
-            examples: [["⑧ 何で 東京へ 行きますか。<br>……新幹線で 行きます。", "Dengan apa pergi ke Tokyo?<br>……Dengan Shinkansen."]],
+            examples: [["⑧ 何で 東京へ 行きますか。<br>……新幹線で 行きます。", "Dengan apa pergi ke Tokyo?<br>……Dengan <i>Shinkansen</i>."]],
           },
           {
             label: "2) Disertai Kata Bantu Bilangan",
@@ -1060,7 +1060,7 @@ const MATERI_BOOK1_LESSONS = [
           },
           {
             label: "2) Berbagai Kata Bantu Bilangan",
-            text: "Waktu menghitung orang, benda atau menunjukkan kwantitas digunakan Kata Bantu Bilangan yang berbeda-beda sesuai dengan benda yang dihitung. Kata Bantu Bilangan dibubuhkan di belakang angka.<br>－人　jumlah orang (dengan catatan untuk seorang dibaca dengan ひとり（1人）, dua orang dibaca dengan ふたり（2人）, 4人 dibacanya よにん)<br>－台　mesin, kendaraan<br>－枚　benda yang tipis dan datar (kertas, baju kaos, piring, CD dll.)<br>－回　kali<br>－分　menit<br>－時間　jam<br>－日　hari<br>（Sama dengan cara membaca tanggal, tetapi 1日 tidak dibaca ついたち melainkan いちにち.）<br>－週間　minggu<br>－か月　bulan<br>－年　tahun",
+            text: "Waktu menghitung orang, benda atau menunjukkan kuantitas digunakan Kata Bantu Bilangan yang berbeda-beda sesuai dengan benda yang dihitung. Kata Bantu Bilangan dibubuhkan di belakang angka.<br>－人　jumlah orang (dengan catatan untuk seorang dibaca dengan ひとり（1人）, dua orang dibaca dengan ふたり（2人）, 4人 dibacanya よにん)<br>－台　mesin, kendaraan<br>－枚　benda yang tipis dan datar (kertas, baju kaos, piring, CD dll.)<br>－回　kali<br>－分　menit<br>－時間　jam<br>－日　hari<br>（Sama dengan cara membaca tanggal, tetapi 1日 tidak dibaca ついたち melainkan いちにち.）<br>－週間　minggu<br>－か月　bulan<br>－年　tahun",
           },
         ],
       },
@@ -1097,7 +1097,7 @@ const MATERI_BOOK1_LESSONS = [
             text: "どのくらい digunakan untuk menanyakan lama waktu.",
             examples: [
               ["⑦ どのくらい 日本語を 勉強しましたか。<br>……3年 勉強しました。", "Berapa lama belajar bahasa Jepang?<br>……Belajar selama tiga tahun."],
-              ["⑧ 大阪から 東京まで どのくらい かかりますか。<br>……新幹線で 2時間半 かかります。", "Memerlukan waktu berapa lama dari Osaka sampai dengan Tokyo?<br>……Memerlukan waktu dua setengah jam dengan Shinkansen."],
+              ["⑧ 大阪から 東京まで どのくらい かかりますか。<br>……新幹線で 2時間半 かかります。", "Memerlukan waktu berapa lama dari Osaka sampai dengan Tokyo?<br>……Memerlukan waktu dua setengah jam dengan <i>Shinkansen</i>."],
             ],
           },
           {
@@ -1120,7 +1120,7 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
       {
-        title: "Kata Keterangan Bilangan だけ／ Kata Bend だけ",
+        title: "Kata Keterangan Bilangan だけ／ Kata Benda だけ",
         blocks: [
           {
             text: "だけ diletakkan di belakang Kata Keterangan Bilangan atau Kata Benda, yang mempunyai arti tidak ada yang lebih dari itu atau tidak ada selain itu.",
@@ -1187,7 +1187,7 @@ const MATERI_BOOK1_LESSONS = [
           {
             text: "Jika membandingkan dua benda, digunakan Kata Tanya どちら untuk seluruh benda yang dibandingkan.",
             examples: [
-              ["⑥ サッカーと 野球と どちらが おもしろいですか。<br>……サッカーの ほうが おもしろいです。", "Yang mana lebih menarik, sepak bola atau baseball?<br>……Sepak bola yang lebih menarik."],
+              ["⑥ サッカーと 野球と どちらが おもしろいですか。<br>……サッカーの ほうが おもしろいです。", "Yang mana lebih menarik, sepak bola atau <i>baseball</i>?<br>……Sepak bola yang lebih menarik."],
               ["⑦ ミラーさんと サントスさんと どちらが テニスが 上手ですか。", "Yang mana lebih pandai bermain tenis, Sdr. Miller atau Sdr. Santos?"],
               ["⑧ 北海道と 大阪と どちらが 涼しいですか。", "Yang mana lebih sejuk, Hokkaido atau Osaka?"],
               ["⑨ 春と 秋と どちらが 好きですか。", "Yang mana lebih suka, musim semi atau musim gugur?"],
@@ -1199,9 +1199,9 @@ const MATERI_BOOK1_LESSONS = [
         title: "Kata Benda<sub>1</sub>［の 中］で 何／どこ／だれ／いつ が いちばん Kata Sifat ですか<br>……Kata Benda<sub>2</sub> が いちばん Kata Sifat です",
         blocks: [
           {
-            text: "で menunjukkan ruang lingkup. Jika menanyakan benda, tempat, orang atau waktu yang menunjukan kondisi dan sifat yang tingkatnya maksimal dari ruang lingkup Kata Benda<sub>1</sub>, gunakan Kata Tanya sesuai dengan target.",
+            text: "で menunjukkan ruang lingkup. Jika menanyakan benda, tempat, orang atau waktu yang menunjukkan kondisi dan sifat yang tingkatnya maksimal dari ruang lingkup Kata Benda<sub>1</sub>, gunakan Kata Tanya sesuai dengan target.",
             examples: [
-              ["⑩ 日本料理［の 中］で 何が いちばん おいしいですか。<br>……てんぷらが いちばん おいしいです。", "Apa yang paling enak [di antara] masakan Jepang?<br>……Tempura yang paling enak."],
+              ["⑩ 日本料理［の 中］で 何が いちばん おいしいですか。<br>……てんぷらが いちばん おいしいです。", "Apa yang paling enak [di antara] masakan Jepang?<br>……<i>Tempura</i> yang paling enak."],
               ["⑪ ヨーロッパで どこが いちばん よかったですか。<br>……スイスが いちばん よかったです。", "Daerah mana yang paling bagus di Eropa?<br>……Swiss yang paling bagus."],
               ["⑫ 家族で だれが いちばん 背が 高いですか。<br>……弟が いちばん 背が 高いです。", "Siapa yang paling tinggi di antara keluarga?<br>……Adik laki-laki yang paling tinggi. (Pel.16)"],
               ["⑬ 1年で いつが いちばん 寒いですか。<br>……2月が いちばん 寒いです。", "Kapan yang paling dingin dalam satu tahun?<br>……Bulan Februari yang paling dingin."],
@@ -1232,7 +1232,7 @@ const MATERI_BOOK1_LESSONS = [
         title: "Kata Benda が 欲しいです",
         blocks: [
           {
-            text: "欲しい adalah Kata Sifat い. Objek untuk 欲しい ditunjuk dengan が.",
+            text: "ほしい adalah Kata Sifat い. Objek untuk ほしい ditunjuk dengan が.",
             examples: [
               ["① わたしは 友達が 欲しいです。", "Saya ingin punya teman."],
               ["② 今 何が いちばん 欲しいですか。<br>……車が 欲しいです。", "Sekarang apa yang paling diinginkan?<br>……Ingin punya mobil."],
@@ -1253,7 +1253,7 @@ const MATERI_BOOK1_LESSONS = [
             text: "Kata Kerja（Bentuk ます）たいです digunakan untuk menunjukkan keinginan untuk berbuat sesuatu. Objek dari ～たい dapat ditunjuk dengan partikel を dan が juga. Perubahan bentuk ～たい sama dengan Kata Sifat い.",
             examples: [
               ["④ わたしは 沖縄へ 行きたいです。", "Saya ingin pergi ke Okinawa."],
-              ["⑤ わたしは てんぷらを（が）食べたいです。", "Saya ingin makan Tempura."],
+              ["⑤ わたしは てんぷらを（が）食べたいです。", "Saya ingin makan <i>Tempura</i>."],
               ["⑥ 神戸で 何を（が）買いたいですか。<br>……靴を（が）買いたいです。", "Di Kobe ingin membeli apa?<br>……Ingin membeli sepatu."],
               ["⑦ おなかが 痛いですから、何も 食べたくないです。", "Karena perut sakit, tidak mau makan apa-apa. (Pel.17)"],
             ],
@@ -1276,7 +1276,7 @@ const MATERI_BOOK1_LESSONS = [
             examples: [["⑧ 神戸へ インド料理を 食べに 行きます。", "Pergi makan masakan India ke Kobe."]],
           },
           {
-            text: "Jika Kata Kerja di depan に adalah Kata Kerja します（かいものします, べんきょうします）serta Kata Benda を します（おはなみを します, つりを します）, bentuk Kata Benda に いきます／きます／かえります yang digunakan.",
+            text: "Jika Kata Kerja di depan に adalah Kata Benda します（かいものします, べんきょうします）serta Kata Benda を します（おはなみを します, つりを します）, bentuk Kata Benda に いきます／きます／かえります yang digunakan.",
             examples: [
               ["⑨ 神戸へ 買い物に 行きます。", "Pergi ke Kobe untuk belanja."],
               ["⑩ 日本へ 美術の 勉強に 来ました。", "Datang ke Jepang untuk belajar seni."],
@@ -1326,11 +1326,11 @@ const MATERI_BOOK1_LESSONS = [
           },
           {
             label: "1) Kata Kerja Kelompok I",
-            text: "Kelompok ini, bunyi terakhir bentuk ます berakhir dengan bunyi pada kolom い.<br>Contoh: かきます　menulis, menggambar　のみます　minum",
+            text: "Kelompok ini, bunyi terakhir bentuk ます berakhir dengan bunyi pada kolom い.<br>Contoh: か<u>き</u>ます　menulis, menggambar　の<u>み</u>ます　minum",
           },
           {
             label: "2) Kata Kerja Kelompok II",
-            text: "Hampir semua kata yang tergolong ke dalam kelompok ini, bunyi terakhir bentuk ます berakhir dengan bunyi pada kolom え, tetapi terdapat pula sebagiannya berakhir dengan bunyi pada kolom い.<br>Contoh: たべます　makan　みせます　memperlihatkan　みます　melihat, menonton",
+            text: "Hampir semua kata yang tergolong ke dalam kelompok ini, bunyi terakhir bentuk ます berakhir dengan bunyi pada kolom え, tetapi terdapat pula sebagiannya berakhir dengan bunyi pada kolom い.<br>Contoh: た<u>べ</u>ます　makan　み<u>せ</u>ます　memperlihatkan　<u>み</u>ます　melihat, menonton",
           },
           {
             label: "3) Kata Kerja Kelompok III",
@@ -1349,20 +1349,20 @@ const MATERI_BOOK1_LESSONS = [
             label: "1) Kata Kerja Kelompok I",
           },
           {
-            text: "(1) Jika bunyi terakhir bentuk ます yang い, ち, り, maka い, ち, dan り perlu diganti dengan って.<br>Contoh: かいます → かって　membeli　まちます → まって　menunggu　かえります → かえって　pulang",
+            text: "(1) Jika bunyi terakhir bentuk ます yang い, ち, り, maka い, ち, dan り perlu diganti dengan って.<br>Contoh: か<u>い</u>ます → かって　membeli　ま<u>ち</u>ます → まって　menunggu　かえ<u>り</u>ます → かえって　pulang",
           },
           {
-            text: "(2) Jika bunyi terakhir bentuk ます yang み, び, に, maka み, び, dan に perlu diganti dengan んで.<br>Contoh: のみます → のんで　minum　よびます → よんで　memanggil　しにます → しんで　meninggal",
+            text: "(2) Jika bunyi terakhir bentuk ます yang み, び, に, maka み, び, dan に perlu diganti dengan んで.<br>Contoh: の<u>み</u>ます → のんで　minum　よ<u>び</u>ます → よんで　memanggil　し<u>に</u>ます → しんで　meninggal",
           },
           {
-            text: "(3) Jika bunyi terakhir bentuk ます yang き dan ぎ, maka masing-masing perlu diganti dengan いて dan いで.<br>Contoh: かきます → かいて　menulis, menggambar　いそぎます → いそいで　buru-buru<br>Dengan catatan いきます adalah pengecualian, karena itu berubah menjadi いって.",
+            text: "(3) Jika bunyi terakhir bentuk ます yang き dan ぎ, maka masing-masing perlu diganti dengan いて dan いで.<br>Contoh: か<u>き</u>ます → かいて　menulis, menggambar　いそ<u>ぎ</u>ます → いそいで　buru-buru<br>Dengan catatan いきます adalah pengecualian, karena itu berubah menjadi いって.",
           },
           {
-            text: "(4) Jika bunyi terakhir bentuk ます yang し, dibubuhkan て pada bentuk ます.<br>Contoh: かします → かして　meminjamkan",
+            text: "(4) Jika bunyi terakhir bentuk ます yang し, dibubuhkan て pada bentuk ます.<br>Contoh: か<u>し</u>ます → かして　meminjamkan",
           },
           {
             label: "2) Kata Kerja Kelompok II",
-            text: "Bubuhkan て pada bentuk ます.<br>Contoh: たべます → たべて　makan　みせます → みせて　memperlihatkan　みます → みて　melihat, menonton",
+            text: "Bubuhkan て pada bentuk ます.<br>Contoh: た<u>べ</u>ます → たべて　makan　み<u>せ</u>ます → みせて　memperlihatkan　<u>み</u>ます → みて　melihat, menonton",
           },
           {
             label: "3) Kata Kerja Kelompok III",
@@ -1377,7 +1377,7 @@ const MATERI_BOOK1_LESSONS = [
           {
             text: "Pola kalimat ini dipakai untuk memerintah, meminta, dan menawarkan sesuatu kepada lawan bicara. Dengan catatan bahwa, pada umumnya dipakai bersama dengan すみませんが seperti contoh ① di bawah ini, sebab maksud permintaan dianggap kurang halus.",
             examples: [
-              ["① すみませんが、この 漢字の 読み方を 教えて ください。", "Permisi, tolong ajarkan cara membaca Kanji ini. (permintaan)"],
+              ["① すみませんが、この 漢字の 読み方を 教えて ください。", "Permisi, tolong ajarkan cara membaca <i>Kanji</i> ini. (permintaan)"],
               ["② ボールペンで 名前を 書いて ください。", "Tolong tuliskan nama dengan bolpoin. (perintah)"],
               ["③ どうぞ たくさん 食べて ください。", "Silakan makan banyak. (ajakan)"],
             ],
@@ -1496,7 +1496,7 @@ const MATERI_BOOK1_LESSONS = [
             text: "もって います mempunyai dua arti yaitu, sekarang memegang di tangan dan memiliki.",
           },
           {
-            label: "2) Menunjukkan perbuatan dari kebiasan (aksi yang sama sedang berlangsung secara berulang-ulang dalam jangka waktu yang lama), atau pekerjaan dan status.",
+            label: "2) Menunjukkan perbuatan dari kebiasaan (aksi yang sama sedang berlangsung secara berulang-ulang dalam jangka waktu yang lama), atau pekerjaan dan status.",
             examples: [
               ["⑩ IMCは コンピューターソフトを 作って います。", "IMC memproduksi perangkat lunak komputer."],
               ["⑪ スーパーで ナンプラーを 売って います。", "Di pasar swalayan dijual kecap ikan."],
