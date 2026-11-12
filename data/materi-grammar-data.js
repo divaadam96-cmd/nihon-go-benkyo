@@ -540,7 +540,7 @@ const MATERI_BOOK1_LESSONS = [
         title: "Kata Benda を します",
         blocks: [
           {
-            text: "します disertai Kata Benda secara luas sebagai objek. します mempunyai arti bahwa melakukan hal yang ditunjukan oleh objek tersebut. Beberapa contoh diberikan di bawah ini:",
+            text: "します disertai Kata Benda secara luas sebagai objek. します mempunyai arti bahwa melakukan hal yang ditunjukkan oleh objek tersebut. Beberapa contoh diberikan di bawah ini:",
           },
           {
             label: "1) Olahraga, permainan dan lain-lain",
@@ -587,10 +587,10 @@ const MATERI_BOOK1_LESSONS = [
           {
             label: "1) Jika kata yang mengikutinya diawali dengan baris た, だ, dan な.",
             examples: [
-              ["④ それは 何ですか。", "Itu apa?"],
-              ["⑤ 何の 本ですか。", "Buku apa?"],
-              ["⑥ 寝る まえに、何と 言いますか。", "Sebelum tidur, mengucapkan apa? (Pel.21)"],
-              ["⑦ 何で 東京へ 行きますか。", "Dengan apa pergi ke Tokyo?"],
+              ["④ それは 何<u>で</u>すか。", "Itu apa?"],
+              ["⑤ 何<u>の</u> 本ですか。", "Buku apa?"],
+              ["⑥ 寝る まえに、何<u>と</u> 言いますか。", "Sebelum tidur, mengucapkan apa? (Pel.21)"],
+              ["⑦ 何<u>で</u> 東京へ 行きますか。", "Dengan apa pergi ke Tokyo?"],
             ],
           },
           {
@@ -671,8 +671,8 @@ const MATERI_BOOK1_LESSONS = [
           {
             text: "Pertanyaan ini digunakan ketika menanyakan bagaimana cara mengatakan arti kata atau kalimat dalam bahasa lain.",
             examples: [
-              ["③ 「ありがとう」は 英語で 何ですか。<br>……「Thank you」です。", "Apa bahasa Inggris dari “Arigato”?<br>……“Thank you”."],
-              ["④ 「Thank you」は 日本語で 何ですか。<br>……「ありがとう」です。", "Apa bahasa Jepang dari “Thank you”?<br>……“Arigato”."],
+              ["③ 「ありがとう」は 英語で 何ですか。<br>……「Thank you」です。", "Apa bahasa Inggris dari “<i>Arigato</i>”?<br>……“<i>Thank you</i>”."],
+              ["④ 「Thank you」は 日本語で 何ですか。<br>……「ありがとう」です。", "Apa bahasa Jepang dari “<i>Thank you</i>”?<br>……“<i>Arigato</i>”."],
             ],
           },
         ],
@@ -681,7 +681,7 @@ const MATERI_BOOK1_LESSONS = [
         title: "Kata Benda<sub>1</sub>（orang）に Kata Benda<sub>2</sub> を あげます dan lain-lain",
         blocks: [
           {
-            text: "Kata Kerja あげます, かします, おしえます dan lain-lainnya menunjukkan arti yang memberi barang atau informasi, dan memerlukan lawan yang diberikan barang atau informasi. Kata Benda<sub>1</sub> (orang) tersebut dibubuhkan dengan patrikel に.",
+            text: "Kata Kerja あげます, かします, おしえます dan lain-lainnya menunjukkan arti yang memberi barang atau informasi, dan memerlukan lawan yang diberikan barang atau informasi. Kata Benda<sub>1</sub> (orang) tersebut dibubuhkan dengan partikel に.",
             examples: [
               ["⑤ ［わたしは］ 木村さんに 花を あげました。", "Saya memberikan Sdr. Kimura bunga."],
               ["⑥ ［わたしは］ イーさんに 本を 貸しました。", "Saya meminjamkan buku kepada Sdr. Lee."],
@@ -694,11 +694,11 @@ const MATERI_BOOK1_LESSONS = [
         title: "Kata Benda<sub>1</sub>（orang）に Kata Benda<sub>2</sub> を もらいます dan lain-lain",
         blocks: [
           {
-            text: "Kata Kerja もらいます, かります, ならいます dan lain-lainnya menunjukkan arti yang menerima barang atau informasi, dan memerlukan lawan yang diberikan barang atau informasi. Kata Benda<sub>1</sub> (orang) tersebut dibubuhkan dengan  patrikel に.",
+            text: "Kata Kerja もらいます, かります, ならいます dan lain-lainnya menunjukkan arti yang menerima barang atau informasi, dan memerlukan lawan yang diberikan barang atau informasi. Kata Benda<sub>1</sub> (orang) tersebut dibubuhkan dengan partikel に.",
             examples: [
               ["⑧ ［わたしは］ 山田さんに 花を もらいました。", "Saya mendapatkan bunga dari Sdr. Yamada."],
               ["⑨ ［わたしは］ カリナさんに CDを 借りました。", "Saya meminjam CD dari Karina."],
-              ["⑩ ［わたしは］ ワンさんに 中国語を 習います。", "Saya belajar bahasa Tionghua dari Sdr. Wang."],
+              ["⑩ ［わたしは］ ワンさんに 中国語を 習います。", "Saya belajar bahasa Tionghoa dari Sdr. Wang."],
             ],
           },
           {
@@ -749,7 +749,7 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
       {
-        title: "Kata Benda は Kata Sifat な［な］です<br>Kata Benda は Kata Sifat い（～い）です",
+        title: "Kata Benda は Kata Sifat な［<span class=\"grammar-coret\">な</span>］です<br>Kata Benda は Kata Sifat い（～い）です",
         blocks: [
           {
             text: "Kalimat adjektival positif waktu non lampau diakhiri です. です menunjukkan sikap yang hormat terhadap pendengar. Kata Sifat な disambung dengan です tanpa な, sedangkan Kata Sifat い disambung dengan です dalam bentuk yang sama.",
@@ -759,7 +759,7 @@ const MATERI_BOOK1_LESSONS = [
             ],
           },
           {
-            label: "1) Kata Sifat な［な］じゃ（では）ありません",
+            label: "1) Kata Sifat な［<span class=\"grammar-coret\">な</span>］じゃ（では）ありません",
             text: "Negatif waktu non lampau dari Kata Sifat な dibuat dengan dibubuhkan じゃ（では）ありません pada bentuk tanpa な dari Kata Sifat な.",
             examples: [["③ あそこは 静かじゃ（では）ありません。", "Di sana tidak sunyi."]],
           },
@@ -775,7 +775,7 @@ const MATERI_BOOK1_LESSONS = [
               headers: ["Kata Sifat な", "Kata Sifat い"],
               rows: [
                 ["Positif waktu non lampau", "しんせつです", "たかいです"],
-                ["Negaif waktu non lampau", "しんせつじゃ（では）ありません", "たかくないです"],
+                ["Negatif waktu non lampau", "しんせつじゃ（では）ありません", "たかくないです"],
               ],
             },
           },
@@ -792,7 +792,7 @@ const MATERI_BOOK1_LESSONS = [
         title: "Kata Sifat な［な］ Kata Benda<br>Kata Sifat い（～い） Kata Benda",
         blocks: [
           {
-            text: "Jika Kata Sifat menerangkan Kata Benda, Kata Sifat diletakan di depan Kata Benda. Kata Sifat な menerangkan Kata Benda dengan bentuk diikuti な.",
+            text: "Jika Kata Sifat menerangkan Kata Benda, Kata Sifat diletakkan di depan Kata Benda. Kata Sifat な menerangkan Kata Benda dengan bentuk diikuti な.",
             examples: [
               ["⑦ ワット先生は 親切な 先生です。", "Bapak Watt adalah guru yang baik hati."],
               ["⑧ 富士山は 高い 山です。", "Gunung Fuji adalah gunung yang tinggi."],
@@ -948,7 +948,7 @@ const MATERI_BOOK1_LESSONS = [
             label: "1) あります digunakan untuk menyatakan keberadaan benda atau tumbuhan dan lain-lainnya yang tidak bergerak dengan sendirinya.",
             examples: [
               ["① コンピューターが あります。", "Ada komputer."],
-              ["② 桜が あります。", "Ada Sakura."],
+              ["② 桜が あります。", "Ada <i>Sakura</i>."],
               ["③ 公園が あります。", "Ada taman."],
             ],
           },
@@ -977,7 +977,7 @@ const MATERI_BOOK1_LESSONS = [
           {
             label: "2) Kata Tanya なに digunakan untuk menanyakan benda atau orang yang berada, dan Kata Tanya だれ digunakan untuk menanyakan keberadaan orang.",
             examples: [
-              ["⑧ 地下に 何が ありますか。<br>……レストランが あります。", "Di lantai basement ada apa?<br>……Ada restoran."],
+              ["⑧ 地下に 何が ありますか。<br>……レストランが あります。", "Di lantai <i>basement</i> ada apa?<br>……Ada restoran."],
               ["⑨ 受付に だれが いますか。<br>……木村さんが います。", "Di resepsionis ada siapa?<br>……Ada Sdr. Kimura."],
             ],
             note: "[Perhatian] Tidak terbatas contoh di atas ini, perlu hati-hati bahwa partikel di belakang Kata Tanya adalah が.（×なには　×だれは）.",
