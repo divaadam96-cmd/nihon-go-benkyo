@@ -1553,7 +1553,7 @@ const MATERI_BOOK1_LESSONS = [
             ],
           },
           {
-            label: "2) Kata Sifat い（～い）→ ～くて",
+            label: "2) Kata Sifat い（～<span class=\"grammar-coret\">い</span>）→ ～くて",
             text: "おおきーい → おおきーくて　besar<br>ちいさーい → ちいさーくて　kecil<br>いーい → 　よーくて（pengecualian）　baik, bagus",
             examples: [
               ["③ ミラーさんは 若くて、元気です。", "Sdr. Miller muda dan sehat."],
@@ -1561,7 +1561,7 @@ const MATERI_BOOK1_LESSONS = [
             ],
           },
           {
-            label: "3) Kata Sifat な［な］→ ～で",
+            label: "3) Kata Sifat な［<span class=\"grammar-coret\">な</span>］→ ～で",
             examples: [
               ["⑤ ミラーさんは ハンサムで、親切です。", "Sdr. Miller ganteng dan baik hati."],
               ["⑥ 奈良は 静かで、きれいな 町です。", "Nara adalah kota yang tenang dan indah."],
@@ -1628,7 +1628,7 @@ const MATERI_BOOK1_LESSONS = [
         title: "どれ／どの Kata Benda",
         blocks: [
           {
-            text: "どれ adalah Kata Tanya untuk meminta untuk menuntukan satu dari lebih dari tiga macam pilihan yang ditunjukkan secara konkret.",
+            text: "どれ adalah Kata Tanya untuk meminta untuk menentukan satu dari lebih dari tiga macam pilihan yang ditunjukkan secara konkret.",
             examples: [["⑰ ミラーさんの 傘は どれですか。<br>……あの 青い 傘です。", "Yang mana payung Sdr. Miller?<br>……Payung yang biru itu."]],
           },
           {
@@ -1705,10 +1705,10 @@ const MATERI_BOOK1_LESSONS = [
             text: "Jika menyatakan dengan objek langsung sebagai topik, maka partikel を dihilangkan kemudian membubuhkan partikel は, lalu diletakkan paling di depan dalam kalimat.",
             examples: [
               ["ここに　荷物を　置かないで　ください。", "Jangan letakkan barang di sini."],
-              ["荷物<span class=\"grammar-kecil\">を</span>は　ここに　置かないで　ください。", ""],
+              ["荷物<span class=\"grammar-coret\">を</span>は　ここに　置かないで　ください。", ""],
               ["⑤　荷物<u>は</u>　　ここに　置かないで　ください。", "Barangnya jangan diletakkan di sini."],
               ["会社の　食堂で　昼ごはんを　食べます。", "Makan siang di kantin perusahaan."],
-              ["昼ごはん<span class=\"grammar-kecil\">を</span>は　会社の　食堂で　食べます。", ""],
+              ["昼ごはん<span class=\"grammar-coret\">を</span>は　会社の　食堂で　食べます。", ""],
               ["⑥　昼ごはん<u>は</u>　　会社の　食堂で　食べます。", "Makan siangnya makan di kantin perusahaan."],
             ],
           },
@@ -1767,7 +1767,7 @@ const MATERI_BOOK1_LESSONS = [
           },
           {
             label: "1) Untuk Kata Benda",
-            text: "Dipakai Kata Benda yang bersifat aksi（うんてん、かいもの、スキー、ダンス）。Kemudian digunakan juga Kata Benda seperti にほんご、atau ピアノ yang menunjukkan ketrampilan.",
+            text: "Dipakai Kata Benda yang bersifat aksi（うんてん、かいもの、スキー、ダンス）。Kemudian digunakan juga Kata Benda seperti にほんご、atau ピアノ yang menunjukkan keterampilan.",
             examples: [
               ["① ミラーさんは 日本語が できます。", "Sdr. Miller bisa berbahasa Jepang."],
               ["② 雪が たくさん 降りましたから、ことしは スキーが できます。", "Karena salju turun banyak, tahun ini dapat bermain ski."],
@@ -1861,6 +1861,7 @@ const MATERI_BOOK1_LESSONS = [
         suffix: "Pernah......",
         blocks: [
           {
+            text: "Ungkapan ini sesuatu yang dianggap telah dilakukan pada waktu lampau dinyatakan sebagai pengalaman pada saat menceritakannya.",
             examples: [["① 馬に 乗った ことが あります。", "Pernah berkuda."]],
           },
           {
@@ -1887,12 +1888,12 @@ const MATERI_BOOK1_LESSONS = [
             examples: [["⑤ 日曜日は テニスを して、映画を 見ました。", "Pada hari Minggu yang lalu, bermain tenis, kemudian menonton film."]],
           },
           {
-            note: "Akan tetapi, tidak ada hubungan tentang waktu di antara aksi yang diangkat dengan Kata Kerja<sub>1</sub> Bentuk たり、Kata Kerja<sub>2</sub> Bentuk たり します. Dengan pola kalimat ini mengangkat aksi yang mewakilinya, maka tidak wajar untuk mengatakan hal-hal yang dilakukan setiap hari (bangun pagi, makan, tidur malam, dan lain-lain).",
+            text: "Akan tetapi, tidak ada hubungan tentang waktu di antara aksi yang diangkat dengan Kata Kerja<sub>1</sub> Bentuk たり、Kata Kerja<sub>2</sub> Bentuk たり します. Dengan pola kalimat ini mengangkat aksi yang mewakilinya, maka tidak wajar untuk mengatakan hal-hal yang dilakukan setiap hari (bangun pagi, makan, tidur malam, dan lain-lain).",
           },
         ],
       },
       {
-        title: "Kata Sifat い（～い）→　～く<br>Kata Sifat な［な］→　～に<br>Kata Benda に｝なります",
+        title: "Kata Sifat い（～<span class=\"grammar-coret\">い</span>）→　～く<br>Kata Sifat な［<span class=\"grammar-coret\">な</span>］→　～に<br>Kata Benda に｝なります",
         suffix: "Menjadi......",
         blocks: [
           {
@@ -1921,7 +1922,7 @@ const MATERI_BOOK1_LESSONS = [
               rows: [
                 ["", "あした 東京へ 行きます。<br>Besok pergi ke Tokyo.", "あした 東京へ 行く。<br>Besok pergi ke Tokyo."],
                 ["", "毎日 忙しいです。<br>Setiap hari sibuk.", "毎日 忙しい。<br>Setiap hari sibuk."],
-                ["", "相撲が 好きです。<br>Suka sumo.", "相撲が 好きだ。<br>Suka sumo."],
+                ["", "相撲が 好きです。<br>Suka <i>sumo</i>.", "相撲が 好きだ。<br>Suka <i>sumo</i>."],
                 ["", "富士山に 登りたいです。<br>Ingin mendaki gunung Fuji.", "富士山に 登りたい。<br>Ingin mendaki gunung Fuji."],
                 ["", "ドイツへ 行った ことが ありません。<br>Belum pernah pergi ke Jerman.", "ドイツへ 行った ことが ない。<br>Belum pernah pergi ke Jerman."],
               ],
@@ -1938,7 +1939,7 @@ const MATERI_BOOK1_LESSONS = [
         blocks: [
           {
             label: "1) Percakapan",
-            text: "Bentuk sopan dipakai untuk orang yang baru saja dikenal, atasan, atau orang yang tidak begitu akrab walaupun orang itu gerenasi yang sama. Sedangkan bentuk biasa dipakai untuk teman akrab, rekan, atau percakapan antara keluarga.<br>Jika memakai bentuk biasa kepada lawan bicara yang tidak tepat maka dianggap tidak sopan, karena itu perlu hati-hati kepada lawan bicara yang boleh atau tidak untuk memakai bentuk biasa.",
+            text: "Bentuk sopan dipakai untuk orang yang baru saja dikenal, atasan, atau orang yang tidak begitu akrab walaupun orang itu generasi yang sama. Sedangkan bentuk biasa dipakai untuk teman akrab, rekan, atau percakapan antara keluarga.<br>Jika memakai bentuk biasa kepada lawan bicara yang tidak tepat maka dianggap tidak sopan, karena itu perlu hati-hati kepada lawan bicara yang boleh atau tidak untuk memakai bentuk biasa.",
           },
           {
             label: "2) Ketika menulis",
@@ -1969,7 +1970,7 @@ const MATERI_BOOK1_LESSONS = [
               ["⑤ この りんご［は］ おいしいね。", "Apel ini enak ya."],
               ["⑥ そこに はさみ［が］ ある？", "Di situ ada gunting?"],
             ],
-            note: "Akan tetapi, partikel で、に、から、まで、と、dan sebagainya tidak dihilangkan sebab konteksnya menjadi tidak jelas.",
+            text: "Akan tetapi, partikel で、に、から、まで、と、dan sebagainya tidak dihilangkan sebab konteksnya menjadi tidak jelas.",
           },
           {
             label: "4)",
