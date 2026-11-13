@@ -302,8 +302,28 @@ async function revealApp(profile) {
   }
 }
 
+/* Link reset yang ditolak Supabase kembali ke sini dengan
+   #error_code=otp_expired (dsb.) dan TANPA type=recovery. Tanpa ini pengguna
+   cuma melihat form login tanpa penjelasan. Link sekali pakai juga bisa
+   "terpakai" oleh pemindai keamanan email yang membukanya lebih dulu. */
+function showRecoveryLinkErrorOnce() {
+  const params = new URLSearchParams(window.location.hash.slice(1) || window.location.search);
+  const code = params.get("error_code");
+  if (!code) return;
+  history.replaceState(null, "", window.location.pathname);
+  loginFormEl.hidden = true;
+  forgotFormEl.hidden = false;
+  forgotSuccessEl.hidden = true;
+  forgotErrorEl.textContent =
+    code === "otp_expired"
+      ? "Link reset sudah kedaluwarsa atau sudah pernah dibuka. Kirim link baru di bawah, lalu buka HANYA link di email terbaru."
+      : `Link reset tidak dapat dipakai: ${params.get("error_description") || code}. Kirim link baru di bawah.`;
+  forgotErrorEl.hidden = false;
+}
+
 async function trySession() {
   showIdleLogoutMessageOnce();
+  showRecoveryLinkErrorOnce();
   if (isPasswordRecoveryLink) {
     loginFormEl.hidden = true;
     forgotFormEl.hidden = true;
@@ -394,6 +414,30 @@ forgotFormEl.addEventListener("submit", async (event) => {
   forgotSuccessEl.hidden = false;
 });
 
+/* Dulu SEMUA kegagalan ditampilkan sebagai "link kedaluwarsa", padahal
+   penyebabnya bisa lain (perlu kode 2 langkah, password sama dengan yang
+   lama, dst.) - pesan dipilih dari kode error Supabase. */
+function resetErrorMessage(error) {
+  switch (error.code) {
+    case "same_password":
+      return "Password baru tidak boleh sama dengan password lama.";
+    case "weak_password":
+      return PASSWORD_RULE_MESSAGE;
+    case "insufficient_aal":
+    case "mfa_verification_failed":
+      return "Verifikasi dua langkah belum berhasil. Coba simpan lagi lalu masukkan kode terbaru dari aplikasi authenticator.";
+    case "session_not_found":
+    case "session_expired":
+    case "refresh_token_not_found":
+      return "Link reset sudah tidak berlaku (kedaluwarsa atau sudah dipakai). Minta link reset baru.";
+    default:
+      if (error.name === "AuthSessionMissingError") {
+        return "Link reset sudah tidak berlaku (kedaluwarsa atau sudah dipakai). Minta link reset baru.";
+      }
+      return `Gagal menyimpan password baru: ${error.message}`;
+  }
+}
+
 resetPasswordFormEl.addEventListener("submit", async (event) => {
   event.preventDefault();
   resetErrorEl.hidden = true;
@@ -409,13 +453,24 @@ resetPasswordFormEl.addEventListener("submit", async (event) => {
   }
   resetSubmitEl.disabled = true;
   resetSubmitEl.textContent = "Menyimpan…";
-  const { error } = await window.supabaseClient.auth.updateUser({
-    password: newPasswordEl.value,
-  });
+  const savePassword = () => window.supabaseClient.auth.updateUser({ password: newPasswordEl.value });
+  let { error } = await savePassword();
+  /* Akun yang memakai verifikasi dua langkah (Operator) hanya boleh ganti
+     password dari sesi aal2, sedangkan sesi dari link reset masih aal1 ->
+     minta kode authenticator dulu, lalu simpan ulang. */
+  if (error?.code === "insufficient_aal") {
+    try {
+      await requireOperatorMfa();
+      ({ error } = await savePassword());
+    } catch (mfaError) {
+      error = mfaError;
+    }
+    resetPasswordFormEl.hidden = false;
+  }
   resetSubmitEl.disabled = false;
   resetSubmitEl.textContent = "Simpan password baru";
   if (error) {
-    resetErrorEl.textContent = "Gagal menyimpan password baru. Link mungkin sudah kedaluwarsa - minta link reset baru.";
+    resetErrorEl.textContent = resetErrorMessage(error);
     resetErrorEl.hidden = false;
     return;
   }
