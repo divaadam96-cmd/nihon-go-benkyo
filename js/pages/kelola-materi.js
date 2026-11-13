@@ -37,6 +37,7 @@ const CATATAN_MAKS = 300;
 
 let ringkasan = []; // baris konten_list()
 let laporanPerBab = {}; // bab -> {baru, terbuka} dari laporan_ringkas()
+let bentrokPerBab = {}; // bab -> {jenis: "berubah" | "belum"} untuk isi terbit (cekBentrok)
 let laporanFilter = { status: "terbuka", bab: null };
 /* current: { bab, isi: {kosakata, kanji, kalimat} lengkap (bawaan + suntingan),
    terbit, base, source, updatedBy, dirty, tab, serverErrors } */
@@ -252,6 +253,150 @@ function isiDisimpan() {
 function diubahDariBawaan(jenis) {
   return !sama(rapikan(jenis, current.isi[jenis]), rapikan(jenis, bawaan(jenis, current.bab)));
 }
+function kembalikanKeBawaan(jenis) {
+  if (!window.confirm(`Kembalikan ${NAMA_JENIS[jenis].toLowerCase()} Pelajaran ${current.bab} ke isi bawaan? Suntingan di bagian ini dihapus dari draft (isi terbit baru berubah setelah diterbitkan).`)) return;
+  current.isi[jenis] = bawaan(jenis, current.bab);
+  // Bagian ini tidak lagi menutupi isi bawaan: catatan lamanya tidak berlaku.
+  delete current.catatanBawaan[jenis];
+  delete current.bentrok[jenis];
+  current.awal.delete(jenis);
+  markDirty();
+  renderEditor();
+}
+
+// ---------- Pengaman bentrok: isi bawaan direvisi setelah disunting ----------
+/* Suntingan yang terbit MENUTUPI seluruh isi bawaan bagian itu. Kalau isi
+   bawaan di berkas data kemudian direvisi lewat kode (mis. verifikasi isi
+   buku), siswa tetap melihat suntingan lama dan revisinya tidak sampai.
+   Karena itu saat menyimpan, editor mencatat isi bawaan yang dipakai
+   ({hash, isi} per bagian, kolom `bawaan` di supabase/add-editor-konten.sql);
+   saat dibuka, catatan itu dibandingkan dengan isi bawaan sekarang.
+   Status per bagian: "berubah" (isi bawaan sudah direvisi sejak disunting)
+   atau "belum" (suntingan lama dari sebelum pencatatan ini, jadi tidak bisa
+   dicek otomatis). Pengecoh tidak dicatat: suntingannya ditambahkan DI ATAS
+   data bawaan, tidak menutupinya. */
+const JENIS_BAWAAN = ["materi", "kosakata", "kanji", "kalimat"];
+const TAB_JENIS = { materi: "materi", kosakata: "kosakata", kanji: "kanji", kalimat: "susun" };
+const hashBawaan = new Map();
+function sidikBawaan(jenis, bab) {
+  const kunci = `${jenis}:${bab}`;
+  if (!hashBawaan.has(kunci)) {
+    const teks = new TextEncoder().encode(JSON.stringify(rapikan(jenis, bawaan(jenis, bab))));
+    hashBawaan.set(kunci, crypto.subtle.digest("SHA-256", teks)
+      .then((buf) => Array.from(new Uint8Array(buf), (x) => x.toString(16).padStart(2, "0")).join("")));
+  }
+  return hashBawaan.get(kunci);
+}
+async function catatBawaan(jenis, bab) {
+  return { hash: await sidikBawaan(jenis, bab), isi: rapikan(jenis, bawaan(jenis, bab)) };
+}
+/* catatan = {jenis: {hash, ...}} atau null; disunting = bagian yang menutupi
+   isi bawaan. Hasil: {jenis: "berubah" | "belum"} (kosong = aman). */
+async function cekBentrok(bab, catatan, disunting) {
+  const hasil = {};
+  for (const jenis of JENIS_BAWAAN) {
+    if (!disunting.includes(jenis)) continue;
+    const c = catatan && catatan[jenis];
+    if (!c || typeof c.hash !== "string") hasil[jenis] = "belum";
+    else if (c.hash !== (await sidikBawaan(jenis, bab))) hasil[jenis] = "berubah";
+  }
+  return hasil;
+}
+/* Catatan bawaan yang dikirim saat menyimpan draft: bagian yang baru mulai
+   disunting dicatat dengan isi bawaan sekarang; bagian yang sudah punya
+   catatan memakai catatan itu (diperbarui hanya lewat "Sudah saya
+   sesuaikan"), supaya peringatan tidak hilang sendiri hanya karena disimpan. */
+async function bawaanDisimpan(isi) {
+  const hasil = {};
+  for (const jenis of JENIS_BAWAAN) {
+    if (isi[jenis] === undefined) continue;
+    const c = current.catatanBawaan[jenis];
+    if (c) hasil[jenis] = c;
+    else if (!current.awal.has(jenis)) hasil[jenis] = await catatBawaan(jenis, current.bab);
+  }
+  return Object.keys(hasil).length ? hasil : null;
+}
+
+/* Ringkasan beda dua isi satu bagian (maks. 8 baris), untuk peringatan. */
+const polos = (html) => String(html ?? "").replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim();
+function bedaBaris(lama, baru, label) {
+  const kunciLama = new Set(lama.map((x) => JSON.stringify(x)));
+  const kunciBaru = new Set(baru.map((x) => JSON.stringify(x)));
+  return [
+    ...lama.filter((x) => !kunciBaru.has(JSON.stringify(x))).map((x) => `− ${label(x)}`),
+    ...baru.filter((x) => !kunciLama.has(JSON.stringify(x))).map((x) => `+ ${label(x)}`),
+  ];
+}
+function ringkasBeda(jenis, lama, baru) {
+  let hasil;
+  if (jenis === "kosakata" || jenis === "kanji") {
+    hasil = bedaBaris(lama, baru, (x) => x.filter(Boolean).join(" · "));
+  } else if (jenis === "kalimat") {
+    hasil = [
+      ...bedaBaris(lama.susun, baru.susun, (x) => `Susun: ${x.potongan.join("")} (${x.arti})`),
+      ...bedaBaris(lama.pilih, baru.pilih, (x) => `Pilih: ${x.benar} (${x.arti})`),
+    ];
+  } else {
+    hasil = [];
+    if (lama.title !== baru.title) hasil.push(`Judul: ${polos(lama.title)} → ${polos(baru.title)}`);
+    for (let i = 0; i < Math.max(lama.items.length, baru.items.length); i++) {
+      const a = lama.items[i];
+      const b = baru.items[i];
+      if (!a) hasil.push(`+ Pola ${i + 1} baru: ${polos(b.title)}`);
+      else if (!b) hasil.push(`− Pola ${i + 1} dihapus: ${polos(a.title)}`);
+      else if (!sama(a, b)) hasil.push(`Pola ${i + 1} (${polos(b.title)}) berubah`);
+    }
+  }
+  return hasil.length > 8 ? [...hasil.slice(0, 8), `…dan ${hasil.length - 8} lainnya`] : hasil;
+}
+
+async function perbaruiBentrok() {
+  const bab = current.bab;
+  const hasil = await cekBentrok(bab, current.catatanBawaan, [...current.awal]);
+  if (!current || current.bab !== bab) return;
+  current.bentrok = hasil;
+  paintBentrok();
+}
+function paintBentrok() {
+  const el = $("kmBentrok");
+  if (!el) return;
+  const daftar = Object.entries(current.bentrok);
+  el.hidden = !daftar.length;
+  if (!daftar.length) {
+    el.innerHTML = "";
+    return;
+  }
+  el.innerHTML = `<b>⚠ Isi bawaan perlu dicocokkan dengan suntingan</b>${daftar.map(([jenis, status]) => {
+    const nama = NAMA_JENIS[jenis];
+    const sekarang = rapikan(jenis, bawaan(jenis, current.bab));
+    const [pesan, judulBeda, beda] = status === "berubah"
+      ? [`Isi bawaan <b>${nama.toLowerCase()}</b> sudah direvisi sejak bagian ini disunting. Suntingan masih menutupi revisi itu, jadi siswa belum melihatnya.`,
+        "Yang direvisi di isi bawaan:", ringkasBeda(jenis, current.catatanBawaan[jenis].isi, sekarang)]
+      : [`Suntingan <b>${nama.toLowerCase()}</b> dibuat sebelum isi bawaan ikut dicatat, jadi revisi isi bawaan tidak bisa dicek otomatis. Pastikan revisi terbaru isi bawaan sudah ikut masuk.`,
+        "Beda suntingan dengan isi bawaan sekarang:", ringkasBeda(jenis, sekarang, rapikan(jenis, current.isi[jenis]))];
+    return `<div class="km-bentrok-item" data-jenis="${jenis}"><p>${pesan}</p>${beda.length ? `<details><summary>${judulBeda}</summary><ul>${beda.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul></details>` : ""}<div class="km-bentrok-aksi"><button type="button" class="ks-link" data-bentrok="buka">Buka ${escapeHtml(nama.toLowerCase())}</button><button type="button" class="ks-link" data-bentrok="bawaan">Pakai isi bawaan terbaru</button><button type="button" class="secondary" data-bentrok="sesuai">✔ Sudah saya sesuaikan</button></div></div>`;
+  }).join("")}`;
+}
+async function aksiBentrok(event) {
+  const button = event.target.closest("[data-bentrok]");
+  if (!button) return;
+  const jenis = button.closest("[data-jenis]").dataset.jenis;
+  const act = button.dataset.bentrok;
+  if (act === "buka") {
+    current.tab = TAB_JENIS[jenis];
+    filterText = "";
+    renderEditor();
+  } else if (act === "bawaan") {
+    kembalikanKeBawaan(jenis);
+  } else if (act === "sesuai") {
+    if (!window.confirm(`Suntingan ${NAMA_JENIS[jenis].toLowerCase()} Pelajaran ${current.bab} sudah mencakup revisi isi bawaan terbaru? Peringatan ini hilang setelah draft disimpan dan diterbitkan.`)) return;
+    current.catatanBawaan[jenis] = await catatBawaan(jenis, current.bab);
+    delete current.bentrok[jenis];
+    markDirty();
+    paintBentrok();
+    showFeedback("success", `Ditandai sudah disesuaikan. Simpan draft lalu terbitkan supaya tercatat.`);
+  }
+}
 
 // ---------- Daftar pelajaran ----------
 async function loadList() {
@@ -261,6 +406,14 @@ async function loadList() {
     return;
   }
   ringkasan = data || [];
+  // sidik = {jenis: hash} catatan isi bawaan dari isi terbit.
+  const hasil = await Promise.all(ringkasan.map((r) => cekBentrok(
+    r.bab,
+    r.sidik && Object.fromEntries(Object.entries(r.sidik).map(([jenis, hash]) => [jenis, { hash }])),
+    r.diubah || [],
+  )));
+  bentrokPerBab = {};
+  ringkasan.forEach((r, i) => Object.keys(hasil[i]).length && (bentrokPerBab[r.bab] = hasil[i]));
   renderList();
   if (current) paintTinjau();
 }
@@ -272,20 +425,25 @@ function renderList() {
     const diubah = (r.diubah || []).map((j) => NAMA_JENIS[j] || j);
     const tinjau = perluTinjau(r);
     const lapor = laporanPerBab[bab];
+    const bentrok = Object.entries(bentrokPerBab[bab] || {});
     const title = [
+      bentrok.length ? `isi bawaan perlu dicocokkan: ${bentrok.map(([j, st]) => `${NAMA_JENIS[j].toLowerCase()} (${st === "berubah" ? "sudah direvisi" : "belum tercatat"})`).join(", ")}` : "",
       lapor ? `${lapor.terbuka} laporan siswa terbuka` : "",
       `Pelajaran ${bab}`,
       diubah.length ? `diubah: ${diubah.join(", ")}` : "isi bawaan",
       r.has_draft ? `ada draft (${r.draft_updated_by || "Operator"})` : "",
       r.ditinjau_at ? `ditinjau ${tanggal(r.ditinjau_at)}${tinjau ? " - perlu ditinjau ulang" : ""}` : "belum pernah ditinjau",
     ].filter(Boolean).join(" · ");
-    return `<button type="button" class="km-bab${current && current.bab === bab ? " active" : ""}" data-bab="${bab}" title="${escapeHtml(title)}"><b>${bab}</b><span>${diubah.length ? '<i class="km-dot diubah"></i>' : ""}${r.has_draft ? '<i class="km-dot draft"></i>' : ""}${tinjau ? '<i class="km-dot tinjau"></i>' : ""}${lapor ? '<i class="km-dot lapor"></i>' : ""}</span></button>`;
+    return `<button type="button" class="km-bab${current && current.bab === bab ? " active" : ""}" data-bab="${bab}" title="${escapeHtml(title)}"><b>${bab}</b><span>${diubah.length ? '<i class="km-dot diubah"></i>' : ""}${r.has_draft ? '<i class="km-dot draft"></i>' : ""}${tinjau ? '<i class="km-dot tinjau"></i>' : ""}${lapor ? '<i class="km-dot lapor"></i>' : ""}${bentrok.length ? `<i class="km-dot bentrok${bentrok.some(([, st]) => st === "berubah") ? "" : " belum"}"></i>` : ""}</span></button>`;
   }).join("");
   const lama = ringkasan.filter((r) => r.ditinjau_at && perluTinjau(r)).length;
   const belum = ringkasan.filter((r) => !r.ditinjau_at).length;
   $("kmTinjauRingkas").textContent = lama + belum
     ? `Perlu ditinjau: ${lama + belum} pelajaran (${[belum ? `${belum} belum pernah` : "", lama ? `${lama} lebih dari 12 bulan` : ""].filter(Boolean).join(", ")}).`
     : "Semua pelajaran sudah ditinjau dalam 12 bulan terakhir.";
+  const nBentrok = Object.keys(bentrokPerBab).length;
+  $("kmBentrokRingkas").hidden = !nBentrok;
+  $("kmBentrokRingkas").textContent = nBentrok ? `Isi bawaan perlu dicocokkan dengan suntingan: ${nBentrok} pelajaran (${Object.keys(bentrokPerBab).join(", ")}).` : "";
 }
 listEl.addEventListener("click", (event) => {
   const button = event.target.closest(".km-bab");
@@ -318,6 +476,11 @@ async function openBab(bab, { paksa = false, tab = null } = {}) {
     catatan: "",
     tab: tab || (current && current.tab !== "riwayat" ? current.tab : "materi"),
     serverErrors: [],
+    // Pengaman bentrok: catatan isi bawaan milik isi yang dibuka (draft/terbit),
+    // bagian yang menutupi isi bawaan saat dibuka, dan hasil pengecekannya.
+    catatanBawaan: salin((data.source === "draft" ? data.bawaan_draft : data.bawaan_terbit) || {}),
+    awal: new Set(JENIS_BAWAAN.filter((jenis) => data.isi?.[jenis] !== undefined)),
+    bentrok: {},
   };
   filterText = "";
   pengecohTerbuka = new Set();
@@ -325,6 +488,7 @@ async function openBab(bab, { paksa = false, tab = null } = {}) {
   pratinjau = new Set();
   renderList();
   renderEditor();
+  perbaruiBentrok();
 }
 
 // ---------- Editor ----------
@@ -357,6 +521,7 @@ function renderEditor() {
       </div>
     </header>
     <div class="km-tinjau" id="kmTinjau"></div>
+    <div class="km-bentrok" id="kmBentrok" hidden></div>
     <label class="km-catatan">Catatan pembaruan untuk siswa <small>(opsional, dikirim saat Terbitkan)</small>
       <input type="text" id="kmCatatan" maxlength="${CATATAN_MAKS}" placeholder="mis. Contoh percakapan di konbini disesuaikan dengan kasir mandiri">
       <small class="muted">Tampil di halaman Materi bersama tanda "Diperbarui". Kosongkan untuk perbaikan kecil seperti salah ketik.</small>
@@ -374,6 +539,8 @@ function renderEditor() {
   $("kmCatatan").value = current.catatan;
   $("kmCatatan").oninput = (event) => (current.catatan = event.target.value);
   paintTinjau();
+  paintBentrok();
+  $("kmBentrok").onclick = aksiBentrok;
   if (current.serverErrors.length) showFeedback("error", "Belum bisa diterbitkan:", current.serverErrors);
   if (current.tab === "riwayat") renderHistoryTab();
   else if (current.tab === "materi") renderMateriTab();
@@ -500,12 +667,7 @@ function renderDaftarTab() {
   filterEl.oninput = () => { filterText = filterEl.value; paintRows(); };
   if (tab === "kosakata" || tab === "kanji") siapkanDaftarKata();
   const reset = $("kmReset");
-  if (reset) reset.onclick = () => {
-    if (!window.confirm(`Kembalikan ${NAMA_JENIS[jenis].toLowerCase()} Pelajaran ${current.bab} ke isi bawaan? Suntingan di bagian ini dihapus dari draft (isi terbit baru berubah setelah diterbitkan).`)) return;
-    current.isi[jenis] = bawaan(jenis, current.bab);
-    markDirty();
-    renderEditor();
-  };
+  if (reset) reset.onclick = () => kembalikanKeBawaan(jenis);
   $("kmAdd").onclick = () => {
     const list = daftarFor(tab);
     list.push(kosong(tab));
@@ -1226,10 +1388,7 @@ editorEl.addEventListener("click", (event) => {
   const act = button.dataset.mact;
   const m = current.isi.materi;
   if (act === "reset") {
-    if (!window.confirm(`Kembalikan tata bahasa Pelajaran ${current.bab} ke isi bawaan? Suntingan di bagian ini dihapus dari draft (isi terbit baru berubah setelah diterbitkan).`)) return;
-    current.isi.materi = bawaan("materi", current.bab);
-    markDirty();
-    renderEditor();
+    kembalikanKeBawaan("materi");
     return;
   }
   if (act === "gambar-bersihkan") {
@@ -1489,7 +1648,11 @@ async function saveDraft() {
   button.disabled = true;
   const label = button.textContent;
   button.textContent = "Menyimpan…";
-  const { data, error } = await supa.rpc("konten_save_draft", { p_bab: current.bab, p_isi: isiDisimpan(), p_base_updated_at: current.base });
+  const isi = isiDisimpan();
+  const catatan = await bawaanDisimpan(isi);
+  const { data, error } = await supa.rpc("konten_save_draft", {
+    p_bab: current.bab, p_isi: isi, p_base_updated_at: current.base, p_bawaan: catatan,
+  });
   button.disabled = false;
   button.textContent = label;
   if (error) {
@@ -1498,6 +1661,8 @@ async function saveDraft() {
   }
   current.base = data;
   current.source = "draft";
+  current.awal = new Set(JENIS_BAWAAN.filter((jenis) => isi[jenis] !== undefined));
+  current.catatanBawaan = salin(catatan || {});
   current.updatedBy = window.currentProfile.full_name;
   current.dirty = false;
   current.serverErrors = [];

@@ -96,6 +96,16 @@ create policy "konten_info_select_login"
 revoke all on public.konten_info from anon, authenticated;
 grant select (bab, diperbarui_at, catatan) on public.konten_info to authenticated;
 
+-- Catatan isi BAWAAN saat suntingan dibuat (pengaman bentrok): untuk tiap
+-- bagian yang disunting, {"<bagian>": {"hash": "...", "isi": <isi bawaan>}}.
+-- Kalau isi bawaan di berkas data kemudian berubah (revisi lewat kode),
+-- editor membandingkan hash-nya dan memperingatkan Operator bahwa suntingan
+-- terbit masih menutupi isi bawaan yang baru. null = belum tercatat
+-- (suntingan lama sebelum fitur ini).
+alter table public.konten_bab add column if not exists bawaan jsonb;
+alter table public.konten_bab_draft add column if not exists bawaan jsonb;
+alter table public.konten_bab_versi add column if not exists bawaan jsonb;
+
 -- 2. Validasi ---------------------------------------------------------------
 -- Teks satu baris: string, 1..maks karakter (tanpa spasi tepi), tanpa < > dan
 -- baris baru (isi ini ikut dipakai sebagai id kartu Hafalan & item statistik).
@@ -309,6 +319,26 @@ begin
 end;
 $$;
 
+-- Bentuk catatan bawaan sah? (null boleh)
+create or replace function public.konten_bawaan_ok(p jsonb)
+returns boolean
+language sql
+immutable
+set search_path = public
+as $$
+  select p is null or (
+    jsonb_typeof(p) = 'object'
+    and length(p::text) <= 600000
+    and not exists (
+      select 1 from jsonb_each(p) e
+      where e.key not in ('kosakata', 'kanji', 'kalimat', 'materi')
+         or jsonb_typeof(e.value) <> 'object'
+         or exists (select 1 from jsonb_object_keys(e.value) k where k not in ('hash', 'isi'))
+         or jsonb_typeof(e.value -> 'hash') is distinct from 'string'
+         or length(e.value ->> 'hash') not between 1 and 64
+         or not (e.value ? 'isi')));
+$$;
+
 -- Daftar pesan kesalahan (kosong = sah). Format pesan "Kosakata no. N: ..."
 -- dipakai halaman editor untuk melompat ke baris yang salah.
 create or replace function public.validate_konten_bab(p_isi jsonb)
@@ -455,7 +485,8 @@ $$;
 drop function if exists public.konten_list();
 create function public.konten_list()
 returns table (bab int, diubah text[], has_draft boolean, draft_updated_at timestamptz, draft_updated_by text,
-               ditinjau_at timestamptz, ditinjau_by text, diperbarui_at timestamptz, catatan text)
+               ditinjau_at timestamptz, ditinjau_by text, diperbarui_at timestamptz, catatan text,
+               sidik jsonb)
 language plpgsql
 stable
 security definer
@@ -468,7 +499,8 @@ begin
   select b, coalesce((select array_agg(k order by k) from jsonb_object_keys(t.isi) k), '{}'::text[]),
          d.bab is not null, d.updated_at, p.full_name,
          i.ditinjau_at, coalesce(pt.full_name, case when i.ditinjau_at is not null then 'Operator' end),
-         i.diperbarui_at, i.catatan
+         i.diperbarui_at, i.catatan,
+         (select jsonb_object_agg(e.key, e.value -> 'hash') from jsonb_each(t.bawaan) e)
   from generate_series(1, 50) b
   left join public.konten_bab t on t.bab = b
   left join public.konten_bab_draft d on d.bab = b
@@ -500,13 +532,14 @@ begin
   select * into d from public.konten_bab_draft where bab = p_bab;
   if found then
     return jsonb_build_object(
-      'source', 'draft', 'isi', d.isi, 'terbit', coalesce(t.isi, '{}'::jsonb),
+      'source', 'draft', 'isi', d.isi, 'terbit', coalesce(t.isi, '{}'::jsonb), 'bawaan_terbit', t.bawaan,
+      'bawaan_draft', d.bawaan,
       'updated_at', d.updated_at,
       'updated_by', (select full_name from public.profiles where id = d.updated_by));
   end if;
   return jsonb_build_object(
     'source', case when t.bab is null then 'bawaan' else 'terbit' end,
-    'isi', coalesce(t.isi, '{}'::jsonb), 'terbit', coalesce(t.isi, '{}'::jsonb),
+    'isi', coalesce(t.isi, '{}'::jsonb), 'terbit', coalesce(t.isi, '{}'::jsonb), 'bawaan_terbit', t.bawaan,
     'updated_at', null, 'updated_by', null,
     'terbit_at', t.updated_at,
     'terbit_by', (select full_name from public.profiles where id = t.updated_by));
@@ -515,7 +548,9 @@ $$;
 
 -- Simpan draft. p_base_updated_at = updated_at draft saat dibuka (null kalau
 -- belum ada draft); kalau berbeda, berarti Operator lain sudah menyimpan.
-create or replace function public.konten_save_draft(p_bab int, p_isi jsonb, p_base_updated_at timestamptz)
+-- p_bawaan = catatan isi bawaan yang dipakai editor saat menyunting.
+drop function if exists public.konten_save_draft(int, jsonb, timestamptz);
+create or replace function public.konten_save_draft(p_bab int, p_isi jsonb, p_base_updated_at timestamptz, p_bawaan jsonb default null)
 returns timestamptz
 language plpgsql
 security definer
@@ -532,6 +567,9 @@ begin
   if p_isi is null or jsonb_typeof(p_isi) <> 'object' or length(p_isi::text) > 600000 then
     raise exception 'Isi draft tidak sah atau terlalu besar.' using errcode = '22023';
   end if;
+  if not public.konten_bawaan_ok(p_bawaan) then
+    raise exception 'Catatan isi bawaan tidak sah.' using errcode = '22023';
+  end if;
   select * into d from public.konten_bab_draft where bab = p_bab for update;
   if found and (p_base_updated_at is null or d.updated_at <> p_base_updated_at) then
     raise exception 'Draft ini sudah diubah oleh % pada % - muat ulang dulu supaya perubahannya tidak tertimpa.',
@@ -539,10 +577,11 @@ begin
       to_char(d.updated_at at time zone 'Asia/Jakarta', 'DD-MM-YYYY HH24:MI')
       using errcode = '40001';
   end if;
-  insert into public.konten_bab_draft (bab, isi, updated_at, updated_by)
-  values (p_bab, p_isi, v_now, auth.uid())
+  insert into public.konten_bab_draft (bab, isi, updated_at, updated_by, bawaan)
+  values (p_bab, p_isi, v_now, auth.uid(), p_bawaan)
   on conflict (bab) do update
-    set isi = excluded.isi, updated_at = excluded.updated_at, updated_by = excluded.updated_by;
+    set isi = excluded.isi, updated_at = excluded.updated_at, updated_by = excluded.updated_by,
+        bawaan = excluded.bawaan;
   return v_now;
 end;
 $$;
@@ -566,8 +605,9 @@ language sql
 security definer
 set search_path = public
 as $$
-  insert into public.konten_bab_versi (bab, isi, alasan, created_by)
-  values (p_bab, (select isi from public.konten_bab where bab = p_bab), p_alasan, auth.uid())
+  insert into public.konten_bab_versi (bab, isi, alasan, created_by, bawaan)
+  values (p_bab, (select isi from public.konten_bab where bab = p_bab), p_alasan, auth.uid(),
+          (select bawaan from public.konten_bab where bab = p_bab))
   returning id;
 $$;
 
@@ -585,7 +625,8 @@ as $$
 $$;
 
 -- Ganti isi terbit ({} / null = kembali ke isi bawaan seluruhnya) (internal).
-create or replace function public.konten_set_terbit(p_bab int, p_isi jsonb)
+drop function if exists public.konten_set_terbit(int, jsonb);
+create or replace function public.konten_set_terbit(p_bab int, p_isi jsonb, p_bawaan jsonb default null)
 returns void
 language plpgsql
 security definer
@@ -595,10 +636,11 @@ begin
   if p_isi is null or p_isi = '{}'::jsonb then
     delete from public.konten_bab where bab = p_bab;
   else
-    insert into public.konten_bab (bab, isi, updated_at, updated_by)
-    values (p_bab, p_isi, now(), auth.uid())
+    insert into public.konten_bab (bab, isi, updated_at, updated_by, bawaan)
+    values (p_bab, p_isi, now(), auth.uid(), p_bawaan)
     on conflict (bab) do update
-      set isi = excluded.isi, updated_at = excluded.updated_at, updated_by = excluded.updated_by;
+      set isi = excluded.isi, updated_at = excluded.updated_at, updated_by = excluded.updated_by,
+          bawaan = excluded.bawaan;
   end if;
   -- Isi yang baru diterbitkan/dipulihkan dianggap sudah ditinjau.
   perform public.konten_catat_tinjau(p_bab);
@@ -640,7 +682,7 @@ begin
     return jsonb_build_object('ok', false, 'errors', to_jsonb(v_errors));
   end if;
   v_version := public.konten_snapshot(p_bab, 'Sebelum diterbitkan dari editor');
-  perform public.konten_set_terbit(p_bab, d.isi);
+  perform public.konten_set_terbit(p_bab, d.isi, d.bawaan);
   delete from public.konten_bab_draft where bab = p_bab;
   if v_catatan is not null then
     update public.konten_info set diperbarui_at = now(), catatan = v_catatan where bab = p_bab;
@@ -684,7 +726,7 @@ begin
     raise exception 'Versi tidak ditemukan.' using errcode = 'P0002';
   end if;
   perform public.konten_snapshot(v.bab, format('Sebelum memulihkan versi #%s', v.id));
-  perform public.konten_set_terbit(v.bab, v.isi);
+  perform public.konten_set_terbit(v.bab, v.isi, v.bawaan);
   delete from public.konten_bab_draft where bab = v.bab;
 end;
 $$;
@@ -707,7 +749,8 @@ $$;
 
 -- 4. Hak eksekusi -------------------------------------------------------------
 revoke execute on function public.konten_snapshot(int, text) from public, anon, authenticated;
-revoke execute on function public.konten_set_terbit(int, jsonb) from public, anon, authenticated;
+revoke execute on function public.konten_set_terbit(int, jsonb, jsonb) from public, anon, authenticated;
+revoke execute on function public.konten_bawaan_ok(jsonb) from public, anon;
 revoke execute on function public.konten_catat_tinjau(int) from public, anon, authenticated;
 revoke execute on function public.konten_teks_ok(jsonb, int) from public, anon;
 revoke execute on function public.validate_konten_bab(jsonb) from public, anon;
@@ -716,7 +759,7 @@ revoke execute on function public.validate_konten_materi(jsonb) from public, ano
 revoke execute on function public.validate_konten_pengecoh(jsonb) from public, anon;
 revoke execute on function public.konten_list() from public, anon;
 revoke execute on function public.konten_load(int) from public, anon;
-revoke execute on function public.konten_save_draft(int, jsonb, timestamptz) from public, anon;
+revoke execute on function public.konten_save_draft(int, jsonb, timestamptz, jsonb) from public, anon;
 revoke execute on function public.konten_discard_draft(int) from public, anon;
 revoke execute on function public.konten_publish(int, timestamptz, text) from public, anon;
 revoke execute on function public.konten_tandai_ditinjau(int) from public, anon;
@@ -729,7 +772,8 @@ grant execute on function public.validate_konten_materi(jsonb) to authenticated;
 grant execute on function public.validate_konten_pengecoh(jsonb) to authenticated;
 grant execute on function public.konten_list() to authenticated;
 grant execute on function public.konten_load(int) to authenticated;
-grant execute on function public.konten_save_draft(int, jsonb, timestamptz) to authenticated;
+grant execute on function public.konten_save_draft(int, jsonb, timestamptz, jsonb) to authenticated;
+grant execute on function public.konten_bawaan_ok(jsonb) to authenticated;
 grant execute on function public.konten_discard_draft(int) to authenticated;
 grant execute on function public.konten_publish(int, timestamptz, text) to authenticated;
 grant execute on function public.konten_tandai_ditinjau(int) to authenticated;
