@@ -1151,3 +1151,63 @@ body.focus-mode .material-reader {
   text-decoration: line-through;
   text-decoration-thickness: 1.5px;
 }
+
+/* HP: daftar pelajaran jadi baris ringkas satu kolom (nomor · judul · status)
+   dan dilipat saat sebuah pelajaran dibuka (tombol .material-lipat-daftar,
+   js/pages/materi.js). */
+.material-lipat-daftar {
+  display: none;
+}
+@media (max-width: 700px) {
+  .material-lipat-daftar {
+    display: block;
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px dashed #cbb991;
+    border-radius: 10px;
+    background: #fffdf8;
+    color: #8b6a32;
+    font: inherit;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+  }
+  .material-choice-grid.terlipat {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .material-choice-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .material-choice {
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    grid-template-areas: "num label dot" "num state dot";
+    align-items: center;
+    align-content: center;
+    gap: 0 10px;
+    min-height: 0;
+    padding: 8px 12px;
+  }
+  .material-choice:hover,
+  .material-choice:focus-visible {
+    transform: none;
+  }
+  .material-choice-number {
+    grid-area: num;
+  }
+  .material-choice-label {
+    grid-area: label;
+    -webkit-line-clamp: 1;
+  }
+  .material-choice-state {
+    grid-area: state;
+  }
+  .material-choice-status {
+    grid-area: dot;
+  }
+  .material-picker-heading p {
+    display: none;
+  }
+}

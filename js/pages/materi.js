@@ -303,10 +303,8 @@ function syncCurriculumDashboard() {
   const bookTwo = materiStatusesForBook(2);
   const bookOneDone = bookOne.filter((status) => status === "done").length;
   const bookTwoDone = bookTwo.filter((status) => status === "done").length;
-  const totalDone = bookOneDone + bookTwoDone;
   const bookOnePercent = Math.round((bookOneDone / 25) * 100);
   const bookTwoPercent = Math.round((bookTwoDone / 25) * 100);
-  const totalPercent = Math.round((totalDone / 50) * 100);
 
   // Dashboard adalah halaman terpisah sekarang (index.html) - tidak ada
   // lagi #dashboard di dokumen ini untuk ditulis langsung. Simpan hasilnya
@@ -315,7 +313,7 @@ function syncCurriculumDashboard() {
   try {
     localStorage.setItem(
       "nihonBenkyoCurriculumSummaryV1",
-      JSON.stringify({ bookOnePercent, bookTwoPercent, totalPercent, totalDone }),
+      JSON.stringify({ bookOnePercent, bookTwoPercent }),
     );
   } catch {
     // Penyimpanan browser tidak tersedia - dashboard tetap tampil 0%, tidak fatal.
@@ -368,6 +366,26 @@ function initMaterialLessonPicker({
   learningMain.className = "material-learning-main";
 
   const grid = picker.querySelector(".material-choice-grid");
+  /* HP: daftar 25 pelajaran dilipat supaya isi pelajaran langsung terlihat
+     (di layar lebar tombolnya disembunyikan CSS dan daftar selalu tampil).
+     Dibuka lewat tombol ini atau "↑ Daftar pelajaran"; dilipat lagi setelah
+     siswa memilih pelajaran. */
+  grid.id = `materialChoiceGrid-${viewId}`;
+  const lipatDaftar = document.createElement("button");
+  lipatDaftar.type = "button";
+  lipatDaftar.className = "material-lipat-daftar";
+  lipatDaftar.setAttribute("aria-controls", grid.id);
+  grid.before(lipatDaftar);
+  function setDaftarTerlipat(tutup) {
+    grid.classList.toggle("terlipat", tutup);
+    lipatDaftar.textContent = tutup ? `Tampilkan ${lessons.length} pelajaran ▾` : "Sembunyikan daftar ▴";
+    lipatDaftar.setAttribute("aria-expanded", String(!tutup));
+  }
+  lipatDaftar.onclick = () => setDaftarTerlipat(!grid.classList.contains("terlipat"));
+  grid.addEventListener("click", (event) => {
+    if (event.target.closest(".material-choice")) setDaftarTerlipat(true);
+  });
+  setDaftarTerlipat(true);
   const readerNumber = reader.querySelector(".material-reader-number");
   const readerTitle = reader.querySelector(".material-reader-title");
   const readerBody = reader.querySelector(".material-reader-body");
@@ -739,8 +757,10 @@ function initMaterialLessonPicker({
   sourceCourse.insertAdjacentElement("beforebegin", learningLayout);
   learningLayout.append(progressPanel, learningMain);
   learningMain.append(picker, sourceCourse, reader);
-  reader.querySelector(".material-back-list").onclick = () =>
+  reader.querySelector(".material-back-list").onclick = () => {
+    setDaftarTerlipat(false);
     picker.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
   reader.querySelector(".material-previous").onclick = () =>
     selectLesson(Math.max(0, activeIndex - 1), true);
   reader.querySelector(".material-next").onclick = () =>

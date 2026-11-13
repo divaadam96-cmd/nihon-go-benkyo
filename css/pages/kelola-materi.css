@@ -614,3 +614,17 @@
 .km-gambar-hint .ks-link {
   margin-left: 6px;
 }
+
+/* Baris "Pola N": label tidak terpotong; di HP tombol pindah ke bawah judul. */
+.km-pola .ks-q-num {
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .km-pola .ks-q-head {
+    flex-wrap: wrap;
+  }
+  .km-pola .ks-q-tools {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

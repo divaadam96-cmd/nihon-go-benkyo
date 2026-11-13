@@ -468,3 +468,28 @@
   color: var(--muted);
   font-size: 12px;
 }
+
+/* Panel editor sebelum memilih tes/pelajaran: setinggi daftar di kirinya,
+   petunjuk di tengah (desktop). */
+@media (min-width: 901px) {
+  .ks-editor:has(> p.muted:only-child) {
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    min-height: 320px;
+    border-style: dashed;
+    text-align: center;
+  }
+}
+/* HP: tab satu baris yang bisa digeser, tidak terbungkus beberapa baris. */
+@media (max-width: 700px) {
+  .ks-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .ks-tabs button {
+    flex: none;
+    white-space: nowrap;
+  }
+}

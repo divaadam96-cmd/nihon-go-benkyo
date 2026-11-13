@@ -847,3 +847,24 @@
     linear-gradient(90deg, #dcd4c61a, #dcd4c61a),
     url("../assets/images/japan-paper-background.webp") center/cover fixed;
 }
+
+/* HP: background-attachment: fixed tidak didukung (iOS) dan versi "scroll"
+   merentangkan gambar setinggi seluruh halaman sampai buram. Gambar ditaruh
+   di lapisan position: fixed seukuran layar. */
+@media (max-width: 700px) {
+  .main {
+    position: relative;
+    isolation: isolate;
+    background: transparent;
+  }
+  .main::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, #dcd4c61a, #dcd4c61a),
+      url("../assets/images/japan-paper-background.webp") center / cover;
+  }
+}
