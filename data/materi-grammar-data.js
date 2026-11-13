@@ -1997,7 +1997,7 @@ const MATERI_BOOK1_LESSONS = [
         suffix: "Saya kira......",
         blocks: [
           {
-            text: "Isi pikiran dan keputusan ditunjukan dengan memakai partikel と. Untuk pola kalimat ini terdapat penggunaan sebagai berikut di bawah ini:",
+            text: "Isi pikiran dan keputusan ditunjukkan dengan memakai partikel と. Untuk pola kalimat ini terdapat penggunaan sebagai berikut di bawah ini:",
           },
           {
             label: "1) Menyatakan dugaan.",
@@ -2045,13 +2045,13 @@ const MATERI_BOOK1_LESSONS = [
             examples: [["⑨ ミラーさんは 東京へ 出張すると 言いました。", "Sdr. Miller mengatakan bahwa dinas ke Tokyo."]],
           },
           {
-            text: "Bagian ketipan tidak dipengaruhi waktu kalimat.<br>Lawan bicara yang mendengarkan ungkapan pembicara ditunjukan dengan partikel に.",
+            text: "Bagian kutipan tidak dipengaruhi waktu kalimat.<br>Lawan bicara yang mendengarkan ungkapan pembicara ditunjukkan dengan partikel に.",
             examples: [["⑩ 父に 留学したいと 言いました。", "Saya berkata kepada ayah bahwa ingin belajar di luar negeri."]],
           },
         ],
       },
       {
-        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa～だ｝でしょう？",
+        title: "Kata Kerja<br>Kata Sifat い｝Bentuk Biasa<br>Kata Sifat な<br>Kata Benda｝Bentuk Biasa～<span class=\"grammar-coret\">だ</span>｝でしょう？",
         suffix: "......, bukan?",
         blocks: [
           {
@@ -2138,7 +2138,7 @@ const MATERI_BOOK1_LESSONS = [
           },
           {
             label: "3)",
-            text: "Subjek di dalam anak kalimat ditunjukan dengan partikel が.",
+            text: "Subjek di dalam anak kalimat ditunjukkan dengan partikel が.",
             examples: [
               ["⑧ これは ミラーさんが 作った ケーキです。", "Ini adalah kue yang dibuat oleh Sdr. Miller."],
               ["⑨ わたしは カリナさんが かいた 絵が 好きです。", "Saya suka lukisan yang dilukis oleh Sdr. Karina."],
@@ -2184,13 +2184,13 @@ const MATERI_BOOK1_LESSONS = [
             examples: [
               ["① 図書館で 本を 借りる とき、カードが 要ります。", "Ketika meminjam buku di perpustakaan, diperlukan kartu."],
               ["② 使い方が わからない とき、わたしに 聞いて ください。", "Jika tidak tahu cara pemakaiannya, silakan tanya kepada saya."],
-              ["③ 体の 調子が 悪い とき、「元気茶」を 飲みます。", "Ketika badan tidak enak, minum “Genki-cha”."],
+              ["③ 体の 調子が 悪い とき、「元気茶」を 飲みます。", "Ketika badan tidak enak, minum “<i>Genki-cha</i>”."],
               ["④ 暇な とき、うちへ 遊びに 来ませんか。", "Pada waktu luang, bagaimana kalau datang bermain ke rumah saya?"],
               ["⑤ 妻が 病気の とき、会社を 休みます。", "Jika istri sakit, saya tidak masuk kerja."],
               ["⑥ 若い とき、あまり 勉強しませんでした。", "Waktu muda, tidak begitu belajar."],
               ["⑦ 子どもの とき、よく 川で 泳ぎました。", "Waktu masih kecil, sering berenang di sungai."],
             ],
-            note: "Kalimat dengan menggunakan とき tidak berpengaruh pada induk kalimat.",
+            text: "Kalimat dengan menggunakan とき tidak berpengaruh pada induk kalimat.",
           },
         ],
       },
@@ -2273,7 +2273,7 @@ const MATERI_BOOK1_LESSONS = [
             text: "あげます, もらいます dan くれます digunakan untuk pemberian atau penerimaan benda, sedangkan～て あげます,～て もらいます dan～て くれます digunakan untuk menunjukkan bahwa perbuatan tersebut saling memberi kebaikan atau keuntungan.",
           },
           {
-            label: "Kata Kerja Bentuk て あげます",
+            label: "1) <span class=\"grammar-pola-box\">Kata Kerja Bentuk て あげます</span>",
             text: "Subjek dari Kata Kerja Bentuk て あげます adalah pelaku dijadikan sebagai subjek, dan dipakai ketika menunjukkan bahwa perbuatan tersebut memberikan kebaikan atau keuntungan.",
             examples: [["④ わたしは 木村さんに 本を 貸して あげました。", "Saya meminjamkan Sdr. Kimura buku."]],
           },
@@ -2285,18 +2285,18 @@ const MATERI_BOOK1_LESSONS = [
             ],
           },
           {
-            label: "Kata Kerja Bentuk て もらいます",
+            label: "2) <span class=\"grammar-pola-box\">Kata Kerja Bentuk て もらいます</span>",
             examples: [["⑦ わたしは 山田さんに 図書館の 電話番号を 教えて もらいました。", "Saya diberikan nomor telepon perpustakaan oleh Sdr. Yamada."]],
           },
           {
             text: "Ini menunjukkan bahwa si penerima bantuan dijadikan subjek dan dengan perbuatan itu si pembicara dianggap sebagai subjek yang menerima kebaikan atau keuntungan. Jika subjeknya わたし, biasanya subjek itu dihilangkan.",
           },
           {
-            label: "Kata Kerja Bentuk て くれます",
-            examples: [["⑧ 母は ［わたしに］ セーターを 送って くれました。", "Ibu saya mengirimkan saya sweater."]],
+            label: "3) <span class=\"grammar-pola-box\">Kata Kerja Bentuk て くれます</span>",
+            examples: [["⑧ 母は ［わたしに］ セーターを 送って くれました。", "Ibu saya mengirimkan saya <i>sweater</i>."]],
           },
           {
-            text: "Ini menunjukan bahwa pelaku dijadikan subjek dan dengan perbuatan itu si pembicara diaggap sebagai penerima kebaikan atau keuntungan. Jika penerima perbuatan (ditunjuk dengan partikel に) adalah わたし, biasanya わたし itu dihilangkan.",
+            text: "Ini menunjukkan bahwa pelaku dijadikan subjek dan dengan perbuatan itu si pembicara dianggap sebagai penerima kebaikan atau keuntungan. Jika penerima perbuatan (ditunjuk dengan partikel に) adalah わたし, biasanya わたし itu dihilangkan.",
             note: "[Perhatian] Partikel yang menunjuk penerima kebaikan dalam kalimat～て あげます atau～て くれます menjadi sama dengan kalimat yang tidak digunakan～て あげます atau～て くれます.<br>わたし<u>に</u> 旅行の 写真を 見せます。<br>↓<br>わたし<u>に</u> 旅行の 写真を 見せて くれます。<br>Memperlihatkan saya foto waktu berwisata.<br><br>わたし<u>を</u> 大阪城へ 連れて 行きます。<br>↓<br>わたし<u>を</u> 大阪城へ 連れて 行って くれます。<br>Mengantarkan saya ke Benteng Osaka.<br><br>わたし<u>の</u> 引っ越しを 手伝います。<br>↓<br>わたし<u>の</u> 引っ越しを 手伝って くれます。<br>Membantu saya pindah rumah.",
           },
         ],
@@ -2348,7 +2348,7 @@ const MATERI_BOOK1_LESSONS = [
         ],
       },
       {
-        title: "Kata Kerja Bentuk て<br>Kata Kerja（Bentuk ない）なくて<br>Kata Sifat い（～い）→～くて<br>Kata Sifat な［な］→～で<br>Kata Benda で｝も、～（kalimat pokok）",
+        title: "Kata Kerja Bentuk て<br>Kata Kerja（Bentuk ない）なくて<br>Kata Sifat い（～<span class=\"grammar-coret\">い</span>）→～くて<br>Kata Sifat な［<span class=\"grammar-coret\">な</span>］→～で<br>Kata Benda で｝も、～（kalimat pokok）",
         suffix: "Walaupun...",
         blocks: [
           {
