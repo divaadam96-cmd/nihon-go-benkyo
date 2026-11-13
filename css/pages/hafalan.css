@@ -121,3 +121,8 @@
     font-size: 62px;
   }
 }
+
+/* Panel "Catatan belajar" setinggi isinya, tidak direntangkan setinggi kartu. */
+.learning-tips {
+  align-self: start;
+}

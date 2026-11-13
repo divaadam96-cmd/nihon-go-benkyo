@@ -53,3 +53,5 @@ button,input,select{font:inherit}.hero{display:flex;align-items:flex-end;justify
 .kanji-level-heading{grid-column:1/-1;position:sticky;z-index:2;top:0;display:flex;align-items:center;gap:8px;min-height:29px;padding:6px 9px;border-left:3px solid var(--gold);color:var(--navy);background:#eee4d2f2;backdrop-filter:blur(5px)}
 .kanji-level-heading b{font-size:9px}.kanji-level-heading small{color:#7d8792;font-size:7px}.kanji-level-heading span{margin-left:auto;color:#7b8793;font-size:7px}.kanji-level-heading.level-n5{border-left-color:#2a7962}.kanji-level-heading.level-n4{border-left-color:#b78740}.kanji-level-heading.level-n3{border-left-color:#b96543}
 @media(max-width:760px){.level-row{grid-template-columns:1fr 1fr}.level-row button{padding:9px}.kanji-level-heading{top:-1px}}
+/* Isi kartu goresan & kuis berada di tengah kartu (kartu direntangkan setinggi kartu sebelahnya). */
+.kanji-stage,.quiz-card{display:flex;flex-direction:column}.kanji-stage>.stroke-board{margin-top:auto}.kanji-stage>:last-child{margin-bottom:auto}.quiz-card>.quiz-body{margin:auto 0}

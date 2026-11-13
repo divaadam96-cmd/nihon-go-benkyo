@@ -1,6 +1,6 @@
 .overview {
   display: grid;
-  grid-template-columns: 1.35fr repeat(3, 0.75fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
 }
 /* Kartu ringkasan dashboard dibuat lebih terang & lapang dari kartu
@@ -27,73 +27,6 @@
   color: var(--muted);
   margin: 8px 0 0;
   line-height: 1.55;
-}
-/* Kartu Total XP dapat aksen warna hangat (--rose) supaya angka
-   pencapaian terasa lebih hidup dibanding kartu statistik netral
-   lainnya - satu-satunya tempat aksen ini dipakai untuk sekarang. */
-.overview .metric:nth-child(2) b {
-  color: var(--rose);
-}
-.overview .metric:nth-child(2) p {
-  display: inline-block;
-  margin: 10px 0 0;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: var(--rose-soft);
-  color: var(--rose);
-  font-weight: 700;
-  line-height: 1.7;
-}
-.continue-card {
-  margin-bottom: 14px;
-  padding: 18px 21px;
-  background: var(--wash);
-  border-color: #d9cdb0;
-}
-.continue-steps {
-  list-style: none;
-  margin: 8px 0 0;
-  padding: 0;
-}
-.continue-steps li {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #eeeae3;
-}
-.continue-steps li:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-.continue-steps b {
-  display: block;
-  color: var(--navy);
-  font-size: 15px;
-}
-.continue-steps span {
-  display: block;
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.5;
-}
-.continue-go {
-  flex: none;
-  padding: 9px 16px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 13px;
-  text-decoration: none;
-}
-a.continue-go.primary {
-  background: var(--navy);
-  color: #fff;
-}
-a.continue-go.secondary {
-  border: 1px solid #d9cdb0;
-  color: var(--navy);
 }
 .dashboard-grid {
   display: grid;
@@ -186,43 +119,15 @@ a.continue-go.secondary {
 .legend i.gold {
   background: var(--gold);
 }
-.levels {
-  display: grid;
-  gap: 11px;
-}
-.level {
-  display: grid;
-  grid-template-columns: 60px 1fr auto;
-  gap: 13px;
-  align-items: center;
-  border: 1px solid #ebe6de;
-  padding: 12px;
-  border-radius: 7px;
-}
-.level b {
-  color: var(--navy);
-}
 @media (max-width: 900px) {
   .overview {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .overview .metric:first-child {
-    grid-column: span 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 610px) {
-  .overview {
-    grid-template-columns: 1fr;
-  }
-  .overview .metric:first-child {
-    grid-column: auto;
-  }
-}
-.metric b,
-.level b {
+.metric b {
   color: #13243e;
 }
 /* Banner pengingat belajar harian di dashboard. */
@@ -613,22 +518,34 @@ a.continue-go.secondary {
 .progres-angka {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 10px;
   margin: 16px 0;
-}
-.progres-angka div {
-  padding: 10px 12px;
-  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
   background: var(--wash);
 }
-.progres-angka small {
+.progres-angka div {
+  min-width: 0;
+  padding: 12px 14px;
+}
+.progres-angka div + div {
+  border-left: 1px solid var(--line);
+}
+.progres-angka small,
+.progres-angka em {
   display: block;
   color: var(--muted);
   font-size: 12px;
+  font-style: normal;
 }
 .progres-angka b {
+  display: block;
+  margin: 2px 0;
   font-size: 22px;
+  letter-spacing: -0.5px;
   color: var(--navy);
+}
+.progres-angka div:first-child b {
+  color: var(--rose);
 }
 .progres-peta {
   display: grid;
@@ -727,10 +644,6 @@ a.continue-go.secondary {
   color: var(--red);
   font-size: 13px;
 }
-.progres-sub {
-  margin: 18px 0 8px;
-  font-size: 15px;
-}
 .progres-bar-wrap {
   position: relative;
   display: flex;
@@ -777,17 +690,23 @@ a.continue-go.secondary {
   margin: 8px 0 0;
   font-size: 12px;
 }
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .progres-angka {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .progres-angka div:nth-child(4) {
+    border-left: 0;
+  }
+  .progres-angka div:nth-child(n + 4) {
+    border-top: 1px solid var(--line);
+  }
 }
 @media (max-width: 560px) {
-  .progres-peta {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+  .progres-angka div {
+    padding: 10px;
   }
-  .progres-angka {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .progres-angka b {
+    font-size: 19px;
   }
   .progres-tugas {
     grid-template-columns: 1fr;
@@ -799,4 +718,315 @@ a.continue-go.secondary {
   color: var(--navy);
   font-size: 13px;
   font-weight: 700;
+}
+
+/* ---------- Beranda siswa: struktur baru ----------
+   Skala jarak 8/12/16/24: jarak antarbagian 16, di dalam kartu 12. */
+#dashboard > * + * {
+  margin-top: 16px;
+}
+#dashboard .card h2 {
+  margin: 0;
+  font-size: 17px;
+}
+#dashboard .head {
+  align-items: end;
+}
+.streak-pil {
+  margin: 0;
+  padding: 6px 12px;
+  border: 1px solid #e3c9a6;
+  border-radius: 999px;
+  background: #fbf1e3;
+  white-space: nowrap;
+}
+.streak-pil b {
+  color: var(--rose);
+}
+.bar-tipis {
+  display: block;
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: #e6e0d4;
+  overflow: hidden;
+}
+.bar-tipis i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: #2e8068;
+}
+
+/* Panel "Hari ini": lanjutkan belajar (kiri) + rencana hari ini (kanan). */
+.hari-ini {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  padding: 0;
+  overflow: hidden;
+}
+.hari-ini.tanpa-lanjut {
+  grid-template-columns: 1fr;
+}
+.hari-ini-lanjut {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  padding: 24px;
+  background: var(--navy);
+  color: #c4cfdc;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.hari-ini-lanjut .eyebrow {
+  color: #d6b273;
+}
+.hari-ini-lanjut > b {
+  color: #fff;
+  font-size: 19px;
+  line-height: 1.35;
+}
+a.hari-ini-mulai {
+  justify-self: start;
+  margin-top: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: #f3dfb1;
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+a.hari-ini-mulai:hover {
+  background: #fff0cc;
+}
+a.hari-ini-lain {
+  color: #e7cf9b;
+  font-size: 13px;
+  font-weight: 600;
+}
+.hari-ini-rencana {
+  padding: 20px 24px;
+}
+.rencana-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rencana-head span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.rencana-head b {
+  color: var(--navy);
+}
+.hari-ini-rencana > .bar-tipis {
+  margin: 10px 0 4px;
+}
+.hari-ini-rencana .todo:last-child {
+  border-bottom: 0;
+}
+
+/* Tugas dari Sensei: setinggi isinya, dengan jumlah tugas aktif. */
+.tugas-sensei {
+  padding: 16px 24px;
+}
+.tugas-sensei-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.tugas-sensei-jumlah {
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #f3e2d3;
+  color: #8a4f2c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Peta 50 pelajaran per buku: buku pelajaran saat ini terbuka, buku lain dilipat. */
+.progres-buku + .progres-buku {
+  margin-top: 12px;
+}
+.progres-buku > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  list-style: none;
+  cursor: pointer;
+}
+.progres-buku > summary::-webkit-details-marker {
+  display: none;
+}
+.progres-buku > summary small {
+  color: var(--muted);
+}
+.progres-buku > summary .bar-tipis {
+  max-width: 260px;
+  margin-left: auto;
+}
+.progres-buku-persen {
+  min-width: 34px;
+  color: var(--navy);
+  font-weight: 700;
+  text-align: right;
+}
+.progres-buku-lihat {
+  flex: none;
+  color: #8b6a32;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+}
+.progres-buku-lihat::after {
+  content: " ▾";
+}
+.progres-buku[open] .progres-buku-lihat {
+  display: none;
+}
+.progres-buku:not([open]) > summary {
+  margin-bottom: 0;
+  padding: 10px 12px;
+  border: 1px dashed #cdbfa3;
+  border-radius: 10px;
+}
+.progres-buku .progres-peta {
+  grid-template-columns: repeat(25, minmax(0, 1fr));
+  gap: 4px;
+}
+.progres-buku .progres-bab {
+  min-height: 42px;
+  padding: 2px 0;
+  place-content: center;
+  border-radius: 6px;
+}
+#dashboard .progres-rincian {
+  margin: 16px 0 0;
+}
+
+/* Dua grafik berdampingan dengan tinggi sama. */
+.dash-grafik {
+  margin-top: 16px;
+}
+.dash-grafik .card h2 {
+  margin-bottom: 12px;
+}
+.dash-grafik .progres-bar-wrap {
+  gap: 10px;
+  height: 170px;
+}
+.dash-grafik .progres-bar-wrap::before {
+  bottom: calc(16px + (154px * var(--kkm-angka, 0.8)));
+}
+.dash-grafik .progres-bar {
+  flex: 1 1 0;
+  min-width: 8px;
+  max-width: 44px;
+  height: 154px;
+}
+
+@media (max-width: 1100px) {
+  .progres-buku .progres-peta {
+    grid-template-columns: repeat(13, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  #dashboard .head {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 8px;
+  }
+  .hari-ini {
+    grid-template-columns: 1fr;
+  }
+  .hari-ini-lanjut {
+    padding: 18px;
+  }
+  .hari-ini-rencana {
+    padding: 16px 18px;
+  }
+  .tugas-sensei {
+    padding: 14px 16px;
+  }
+  .progres-buku .progres-peta {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .progres-buku > summary {
+    flex-wrap: wrap;
+  }
+  .progres-buku > summary .bar-tipis {
+    flex-basis: 100%;
+    max-width: none;
+    order: 3;
+  }
+  .progres-buku-persen {
+    margin-left: auto;
+  }
+  .progres-buku-lihat {
+    order: 2;
+  }
+}
+/* HP: keterangan "Rencana hari ini" di bawah judul tugas, tidak terjepit. */
+@media (max-width: 610px) {
+  .todo {
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+  .todo span {
+    flex: 1 1 calc(100% - 40px);
+  }
+  .todo small {
+    flex-basis: 100%;
+    padding-left: 30px;
+  }
+}
+
+/* ---------- Ringkasan kelas (Sensei/Operator) ----------
+   "Pelajaran tersulit" di bawah "Perlu perhatian", "Sebaran posisi" di kanan:
+   dua kolom seimbang tanpa lubang. */
+@media (min-width: 901px) {
+  .rk-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    align-items: start;
+  }
+  .rk-grid > .card:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .rk-grid > .rk-kolom {
+    display: contents;
+  }
+  .rk-grid > .rk-kolom > .card:first-child {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin: 0;
+  }
+  .rk-grid > .rk-kolom > .card:last-child {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0;
+  }
+}
+/* Belum ada nilai tugas: petunjuk mengisi kartu (setinggi grafik aktivitas),
+   bukan satu baris teks di atas area kosong. */
+.dash-grafik > .card {
+  display: flex;
+  flex-direction: column;
+}
+.dash-grafik .progres-nilai:has(> p.muted:only-child) {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  text-align: center;
 }

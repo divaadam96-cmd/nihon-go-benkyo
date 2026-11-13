@@ -38,15 +38,18 @@ function initPage() {
       quiz: typeof window.quizDoneToday === "function" && window.quizDoneToday(),
     };
     const done = Object.values(taskDone).filter(Boolean).length;
+    // XP ada di baris angka "Progres saya" (dibangun renderProgresSaya).
     const xpCardEl = document.getElementById("xpCard");
     if (xpCardEl) xpCardEl.textContent = format(window.totalXp());
     const xpWeeklyNote = document.getElementById("xpWeeklyNote");
-    if (xpWeeklyNote)
-      xpWeeklyNote.textContent = `+${format(weeklyXpDelta())} XP minggu ini`;
-    const taskHeadlineEl = document.getElementById("taskHeadline");
-    if (taskHeadlineEl) taskHeadlineEl.textContent = `${done} dari 4`;
-    const kanjiCountEl = document.getElementById("kanjiCount");
-    if (kanjiCountEl) kanjiCountEl.textContent = srsMasteredCount("kanji:");
+    if (xpWeeklyNote) xpWeeklyNote.textContent = `+${format(weeklyXpDelta())} minggu ini`;
+    const hitungEl = document.getElementById("rencanaHitung");
+    if (hitungEl) hitungEl.innerHTML = `<b>${done}</b> dari 4 selesai`;
+    const barEl = document.getElementById("rencanaBar");
+    if (barEl) {
+      barEl.setAttribute("aria-label", `${done} dari 4 selesai`);
+      barEl.firstElementChild.style.width = `${done * 25}%`;
+    }
     document
       .querySelectorAll(".todo")
       .forEach((t) => t.classList.toggle("done", !!taskDone[t.dataset.task]));
@@ -62,19 +65,19 @@ function initPage() {
      dokumen terpisah. Kalau cache belum ada (siswa belum pernah membuka
      Materi sama sekali), tampil 0% - itu memang benar adanya. */
   function renderCurriculumSummary() {
-    let summary = { bookOnePercent: 0, bookTwoPercent: 0, totalPercent: 0, totalDone: 0 };
+    let summary = { bookOnePercent: 0, bookTwoPercent: 0 };
     try {
       const raw = localStorage.getItem("nihonBenkyoCurriculumSummaryV1");
       if (raw) summary = Object.assign(summary, JSON.parse(raw));
     } catch {
       // Cache rusak/tidak tersedia - tampil 0% saja, tidak fatal.
     }
-    document.getElementById("totalPercent").textContent = `${summary.totalPercent}%`;
-    document.getElementById("totalPercentNote").textContent = `${summary.totalDone} dari 50 pelajaran dipahami`;
     const percents = [summary.bookOnePercent, summary.bookTwoPercent];
-    document.querySelectorAll("#dashboard .levels .level").forEach((level, index) => {
-      level.querySelector(".fill").style.width = `${percents[index]}%`;
-      level.querySelector("span").textContent = `${percents[index]}%`;
+    document.querySelectorAll("#progresPeta .progres-buku").forEach((buku, index) => {
+      const persen = percents[index] || 0;
+      buku.querySelector(".bar-tipis").setAttribute("aria-label", `Buku ${index + 1}: ${persen}% materi dipahami`);
+      buku.querySelector(".bar-tipis i").style.width = `${persen}%`;
+      buku.querySelector(".progres-buku-persen").textContent = `${persen}%`;
     });
   }
   window.renderCurriculumSummary = renderCurriculumSummary;
@@ -169,31 +172,26 @@ function initPage() {
   function esc(text) {
     return String(text).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   }
+  /* Panel "Hari ini": langkah pertama besar di kiri, langkah berikutnya
+     sebagai tautan kecil di bawahnya; rencana hari ini di kanan. */
   function renderLanjutkan() {
-    const anchor = document.querySelector("#dashboard .overview");
-    if (!anchor) return;
-    let card = document.getElementById("continueCard");
-    if (!card) {
-      card = document.createElement("section");
-      card.id = "continueCard";
-      card.className = "card continue-card";
-      anchor.insertAdjacentElement("beforebegin", card);
-    }
+    const card = document.getElementById("continueCard");
+    if (!card) return;
     const langkah = langkahBelajar();
-    if (!langkah.length) {
-      card.hidden = true;
-      return;
-    }
-    card.hidden = false;
-    card.innerHTML = `<div class="eyebrow">Lanjutkan belajar</div><ol class="continue-steps">${langkah
-      .map((l, i) => `<li><div><b>${esc(l.judul)}</b><span>${esc(l.ket)}</span></div><a class="${i === 0 ? "primary" : "secondary"} continue-go" href="${esc(l.href)}">${i === 0 ? "Mulai →" : "Buka"}</a></li>`)
-      .join("")}</ol>`;
+    card.hidden = !langkah.length;
+    document.getElementById("hariIni").classList.toggle("tanpa-lanjut", !langkah.length);
+    if (!langkah.length) return;
+    const [utama, ...lain] = langkah;
+    card.innerHTML = `<div class="eyebrow">Lanjutkan belajar</div><b>${esc(utama.judul)}</b><span>${esc(utama.ket)}</span><a class="hari-ini-mulai" href="${esc(utama.href)}">Mulai →</a>${lain
+      .map((l) => `<a class="hari-ini-lain" href="${esc(l.href)}">Berikutnya: ${esc(l.judul)} →</a>`)
+      .join("")}`;
   }
   /* Peta 50 pelajaran (siswa): status tiap pelajaran dari TugasBab
      (nilai tugas di server, aturan kunci yang sama dengan halaman Materi),
      angka ringkas, rincian nilai pelajaran yang diklik, dan nilai rata-rata
      tugas per pelajaran. */
   let babDipilih = null; // null = ikut pelajaran saat ini
+  const bukuTerbuka = {}; // no buku -> true/false bila siswa membuka/menutup sendiri
   function statusBab(bab, sekarang) {
     if (TugasBab.isComplete(bab)) return "tuntas";
     if (bab === sekarang) return "sekarang";
@@ -227,21 +225,31 @@ function initPage() {
     // Rata-rata skor terbaik semua tugas yang sudah dikerjakan (sama dengan Ringkasan kelas staf).
     const skor = dengan.flatMap((b) => TugasBab.rincian(b).tugas.map((t) => t.skor).filter((v) => v !== null));
     const rata = skor.length ? Math.round(skor.reduce((n, v) => n + v, 0) / skor.length) : null;
+    // Satu baris angka (XP diperbarui paintProgressUI lewat id xpCard/xpWeeklyNote).
     const angka = [
-      ["Pelajaran saat ini", sekarang],
-      ["Pelajaran tuntas", `${status.filter((s) => s === "tuntas").length} / ${max}`],
-      ["Rata-rata nilai tugas", rata ?? "–"],
-      ["Pola materi dipahami", srsMasteredCount("materi:")],
-      ["Kata dikuasai", srsMasteredCount("hafalan:")],
-      ["Kanji dikuasai", srsMasteredCount("kanji:")],
+      ["Total XP", `<b id="xpCard">${esc(format(window.totalXp()))}</b><em id="xpWeeklyNote">+${esc(format(weeklyXpDelta()))} minggu ini</em>`],
+      ["Pelajaran tuntas", `<b>${status.filter((s) => s === "tuntas").length} / ${max}</b><em>sedang di Pelajaran ${sekarang}</em>`],
+      ["Rata-rata nilai tugas", `<b>${esc(rata ?? "–")}</b><em>KKM ${TugasBab.KKM}</em>`],
+      ["Pola dipahami", `<b>${srsMasteredCount("materi:")}</b><em>pola materi</em>`],
+      ["Kata dikuasai", `<b>${srsMasteredCount("hafalan:")}</b><em>di Hafalan</em>`],
+      ["Kanji dikuasai", `<b>${srsMasteredCount("kanji:")}</b><em>di Hafalan</em>`],
     ];
-    document.getElementById("progresAngka").innerHTML = angka.map(([k, v]) => `<div><small>${esc(k)}</small><b>${esc(v)}</b></div>`).join("");
-    document.getElementById("progresPeta").innerHTML = status.map((s, i) => {
-      const bab = i + 1;
+    document.getElementById("progresAngka").innerHTML = angka.map(([k, v]) => `<div><small>${esc(k)}</small>${v}</div>`).join("");
+    const sel = (bab) => {
+      const s = status[bab - 1];
       const p = TugasBab.progress(bab);
       const ket = `Pelajaran ${bab}: ${NAMA_STATUS[s]}${p.dikerjakan ? `, rata-rata ${p.rataRata}` : ""}`;
       return `<button type="button" role="listitem" class="progres-bab ${s}${bab === (babDipilih || sekarang) ? " dipilih" : ""}" data-bab="${bab}" title="${esc(ket)}" aria-label="${esc(ket)}"><b>${bab}</b>${p.dikerjakan ? `<small>${p.rataRata}</small>` : ""}</button>`;
+    };
+    // Peta per buku: buku pelajaran saat ini terbuka, buku lain dilipat
+    // (pilihan buka/tutup siswa diingat selama halaman terbuka).
+    const bukuSekarang = sekarang <= 25 ? 1 : 2;
+    document.getElementById("progresPeta").innerHTML = [1, 2].map((no) => {
+      const awal = no === 1 ? 1 : 26;
+      const buka = bukuTerbuka[no] ?? no === bukuSekarang;
+      return `<details class="progres-buku" data-buku="${no}"${buka ? " open" : ""}><summary><b>Buku ${no}</b><small>Pelajaran ${awal}–${awal + 24}</small><span class="bar-tipis" role="img"><i></i></span><span class="progres-buku-persen">0%</span><em class="progres-buku-lihat">Lihat 25 pelajaran</em></summary><div class="progres-peta" role="list">${Array.from({ length: 25 }, (_, i) => sel(awal + i)).join("")}</div></details>`;
     }).join("");
+    renderCurriculumSummary();
     document.getElementById("progresNilai").innerHTML = dengan.length
       ? `<div class="progres-bar-wrap" style="--kkm-angka:${TugasBab.KKM / 100}">${dengan.map((b) => {
           const v = TugasBab.progress(b).rataRata;
@@ -251,6 +259,10 @@ function initPage() {
     renderRincian();
     kartu.hidden = false;
   }
+  document.getElementById("progresPeta")?.addEventListener("toggle", (event) => {
+    const buku = event.target.closest(".progres-buku");
+    if (buku) bukuTerbuka[buku.dataset.buku] = buku.open;
+  }, true);
   document.getElementById("progresPeta")?.addEventListener("click", (event) => {
     const tombol = event.target.closest(".progres-bab");
     if (!tombol) return;

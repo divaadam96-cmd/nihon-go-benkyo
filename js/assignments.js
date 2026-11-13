@@ -140,6 +140,13 @@ async function loadSiswaAssignments() {
     assignmentsList.innerHTML = `<p class="muted">Gagal memuat tugas: ${error.message}</p>`;
     return;
   }
+  // Jumlah tugas yang belum selesai, tampil di samping judul kartu.
+  const jumlahEl = document.getElementById("assignmentsCount");
+  const aktif = (data || []).filter((task) => !task.completed).length;
+  if (jumlahEl) {
+    jumlahEl.textContent = `${aktif} aktif`;
+    jumlahEl.hidden = !aktif;
+  }
   if (!data || data.length === 0) {
     assignmentsList.innerHTML = '<p class="muted">Belum ada tugas dari Sensei.</p>';
     return;
