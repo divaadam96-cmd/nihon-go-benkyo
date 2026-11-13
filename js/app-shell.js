@@ -38,7 +38,6 @@
 
   const IS_SUBPAGE = /\/pages\//.test(location.pathname);
   const ROOT = IS_SUBPAGE ? "../" : "";
-  window.ROOT_PATH = ROOT;
 
   const pageMain = document.getElementById("pageMain");
   if (!pageMain) return;

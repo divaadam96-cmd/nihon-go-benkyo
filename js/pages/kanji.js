@@ -2,12 +2,8 @@
    langsung begitu skrip termuat (dengan pengecekan login sendiri di
    kanji.html); sekarang dibungkus initPage() dan dijalankan auth.js
    SETELAH login, sama seperti halaman lain, supaya header/sidebar bersama
-   (js/app-shell.js) selalu terpasang dulu. embed-mode/?embed=1 di bawah
-   sudah tidak pernah dipakai lagi (halaman ini tidak lagi dimuat lewat
-   iframe), dibiarkan karena tidak berdampak apa pun bila tidak ada. */
+   (js/app-shell.js) selalu terpasang dulu. */
 function initPage() {
-const kanjiEmbedMode = new URLSearchParams(location.search).get("embed") === "1";
-document.body.classList.toggle("embed-mode", kanjiEmbedMode);
 
 const grid = document.getElementById("kanjiGrid");
 const search = document.getElementById("kanjiSearch");
