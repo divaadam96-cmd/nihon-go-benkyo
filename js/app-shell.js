@@ -148,9 +148,14 @@
       location.href = `${ROOT}index.html#${view}`;
       return;
     }
+    /* Sensei/Operator: "dashboard" (menu Ringkasan) berarti Ringkasan kelas
+       (#ringkasanKelas, ditampilkan js/pages/ringkasan-kelas.js) - #dashboard
+       pribadi disembunyikan untuk mereka. Tanpa ini menu Ringkasan / hash
+       #dashboard mencabut .active dari Ringkasan kelas dan halaman kosong. */
+    const ringkasanStaf = (v) => view === "dashboard" && v.id === "ringkasanKelas" && !v.hidden;
     document
       .querySelectorAll(".view")
-      .forEach((v) => v.classList.toggle("active", v.id === view));
+      .forEach((v) => v.classList.toggle("active", v.id === view || ringkasanStaf(v)));
     document
       .querySelectorAll("[data-view]")
       .forEach((b) => b.classList.toggle("active", b.dataset.view === view));
