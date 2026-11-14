@@ -88,14 +88,27 @@ Lokasi: `pages/kanji.html` dan `js/pages/kanji.js`.
 
 Lokasi: `pages/latihan.html` dan `js/pages/latihan.js`.
 
-- Pilihan simulasi JLPT atau JFT dan paket soal yang tersedia.
-- Pengaturan tingkat, cakupan, serta jenis soal.
+- **Tes per 5 Bab** (Bab 1–5 sampai Bab 46–50): cara baca & penulisan
+  kanji, partikel, susunan kalimat, dan soal cerita; 45 menit; lulus
+  dengan nilai minimal 80.
+- **Paket ujian** (simulasi JLPT N5/N4 dan paket lain) dengan batas waktu
+  masing-masing; nilai 80 ditampilkan sebagai target latihan, bukan
+  kelulusan JLPT resmi.
+- Siswa: tes terbuka sendiri mengikuti kemajuan belajar - Tes per 5 Bab
+  setiap 5 pelajaran tuntas, paket N5 setelah Pelajaran 25, paket N4
+  setelah Pelajaran 50 - dan boleh dikerjakan 1x per hari. Tes yang
+  belum terbuka tampil terkunci beserta syaratnya; paket yang belum
+  terbuka bisa diminta ke Sensei.
+- Info tes yang baru terbuka muncul di Beranda dan di hasil tugas Materi.
+- Nilai tes tidak memengaruhi kunci pelajaran; nilai terbaiknya menambah
+  poin Prestasi.
 - Timer, navigasi nomor soal, penanda soal, dan progres pengerjaan.
 - Penyelesaian otomatis ketika waktu habis.
 - Nilai akhir, akurasi per kategori, dan rekomendasi belajar.
 - Bank jawaban salah untuk ditinjau kembali.
 - Hasil disimpan ke Supabase dan ikut dihitung sebagai XP.
-- Akses tes tertentu dapat diberikan Sensei/Operator melalui tugas.
+- Sensei/Operator dapat memberi akses tes lebih awal atau percobaan
+  tambahan melalui Pantau Siswa.
 
 ## Pantau Siswa
 
@@ -116,7 +129,10 @@ Tersedia untuk Sensei dan Operator:
 - pemberian serta penghapusan tugas;
 - membaca kiriman tugas (teks + lampiran) dan memberi nilai 0–100 serta
   komentar; kartu siswa menandai “N tugas perlu dinilai”;
-- pemberian akses ke Tes Kemampuan dengan batas waktu;
+- pemberian akses ke Tes Kemampuan (izin lebih awal / percobaan tambahan)
+  dengan peringatan kalau siswa belum menuntaskan pelajaran syaratnya;
+- persetujuan atau penolakan (dengan alasan) permintaan akses paket ujian
+  dari siswa; kartu siswa menandai “N permintaan tes”;
 - reset progres SRS seorang Siswa setelah konfirmasi; setiap reset tercatat
   (siapa & kapan) dan bisa dipulihkan dari cadangannya.
 

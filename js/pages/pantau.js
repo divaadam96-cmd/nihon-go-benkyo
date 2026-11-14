@@ -48,10 +48,16 @@ const monitorAssignmentError = document.getElementById("monitorAssignmentError")
 const monitorAssignmentTitle = document.getElementById("monitorAssignmentTitle");
 const monitorAssignmentBab = document.getElementById("monitorAssignmentBab");
 const monitorAssignmentPaket = document.getElementById("monitorAssignmentPaket");
+const monitorAssignmentWarn = document.getElementById("monitorAssignmentWarn");
+const monitorRequestList = document.getElementById("monitorRequestList");
 
 let monitorStudents = [];
 let monitorSelectedId = null;
 let monitorFilter = "all";
+/* Permintaan akses paket ujian yang menunggu (daftar_minta_akses) dan
+   status tes siswa yang sedang dibuka (tes_status) - supabase/add-tes-otomatis.sql. */
+let monitorRequests = [];
+let monitorTesStatus = null;
 
 /* Paket ujian siap pakai dibaca dari database (list_test_packages) - paket
    baru yang ditambahkan Operator di tabel test_packages + package_questions
@@ -89,11 +95,40 @@ function updateAssignmentFormMode() {
   const isTestAccess = type !== "umum";
   monitorAssignmentTitle.hidden = isTestAccess;
   monitorAssignmentTitle.required = !isTestAccess;
+  updateAssignmentWarn();
+}
+
+/* Peringatan saat memberi akses tes: tes yang belum terbuka = izin lebih
+   awal; tes yang sudah terbuka otomatis tidak perlu akses (kecuali untuk
+   percobaan tambahan di hari yang sama). */
+function updateAssignmentWarn() {
+  const type = currentAssignmentType();
+  const st = monitorTesStatus;
+  if (type === "umum" || !st) {
+    monitorAssignmentWarn.hidden = true;
+    return;
+  }
+  const ref = type === "bab" ? monitorAssignmentBab.value : monitorAssignmentPaket.value;
+  const tes = (st.tes || []).find((t) => t.kind === type && t.ref === ref);
+  if (!tes) {
+    monitorAssignmentWarn.hidden = true;
+    return;
+  }
+  const sampai = st.tuntas_sampai ? `baru tuntas sampai Pelajaran ${st.tuntas_sampai}` : "belum menuntaskan satu pelajaran pun";
+  monitorAssignmentWarn.className = `monitor-assign-warn${tes.terbuka ? " info" : ""}`;
+  monitorAssignmentWarn.textContent = tes.terbuka
+    ? `Tes ini sudah terbuka otomatis untuk siswa ini (1x sehari). Akses manual hanya perlu untuk percobaan tambahan.`
+    : tes.syarat
+      ? `⚠ Siswa ini ${sampai}; tes ini biasanya terbuka setelah Pelajaran ${tes.syarat}. Akses ini membuka tes lebih awal (satu kali).`
+      : `Paket ini tidak terbuka otomatis - hanya lewat akses dari Sensei (satu kali).`;
+  monitorAssignmentWarn.hidden = false;
 }
 
 monitorAssignmentForm.querySelectorAll('input[name="assignmentType"]').forEach((radio) => {
   radio.addEventListener("change", updateAssignmentFormMode);
 });
+monitorAssignmentBab.addEventListener("change", updateAssignmentWarn);
+monitorAssignmentPaket.addEventListener("change", updateAssignmentWarn);
 updateAssignmentFormMode();
 
 function formatActivityDate(value) {
@@ -231,6 +266,8 @@ function daysSince(dateStr) {
 /* Alasan siswa perlu dihubungi Sensei, dari yang paling mendesak. */
 function studentFlags(student) {
   const flags = [];
+  const requests = monitorRequests.filter((r) => r.siswa_id === student.id).length;
+  if (requests) flags.push({ key: "request", label: `${requests} permintaan tes` });
   if (student.ungraded) flags.push({ key: "ungraded", label: `${student.ungraded} tugas perlu dinilai` });
   const idle = daysSince(student.last_active);
   if (idle === null) flags.push({ key: "inactive", label: "Belum pernah belajar" });
@@ -358,10 +395,12 @@ async function loadMonitorPanel() {
   } catch {
     // Gagal tidak fatal - nilai muncul saat siswa/Sensei membuka berikutnya.
   }
-  const [{ data, error }, classResult] = await Promise.all([
+  const [{ data, error }, classResult, requestResult] = await Promise.all([
     window.supabaseClient.rpc("pantau_ringkasan"),
     window.supabaseClient.rpc("pantau_kelas", { p_days: CLASS_SUMMARY_DAYS }),
+    window.supabaseClient.rpc("daftar_minta_akses"),
   ]);
+  monitorRequests = requestResult.error ? [] : requestResult.data || [];
   monitorClassEl.innerHTML = classResult.error ? "" : classSummaryHtml(classResult.data);
   if (error) {
     // Jangan tampilkan angka nol - Sensei akan mengira progres siswa ter-reset.
@@ -515,12 +554,65 @@ function renderMonitorDetail(student) {
   monitorAssignmentSection.open = false;
   monitorDangerSection.open = false;
   monitorAssignmentCount.textContent = "Memuat…";
+  renderStudentRequests(student.id);
   monitorDetailEl.hidden = false;
   document.body.classList.add("monitor-modal-open");
   monitorDetailClose.focus();
   loadStudentDetail(student.id);
   loadStudentAssignments(student.id);
+  loadStudentTesStatus(student.id);
 }
+
+async function loadStudentTesStatus(siswaId) {
+  monitorTesStatus = null;
+  updateAssignmentWarn();
+  const { data, error } = await window.supabaseClient.rpc("tes_status", { p_siswa: siswaId });
+  if (monitorSelectedId !== siswaId || error) return;
+  monitorTesStatus = data;
+  updateAssignmentWarn();
+}
+
+/* Permintaan akses paket dari siswa ini: setujui (jadi akses tes satu
+   kali) atau tolak dengan alasan singkat. */
+function renderStudentRequests(siswaId) {
+  const list = monitorRequests.filter((r) => r.siswa_id === siswaId);
+  monitorRequestList.hidden = !list.length;
+  if (list.length) monitorAssignmentSection.open = true;
+  monitorRequestList.innerHTML = list.length
+    ? `<b>Permintaan akses tes</b>${list
+        .map(
+          (r) =>
+            `<form class="monitor-request" data-id="${r.id}"><div><span>${escapeHtml(r.label)}</span><small>Diminta ${formatQuizDate(r.created_at)}</small></div><input name="alasan" maxlength="300" placeholder="Alasan jika ditolak (opsional)" autocomplete="off"><button type="submit" class="primary" data-setuju="1">Setujui</button><button type="submit" class="secondary" data-setuju="0">Tolak</button><p class="login-error" hidden></p></form>`,
+        )
+        .join("")}`
+    : "";
+}
+
+monitorRequestList.addEventListener("submit", async (event) => {
+  const form = event.target.closest(".monitor-request");
+  if (!form) return;
+  event.preventDefault();
+  const setuju = event.submitter ? event.submitter.dataset.setuju === "1" : true;
+  const errorEl = form.querySelector(".login-error");
+  form.querySelectorAll("button").forEach((b) => (b.disabled = true));
+  const { error } = await window.supabaseClient.rpc("putuskan_minta_akses", {
+    p_id: Number(form.dataset.id),
+    p_setuju: setuju,
+    p_alasan: form.elements.alasan.value,
+  });
+  if (error) {
+    errorEl.textContent = `Gagal menyimpan keputusan: ${error.message}`;
+    errorEl.hidden = false;
+    form.querySelectorAll("button").forEach((b) => (b.disabled = false));
+    return;
+  }
+  monitorRequests = monitorRequests.filter((r) => String(r.id) !== form.dataset.id);
+  renderMonitorList();
+  if (monitorSelectedId) {
+    renderStudentRequests(monitorSelectedId);
+    loadStudentAssignments(monitorSelectedId);
+  }
+});
 
 async function loadStudentDetail(siswaId) {
   const { data, error } = await window.supabaseClient.rpc("pantau_detail", { p_siswa: siswaId });
@@ -800,7 +892,7 @@ monitorAssignmentForm.addEventListener("submit", async (event) => {
     const start = Number(monitorAssignmentBab.value);
     testKind = "bab";
     testRef = String(start);
-    title = `Latihan per 5 Bab · Bab ${start}–${start + 4}`;
+    title = `Tes per 5 Bab · Bab ${start}–${start + 4}`;
   } else if (type === "paket") {
     testKind = "paket";
     testRef = monitorAssignmentPaket.value;

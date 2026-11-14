@@ -833,6 +833,37 @@ a.hari-ini-lain {
 .tugas-sensei {
   padding: 16px 24px;
 }
+/* Kartu "Tes Kemampuan terbuka" (dashboard.js renderTesTerbuka). */
+.tes-terbuka {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 24px;
+  border-left: 4px solid var(--gold);
+}
+.tes-terbuka-ikon {
+  font-size: 26px;
+}
+.tes-terbuka > div {
+  display: grid;
+  flex: 1 1 220px;
+  gap: 2px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.tes-terbuka b {
+  color: var(--navy);
+  font-size: 15px;
+}
+.tes-terbuka {
+  flex-wrap: wrap;
+}
+.tes-terbuka a.primary {
+  flex-shrink: 0;
+  margin-left: auto;
+  text-decoration: none;
+}
 .tugas-sensei-head {
   display: flex;
   align-items: center;
@@ -953,6 +984,9 @@ a.hari-ini-lain {
     padding: 16px 18px;
   }
   .tugas-sensei {
+    padding: 14px 16px;
+  }
+  .tes-terbuka {
     padding: 14px 16px;
   }
   .progres-buku .progres-peta {
