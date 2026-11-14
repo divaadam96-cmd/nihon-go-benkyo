@@ -223,6 +223,10 @@
   background: #f6e3b4;
   color: #7a5310;
 }
+.monitor-flag-request {
+  background: #dfe8f6;
+  color: #234a86;
+}
 
 .monitor-list {
   display: grid;
@@ -1151,6 +1155,61 @@ body.monitor-modal-open {
 #monitorAssignmentForm select,
 #monitorAssignmentForm button {
   min-width: 0;
+}
+
+/* Peringatan izin lebih awal & permintaan akses tes (supabase/add-tes-otomatis.sql). */
+.monitor-assign-warn {
+  flex-basis: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #f6e3b4;
+  color: #7a5310;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.monitor-assign-warn.info {
+  background: #dfe8f6;
+  color: #234a86;
+}
+.monitor-requests {
+  display: grid;
+  gap: 8px;
+  padding: 11px;
+  border: 1px solid #b9cbe6;
+  border-radius: 10px;
+  background: #f3f7fd;
+}
+.monitor-requests > b {
+  color: var(--navy);
+  font-size: 13px;
+}
+.monitor-request {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.monitor-request > div {
+  display: grid;
+  flex: 1 1 180px;
+  font-size: 13px;
+}
+.monitor-request small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.monitor-request input {
+  flex: 1 1 180px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: 12px "DM Sans", sans-serif;
+}
+.monitor-request .login-error {
+  flex-basis: 100%;
+  margin: 0;
 }
 
 .monitor-danger-zone > summary b {

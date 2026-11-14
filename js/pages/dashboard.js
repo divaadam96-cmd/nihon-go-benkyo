@@ -271,6 +271,27 @@ function initPage() {
     renderRincian();
   });
 
+  /* Kartu "Tes Kemampuan terbuka" (siswa): tes yang sudah terbuka otomatis
+     atau lewat akses Sensei tapi belum pernah dikerjakan (tes_status,
+     supabase/add-tes-otomatis.sql). Satu panggilan ringan per buka Beranda. */
+  async function renderTesTerbuka() {
+    const kartu = document.getElementById("tesTerbuka");
+    if (!kartu || window.currentProfile?.role !== "siswa" || !window.supabaseClient) return;
+    let tes = [];
+    try {
+      const { data, error } = await window.supabaseClient.rpc("tes_status");
+      if (error) return;
+      tes = (data?.tes || []).filter((t) => (t.terbuka || t.akses) && !t.kali);
+    } catch {
+      return; // Offline dsb. - kartu tidak ditampilkan.
+    }
+    kartu.hidden = !tes.length;
+    if (!tes.length) return;
+    const [utama, ...lain] = tes;
+    kartu.innerHTML = `<span class="tes-terbuka-ikon" aria-hidden="true">🎉</span><div><b>${tes.length === 1 ? "Tes Kemampuan baru terbuka" : `${tes.length} Tes Kemampuan siap dikerjakan`}</b><span>${esc(utama.label)}${lain.length ? ` dan ${lain.length} tes lainnya` : ""}. Nilainya menambah poin Prestasi dan tidak memengaruhi kunci pelajaran.</span></div><a class="primary" href="pages/latihan.html">Kerjakan tes →</a>`;
+  }
+  renderTesTerbuka();
+
   /* Sapaan memakai nama depan akun yang login. */
   const greeting = document.getElementById("dashboardGreeting");
   const namaDepan = String(window.currentProfile?.full_name || "").trim().split(/\s+/)[0];

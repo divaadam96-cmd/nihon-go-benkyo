@@ -18,14 +18,17 @@
 --     opsional (assets/images/...), subcategory = nama もんだい.
 --   * html boleh memakai tag sederhana (u, b, br, small, ruby/rt, span,
 --     div, table) - tag lain disaring otomatis di browser.
+--   * level: 'n5' (terbuka sendiri untuk siswa setelah Pelajaran 25 tuntas),
+--     'n4' (setelah Pelajaran 50), atau null (hanya lewat akses Sensei) -
+--     lihat supabase/add-tes-otomatis.sql. Bisa juga diatur di Kelola Soal.
 --   * Paket bisa disembunyikan tanpa menghapus soal:
 --       update public.test_packages set active = false where key = '...';
 
 begin;
 
-insert into public.test_packages (key, label, mark, description, time_limit_minutes, one_page, position)
+insert into public.test_packages (key, label, mark, description, time_limit_minutes, one_page, position, level)
 values ('contoh-set-04', 'Paket Ujian · Contoh (Set 04)', 'SET·4',
-        '2 soal contoh - ganti dengan deskripsi paket.', 30, false, 100);
+        '2 soal contoh - ganti dengan deskripsi paket.', 30, false, 100, null);
 
 insert into public.package_questions
   (package_key, position, category, subcategory, instruction, html, options, answer, explanation, material, image, audio_src, srs_id)

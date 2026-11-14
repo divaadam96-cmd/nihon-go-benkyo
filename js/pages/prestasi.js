@@ -29,6 +29,7 @@ function initPage() {
       [`Pelajaran tuntas (${r.jumlah_tuntas})`, r.tuntas],
       ["Ujian ulang", r.ujian],
       ["Pola materi dipahami", r.materi],
+      [`Tes Kemampuan (${r.jumlah_tes ?? 0})`, r.tes ?? 0],
     ];
     el.innerHTML = `<div class="pr-saya-total"><small>Poin prestasi saya</small><b>${angka(r.total)}</b><span>+${angka(Math.max(0, r.minggu))} minggu ini · streak ${angka(r.streak)} hari</span></div>
       <ul class="pr-saya-rincian">${bagian.map(([k, v]) => `<li><span>${esc(k)}</span><b>${angka(v)}</b></li>`).join("")}</ul>`;

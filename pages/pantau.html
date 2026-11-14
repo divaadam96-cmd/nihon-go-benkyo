@@ -68,16 +68,18 @@
             <details class="monitor-disclosure" id="monitorAssignmentSection">
               <summary><span><b>Tugas &amp; akses tes</b><small>Kelola tugas aktif dan riwayatnya.</small></span><strong id="monitorAssignmentCount">Memuat…</strong></summary>
               <div class="monitor-assignments">
+                <div id="monitorRequestList" class="monitor-requests" hidden></div>
                 <div id="monitorAssignmentList"></div>
                 <form id="monitorAssignmentForm">
-                  <div class="assignment-type-choice"><label><input type="radio" name="assignmentType" value="umum" checked><span>Tugas umum</span></label><label><input type="radio" name="assignmentType" value="bab"><span>Akses latihan per 5 Bab</span></label><label><input type="radio" name="assignmentType" value="paket"><span>Akses simulasi paket</span></label></div>
+                  <div class="assignment-type-choice"><label><input type="radio" name="assignmentType" value="umum" checked><span>Tugas umum</span></label><label><input type="radio" name="assignmentType" value="bab"><span>Akses Tes per 5 Bab</span></label><label><input type="radio" name="assignmentType" value="paket"><span>Akses simulasi paket</span></label></div>
                   <textarea id="monitorAssignmentTitle" rows="6" placeholder="Tulis tugas selengkapnya, mis.&#10;Selesaikan Pelajaran 3:&#10;1. Baca materi Bab 3&#10;2. Kerjakan latihan kosakata" required autocomplete="off"></textarea>
                   <select id="monitorAssignmentBab" hidden><option value="1">Bab 1–5</option><option value="6">Bab 6–10</option><option value="11">Bab 11–15</option><option value="16">Bab 16–20</option><option value="21">Bab 21–25</option><option value="26">Bab 26–30</option><option value="31">Bab 31–35</option><option value="36">Bab 36–40</option><option value="41">Bab 41–45</option><option value="46">Bab 46–50</option></select>
                   <select id="monitorAssignmentPaket" hidden><option value="" disabled selected>Memuat paket…</option></select>
+                  <p id="monitorAssignmentWarn" class="monitor-assign-warn" hidden></p>
                   <input type="date" id="monitorAssignmentDue">
                   <button type="submit" class="secondary">Beri tugas</button>
                 </form>
-                <p id="monitorAssignmentHint" class="muted">Akses tes: latihan per 5 Bab dibatasi 45 menit; simulasi paket mengikuti batas waktu masing-masing paket. Tes selesai otomatis saat waktu habis.</p>
+                <p id="monitorAssignmentHint" class="muted">Tes per 5 Bab terbuka sendiri setiap 5 pelajaran tuntas, paket JLPT N5 setelah Pelajaran 25, dan N4 setelah Pelajaran 50 (boleh dikerjakan 1x sehari). Akses manual di sini = izin lebih awal atau percobaan tambahan, satu kali. Tes per 5 Bab dibatasi 45 menit; paket mengikuti batas waktunya masing-masing.</p>
                 <p id="monitorAssignmentError" class="login-error" hidden></p>
               </div>
             </details>

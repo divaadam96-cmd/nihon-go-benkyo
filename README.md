@@ -34,7 +34,7 @@ pages/                   halaman lain, masing-masing dokumen HTML sendiri
   materi.html              daftar + pembaca materi (Buku 1 & 2, mode fokus)
   hafalan.html             flashcard per Bab + materi Hiragana/Katakana
   kanji.html               belajar Kanji (grid, papan goresan, kuis)
-  latihan.html             simulasi Tes Kemampuan (JLPT/JFT)
+  latihan.html             Tes Kemampuan (Tes per 5 Bab & paket JLPT)
   prestasi.html            papan peringkat & poin prestasi (semua peran)
   pantau.html              panel Sensei/Operator: pantau progres siswa
   admin.html               panel Operator: kelola akun
@@ -268,13 +268,27 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   komentar file SQL tersebut), lalu Operator mendaftar ulang.
 - **Batas waktu tes dijaga server** (`supabase/fix-2-batas-waktu-server.sql`).
   `start_test()` mencatat jam mulai & tenggat saat soal dibuka (tabel
-  `test_attempts`, satu percobaan per akses tes); soal hanya bisa diambil
+  `test_attempts`, satu percobaan per akses tes dari Sensei); soal hanya bisa diambil
   selama percobaan berjalan; jawaban disimpan ke server setiap dipilih
   (`save_test_answers`) dan ditolak setelah tenggat (+30 detik kelonggaran).
   Reload/tutup tab tidak mengulang timer - siswa otomatis melanjutkan tes
   yang sama. Tes yang ditinggal sampai waktu habis ditutup & dinilai dari
   jawaban tersimpan saat siswa membuka dashboard/Tes Kemampuan atau Sensei
   membuka Pantau Siswa (ditandai "⏱ Waktu habis").
+- **Tes Kemampuan terbuka mengikuti kemajuan siswa**
+  (`supabase/add-tes-otomatis.sql`). Tes per 5 Bab terbuka sendiri setelah
+  siswa tuntas sampai Pelajaran 5, 10, ..., 50; paket ber-`level` N5 setelah
+  Pelajaran 25, N4 setelah Pelajaran 50 (level diatur Operator di Kelola
+  Soal, paket tanpa level hanya lewat akses Sensei). Tes yang terbuka sendiri
+  boleh dikerjakan 1x per hari (WIB); akses dari Sensei = satu percobaan
+  tambahan/izin lebih awal. Siswa bisa meminta akses paket yang belum
+  terbuka (`minta_akses_tes`), Sensei menyetujui/menolak di Pantau Siswa
+  (`putuskan_minta_akses`, setuju = baris `assignments` biasa). Nilai tes
+  tidak memengaruhi kunci pelajaran; nilai terbaik tiap tes (+50 Tes per 5
+  Bab / +100 paket kalau >= 80) masuk poin Prestasi (`prestasi_rincian`).
+  "Tuntas sampai N" dihitung `bab_tuntas_sampai()` (rumus sama dengan
+  `isComplete()`/`tuntasSampai()` di `js/tugas-bab.js` - ubah keduanya
+  bersamaan). Status semua tes untuk satu siswa: `tes_status()`.
 - **Riwayat & versi soal** (`supabase/fix-6-riwayat-perubahan-soal.sql`).
   Trigger mencatat setiap perubahan `quiz_questions`, `package_questions`,
   dan `test_packages` ke `content_audit_log` (siapa, kapan, isi sebelum &
@@ -417,7 +431,9 @@ isinya diganti wajib diberi nama file baru**. Rekaman audio
   urutan, aktif) ada di tabel `test_packages`; soalnya di
   `package_questions`. Pantau Siswa dan Tes Kemampuan membacanya lewat
   `list_test_packages()`, jadi paket baru yang sudah punya soal langsung
-  bisa ditugaskan Sensei. Menyembunyikan paket: `active = false`.
+  bisa ditugaskan Sensei. Menyembunyikan paket: `active = false`. Kolom
+  `level` (`n5`/`n4`/kosong) menentukan kapan paket terbuka sendiri untuk
+  siswa (lihat Tes Kemampuan terbuka mengikuti kemajuan siswa).
 - **Editor soal untuk Operator: halaman Kelola Soal**
   (`pages/kelola-soal.html`, menu "Kelola Soal"; database:
   `supabase/add-editor-soal.sql`). Mengedit semua soal per-5-Bab dan

@@ -183,6 +183,25 @@
     if (isStaff() || bab <= 1) return false;
     return !isComplete(bab - 1);
   }
+  /* Pelajaran terakhir yang tuntas berurutan dari Pelajaran 1 (0 = belum
+     ada) - sama dengan bab_tuntas_sampai() di supabase/add-tes-otomatis.sql,
+     dasar terbukanya Tes Kemampuan. */
+  function tuntasSampai() {
+    for (let bab = 1; bab <= MAX_BAB; bab++) if (!isComplete(bab)) return bab - 1;
+    return MAX_BAB;
+  }
+  /* Tes Kemampuan yang terbuka saat siswa tuntas sampai pelajaran
+     `dari`+1..`sampai` (Tes per 5 Bab tiap 5 pelajaran, paket JLPT N5 di
+     Pelajaran 25, N4 di Pelajaran 50). */
+  function tesBaruTerbuka(dari, sampai) {
+    const tes = [];
+    for (let bab = dari + 1; bab <= sampai; bab++) {
+      if (bab % 5 === 0) tes.push(`Tes per 5 Bab · Bab ${bab - 4}–${bab}`);
+      if (bab === 25) tes.push("paket ujian JLPT N5");
+      if (bab === 50) tes.push("paket ujian JLPT N4");
+    }
+    return tes;
+  }
   /* Bab paling awal yang belum tuntas (titik belajar siswa saat ini). */
   function frontierBab() {
     for (let bab = 1; bab <= MAX_BAB; bab++) if (!isComplete(bab)) return bab;
@@ -1145,14 +1164,17 @@
         finishLatihan(skor);
         return;
       }
+      const sampaiSebelum = tuntasSampai();
       const { saved } = await record(bab, target, correct, total);
       kirimKesalahan([...salahServer.values()]);
       const babSelesai = isComplete(bab);
+      const tesBaru = isStaff() ? [] : tesBaruTerbuka(sampaiSebelum, tuntasSampai());
       let html = `<div class="tugas-result ${lulus ? "lulus" : "ulang"}"><div class="eyebrow">${esc(info.judul)} · Pelajaran ${bab}</div><div class="tugas-result-score"><b>${skor}</b><span>${correct} benar dari ${total} soal</span></div><h3>${lulus ? (target === UJIAN ? "Lulus ujian ulang! 🎉" : "Bagus! 🎉") : target === UJIAN ? `Belum lulus - perlu nilai minimal ${TUGAS_KKM}. Ulangi kata yang salah di Hafalan, lalu coba lagi.` : `Skor di bawah ${TUGAS_KKM} - boleh diulang untuk menaikkan rata-rata.`}</h3>`;
       const p = progress(bab);
       if (target !== UJIAN) html += `<p class="tugas-rata">Rata-rata nilai tugas Pelajaran ${bab}: <b>${p.rataRata}</b> (${p.dikerjakan}/${p.totalTugas} tugas dikerjakan, minimal ${TUGAS_KKM} untuk membuka pelajaran berikutnya).</p>`;
       if (babSelesai && bab < MAX_BAB) html += `<p class="tugas-unlock">🔓 Semua target Pelajaran ${bab} selesai - Pelajaran ${bab + 1} sekarang terbuka.</p>`;
       else if (bab < MAX_BAB && !isStaff()) html += `<p class="tugas-masih">Untuk membuka Pelajaran ${bab + 1}: ${esc(kekurangan(bab).join("; "))}.</p>`;
+      if (tesBaru.length) html += `<p class="tugas-unlock">📝 Tes Kemampuan baru terbuka: ${esc(tesBaru.join(", "))}. Nilainya menambah poin Prestasi dan tidak memengaruhi kunci pelajaran. <a href="latihan.html">Kerjakan tes →</a></p>`;
       if (!saved) html += `<p class="tugas-warning">Hasil belum tersimpan di server - disimpan di perangkat ini dan dikirim ulang otomatis nanti.</p>`;
       if (mistakes.length) {
         html += `<details class="tugas-mistakes"${lulus ? "" : " open"}><summary>Soal yang salah (${mistakes.length})</summary><ul>${mistakes
@@ -1225,6 +1247,7 @@
     kekurangan,
     isLocked,
     frontierBab,
+    tuntasSampai,
     langkahBerikut,
     recordMateri,
     renderPanel,

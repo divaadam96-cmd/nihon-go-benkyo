@@ -566,6 +566,12 @@ function renderPackageTab() {
       <label class="ks-field">Deskripsi<textarea data-pkg="description" rows="3" maxlength="500"></textarea></label>
       <label class="ks-check"><input type="checkbox" data-pkg="one_page"> Tampilkan semua soal dalam satu halaman (format simulasi JLPT)</label>
       <label class="ks-check"><input type="checkbox" data-pkg="active"> Aktif — bisa dipilih Sensei di Pantau Siswa (akses yang sudah diberikan tetap berlaku walau nonaktif)</label>
+      <label class="ks-field">Terbuka otomatis untuk siswa<small>langsung tersimpan, terpisah dari draft soal</small><select id="ksPkgLevel" disabled>
+        <option value="">Tidak — hanya lewat akses dari Sensei</option>
+        <option value="n5">Level N5 — setelah Pelajaran 25 tuntas</option>
+        <option value="n4">Level N4 — setelah Pelajaran 50 tuntas</option>
+      </select></label>
+      <p class="muted" id="ksPkgLevelStatus">Memuat…</p>
       <ul class="ks-q-errors" id="ksPkgErrors"></ul>
     </div>`;
   body.querySelectorAll("[data-pkg]").forEach((input) => {
@@ -574,7 +580,34 @@ function renderPackageTab() {
     else input.value = value ?? "";
   });
   paintPackageErrors();
+  loadPackageLevel(current.ref);
 }
+/* Level paket (test_packages.level, supabase/add-tes-otomatis.sql) menentukan
+   kapan paket terbuka sendiri untuk siswa. Disimpan langsung lewat
+   atur_level_paket - paket yang belum pernah diterbitkan belum bisa diatur. */
+async function loadPackageLevel(ref) {
+  const { data, error } = await supa.from("test_packages").select("level").eq("key", ref).maybeSingle();
+  const select = $("ksPkgLevel");
+  const status = $("ksPkgLevelStatus");
+  if (!select || !current || current.ref !== ref) return;
+  if (error || !data) {
+    status.textContent = error ? `Gagal memuat level: ${errorMessage(error)}` : "Terbitkan paket ini dulu, lalu atur kapan paket terbuka untuk siswa.";
+    return;
+  }
+  select.value = data.level || "";
+  select.disabled = false;
+  status.textContent = "";
+}
+editorEl.addEventListener("change", async (event) => {
+  const select = event.target;
+  if (select.id !== "ksPkgLevel" || !current) return;
+  const status = $("ksPkgLevelStatus");
+  select.disabled = true;
+  status.textContent = "Menyimpan…";
+  const { error } = await supa.rpc("atur_level_paket", { p_key: current.ref, p_level: select.value || null });
+  select.disabled = false;
+  status.textContent = error ? `Gagal menyimpan: ${errorMessage(error)}` : "✓ Tersimpan";
+});
 function paintPackageErrors() {
   const ul = $("ksPkgErrors");
   if (ul) ul.replaceChildren(...validatePackage(current.pkg).map((m) => Object.assign(document.createElement("li"), { textContent: m })));

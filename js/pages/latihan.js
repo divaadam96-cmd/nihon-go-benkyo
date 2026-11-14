@@ -47,14 +47,14 @@ function initPage() {
     reviewOnly = false,
     reviewIndexes = [],
     onePageExamRendered = false;
-  /* Kontrol akses tes kemampuan: siswa cuma boleh mulai tes lewat akses yang
-   sudah diberikan Sensei/Operator (baris `assignments` dengan test_kind
-   terisi). Sensei/Operator sendiri tetap pakai form pilih-bebas di bawah
-   (dipakai untuk menyiapkan/mengecek soal), jadi gating ini hanya aktif
-   kalau peran login-nya "siswa". */
+  /* Kontrol akses tes kemampuan: siswa hanya bisa mulai tes yang sudah
+   terbuka sesuai kemajuannya atau lewat akses dari Sensei/Operator (lihat
+   renderTesGate). Sensei/Operator sendiri tetap pakai form pilih-bebas di
+   bawah (dipakai untuk menyiapkan/mengecek soal). */
   let restrictedMode = false,
-    accessAssignments = [],
     activeAssignmentId = null;
+  // Nilai acuan lulus Tes per 5 Bab (= target_bab_kkm() di SQL).
+  const TES_KKM = 80;
   /* Percobaan tes di server (start_test, supabase/fix-2-batas-waktu-server.sql):
    waktu mulai & tenggat dicatat server, jadi timer di layar hanya MENAMPILKAN
    sisa waktu menuju tenggat itu (dihitung ulang tiap detik dari jam server,
@@ -92,7 +92,7 @@ function initPage() {
    posisi tampil i - jawaban dikirim ke server dalam index asli, dan kunci
    dari server dipetakan balik ke posisi tampil setelah dinilai. Paket
    siap pakai sengaja TIDAK diacak urutan soalnya supaya format ujian
-   resmi (Mondai 1→2→3→4) tetap utuh; per-5-Bab diacak supaya tiap
+   resmi (Mondai 1→2→3→4) tetap utuh; Tes per 5 Bab diacak supaya tiap
    pengulangan terasa berbeda. */
   function rowToQuestion(row) {
     const options = row.options || [];
@@ -134,7 +134,7 @@ function initPage() {
     $("heroPackage").textContent = mockPackage ? packageInfo(mockPackage).label : `Bab ${rangeStart}–${rangeStart + 4}`;
   }
   /* Batas waktu wajib (tidak bisa dimatikan siswa): latihan per 5 bab
-   maksimal 45 menit, simulasi paket maksimal 60 menit. */
+   maksimal 45 menit, paket mengikuti batas waktu paketnya (test_packages). */
   function timeLimitSeconds() {
     return mockPackage ? packageInfo(mockPackage).time_limit_minutes * 60 : 2700;
   }
@@ -153,9 +153,9 @@ function initPage() {
       $("heroPackage").textContent = label;
       return;
     }
-    $("selectedTestName").textContent = `Ujian per 5 Bab · Bab ${rangeStart}–${rangeStart + 4}`;
+    $("selectedTestName").textContent = `Tes per 5 Bab · Bab ${rangeStart}–${rangeStart + 4}`;
     $("selectedRangeText").textContent =
-      `Soal disusun manual dari kosakata, kanji, dan pola kalimat Bab ${rangeStart}–${rangeStart + 4}.`;
+      `Cara baca & penulisan kanji, partikel, susunan kalimat, dan soal cerita dari Bab ${rangeStart}–${rangeStart + 4}.`;
     $("heroExamType").textContent = "Per 5 Bab";
     $("heroPackage").textContent = `Bab ${rangeStart}–${rangeStart + 4}`;
   }
@@ -480,6 +480,7 @@ function initPage() {
     $("resultTitle").textContent = "Menilai jawaban…";
     $("resultSummary").textContent = "Jawabanmu sedang dikirim ke server untuk dinilai.";
     $("retryGrading").hidden = true;
+    $("resultLulus").hidden = true;
     $("categoryResults").replaceChildren();
     $("recommendations").replaceChildren();
     $("mistakeList").replaceChildren();
@@ -537,6 +538,16 @@ function initPage() {
           : "Mari perkuat dasar sedikit lagi.");
     $("resultSummary").textContent =
       `${correct} dari ${questions.length} soal benar. ${questions.length - correct} soal tersimpan dalam bank kesalahan untuk ditinjau kembali.`;
+    // Acuan 80: Tes per 5 Bab = lulus/belum; paket = target latihan saja
+    // (kelulusan JLPT asli memakai skala & batas per bagian yang berbeda).
+    const lulus = score >= TES_KKM;
+    $("resultLulus").hidden = false;
+    $("resultLulus").className = `result-lulus${lulus ? " lulus" : ""}`;
+    $("resultLulus").textContent = mockPackage
+      ? `${lulus ? "🎯 Target latihan tercapai" : "🎯 Target latihan belum tercapai"} (nilai ${TES_KKM} ke atas). Nilai simulasi ini bukan nilai kelulusan JLPT resmi.`
+      : lulus
+        ? `✅ Lulus Tes per 5 Bab (nilai minimal ${TES_KKM}).`
+        : `Belum lulus - perlu nilai minimal ${TES_KKM}. Pelajari bank kesalahan, lalu coba lagi${restrictedMode ? " besok" : ""}.`;
     $("reviewMistakes").hidden = false;
     pushQuizAnswersToSrs();
     const categoryBox = $("categoryResults");
@@ -610,7 +621,7 @@ function initPage() {
       button.innerHTML = originalLabel;
       $("startError").textContent = `Tes gagal dibuka: ${e && e.message ? e.message : e}`;
       $("startError").hidden = false;
-      if (restrictedMode) loadAccessAssignments();
+      if (restrictedMode) loadTesStatus();
       return;
     }
     button.disabled = false;
@@ -687,7 +698,7 @@ function initPage() {
     $("resultScreen").hidden = true;
     $("startScreen").hidden = false;
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (restrictedMode) loadAccessAssignments();
+    if (restrictedMode) loadTesStatus();
   };
   $("reviewMistakes").onclick = () => {
     $("mistakeBank").hidden = false;
@@ -714,58 +725,90 @@ function initPage() {
    berlangsung 90 menit. */
   if (window.IdleSession) window.IdleSession.keepAlive(() => testRunning());
 
-  /* --- Akses tes kemampuan: gating khusus siswa --- */
-  /* Profil sudah dimuat auth.js (revealApp) sebelum initPage() dijalankan. */
+  /* --- Daftar tes untuk siswa (supabase/add-tes-otomatis.sql) ---
+   Tes per 5 Bab terbuka sendiri setiap 5 pelajaran tuntas, paket JLPT N5
+   setelah Pelajaran 25, N4 setelah Pelajaran 50 - boleh dikerjakan 1x per
+   hari. Paket yang belum terbuka bisa diminta ke Sensei; akses dari Sensei
+   (tugas) tetap satu kali percobaan. Semua aturan dijaga server
+   (start_test); daftar ini hanya menampilkan statusnya (tes_status). */
   async function resolveRole() {
     return window.currentProfile?.role || null;
   }
-  function renderAccessGate() {
-    const empty = accessAssignments.length === 0;
-    $("accessEmpty").hidden = !empty;
-    $("accessList").innerHTML = accessAssignments
-      .map((a) => {
-        const isPaket = a.test_kind === "paket";
-        const start = Number(a.test_ref);
-        const pkg = isPaket ? packageInfo(a.test_ref) : null;
-        const limitMinutes = isPaket ? pkg.time_limit_minutes : 45;
-        const dueText = a.due_date ? `Tenggat ${a.due_date}` : "Tanpa tenggat";
-        return `<button type="button" class="access-card" data-id="${a.id}"><span class="access-mark">${isPaket ? escapeHtmlTes(pkg.mark) : "BAB"}</span><div><b>${escapeHtmlTes(a.title)}</b><small>${dueText} · Batas waktu ${limitMinutes} menit</small></div><span class="access-go">Mulai →</span></button>`;
-      })
-      .join("");
+  let tesStatus = { tuntas_sampai: 0, tes: [] };
+  function tesCardHtml(t) {
+    const akses = t.akses && t.akses[0];
+    const kkm = TES_KKM;
+    const nilai =
+      t.terbaik == null
+        ? ""
+        : `<em class="tes-nilai${t.terbaik >= kkm ? " lulus" : ""}">Nilai terbaik ${t.terbaik}${t.kind === "bab" ? (t.terbaik >= kkm ? " · Lulus" : ` · belum ${kkm}`) : ""}</em>`;
+    const data = `data-kind="${t.kind}" data-ref="${escapeHtmlTes(t.ref)}"`;
+    let meta = `${t.menit} menit`;
+    let aksi;
+    let locked = false;
+    if (akses) {
+      meta += ` · akses dari Sensei${akses.due_date ? ` · tenggat ${akses.due_date}` : ""}`;
+      aksi = `<button type="button" class="primary" ${data} data-akses="${akses.id}">Mulai →</button>`;
+    } else if (t.terbuka && t.hari_ini) {
+      aksi = '<span class="tes-status">Sudah dikerjakan hari ini · coba lagi besok</span>';
+    } else if (t.terbuka) {
+      aksi = `<button type="button" class="primary" ${data}>${t.kali ? "Kerjakan lagi" : "Mulai"} →</button>`;
+    } else {
+      locked = true;
+      meta += t.syarat ? ` · 🔒 terbuka setelah Pelajaran ${t.syarat} tuntas` : " · 🔒 hanya lewat akses dari Sensei";
+      const minta = t.permintaan;
+      if (t.kind !== "paket") aksi = "";
+      else if (minta && minta.status === "menunggu") aksi = '<span class="tes-status">Permintaan terkirim · menunggu Sensei</span>';
+      else
+        aksi = `${minta && minta.status === "ditolak" ? `<span class="tes-status ditolak">Permintaan ditolak${minta.alasan ? `: ${escapeHtmlTes(minta.alasan)}` : ""}</span>` : ""}<button type="button" class="secondary" data-minta="${escapeHtmlTes(t.ref)}">Minta izin ke Sensei</button>`;
+    }
+    return `<article class="access-card${locked ? " locked" : ""}"><span class="access-mark">${escapeHtmlTes(t.mark)}</span><div><b>${escapeHtmlTes(t.label)}</b><small>${meta}</small>${nilai}</div><div class="access-act">${aksi}</div></article>`;
   }
-  async function loadAccessAssignments() {
-    $("accessList").innerHTML = "";
-    // Tes yang ditinggal sampai waktunya habis ditutup & dinilai dulu.
+  function renderTesGate() {
+    const tes = tesStatus.tes || [];
+    const sampai = tesStatus.tuntas_sampai || 0;
+    const bab = tes.filter((t) => t.kind === "bab");
+    const paket = tes.filter((t) => t.kind === "paket");
+    const siap = tes.filter((t) => t.akses || (t.terbuka && !t.hari_ini)).length;
+    $("accessIntro").querySelector("b").textContent = sampai
+      ? `Kamu sudah tuntas sampai Pelajaran ${sampai} · ${siap} tes siap dikerjakan`
+      : "Tuntaskan Pelajaran 1–5 untuk membuka tes pertamamu";
+    const grup = (judul, list) =>
+      list.length ? `<h3 class="access-group">${judul}</h3><div class="access-list">${list.map(tesCardHtml).join("")}</div>` : "";
+    $("accessList").innerHTML = grup("Tes per 5 Bab", bab) + grup("Paket ujian", paket);
+    $("heroQuestionTotal").textContent = "—";
+    $("heroPackage").textContent = `${siap} tes siap`;
+  }
+  async function loadTesStatus() {
     try {
-      await window.supabaseClient.rpc("finalize_my_expired_tests");
-    } catch (e) {}
-    $("accessEmpty").hidden = false;
-    const { data } = await window.supabaseClient.auth.getUser();
-    const user = data && data.user;
-    if (!user) {
-      accessAssignments = [];
-      renderAccessGate();
+      const { data, error } = await window.supabaseClient.rpc("tes_status");
+      if (error) throw error;
+      tesStatus = data || { tuntas_sampai: 0, tes: [] };
+      renderTesGate();
+    } catch (e) {
+      $("accessIntro").querySelector("b").textContent = "Daftar tes gagal dimuat";
+      $("accessList").innerHTML = `<p class="start-error">${escapeHtmlTes(e && e.message ? e.message : e)}. Muat ulang halaman untuk mencoba lagi.</p>`;
+    }
+  }
+  $("accessList").addEventListener("click", async (event) => {
+    const mulai = event.target.closest("button[data-kind]");
+    if (mulai) {
+      activeAssignmentId = mulai.dataset.akses ? Number(mulai.dataset.akses) : null;
+      mockPackage = mulai.dataset.kind === "paket" ? mulai.dataset.ref : "";
+      if (mulai.dataset.kind === "bab") rangeStart = Number(mulai.dataset.ref);
+      startTest();
       return;
     }
-    const { data: rows, error } = await window.supabaseClient
-      .from("assignments")
-      .select("id, title, due_date, test_kind, test_ref")
-      .eq("siswa_id", user.id)
-      .eq("completed", false)
-      .not("test_kind", "is", null)
-      .order("due_date", { ascending: true, nullsFirst: false });
-    accessAssignments = error ? [] : rows || [];
-    renderAccessGate();
-  }
-  $("accessList").addEventListener("click", (event) => {
-    const card = event.target.closest(".access-card");
-    if (!card) return;
-    const assignment = accessAssignments.find((a) => String(a.id) === card.dataset.id);
-    if (!assignment) return;
-    activeAssignmentId = assignment.id;
-    mockPackage = assignment.test_kind === "paket" ? assignment.test_ref : "";
-    rangeStart = assignment.test_kind === "bab" ? Number(assignment.test_ref) : rangeStart;
-    startTest();
+    const minta = event.target.closest("button[data-minta]");
+    if (!minta) return;
+    minta.disabled = true;
+    minta.textContent = "Mengirim…";
+    const { error } = await window.supabaseClient.rpc("minta_akses_tes", { p_paket: minta.dataset.minta });
+    if (error) {
+      $("startError").textContent = `Permintaan gagal dikirim: ${error.message}`;
+      $("startError").hidden = false;
+    } else $("startError").hidden = true;
+    loadTesStatus();
   });
   async function initAccessControl() {
     const role = await resolveRole();
@@ -778,10 +821,11 @@ function initPage() {
       updatePackagePreview();
     }
     if (restrictedMode) {
-      $("heroExamType").textContent = "Akses dari Sensei";
-      $("heroPackage").textContent = "Pilih dari daftar";
+      $("restartTest").textContent = "Kembali ke daftar tes";
+      $("heroExamType").textContent = "Sesuai kemajuan";
+      $("heroPackage").textContent = "Memuat…";
       $("heroQuestionTotal").textContent = "—";
-      await loadAccessAssignments();
+      await loadTesStatus();
       await resumeOpenAttempt();
     }
   }

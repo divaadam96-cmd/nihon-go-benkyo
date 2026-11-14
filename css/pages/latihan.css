@@ -891,9 +891,81 @@ input {
   color: #7e8995;
   font-size: 9px;
 }
-.access-card .access-go {
-  color: #9a7a47;
-  font: 800 10px "Noto Serif JP";
+/* Daftar tes siswa (renderTesGate di js/pages/latihan.js). */
+.access-group {
+  margin: 22px 0 0;
+  color: var(--navy);
+  font-size: 13px;
+}
+.access-group + .access-list {
+  margin-top: 10px;
+}
+.access-card {
+  cursor: default;
+}
+.access-card.locked {
+  background: #f7f4ee;
+}
+.access-card.locked .access-mark {
+  color: #8e8a82;
+  background: #e8e4dc;
+}
+.access-act {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+  text-align: right;
+}
+.access-act .primary,
+.access-act .secondary {
+  white-space: nowrap;
+}
+.tes-status {
+  color: #7e8995;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.tes-status.ditolak {
+  max-width: 220px;
+  color: var(--red);
+}
+.tes-nilai {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #8a5a2b;
+  background: #f4e3dc;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+}
+.tes-nilai.lulus {
+  color: #1f6e55;
+  background: #dcefe7;
+}
+.result-hero .result-lulus {
+  margin: 8px 0 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #8a5a2b;
+  background: #f4e3dc;
+  font-size: 12px;
+  font-weight: 600;
+}
+.result-hero .result-lulus.lulus {
+  color: #1f6e55;
+  background: #dcefe7;
+}
+@media (max-width: 600px) {
+  .access-card {
+    grid-template-columns: 48px 1fr;
+  }
+  .access-act {
+    grid-column: 1 / -1;
+    justify-items: start;
+    text-align: left;
+  }
 }
 .finish-hint {
   display: block;
